@@ -1,5 +1,8 @@
-h2 Insights.VC channels
+extends layout
 
-ul
-  each channel in channels
-    li ##{channel.name} (#{channel.id})
+block content
+  h2 Insights.VC channels
+
+  ul
+    each channel in channels
+      li ##{channel.name} (#{channel.id})
