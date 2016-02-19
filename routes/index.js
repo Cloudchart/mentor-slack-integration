@@ -41,6 +41,7 @@ router.get('/oauth/callback', (req, res, next) => {
             accessToken: data.bot.bot_access_token,
             responseBody: JSON.stringify(data),
           } }).spread((team, created) => {
+            req.session.teamId = team.id
             res.redirect('/channels')
           })
         }
@@ -52,7 +53,9 @@ router.get('/oauth/callback', (req, res, next) => {
 })
 
 router.get('/channels', async (req, res, next) => {
-  let team = await Team.findOne({ where: { name: 'Insights.VC' } })
+  if (!req.session.teamId) return res.redirect('/')
+
+  let team = await Team.findById(req.session.teamId)
   let SlackWeb = new WebClient(team.accessToken)
 
   // SlackWeb.chat.postMessage('C04BXJQ77', 'khhh... mic check', { as_user: true }, (err, data) => {

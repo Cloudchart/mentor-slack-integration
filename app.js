@@ -8,7 +8,6 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 var RedisStore = require('connect-redis')(session);
-var passport = require('passport');
 
 var routes = require('./routes/index').default;
 
@@ -19,7 +18,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
 // uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+// app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -40,21 +39,16 @@ app.use(require('coffee-middleware')({
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-// app.use(session({
-//   store: new RedisStore({ url: process.env.REDIS_URL }),
-//   secret: process.env.SESSION_SECRET || 'keyboard cat',
-//   name: 'mentor-slack-integration',
-//   resave: true,
-//   saveUninitialized: true
-// }));
+// session
+app.use(session({
+  store: new RedisStore({ url: process.env.REDIS_URL }),
+  secret: process.env.SESSION_SECRET || 'keyboard cat',
+  name: 'mentor-slack-integration',
+  resave: true,
+  saveUninitialized: true
+}));
 
-// app.use(passport.initialize());
-// app.use(passport.session());
-
-// passport.deserializeUser((id, done) => {
-//   done(null, id);
-// });
-
+// routes
 app.use('/', routes);
 
 // catch 404 and forward to error handler
