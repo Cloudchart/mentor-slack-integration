@@ -1,8 +1,13 @@
 extends layout
 
 block content
-  h2 Insights.VC channels
+  h2 Hey, #{team.name} team!
+  p Select the channels in which we can post some useful insights
 
-  ul
+  form(id="channels" method="post")
     each channel in channels
-      li ##{channel.name} (#{channel.id})
+      input(type="checkbox" id=channel.id name="channelIds" value=channel.id)
+      label(for=channel.id)= channel.name
+      br
+
+    input(type="submit")

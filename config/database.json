@@ -1,7 +1,11 @@
 {
   "development": {
-    "dialect": "sqlite",
-    "storage": "./development.sqlite"
+    "use_env_variable": "MYSQL_URL",
+    "pool": {
+      "min":  0,
+      "max":  5,
+      "idle": 10000
+    }
   },
   "production": {
     "use_env_variable": "DATABASE_URL",

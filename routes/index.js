@@ -2,12 +2,14 @@ import url from 'url'
 
 import { Router } from 'express'
 import { WebClient } from 'slack-client'
-import { Team } from '../models'
+import { Team, Channel } from '../models'
 
 let router = Router()
 let SlackDefaultWeb = new WebClient('')
 
 
+// auth
+//
 router.get('/', (req, res, next) => {
   let slackButtonUrl = url.format({
     protocol: 'https',
@@ -52,6 +54,8 @@ router.get('/oauth/callback', (req, res, next) => {
   }
 })
 
+// channels
+//
 router.get('/channels', async (req, res, next) => {
   if (!req.session.teamId) return res.redirect('/')
 
@@ -71,10 +75,51 @@ router.get('/channels', async (req, res, next) => {
       console.log('Error:', err)
       res.redirect('/')
     } else {
-      // console.log(channels.channels);
-      res.render('channels', { channels: channels.channels })
+      res.render('channels', { team: team, channels: channels.channels })
     }
   })
 })
+
+router.post('/channels', (req, res, next) => {
+  // TODO: make graphql request to mentor web app
+
+  if (!req.session.teamId) return res.redirect('/')
+
+  let channelIds = req.body.channelIds
+  if (!channelIds) return res.redirect('/channels')
+  if (typeof channelIds === 'string') channelIds = [channelIds]
+
+  // TODO: redirect only after all channels have been created
+  channelIds.forEach((id) => {
+    Channel.findOrCreate({ where: { id: id }, defaults: { teamId: req.session.teamId } })
+  })
+
+  res.redirect('/themes')
+})
+
+// themes
+//
+router.get('/themes', async (req, res, next) => {
+  // TODO: get themes from web app
+
+  if (!req.session.teamId) return res.redirect('/')
+
+  let team = await Team.findById(req.session.teamId)
+  let SlackWeb = new WebClient(team.accessToken)
+
+  let selectedChannels = await Channel.findAll({ where: { teamId: team.id } })
+  let selectedChannelIds = selectedChannels.map((channel) => { return channel.id })
+
+  SlackWeb.channels.list((err, channels) => {
+    if (err) {
+      console.log('Error:', err)
+      res.redirect('/')
+    } else {
+      let filteredChannels = channels.channels.filter((channel) => { return selectedChannelIds.includes(channel.id) })
+      res.render('themes', { team: team, channels: filteredChannels })
+    }
+  })
+})
+
 
 export default router

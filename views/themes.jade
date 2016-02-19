@@ -1,0 +1,9 @@
+extends layout
+
+block content
+  h2 Good!
+  p Now associate themes with selected channels
+
+  ul
+    each channel in channels
+      li ##{channel.name}
