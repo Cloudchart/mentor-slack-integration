@@ -1,4 +1,5 @@
 import url from 'url'
+import request from 'request'
 
 import { Router } from 'express'
 import { WebClient } from 'slack-client'
@@ -7,6 +8,22 @@ import { Team, Channel } from '../models'
 let router = Router()
 let SlackDefaultWeb = new WebClient('')
 
+
+// helpers
+//
+let callWebAppGraphQL = (channelId) => {
+  let options = {
+    url: process.env.GRAPHQL_SERVER_URL,
+    qs: { query: '{viewer{id}}' },
+    headers: { 'X-Slack-Channel-Id': channelId },
+  }
+
+  request(options, (error, response, body) => {
+    if (!error && response.statusCode === 200) {
+      console.log('Successfully called web app graphql server for channel:', channelId)
+    }
+  })
+}
 
 // auth
 //
@@ -62,14 +79,6 @@ router.get('/channels', async (req, res, next) => {
   let team = await Team.findById(req.session.teamId)
   let SlackWeb = new WebClient(team.accessToken)
 
-  // SlackWeb.chat.postMessage('C04BXJQ77', 'khhh... mic check', { as_user: true }, (err, data) => {
-  //   if (err) {
-  //     console.log('Error:', err)
-  //   } else {
-  //     console.log(data);
-  //   }
-  // })
-
   SlackWeb.channels.list((err, channels) => {
     if (err) {
       console.log('Error:', err)
@@ -81,20 +90,23 @@ router.get('/channels', async (req, res, next) => {
 })
 
 router.post('/channels', (req, res, next) => {
-  // TODO: make graphql request to mentor web app
-
-  if (!req.session.teamId) return res.redirect('/')
+  let teamId = req.session.teamId
+  if (!teamId) return res.redirect('/')
 
   let channelIds = req.body.channelIds
   if (!channelIds) return res.redirect('/channels')
   if (typeof channelIds === 'string') channelIds = [channelIds]
 
-  // TODO: redirect only after all channels have been created
-  channelIds.forEach((id) => {
-    Channel.findOrCreate({ where: { id: id }, defaults: { teamId: req.session.teamId } })
-  })
+  // make requests to web app graphql server and create channels
+  let requests = channelIds.reduce((promiseChain, id) => {
+    callWebAppGraphQL(id)
 
-  res.redirect('/themes')
+    return promiseChain.then(() => {
+      return Channel.findOrCreate({ where: { id: id }, defaults: { teamId: teamId } })
+    })
+  }, Promise.resolve())
+
+  requests.then(() => res.redirect('/themes'))
 })
 
 // themes

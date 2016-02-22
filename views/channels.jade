@@ -2,7 +2,7 @@ extends layout
 
 block content
   h2 Hey, #{team.name} team!
-  p Select the channels in which we can post some useful insights
+  p Select one or more channels. We'll post insights there only when @boris will be invited.
 
   form(id="channels" method="post")
     each channel in channels
