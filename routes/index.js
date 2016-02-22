@@ -4,6 +4,7 @@ import request from 'request'
 import { Router } from 'express'
 import { WebClient } from 'slack-client'
 import { Team, Channel } from '../models'
+import { Theme } from '../models/web_app'
 
 let router = Router()
 let SlackDefaultWeb = new WebClient('')
@@ -112,25 +113,31 @@ router.post('/channels', (req, res, next) => {
 // themes
 //
 router.get('/themes', async (req, res, next) => {
-  // TODO: get themes from web app
+  let teamId = req.session.teamId
+  if (!teamId) return res.redirect('/')
 
-  if (!req.session.teamId) return res.redirect('/')
-
-  let team = await Team.findById(req.session.teamId)
+  let team = await Team.findById(teamId)
   let SlackWeb = new WebClient(team.accessToken)
 
   let selectedChannels = await Channel.findAll({ where: { teamId: team.id } })
-  let selectedChannelIds = selectedChannels.map((channel) => { return channel.id })
+  let selectedChannelIds = selectedChannels.map((channel) => channel.id)
+
+  let themes = await Theme.findAll({ where: { is_default: true } })
 
   SlackWeb.channels.list((err, channels) => {
     if (err) {
       console.log('Error:', err)
       res.redirect('/')
     } else {
-      let filteredChannels = channels.channels.filter((channel) => { return selectedChannelIds.includes(channel.id) })
-      res.render('themes', { team: team, channels: filteredChannels })
+      let filteredChannels = channels.channels.filter((channel) => selectedChannelIds.includes(channel.id))
+      res.render('themes', { team: team, channels: filteredChannels, themes: themes })
     }
   })
+})
+
+router.post('/themes', async (req, res, next) => {
+  console.log(req.body);
+  res.redirect('/themes')
 })
 
 
