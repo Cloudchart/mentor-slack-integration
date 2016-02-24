@@ -17,17 +17,22 @@ let checkTeamId = (req, res, next) => {
 }
 
 let callWebAppGraphQL = (channelId, method, query) => {
-  let options = {
-    url: process.env.GRAPHQL_SERVER_URL,
-    method: method,
-    qs: { query: query },
-    headers: { 'X-Slack-Channel-Id': channelId },
-  }
-
-  request(options, (error, response, body) => {
-    if (!error && response.statusCode === 200) {
-      console.log('Successfully called web app graphql server for channel:', channelId)
+  return new Promise((resolve, reject) => {
+    let options = {
+      url: process.env.GRAPHQL_SERVER_URL,
+      method: method,
+      qs: { query: query },
+      headers: { 'X-Slack-Channel-Id': channelId },
     }
+
+    request(options, (error, response, body) => {
+      if (!error && response.statusCode === 200) {
+        console.log('Successfully called web app graphql server for channel:', channelId)
+        resolve()
+      } else {
+        reject()
+      }
+    })
   })
 }
 
@@ -98,14 +103,13 @@ router.post('/channels', checkTeamId, (req, res, next) => {
   if (!channelIds) return res.redirect('/channels')
   if (typeof channelIds === 'string') channelIds = [channelIds]
 
-  // call web app graphql server to create users and user themes
   // create internal channels
+  // call web app graphql server to create users and user themes
   let requests = channelIds.reduce((promiseChain, id) => {
-    // TODO: add this call to promise chain
-    callWebAppGraphQL(id, 'GET', '{viewer{themes{edges{node{id}}}}}')
-
-    return promiseChain.then(() => {
-      return Channel.findOrCreate({ where: { id: id }, defaults: { teamId: req.session.teamId } })
+    return promiseChain.then(async () => {
+      await Channel.findOrCreate({ where: { id: id }, defaults: { teamId: req.session.teamId } })
+    }).then(async () => {
+      await callWebAppGraphQL(id, 'GET', '{viewer{themes{edges{node{id}}}}}')
     })
   }, Promise.resolve())
 
