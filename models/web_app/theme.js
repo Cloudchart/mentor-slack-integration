@@ -4,8 +4,7 @@ module.exports = function(sequelize, DataTypes) {
   var Theme = sequelize.define('Theme', {
     id: {
       type: DataTypes.UUID,
-      primaryKey: true,
-      defaultValue: DataTypes.UUIDV4
+      primaryKey: true
     },
     name: DataTypes.STRING,
     is_system: DataTypes.BOOLEAN,
@@ -19,6 +18,7 @@ module.exports = function(sequelize, DataTypes) {
 
     classMethods: {
       associate: function(models) {
+        Theme.hasMany(models.UserTheme)
       }
     }
 

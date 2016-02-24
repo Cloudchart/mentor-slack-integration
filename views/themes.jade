@@ -9,9 +9,10 @@ block content
       each channel in channels
         li ##{channel.name}
           br
-          each theme in themes
-            input(type="checkbox" id="#{channel.id}-#{theme.id}" name="themeIds[#{channel.id}]" value=theme.id)
-            label(for="#{channel.id}-#{theme.id}")= theme.name
+          each userTheme in channel.themes
+            - var checked = userTheme.status === 'subscribed'
+            input(type="checkbox" id=userTheme.id value=userTheme.id checked=checked)
+            label(for=userTheme.id)= userTheme.Theme.name
             br
 
     input(type="submit")

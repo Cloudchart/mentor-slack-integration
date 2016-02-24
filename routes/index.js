@@ -4,7 +4,7 @@ import request from 'request'
 import { Router } from 'express'
 import { WebClient } from 'slack-client'
 import { Team, Channel } from '../models'
-import { Theme } from '../models/web_app'
+import { Theme, UserTheme, SlackChannel } from '../models/web_app'
 
 let router = Router()
 let SlackDefaultWeb = new WebClient('')
@@ -12,10 +12,14 @@ let SlackDefaultWeb = new WebClient('')
 
 // helpers
 //
-let callWebAppGraphQL = (channelId) => {
+let checkTeamId = (req, res, next) => {
+  req.session.teamId ? next() : res.redirect('/')
+}
+
+let callWebAppGraphQL = (channelId, query) => {
   let options = {
     url: process.env.GRAPHQL_SERVER_URL,
-    qs: { query: '{viewer{id}}' },
+    qs: { query: query },
     headers: { 'X-Slack-Channel-Id': channelId },
   }
 
@@ -74,9 +78,7 @@ router.get('/oauth/callback', (req, res, next) => {
 
 // channels
 //
-router.get('/channels', async (req, res, next) => {
-  if (!req.session.teamId) return res.redirect('/')
-
+router.get('/channels', checkTeamId, async (req, res, next) => {
   let team = await Team.findById(req.session.teamId)
   let SlackWeb = new WebClient(team.accessToken)
 
@@ -90,20 +92,19 @@ router.get('/channels', async (req, res, next) => {
   })
 })
 
-router.post('/channels', (req, res, next) => {
-  let teamId = req.session.teamId
-  if (!teamId) return res.redirect('/')
-
+router.post('/channels', checkTeamId, (req, res, next) => {
   let channelIds = req.body.channelIds
   if (!channelIds) return res.redirect('/channels')
   if (typeof channelIds === 'string') channelIds = [channelIds]
 
-  // make requests to web app graphql server and create channels
+  // call web app graphql server to create users and user themes
+  // create internal channels
   let requests = channelIds.reduce((promiseChain, id) => {
-    callWebAppGraphQL(id)
+    // TODO: add this call to promise chain
+    callWebAppGraphQL(id, '{viewer{themes{edges{node{id}}}}}')
 
     return promiseChain.then(() => {
-      return Channel.findOrCreate({ where: { id: id }, defaults: { teamId: teamId } })
+      return Channel.findOrCreate({ where: { id: id }, defaults: { teamId: req.session.teamId } })
     })
   }, Promise.resolve())
 
@@ -112,30 +113,37 @@ router.post('/channels', (req, res, next) => {
 
 // themes
 //
-router.get('/themes', async (req, res, next) => {
-  let teamId = req.session.teamId
-  if (!teamId) return res.redirect('/')
-
-  let team = await Team.findById(teamId)
+router.get('/themes', checkTeamId, async (req, res, next) => {
+  let team = await Team.findById(req.session.teamId)
   let SlackWeb = new WebClient(team.accessToken)
 
-  let selectedChannels = await Channel.findAll({ where: { teamId: team.id } })
-  let selectedChannelIds = selectedChannels.map((channel) => channel.id)
+  let teamChannels = await Channel.findAll({ where: { teamId: team.id } })
+  let teamChannelIds = teamChannels.map((channel) => channel.id)
 
-  let themes = await Theme.findAll({ where: { is_default: true } })
+  let slackChannels = await SlackChannel.findAll({ where: { id: teamChannelIds } })
+  let userIds = slackChannels.map((channel) => channel.user_id)
+
+  let userThemes = await UserTheme.findAll({ include: [ Theme ], where: { user_id: userIds } })
+  userThemes = userThemes.sort((a, b) => a.Theme.name.localeCompare(b.Theme.name))
 
   SlackWeb.channels.list((err, channels) => {
     if (err) {
       console.log('Error:', err)
       res.redirect('/')
     } else {
-      let filteredChannels = channels.channels.filter((channel) => selectedChannelIds.includes(channel.id))
-      res.render('themes', { team: team, channels: filteredChannels, themes: themes })
+      let reducedChannels = slackChannels.reduce((array, slackChannel) => {
+        let object = channels.channels.find(channel => channel.id === slackChannel.id)
+        object.themes = userThemes.filter(userTheme => userTheme.user_id === slackChannel.user_id)
+        array.push(object)
+        return array
+      }, [])
+
+      res.render('themes', { team: team, channels: reducedChannels })
     }
   })
 })
 
-router.post('/themes', async (req, res, next) => {
+router.post('/themes', checkTeamId, async (req, res, next) => {
   console.log(req.body);
   res.redirect('/themes')
 })
