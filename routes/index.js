@@ -16,9 +16,10 @@ let checkTeamId = (req, res, next) => {
   req.session.teamId ? next() : res.redirect('/')
 }
 
-let callWebAppGraphQL = (channelId, query) => {
+let callWebAppGraphQL = (channelId, method, query) => {
   let options = {
     url: process.env.GRAPHQL_SERVER_URL,
+    method: method,
     qs: { query: query },
     headers: { 'X-Slack-Channel-Id': channelId },
   }
@@ -101,7 +102,7 @@ router.post('/channels', checkTeamId, (req, res, next) => {
   // create internal channels
   let requests = channelIds.reduce((promiseChain, id) => {
     // TODO: add this call to promise chain
-    callWebAppGraphQL(id, '{viewer{themes{edges{node{id}}}}}')
+    callWebAppGraphQL(id, 'GET', '{viewer{themes{edges{node{id}}}}}')
 
     return promiseChain.then(() => {
       return Channel.findOrCreate({ where: { id: id }, defaults: { teamId: req.session.teamId } })
@@ -144,8 +145,29 @@ router.get('/themes', checkTeamId, async (req, res, next) => {
 })
 
 router.post('/themes', checkTeamId, async (req, res, next) => {
-  console.log(req.body);
-  res.redirect('/themes')
+  let body = req.body
+  if (Object.keys(body).length === 0) return res.redirect('/themes')
+
+  Object.keys(body).forEach(function(channelId) {
+    let userThemesIds = body[channelId]
+    if (typeof userThemesIds === 'string') userThemesIds = [userThemesIds]
+
+    userThemesIds.forEach((id, index) => {
+      callWebAppGraphQL(channelId, 'POST', `
+        mutation m {
+          subscribeOnTheme(input: {
+            id: "${new Buffer(id).toString('base64')}",
+            clientMutationId: "${index}"
+          }) {
+            themeID
+          }
+        }
+      `)
+
+    })
+  })
+
+  res.render('success')
 })
 
 
