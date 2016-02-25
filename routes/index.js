@@ -157,28 +157,39 @@ router.get('/themes', checkTeamId, async (req, res, next) => {
 })
 
 router.post('/themes', checkTeamId, async (req, res, next) => {
-  let body = req.body
-  if (Object.keys(body).length === 0) return res.redirect('/themes')
+  let channelId = req.body.channelId
+  let userThemeId = req.body.userThemeId
+  let checked = req.body.checked
+  let mutationName
 
-  Object.keys(body).forEach(function(channelId) {
-    let userThemesIds = body[channelId]
-    if (typeof userThemesIds === 'string') userThemesIds = [userThemesIds]
+  if (checked === 'true') {
+    mutationName = 'subscribeOnTheme'
+  } else if (checked === 'false') {
+    mutationName = 'unsubscribeFromTheme'
+  } else {
+    return res.status(400).json({ error: 'bad request' })
+  }
 
-    userThemesIds.forEach((id, index) => {
-      callWebAppGraphQL(channelId, 'POST', `
-        mutation m {
-          subscribeOnTheme(input: {
-            id: "${new Buffer(id).toString('base64')}",
-            clientMutationId: "${index}"
-          }) {
-            themeID
-          }
-        }
-      `)
-
-    })
+  callWebAppGraphQL(channelId, 'POST', `
+    mutation m {
+      ${mutationName}(input: {
+        id: "${new Buffer(userThemeId).toString('base64')}",
+        clientMutationId: "1"
+      }) {
+        themeID
+      }
+    }
+  `).then(() => {
+    res.json('ok')
+  }).catch(() => {
+    res.status(500).json('something went wrong')
   })
+})
 
+// success
+//
+router.get('/success', (req, res, next) => {
+  // TODO: call web app graphql server to add insights
   res.render('success')
 })
 
