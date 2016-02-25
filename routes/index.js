@@ -189,7 +189,6 @@ router.post('/themes', checkTeamId, async (req, res, next) => {
 // success
 //
 router.get('/success', (req, res, next) => {
-  // TODO: call web app graphql server to add insights
   res.render('success')
 })
 

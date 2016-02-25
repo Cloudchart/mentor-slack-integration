@@ -1,0 +1,4 @@
+require('babel-core/register');
+require('babel-polyfill');
+require('../models').sequelize.sync();
+require('../initializers/node_resque').start();
