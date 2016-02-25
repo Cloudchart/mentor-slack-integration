@@ -101,7 +101,7 @@ router.get('/channels', checkTeamId, async (req, res, next) => {
   })
 })
 
-router.post('/channels', checkTeamId, (req, res, next) => {
+router.post('/channels', checkTeamId, async (req, res, next) => {
   let channelIds = req.body.channelIds
   if (!channelIds) return res.redirect('/channels')
   if (typeof channelIds === 'string') channelIds = [channelIds]
@@ -109,7 +109,7 @@ router.post('/channels', checkTeamId, (req, res, next) => {
   let teamId = req.session.teamId
 
   // destroy all previously selected team channels
-  Channel.destroy({ where: { teamId: teamId } })
+  await Channel.destroy({ where: { teamId: teamId } })
 
   // create team channels
   // call web app graphql server to create users and user themes
