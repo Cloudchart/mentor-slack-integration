@@ -6,7 +6,8 @@ block content
 
   form(id="channels" method="post")
     each channel in channels
-      input(type="checkbox" id=channel.id name="channelIds" value=channel.id)
+      - var checked = currentChannelIds.includes(channel.id)
+      input(type="checkbox" id=channel.id name="channelIds" value=channel.id checked=checked)
       label(for=channel.id)= channel.name
       br
 

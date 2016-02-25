@@ -88,12 +88,15 @@ router.get('/channels', checkTeamId, async (req, res, next) => {
   let team = await Team.findById(req.session.teamId)
   let SlackWeb = new WebClient(team.accessToken)
 
+  let teamChannels = await Channel.findAll({ where: { teamId: team.id } })
+  let currentChannelIds = teamChannels.map(channel => channel.id)
+
   SlackWeb.channels.list((err, channels) => {
     if (err) {
       console.log('Error:', err)
       res.redirect('/')
     } else {
-      res.render('channels', { team: team, channels: channels.channels })
+      res.render('channels', { team: team, channels: channels.channels, currentChannelIds: currentChannelIds })
     }
   })
 })
@@ -103,7 +106,12 @@ router.post('/channels', checkTeamId, (req, res, next) => {
   if (!channelIds) return res.redirect('/channels')
   if (typeof channelIds === 'string') channelIds = [channelIds]
 
-  // create internal channels
+  let teamId = req.session.teamId
+
+  // destroy all previously selected team channels
+  Channel.destroy({ where: { teamId: teamId } })
+
+  // create team channels
   // call web app graphql server to create users and user themes
   let requests = channelIds.reduce((promiseChain, id) => {
     return promiseChain.then(async () => {
@@ -123,10 +131,10 @@ router.get('/themes', checkTeamId, async (req, res, next) => {
   let SlackWeb = new WebClient(team.accessToken)
 
   let teamChannels = await Channel.findAll({ where: { teamId: team.id } })
-  let teamChannelIds = teamChannels.map((channel) => channel.id)
+  let currentChannelIds = teamChannels.map(channel => channel.id)
 
-  let slackChannels = await SlackChannel.findAll({ where: { id: teamChannelIds } })
-  let userIds = slackChannels.map((channel) => channel.user_id)
+  let slackChannels = await SlackChannel.findAll({ where: { id: currentChannelIds } })
+  let userIds = slackChannels.map(channel => channel.user_id)
 
   let userThemes = await UserTheme.findAll({ include: [ Theme ], where: { user_id: userIds } })
   userThemes = userThemes.sort((a, b) => a.Theme.name.localeCompare(b.Theme.name))
