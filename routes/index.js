@@ -41,7 +41,7 @@ router.get('/oauth/callback', (req, res, next) => {
       process.env.SLACK_CLIENT_ID,
       process.env.SLACK_CLIENT_SECRET,
       req.query.code,
-      {},
+      { redirect_uri: process.env.SLACK_CLIENT_OAUTH_REDIRECT_URI },
       (err, data) => {
         if (err) {
           console.log('Error:', err)
