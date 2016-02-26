@@ -11,7 +11,7 @@ module.exports = function(sequelize, DataTypes) {
 
     classMethods: {
       associate: function(models) {
-        Channel.belongsTo(models.Team, { as: 'team' })
+        Channel.belongsTo(models.Team, { foreignKey: 'teamId' })
       }
     }
 
