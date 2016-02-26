@@ -1,8 +1,9 @@
 import url from 'url'
-import request from 'request'
 
 import { Router } from 'express'
 import { WebClient } from 'slack-client'
+import { callWebAppGraphQL } from '../utils'
+
 import { Team, Channel } from '../models'
 import { Theme, UserTheme, SlackChannel } from '../models/web_app'
 
@@ -14,26 +15,6 @@ let SlackDefaultWeb = new WebClient('')
 //
 let checkTeamId = (req, res, next) => {
   req.session.teamId ? next() : res.redirect('/')
-}
-
-let callWebAppGraphQL = (channelId, method, query) => {
-  return new Promise((resolve, reject) => {
-    let options = {
-      url: process.env.GRAPHQL_SERVER_URL,
-      method: method,
-      qs: { query: query },
-      headers: { 'X-Slack-Channel-Id': channelId },
-    }
-
-    request(options, (error, response, body) => {
-      if (!error && response.statusCode === 200) {
-        console.log('Successfully called web app graphql server for channel:', channelId)
-        resolve()
-      } else {
-        reject()
-      }
-    })
-  })
 }
 
 // auth
@@ -136,7 +117,7 @@ router.get('/themes', checkTeamId, async (req, res, next) => {
   let slackChannels = await SlackChannel.findAll({ where: { id: currentChannelIds } })
   let userIds = slackChannels.map(channel => channel.user_id)
 
-  let userThemes = await UserTheme.findAll({ include: [ Theme ], where: { user_id: userIds } })
+  let userThemes = await UserTheme.findAll({ include: [Theme], where: { user_id: userIds } })
   userThemes = userThemes.sort((a, b) => a.Theme.name.localeCompare(b.Theme.name))
 
   SlackWeb.channels.list((err, channels) => {

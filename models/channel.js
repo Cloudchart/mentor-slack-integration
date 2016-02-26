@@ -5,12 +5,12 @@ module.exports = function(sequelize, DataTypes) {
     id: {
       type: DataTypes.STRING,
       primaryKey: true,
-    },
-    teamId: DataTypes.STRING,
+    }
   }, {
 
     classMethods: {
       associate: function(models) {
+        Channel.belongsTo(models.Team)
       }
     }
 
