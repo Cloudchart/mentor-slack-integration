@@ -47,6 +47,8 @@ router.get('/oauth/callback', (req, res, next) => {
           console.log('Error:', err)
           res.redirect('/')
         } else {
+          console.log(JSON.stringify(data))
+
           Team.findOrCreate({ where: { id: data.team_id }, defaults: {
             name: data.team_name,
             accessToken: data.bot.bot_access_token,
