@@ -37,7 +37,7 @@ function start() {
   })
 
   queue.connect(() => {
-    schedule.scheduleJob('*/2 * * * *', () => {
+    schedule.scheduleJob('*/15 * * * *', () => {
       if (scheduler.master) {
         queue.enqueue('slack-integration', 'spreader')
         console.log('>>> enqueued scheduled job')
