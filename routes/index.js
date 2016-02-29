@@ -1,4 +1,4 @@
-import url from 'url'
+import URL from 'url'
 
 import { Router } from 'express'
 import { WebClient } from 'slack-client'
@@ -20,7 +20,7 @@ let checkTeamId = (req, res, next) => {
 // auth
 //
 router.get('/', (req, res, next) => {
-  let slackButtonUrl = url.format({
+  let slackButtonUrl = URL.format({
     protocol: 'https',
     hostname: 'slack.com',
     pathname: '/oauth/authorize',

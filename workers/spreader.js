@@ -1,3 +1,5 @@
+import URL from 'url'
+
 import { WebClient } from 'slack-client'
 
 import { callWebAppGraphQL } from '../utils'
@@ -27,15 +29,23 @@ async function sendMessage(channelId, userThemeInsight, done) {
   let insight = await Insight.findById(userThemeInsight.insight_id)
   let insightOrigin = await InsightOrigin.findById(userThemeInsight.insight_id)
 
-  let title = insightOrigin.title
-  if (!title) { title = 'Source' }
-
   // generate text
-  let text = `${insightOrigin.author}\n${insight.content} – <${insightOrigin.url}|${title}>`
+  let text = []
+  text.push(insight.content)
+  text.push(insightOrigin.author)
+  if (insightOrigin.title) text.push(`<${insightOrigin.url}|${insightOrigin.title}>`)
+  text.push(`<${insightOrigin.url}|${URL.parse(insightOrigin.url).hostname}>`)
+  text = text.join(' — ')
+
+  let options = {
+    as_user: true,
+    unfurl_links: false,
+    unfurl_media: false,
+  }
 
   // post message
-  SlackWeb.chat.postMessage(channelId, text, { as_user: true }, async (err, data) => {
-    // TODO: bot isn't invited, send note to the team owner
+  SlackWeb.chat.postMessage(channelId, text, options, async (err, data) => {
+    // TODO: bot isn't invited, leave trace for the team owner notification
     if (err) {
       console.log('Error:', err)
       done(null, true)

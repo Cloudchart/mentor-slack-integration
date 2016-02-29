@@ -37,6 +37,9 @@ function start() {
   })
 
   queue.connect(() => {
+    // TODO: move next line to test suite
+    // queue.enqueue('slack-integration', 'spreader')
+
     schedule.scheduleJob('*/15 * * * *', () => {
       if (scheduler.master) {
         queue.enqueue('slack-integration', 'spreader')
