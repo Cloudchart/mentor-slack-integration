@@ -8,6 +8,25 @@ import { Channel, Team } from '../models'
 import { SlackChannel, Insight, InsightOrigin, UserTheme, UserThemeInsight } from '../models/web_app'
 
 
+// Helpers
+//
+function isEveryoneAsleep(SlackWeb) {
+  return new Promise((resolve, reject) => {
+    SlackWeb.users.list(1, (err, data) => {
+      if (err = err || data.error) {
+        console.log('Error:', err)
+        reject()
+      } else {
+        let activeUsers = data.members.filter(member => {
+          return !member.deleted && !member.is_ultra_restricted && !member.is_bot && member.presence === 'active'
+        })
+
+        resolve(activeUsers.length === 0)
+      }
+    })
+  })
+}
+
 function findUnratedInsight(userId) {
   return UserThemeInsight.findOne({
     include: [{
@@ -22,8 +41,15 @@ function findUnratedInsight(userId) {
 }
 
 async function sendMessage(channelId, userThemeInsight, done) {
+  // find channel and init web client
   let channel = await Channel.findOne({ include: [Team], where: { id: channelId } })
   let SlackWeb = new WebClient(channel.Team.accessToken)
+
+  // TODO: do nothing if there are no reactions for last 3 insights
+
+  // do nothing if everyone is away
+  let everyoneIsAsleep = await isEveryoneAsleep(SlackWeb)
+  if (everyoneIsAsleep === true) return done(null, true)
 
   // get insight content and origin
   let insight = await Insight.findById(userThemeInsight.insight_id)
@@ -44,7 +70,7 @@ async function sendMessage(channelId, userThemeInsight, done) {
   }
 
   // post message
-  SlackWeb.chat.postMessage(channelId, text, options, async (err, data) => {
+  SlackWeb.chat.postMessage(channel.id, text, options, async (err, data) => {
     // TODO: bot isn't invited, leave trace for the team owner notification
     if (err) {
       console.log('Error:', err)

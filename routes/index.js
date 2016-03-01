@@ -7,6 +7,8 @@ import { callWebAppGraphQL } from '../utils'
 import { Team, Channel } from '../models'
 import { Theme, UserTheme, SlackChannel } from '../models/web_app'
 
+const slackOauthScope = 'bot'
+
 let router = Router()
 let SlackDefaultWeb = new WebClient('')
 
@@ -25,7 +27,7 @@ router.get('/', (req, res, next) => {
     hostname: 'slack.com',
     pathname: '/oauth/authorize',
     query: {
-      scope: 'bot',
+      scope: slackOauthScope,
       client_id: process.env.SLACK_CLIENT_ID,
       redirect_uri: process.env.SLACK_CLIENT_OAUTH_REDIRECT_URI,
       state: process.env.SLACK_CLIENT_OAUTH_STATE,
@@ -43,12 +45,10 @@ router.get('/oauth/callback', (req, res, next) => {
       req.query.code,
       { redirect_uri: process.env.SLACK_CLIENT_OAUTH_REDIRECT_URI },
       (err, data) => {
-        if (err) {
+        if (err = err || data.error) {
           console.log('Error:', err)
           res.redirect('/')
         } else {
-          console.log(JSON.stringify(data))
-
           Team.findOrCreate({ where: { id: data.team_id }, defaults: {
             name: data.team_name,
             accessToken: data.bot.bot_access_token,
