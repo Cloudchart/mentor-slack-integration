@@ -4,7 +4,7 @@ import { WebClient } from 'slack-client'
 
 import { callWebAppGraphQL } from '../utils'
 
-import { Channel, Team } from '../models'
+import { Channel, Message, Team } from '../models'
 import { SlackChannel, Insight, InsightOrigin, UserTheme, UserThemeInsight } from '../models/web_app'
 
 
@@ -75,10 +75,10 @@ async function sendMessage(channelId, userThemeInsight, done) {
     if (err) {
       console.log('Error:', err)
       done(null, true)
-    // message sent, update rate to -1
+    // message sent, update rate to -1 and save output
     } else {
-      console.log(data);
-      await userThemeInsight.update({ rate: -1 })
+      userThemeInsight.update({ rate: -1 })
+      Message.create({ channelId: data.channel, timestamp: data.ts, responseBody: JSON.stringify(data) })
       done(null, true)
     }
   })

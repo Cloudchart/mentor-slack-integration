@@ -4,11 +4,21 @@ module.exports = function(sequelize, DataTypes) {
   var Team = sequelize.define('Team', {
     id: {
       type: DataTypes.STRING,
-      primaryKey: true,
+      primaryKey: true
     },
+
     name: DataTypes.STRING,
-    accessToken: DataTypes.STRING,
-    responseBody: DataTypes.TEXT,
+
+    accessToken: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+
+    responseBody: {
+      type: DataTypes.TEXT,
+      allowNull: false
+    }
+
   }, {
 
     classMethods: {

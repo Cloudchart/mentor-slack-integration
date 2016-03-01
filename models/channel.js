@@ -4,10 +4,19 @@ module.exports = function(sequelize, DataTypes) {
   var Channel = sequelize.define('Channel', {
     id: {
       type: DataTypes.STRING,
-      primaryKey: true,
+      primaryKey: true
     },
-    teamId: DataTypes.STRING,
+
+    teamId: {
+      type: DataTypes.STRING,
+      allowNull: false
+    }
+
   }, {
+
+    indexes: [{
+      fields: ['teamId']
+    }],
 
     classMethods: {
       associate: function(models) {
