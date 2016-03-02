@@ -1,8 +1,9 @@
 import URL from 'url'
 
-import { WebClient } from 'slack-client'
+import { queue } from '../initializers/node_resque'
 
-import { callWebAppGraphQL } from '../utils'
+import { WebClient } from 'slack-client'
+import { eventMarker, errorMarker, oneDayInSeconds, callWebAppGraphQL } from '../lib'
 
 import { Channel, Message, Team } from '../models'
 import { SlackChannel, Insight, InsightOrigin, UserTheme, UserThemeInsight } from '../models/web_app'
@@ -14,7 +15,7 @@ function isEveryoneAsleep(SlackWeb) {
   return new Promise((resolve, reject) => {
     SlackWeb.users.list(1, (err, data) => {
       if (err = err || data.error) {
-        console.log('Error:', err)
+        console.log(errorMarker, err)
         reject()
       } else {
         let activeUsers = data.members.filter(member => {
@@ -72,20 +73,29 @@ async function sendMessage(channelId, userThemeInsight, done) {
   // post message
   SlackWeb.chat.postMessage(channel.id, text, options, async (err, data) => {
     // TODO: bot isn't invited, leave trace for the team owner notification
-    if (err) {
-      console.log('Error:', err)
+    if (err = err || data.error) {
+      console.log(errorMarker, err)
       done(null, true)
-    // message sent, update rate to -1 and save output
+    // message sent, update rate to -1, save output and enqueue reactionsCollector
     } else {
       userThemeInsight.update({ rate: -1 })
-      Message.create({ channelId: data.channel, timestamp: data.ts, responseBody: JSON.stringify(data) })
-      done(null, true)
+      let message = await Message.create({
+        channelId: data.channel,
+        userThemeInsightId: userThemeInsight.id,
+        timestamp: data.ts,
+        responseBody: JSON.stringify(data),
+      })
+
+      queue.enqueueAt(Date.now() + 20000, 'slack-integration', 'reactionsCollector', message.id, () => {
+        console.log(eventMarker, 'enqueued reactionsCollector')
+        done(null, true)
+      })
     }
   })
 }
 
 
-// Worker (sends insights to a channel)
+// Worker – sends insights to a channel
 //
 export let perform = async (done) => {
   // get all channel ids

@@ -13,6 +13,11 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false
     },
 
+    userThemeInsightId: {
+      type: DataTypes.UUID,
+      allowNull: false
+    },
+
     timestamp: {
       type: DataTypes.STRING,
       allowNull: false

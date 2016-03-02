@@ -2,12 +2,11 @@ import URL from 'url'
 
 import { Router } from 'express'
 import { WebClient } from 'slack-client'
-import { callWebAppGraphQL } from '../utils'
+import { errorMarker, callWebAppGraphQL } from '../lib'
 
 import { Team, Channel } from '../models'
 import { Theme, UserTheme, SlackChannel } from '../models/web_app'
 
-const slackOauthScope = 'bot'
 
 let router = Router()
 let SlackDefaultWeb = new WebClient('')
@@ -27,7 +26,7 @@ router.get('/', (req, res, next) => {
     hostname: 'slack.com',
     pathname: '/oauth/authorize',
     query: {
-      scope: slackOauthScope,
+      scope: 'bot',
       client_id: process.env.SLACK_CLIENT_ID,
       redirect_uri: process.env.SLACK_CLIENT_OAUTH_REDIRECT_URI,
       state: process.env.SLACK_CLIENT_OAUTH_STATE,
@@ -46,7 +45,7 @@ router.get('/oauth/callback', (req, res, next) => {
       { redirect_uri: process.env.SLACK_CLIENT_OAUTH_REDIRECT_URI },
       (err, data) => {
         if (err = err || data.error) {
-          console.log('Error:', err)
+          console.log(errorMarker, err)
           res.redirect('/')
         } else {
           Team.findOrCreate({ where: { id: data.team_id }, defaults: {
@@ -76,7 +75,7 @@ router.get('/channels', checkTeamId, async (req, res, next) => {
 
   SlackWeb.channels.list((err, channels) => {
     if (err) {
-      console.log('Error:', err)
+      console.log(errorMarker, err)
       res.redirect('/')
     } else {
       res.render('channels', { team: team, channels: channels.channels, currentChannelIds: currentChannelIds })
@@ -124,7 +123,7 @@ router.get('/themes', checkTeamId, async (req, res, next) => {
 
   SlackWeb.channels.list((err, channels) => {
     if (err) {
-      console.log('Error:', err)
+      console.log(errorMarker, err)
       res.redirect('/')
     } else {
       let reducedChannels = slackChannels.reduce((array, slackChannel) => {

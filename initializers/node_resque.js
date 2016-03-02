@@ -4,6 +4,7 @@ import schedule from 'node-schedule'
 import NR from 'node-resque'
 import Redis from 'ioredis'
 import workers from '../workers'
+import { eventMarker } from '../lib'
 
 const redisClient = new Redis(process.env.REDIS_URL)
 const queue = new NR.queue({ connection: { redis: redisClient } }, workers)
@@ -21,7 +22,7 @@ const scheduler = new NR.scheduler({ connection: { redis: redisClient } })
 function stop() {
   scheduler.end(() => {
     worker.end(() => {
-      console.log('>>> stopped all workers')
+      console.log(eventMarker, 'stopped all workers')
       return process.exit(0)
     })
   })
@@ -30,20 +31,20 @@ function stop() {
 function start() {
   scheduler.connect(() => {
     scheduler.start()
-    console.log('>>> started scheduler')
+    console.log(eventMarker, 'started scheduler')
 
     worker.start()
-    console.log('>>> started worker')
+    console.log(eventMarker, 'started worker')
   })
 
   queue.connect(() => {
-    // TODO: move next line to test suite
-    // queue.enqueue('slack-integration', 'spreader')
+    // TODO: move next line to the test suite
+    // queue.enqueue('slack-integration', 'sender')
 
     schedule.scheduleJob('*/15 * * * *', () => {
       if (scheduler.master) {
-        queue.enqueue('slack-integration', 'spreader')
-        console.log('>>> enqueued scheduled job')
+        queue.enqueue('slack-integration', 'sender')
+        console.log(eventMarker, 'enqueued scheduled job')
       }
     })
   })
@@ -54,4 +55,4 @@ process.on('SIGINT', stop)
 process.on('SIGTERM', stop)
 
 
-export { start }
+export { start, queue }
