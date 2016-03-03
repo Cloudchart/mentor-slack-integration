@@ -23,20 +23,6 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-
-// assets
-app.use(require('node-sass-middleware')({
-  src: path.join(__dirname, 'public'),
-  dest: path.join(__dirname, 'public'),
-  indentedSyntax: true,
-  sourceMap: true
-}));
-
-app.use(require('coffee-middleware')({
-  src: path.join(__dirname, 'public'),
-  compress: true
-}));
-
 app.use(express.static(path.join(__dirname, 'public')));
 
 // session
