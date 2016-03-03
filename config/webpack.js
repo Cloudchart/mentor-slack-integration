@@ -43,9 +43,14 @@ module.exports = {
       extract: true,
       remove: true
     }),
+    new webpack.ProvidePlugin({
+      $: 'jquery',
+      jQuery: 'jquery',
+    }),
     // new webpack.DefinePlugin({
     //   GRAPHQL_SERVER_URL: JSON.stringify(process.env.GRAPHQL_SERVER_URL),
-    // })
+    // }),
+
   ],
   postcss: () => {
     return [autoprefixer({ browsers: ['last 2 versions'] })]
