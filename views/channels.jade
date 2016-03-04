@@ -6,11 +6,9 @@ block content
   h3 Channels
   p Select one or more channels. We'll post insights there only when @boris will be invited.
 
-  form(id="channels" method="post")
+  ul
     each channel in channels
-      - var checked = currentChannelIds.includes(channel.id)
-      input(type="checkbox" id=channel.id name="channelIds" value=channel.id checked=checked)
-      label(for=channel.id)= channel.name
-      br
-
-    input(type="submit")
+      - var active = currentChannelIds.includes(channel.id)
+      li
+        span #
+        a(href="/themes?channelId=#{channel.id}" class="channel" data-value=channel.id rel="modal:open")= channel.name

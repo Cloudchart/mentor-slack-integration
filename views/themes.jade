@@ -1,20 +1,23 @@
-extends layout
+h3 Subscribe #{channel.name} to following topics
 
-block content
-  h2 Good!
-  p Now associate themes with selected channels. Max 3 themes per channel.
 
-  form(id="channels-themes" method="post")
-    ul
-      each channel in channels
-        li ##{channel.name}
-          br
-          each userTheme in channel.themes
-            - var checked = userTheme.status === 'subscribed'
-            input(type="checkbox" id=userTheme.id class="user-theme" name=channel.id value=userTheme.id checked=checked)
-            label(for=userTheme.id)= userTheme.Theme.name
-            br
+//- extends layout
 
-    a(href="/channels") Back
-    span= " | "
-    a(href="/success") Next
+//- block content
+//-   h2 Good!
+//-   p Now associate themes with selected channels. Max 3 themes per channel.
+
+//-   form(id="channels-themes" method="post")
+//-     ul
+//-       each channel in channels
+//-         li ##{channel.name}
+//-           br
+//-           each userTheme in channel.themes
+//-             - var checked = userTheme.status === 'subscribed'
+//-             input(type="checkbox" id=userTheme.id class="user-theme" name=channel.id value=userTheme.id checked=checked)
+//-             label(for=userTheme.id)= userTheme.Theme.name
+//-             br
+
+//-     a(href="/channels") Back
+//-     span= " | "
+//-     a(href="/success") Next

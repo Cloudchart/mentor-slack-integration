@@ -43,13 +43,12 @@ module.exports = {
       extract: true,
       remove: true
     }),
-    new webpack.ProvidePlugin({
-      $: 'jquery',
-      jQuery: 'jquery',
+    new webpack.DefinePlugin({
+      "process.env": {
+        NODE_ENV: JSON.stringify("production"),
+        // GRAPHQL_SERVER_URL: JSON.stringify(process.env.GRAPHQL_SERVER_URL),
+      }
     }),
-    // new webpack.DefinePlugin({
-    //   GRAPHQL_SERVER_URL: JSON.stringify(process.env.GRAPHQL_SERVER_URL),
-    // }),
 
   ],
   postcss: () => {

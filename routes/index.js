@@ -112,30 +112,46 @@ router.get('/themes', checkTeamId, async (req, res, next) => {
   let team = await Team.findById(req.session.teamId)
   let SlackWeb = new WebClient(team.accessToken)
 
-  let teamChannels = await Channel.findAll({ where: { teamId: team.id } })
-  let currentChannelIds = teamChannels.map(channel => channel.id)
+  console.log(req.query);
 
-  let slackChannels = await SlackChannel.findAll({ where: { id: currentChannelIds } })
-  let userIds = slackChannels.map(channel => channel.user_id)
-
-  let userThemes = await UserTheme.findAll({ include: [Theme], where: { user_id: userIds } })
-  userThemes = userThemes.sort((a, b) => a.Theme.name.localeCompare(b.Theme.name))
-
-  SlackWeb.channels.list((err, channels) => {
-    if (err) {
-      console.log(errorMarker, err)
-      res.redirect('/')
+  SlackWeb.channels.info(req.query.channelId, (err, data) => {
+    if (err = err || data.error) {
+      console.log(err);
+      // TODO: handle error
     } else {
-      let reducedChannels = slackChannels.reduce((array, slackChannel) => {
-        let object = channels.channels.find(channel => channel.id === slackChannel.id)
-        object.themes = userThemes.filter(userTheme => userTheme.user_id === slackChannel.user_id)
-        array.push(object)
-        return array
-      }, [])
-
-      res.render('themes', { team: team, channels: reducedChannels })
+      res.render('themes', { channel: data.channel })
     }
   })
+
+
+
+  // let team = await Team.findById(req.session.teamId)
+  // let SlackWeb = new WebClient(team.accessToken)
+
+  // let teamChannels = await Channel.findAll({ where: { teamId: team.id } })
+  // let currentChannelIds = teamChannels.map(channel => channel.id)
+
+  // let slackChannels = await SlackChannel.findAll({ where: { id: currentChannelIds } })
+  // let userIds = slackChannels.map(channel => channel.user_id)
+
+  // let userThemes = await UserTheme.findAll({ include: [Theme], where: { user_id: userIds } })
+  // userThemes = userThemes.sort((a, b) => a.Theme.name.localeCompare(b.Theme.name))
+
+  // SlackWeb.channels.list((err, channels) => {
+  //   if (err) {
+  //     console.log(errorMarker, err)
+  //     res.redirect('/')
+  //   } else {
+  //     let reducedChannels = slackChannels.reduce((array, slackChannel) => {
+  //       let object = channels.channels.find(channel => channel.id === slackChannel.id)
+  //       object.themes = userThemes.filter(userTheme => userTheme.user_id === slackChannel.user_id)
+  //       array.push(object)
+  //       return array
+  //     }, [])
+
+  //     res.render('themes', { team: team, channels: reducedChannels })
+  //   }
+  // })
 })
 
 router.post('/themes', checkTeamId, async (req, res, next) => {
