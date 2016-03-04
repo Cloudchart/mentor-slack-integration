@@ -3,11 +3,6 @@ import ChannelsList from './ChannelsList'
 
 export default class ConfigApp extends React.Component {
 
-  // Handlers
-  //
-
-  // Renderers
-  //
   render() {
     return (
       <div className="container">
@@ -19,9 +14,3 @@ export default class ConfigApp extends React.Component {
   }
 
 }
-
-// ConfigApp.propTypes = {
-// }
-
-// ConfigApp.defaultProps = {
-// }

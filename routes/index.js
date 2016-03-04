@@ -15,7 +15,19 @@ let SlackDefaultWeb = new WebClient('')
 // helpers
 //
 let checkTeamId = (req, res, next) => {
-  req.session.teamId ? next() : res.redirect('/')
+  if (req.session.teamId) {
+    next()
+  } else {
+    res.format({
+      html: () => {
+        res.redirect('/')
+      },
+
+      json: function(){
+        res.status(401).json({ message: 'you are not authenticated' })
+      }
+    })
+  }
 }
 
 // auth
@@ -33,7 +45,7 @@ router.get('/', (req, res, next) => {
     }
   })
 
-  res.render('index', { slackButtonUrl: slackButtonUrl })
+  res.render('landing', { slackButtonUrl: slackButtonUrl })
 })
 
 router.get('/oauth/callback', (req, res, next) => {
@@ -54,7 +66,7 @@ router.get('/oauth/callback', (req, res, next) => {
             responseBody: JSON.stringify(data),
           } }).spread((team, created) => {
             req.session.teamId = team.id
-            res.redirect('/channels')
+            res.redirect('/configuration')
           })
         }
       }
@@ -64,79 +76,82 @@ router.get('/oauth/callback', (req, res, next) => {
   }
 })
 
+// config
+//
+router.get('/configuration', checkTeamId, async (req, res, next) => {
+  let team = await Team.findById(req.session.teamId)
+  res.render('configuration', { teamName: team.name })
+})
+
 // channels
 //
 router.get('/channels', checkTeamId, async (req, res, next) => {
   let team = await Team.findById(req.session.teamId)
+  let SlackWeb = new WebClient(team.accessToken)
 
-  res.format({
-    html: () => {
-      res.render('channels', { teamName: team.name })
-    },
+  let teamChannels = await Channel.findAll({ where: { teamId: team.id } })
+  let selectedChannelIds = teamChannels.map(channel => channel.id)
 
-    json: async () => {
-      let SlackWeb = new WebClient(team.accessToken)
-
-      let teamChannels = await Channel.findAll({ where: { teamId: team.id } })
-      let selectedChannelIds = teamChannels.map(channel => channel.id)
-
-      SlackWeb.channels.list((err, data) => {
-        if (err = err || data.error) {
-          res.status(500).json({ error: err })
-        } else {
-          let channels = data.channels.map(channel => {
-            return { id: channel.id, name: channel.name }
-          })
-          res.json({ channels: channels, selectedChannelIds: selectedChannelIds  })
-        }
+  SlackWeb.channels.list((err, data) => {
+    if (err = err || data.error) {
+      res.status(500).json({ error: err })
+    } else {
+      let channels = data.channels.map(channel => {
+        return { id: channel.id, name: channel.name }
       })
+      res.json({ channels: channels, selectedChannelIds: selectedChannelIds  })
     }
   })
-
-})
-
-router.post('/channels', checkTeamId, async (req, res, next) => {
-  let channelIds = req.body.channelIds
-  if (!channelIds) return res.redirect('/channels')
-  if (typeof channelIds === 'string') channelIds = [channelIds]
-
-  let teamId = req.session.teamId
-
-  // destroy all previously selected team channels
-  await Channel.destroy({ where: { teamId: teamId } })
-
-  // create team channels
-  // call web app graphql server to create users and user themes
-  let requests = channelIds.reduce((promiseChain, id) => {
-    return promiseChain.then(async () => {
-      await Channel.findOrCreate({ where: { id: id }, defaults: { teamId: req.session.teamId } })
-    }).then(async () => {
-      await callWebAppGraphQL(id, 'GET', '{viewer{themes{edges{node{id}}}}}')
-    })
-  }, Promise.resolve())
-
-  requests.then(() => res.redirect('/themes'))
 })
 
 // themes
 //
 router.get('/themes', checkTeamId, async (req, res, next) => {
-  let team = await Team.findById(req.session.teamId)
-  let SlackWeb = new WebClient(team.accessToken)
+  let channelId = req.query.channelId
 
-  console.log(req.query);
+  // call web app graphql server to create users and user themes
+  await callWebAppGraphQL(channelId, 'GET', '{viewer{themes{edges{node{id}}}}}')
 
-  SlackWeb.channels.info(req.query.channelId, (err, data) => {
-    if (err = err || data.error) {
-      console.log(err);
-      // TODO: handle error
-    } else {
-      res.render('themes', { channel: data.channel })
-    }
+  // get slack channel from web app
+  let slackChannel = await SlackChannel.findById(channelId)
+
+  // get user themes from web app
+  let userThemes = await UserTheme.findAll({ include: [Theme], where: { user_id: slackChannel.user_id } })
+  userThemes = userThemes.map(userTheme => {
+    return { id: userTheme.id, name: userTheme.Theme.name, status: userTheme.status }
   })
+  userThemes = userThemes.sort((a, b) => a.name.localeCompare(b.name))
+
+  res.json({ themes: userThemes })
+})
 
 
+// router.post('/channels', checkTeamId, async (req, res, next) => {
+//   let channelIds = req.body.channelIds
+//   if (!channelIds) return res.redirect('/channels')
+//   if (typeof channelIds === 'string') channelIds = [channelIds]
 
+//   let teamId = req.session.teamId
+
+//   // destroy all previously selected team channels
+//   await Channel.destroy({ where: { teamId: teamId } })
+
+//   // create team channels
+//   // call web app graphql server to create users and user themes
+//   let requests = channelIds.reduce((promiseChain, id) => {
+//     return promiseChain.then(async () => {
+//       await Channel.findOrCreate({ where: { id: id }, defaults: { teamId: req.session.teamId } })
+//     }).then(async () => {
+//       await callWebAppGraphQL(id, 'GET', '{viewer{themes{edges{node{id}}}}}')
+//     })
+//   }, Promise.resolve())
+
+//   requests.then(() => res.redirect('/themes'))
+// })
+
+// themes
+//
+// router.get('/themes', checkTeamId, async (req, res, next) => {
   // let team = await Team.findById(req.session.teamId)
   // let SlackWeb = new WebClient(team.accessToken)
 
@@ -164,43 +179,37 @@ router.get('/themes', checkTeamId, async (req, res, next) => {
   //     res.render('themes', { team: team, channels: reducedChannels })
   //   }
   // })
-})
+// })
 
-router.post('/themes', checkTeamId, async (req, res, next) => {
-  let channelId = req.body.channelId
-  let userThemeId = req.body.userThemeId
-  let checked = req.body.checked
-  let mutationName
+// router.post('/themes', checkTeamId, async (req, res, next) => {
+//   let channelId = req.body.channelId
+//   let userThemeId = req.body.userThemeId
+//   let checked = req.body.checked
+//   let mutationName
 
-  if (checked === 'true') {
-    mutationName = 'subscribeOnTheme'
-  } else if (checked === 'false') {
-    mutationName = 'unsubscribeFromTheme'
-  } else {
-    return res.status(400).json({ error: 'bad request' })
-  }
+//   if (checked === 'true') {
+//     mutationName = 'subscribeOnTheme'
+//   } else if (checked === 'false') {
+//     mutationName = 'unsubscribeFromTheme'
+//   } else {
+//     return res.status(400).json({ error: 'bad request' })
+//   }
 
-  callWebAppGraphQL(channelId, 'POST', `
-    mutation m {
-      ${mutationName}(input: {
-        id: "${new Buffer(userThemeId).toString('base64')}",
-        clientMutationId: "1"
-      }) {
-        themeID
-      }
-    }
-  `).then(() => {
-    res.json('ok')
-  }).catch(() => {
-    res.status(500).json('something went wrong')
-  })
-})
-
-// success
-//
-router.get('/success', (req, res, next) => {
-  res.render('success')
-})
+//   callWebAppGraphQL(channelId, 'POST', `
+//     mutation m {
+//       ${mutationName}(input: {
+//         id: "${new Buffer(userThemeId).toString('base64')}",
+//         clientMutationId: "1"
+//       }) {
+//         themeID
+//       }
+//     }
+//   `).then(() => {
+//     res.json('ok')
+//   }).catch(() => {
+//     res.status(500).json('something went wrong')
+//   })
+// })
 
 
 export default router

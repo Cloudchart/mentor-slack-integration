@@ -1,5 +1,9 @@
 import React from 'react'
-import request from 'superagent'
+import ReactDOM from 'react-dom'
+import superagent from 'superagent'
+
+import ThemesList from './ThemesList'
+
 
 export default class ChannelsList extends React.Component {
 
@@ -11,18 +15,10 @@ export default class ChannelsList extends React.Component {
     }
   }
 
-  // Handlers
-  //
-  handleChannelClick(channelId, event) {
-    event.preventDefault()
-    console.log(channelId);
-    // TODO render modal with themes
-  }
-
-  // Lifecycle
+  // lifecycle
   //
   componentDidMount() {
-    this.serverRequest = request
+    this.serverRequest = superagent
      .get('/channels')
      .set('Accept', 'application/json')
      .end((err, res) => {
@@ -38,7 +34,14 @@ export default class ChannelsList extends React.Component {
     this.serverRequest.abort()
   }
 
-  // Renderers
+  // handlers
+  //
+  handleChannelClick(channelId, event) {
+    event.preventDefault()
+    ReactDOM.render(<ThemesList channelId={ channelId }/>, document.getElementById('modal'))
+  }
+
+  // renderers
   //
   renderChannel(channel) {
     return (
@@ -59,9 +62,3 @@ export default class ChannelsList extends React.Component {
   }
 
 }
-
-// ChannelsList.propTypes = {
-// }
-
-// ChannelsList.defaultProps = {
-// }

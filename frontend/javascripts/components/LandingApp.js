@@ -2,11 +2,6 @@ import React from 'react'
 
 export default class LandingApp extends React.Component {
 
-  // Handlers
-  //
-
-  // Renderers
-  //
   render() {
     return (
       <div className="container">
