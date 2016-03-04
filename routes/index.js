@@ -68,19 +68,31 @@ router.get('/oauth/callback', (req, res, next) => {
 //
 router.get('/channels', checkTeamId, async (req, res, next) => {
   let team = await Team.findById(req.session.teamId)
-  let SlackWeb = new WebClient(team.accessToken)
 
-  let teamChannels = await Channel.findAll({ where: { teamId: team.id } })
-  let currentChannelIds = teamChannels.map(channel => channel.id)
+  res.format({
+    html: () => {
+      res.render('channels', { teamName: team.name })
+    },
 
-  SlackWeb.channels.list((err, channels) => {
-    if (err) {
-      console.log(errorMarker, err)
-      res.redirect('/')
-    } else {
-      res.render('channels', { team: team, channels: channels.channels, currentChannelIds: currentChannelIds })
+    json: async () => {
+      let SlackWeb = new WebClient(team.accessToken)
+
+      let teamChannels = await Channel.findAll({ where: { teamId: team.id } })
+      let selectedChannelIds = teamChannels.map(channel => channel.id)
+
+      SlackWeb.channels.list((err, data) => {
+        if (err = err || data.error) {
+          res.status(500).json({ error: err })
+        } else {
+          let channels = data.channels.map(channel => {
+            return { id: channel.id, name: channel.name }
+          })
+          res.json({ channels: channels, selectedChannelIds: selectedChannelIds  })
+        }
+      })
     }
   })
+
 })
 
 router.post('/channels', checkTeamId, async (req, res, next) => {

@@ -1,14 +1,7 @@
 extends layout
 
 block content
-  h2 Hey, #{team.name} team!
-
-  h3 Channels
-  p Select one or more channels. We'll post insights there only when @boris will be invited.
-
-  ul
-    each channel in channels
-      - var active = currentChannelIds.includes(channel.id)
-      li
-        span #
-        a(href="/themes?channelId=#{channel.id}" class="channel" data-value=channel.id rel="modal:open")= channel.name
+  main(
+    data-react-class="ConfigApp"
+    data-react-props={ teamName: teamName }
+  )
