@@ -1,3 +1,5 @@
+@import 'fontawesome';
+
 body {
   padding: 50px;
   font: 14px Helvetica, Arial, sans-serif;
@@ -7,6 +9,16 @@ a {
   color: #00B7FF;
 }
 
-div#modal.hidden {
-  display: none;
+div#modal {
+  &.hidden {
+    display: none;
+  }
+
+  .modal-content {
+    padding: 30px;
+  }
+
+  button {
+    float: right;
+  }
 }

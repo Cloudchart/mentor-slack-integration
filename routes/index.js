@@ -125,6 +125,36 @@ router.get('/themes', checkTeamId, async (req, res, next) => {
   res.json({ themes: userThemes })
 })
 
+router.post('/themes', checkTeamId, async (req, res, next) => {
+  let teamId = req.session.teamId
+  let channelId = req.body.channelId
+  let userThemeId = req.body.userThemeId
+  let status = req.body.status
+  let selectedThemesSize = req.body.selectedThemesSize
+  let mutationName = status === 'subscribed' ? 'subscribeOnTheme' : 'unsubscribeFromTheme'
+
+  callWebAppGraphQL(channelId, 'POST', `
+    mutation m {
+      ${mutationName}(input: {
+        id: "${new Buffer(userThemeId).toString('base64')}",
+        clientMutationId: "1"
+      }) {
+        themeID
+      }
+    }
+  `).then(async (data) => {
+    if (selectedThemesSize === 1 && status === 'subscribed') {
+      Channel.findOrCreate({ where: { id: channelId }, defaults: { teamId: teamId } })
+    } else if (selectedThemesSize === 0 && status === 'visible') {
+      Channel.destroy({ where: { id: channelId } })
+    }
+
+    res.json('ok')
+  }).catch(() => {
+    res.status(500).json('something went wrong')
+  })
+})
+
 
 // router.post('/channels', checkTeamId, async (req, res, next) => {
 //   let channelIds = req.body.channelIds

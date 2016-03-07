@@ -18,7 +18,7 @@ export default class ChannelsList extends React.Component {
   // lifecycle
   //
   componentDidMount() {
-    this.serverRequest = superagent
+    this.initialRequest = superagent
      .get('/channels')
      .set('Accept', 'application/json')
      .end((err, res) => {
@@ -31,7 +31,7 @@ export default class ChannelsList extends React.Component {
   }
 
   componentWillUnmount() {
-    this.serverRequest.abort()
+    this.initialRequest.abort()
   }
 
   // handlers

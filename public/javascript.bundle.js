@@ -19075,7 +19075,7 @@
 	    value: function componentDidMount() {
 	      var _this2 = this;
 
-	      this.serverRequest = _superagent2.default.get('/channels').set('Accept', 'application/json').end(function (err, res) {
+	      this.initialRequest = _superagent2.default.get('/channels').set('Accept', 'application/json').end(function (err, res) {
 	        if (err || !res.ok) {
 	          console.error(err);
 	        } else {
@@ -19086,7 +19086,7 @@
 	  }, {
 	    key: 'componentWillUnmount',
 	    value: function componentWillUnmount() {
-	      this.serverRequest.abort();
+	      this.initialRequest.abort();
 	    }
 
 	    // handlers
@@ -20581,9 +20581,24 @@
 	  _createClass(ThemesList, [{
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
+	      this.getInitialData();
+	    }
+	  }, {
+	    key: 'componentWillUnmount',
+	    value: function componentWillUnmount() {
+	      this.initialRequest.abort();
+	      this.themeStatusRequest.abort();
+	    }
+
+	    // requests
+	    //
+
+	  }, {
+	    key: 'getInitialData',
+	    value: function getInitialData() {
 	      var _this2 = this;
 
-	      this.serverRequest = _superagent2.default.get('/themes').set('Accept', 'application/json').query({ channelId: this.props.channelId }).end(function (err, res) {
+	      this.initialRequest = _superagent2.default.get('/themes').set('Accept', 'application/json').query({ channelId: this.props.channelId }).end(function (err, res) {
 	        if (err || !res.ok) {
 	          console.error(err);
 	        } else {
@@ -20594,9 +20609,20 @@
 	      });
 	    }
 	  }, {
-	    key: 'componentWillUnmount',
-	    value: function componentWillUnmount() {
-	      this.serverRequest.abort();
+	    key: 'updateThemeStatus',
+	    value: function updateThemeStatus(userThemeId, status) {
+	      this.themeStatusRequest = _superagent2.default.post('/themes').set('Accept', 'application/json').send({
+	        userThemeId: userThemeId,
+	        status: status,
+	        channelId: this.props.channelId,
+	        selectedThemesSize: this.getSelectedThemesSize()
+	      }).end(function (err, res) {
+	        if (err || !res.ok) {
+	          console.error(err);
+	        } else {
+	          // TODO: get data from the server and set state
+	        }
+	      });
 	    }
 
 	    // helpers
@@ -20609,6 +20635,13 @@
 	      _reactDom2.default.unmountComponentAtNode(node);
 	      node.className = 'hidden';
 	    }
+	  }, {
+	    key: 'getSelectedThemesSize',
+	    value: function getSelectedThemesSize() {
+	      return this.state.themes.filter(function (theme) {
+	        return theme.status === 'subscribed';
+	      }).length;
+	    }
 
 	    // handlers
 	    //
@@ -20617,6 +20650,18 @@
 	    key: 'handleModalClose',
 	    value: function handleModalClose(event) {
 	      this.refs.modal.hide();
+	    }
+	  }, {
+	    key: 'handleThemeClick',
+	    value: function handleThemeClick(userTheme, event) {
+	      event.preventDefault();
+	      var status = userTheme.status === 'subscribed' ? 'visible' : 'subscribed';
+
+	      // optimistic update
+	      userTheme.status = status;
+	      this.setState({ themes: this.state.themes });
+
+	      this.updateThemeStatus(userTheme.id, status);
 	    }
 
 	    // renderers
@@ -20628,7 +20673,12 @@
 	      return _react2.default.createElement(
 	        'li',
 	        null,
-	        theme.name + ' — ' + theme.status
+	        _react2.default.createElement(
+	          'a',
+	          { href: '', onClick: this.handleThemeClick.bind(this, theme) },
+	          theme.name
+	        ),
+	        theme.status === 'subscribed' ? _react2.default.createElement('i', { className: 'fa fa-check' }) : null
 	      );
 	    }
 	  }, {
@@ -20638,14 +20688,18 @@
 	        _FadeModal2.default,
 	        { ref: 'modal', onHide: this.unmountModal },
 	        _react2.default.createElement(
-	          'ul',
-	          null,
-	          this.state.themes.map(this.renderTheme.bind(this))
-	        ),
-	        _react2.default.createElement(
-	          'button',
-	          { onClick: this.handleModalClose.bind(this) },
-	          'Close'
+	          'div',
+	          { className: 'modal-content' },
+	          _react2.default.createElement(
+	            'ul',
+	            null,
+	            this.state.themes.map(this.renderTheme.bind(this))
+	          ),
+	          _react2.default.createElement(
+	            'button',
+	            { onClick: this.handleModalClose.bind(this) },
+	            'Close'
+	          )
 	        )
 	      );
 	    }
