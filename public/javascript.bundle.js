@@ -20588,6 +20588,7 @@
 	          console.error(err);
 	        } else {
 	          _this2.setState(res.body);
+	          document.getElementById('modal').className = '';
 	          _this2.refs.modal.show();
 	        }
 	      });
@@ -20604,7 +20605,9 @@
 	  }, {
 	    key: 'unmountModal',
 	    value: function unmountModal() {
-	      _reactDom2.default.unmountComponentAtNode(document.getElementById('modal'));
+	      var node = document.getElementById('modal');
+	      _reactDom2.default.unmountComponentAtNode(node);
+	      node.className = 'hidden';
 	    }
 
 	    // handlers

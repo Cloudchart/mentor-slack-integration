@@ -25,6 +25,7 @@ export default class ThemesList extends React.Component {
          console.error(err)
        } else {
          this.setState(res.body)
+         document.getElementById('modal').className = ''
          this.refs.modal.show()
        }
      })
@@ -37,7 +38,9 @@ export default class ThemesList extends React.Component {
   // helpers
   //
   unmountModal() {
-    ReactDOM.unmountComponentAtNode(document.getElementById('modal'))
+    let node = document.getElementById('modal')
+    ReactDOM.unmountComponentAtNode(node)
+    node.className = 'hidden'
   }
 
   // handlers
