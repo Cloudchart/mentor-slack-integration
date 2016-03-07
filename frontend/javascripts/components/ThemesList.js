@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import Modal from 'simple-react-modal'
+import Modal from 'boron/FadeModal'
 import superagent from 'superagent'
 
 
@@ -10,7 +10,6 @@ export default class ThemesList extends React.Component {
     super(props)
     this.state = {
       themes: [],
-      showModal: true,
     }
   }
 
@@ -26,6 +25,7 @@ export default class ThemesList extends React.Component {
          console.error(err)
        } else {
          this.setState(res.body)
+         this.refs.modal.show()
        }
      })
   }
@@ -34,11 +34,16 @@ export default class ThemesList extends React.Component {
     this.serverRequest.abort()
   }
 
+  // helpers
+  //
+  unmountModal() {
+    ReactDOM.unmountComponentAtNode(document.getElementById('modal'))
+  }
+
   // handlers
   //
   handleModalClose(event) {
-    this.setState({ showModal: false })
-    ReactDOM.unmountComponentAtNode(document.getElementById('modal'))
+    this.refs.modal.hide()
   }
 
   // renderers
@@ -51,10 +56,11 @@ export default class ThemesList extends React.Component {
 
   render() {
     return (
-      <Modal show={ this.state.showModal } onClose={ this.handleModalClose.bind(this) }>
+      <Modal ref="modal" onHide={ this.unmountModal }>
         <ul>
           { this.state.themes.map(this.renderTheme.bind(this)) }
         </ul>
+        <button onClick={ this.handleModalClose.bind(this) }>Close</button>
       </Modal>
     )
   }
