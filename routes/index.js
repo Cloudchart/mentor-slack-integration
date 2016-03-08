@@ -92,14 +92,23 @@ router.get('/channels', checkTeamId, async (req, res, next) => {
   let teamChannels = await Channel.findAll({ where: { teamId: team.id } })
   let selectedChannelIds = teamChannels.map(channel => channel.id)
 
-  SlackWeb.channels.list((err, data) => {
+  SlackWeb.channels.list(true, (err, data) => {
     if (err = err || data.error) {
       res.status(500).json({ error: err })
     } else {
       let channels = data.channels.map(channel => {
-        return { id: channel.id, name: channel.name }
+        let status
+        if (selectedChannelIds.includes(channel.id)) {
+          status = channel.is_member ? 'invited' : 'uninvited'
+        }
+
+        return {
+          id: channel.id,
+          name: channel.name,
+          status: status,
+        }
       })
-      res.json({ channels: channels, selectedChannelIds: selectedChannelIds  })
+      res.json({ channels: channels })
     }
   })
 })

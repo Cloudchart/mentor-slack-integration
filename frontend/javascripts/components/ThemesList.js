@@ -80,6 +80,8 @@ export default class ThemesList extends React.Component {
   }
 
   handleThemeClick(userTheme, event) {
+    // TODO: update channel status
+
     event.preventDefault()
     if (this.getSelectedThemesSize() === 3 && userTheme.status !== 'subscribed') return
 

@@ -19039,6 +19039,10 @@
 
 	var _superagent2 = _interopRequireDefault(_superagent);
 
+	var _classnames = __webpack_require__(171);
+
+	var _classnames2 = _interopRequireDefault(_classnames);
+
 	var _ThemesList = __webpack_require__(159);
 
 	var _ThemesList2 = _interopRequireDefault(_ThemesList);
@@ -19060,8 +19064,7 @@
 	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ChannelsList).call(this, props));
 
 	    _this.state = {
-	      channels: [],
-	      selectedChannelIds: []
+	      channels: []
 	    };
 	    return _this;
 	  }
@@ -19105,13 +19108,21 @@
 	  }, {
 	    key: 'renderChannel',
 	    value: function renderChannel(channel) {
+	      var iconClassNames = (0, _classnames2.default)('fa', 'fa-circle', channel.status);
+
 	      return _react2.default.createElement(
 	        'li',
 	        null,
+	        _react2.default.createElement('i', { className: iconClassNames }),
+	        _react2.default.createElement(
+	          'span',
+	          null,
+	          '#'
+	        ),
 	        _react2.default.createElement(
 	          'a',
 	          { href: '', onClick: this.handleChannelClick.bind(this, channel.id) },
-	          '#' + channel.name
+	          channel.name
 	        )
 	      );
 	    }
@@ -19120,7 +19131,7 @@
 	    value: function render() {
 	      return _react2.default.createElement(
 	        'ul',
-	        null,
+	        { className: 'channels-list' },
 	        this.state.channels.map(this.renderChannel.bind(this))
 	      );
 	    }
@@ -20654,6 +20665,8 @@
 	  }, {
 	    key: 'handleThemeClick',
 	    value: function handleThemeClick(userTheme, event) {
+	      // TODO: update channel status
+
 	      event.preventDefault();
 	      if (this.getSelectedThemesSize() === 3 && userTheme.status !== 'subscribed') return;
 
@@ -21407,6 +21420,60 @@
 
 	// LandingApp.defaultProps = {
 	// }
+
+/***/ },
+/* 171 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
+	  Copyright (c) 2016 Jed Watson.
+	  Licensed under the MIT License (MIT), see
+	  http://jedwatson.github.io/classnames
+	*/
+	/* global define */
+
+	(function () {
+		'use strict';
+
+		var hasOwn = {}.hasOwnProperty;
+
+		function classNames () {
+			var classes = [];
+
+			for (var i = 0; i < arguments.length; i++) {
+				var arg = arguments[i];
+				if (!arg) continue;
+
+				var argType = typeof arg;
+
+				if (argType === 'string' || argType === 'number') {
+					classes.push(arg);
+				} else if (Array.isArray(arg)) {
+					classes.push(classNames.apply(null, arg));
+				} else if (argType === 'object') {
+					for (var key in arg) {
+						if (hasOwn.call(arg, key) && arg[key]) {
+							classes.push(key);
+						}
+					}
+				}
+			}
+
+			return classes.join(' ');
+		}
+
+		if (typeof module !== 'undefined' && module.exports) {
+			module.exports = classNames;
+		} else if (true) {
+			// register as 'classnames', consistent with npm package name
+			!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
+				return classNames;
+			}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+		} else {
+			window.classNames = classNames;
+		}
+	}());
+
 
 /***/ }
 /******/ ]);

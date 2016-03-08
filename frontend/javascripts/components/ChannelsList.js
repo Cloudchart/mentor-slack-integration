@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import superagent from 'superagent'
+import classNames from 'classnames'
 
 import ThemesList from './ThemesList'
 
@@ -11,7 +12,6 @@ export default class ChannelsList extends React.Component {
     super(props)
     this.state = {
       channels: [],
-      selectedChannelIds: [],
     }
   }
 
@@ -44,10 +44,14 @@ export default class ChannelsList extends React.Component {
   // renderers
   //
   renderChannel(channel) {
+    let iconClassNames = classNames('fa', 'fa-circle', channel.status)
+
     return (
       <li>
-        <a href="" onClick={ this.handleChannelClick.bind(this, channel.id) } >
-          { `#${channel.name}` }
+        <i className={ iconClassNames }/>
+        <span>#</span>
+        <a href="" onClick={ this.handleChannelClick.bind(this, channel.id) }>
+          { channel.name }
         </a>
       </li>
     )
@@ -55,7 +59,7 @@ export default class ChannelsList extends React.Component {
 
   render() {
     return (
-      <ul>
+      <ul className="channels-list">
         { this.state.channels.map(this.renderChannel.bind(this)) }
       </ul>
     )

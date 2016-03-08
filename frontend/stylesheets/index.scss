@@ -9,6 +9,12 @@ a {
   color: #00B7FF;
 }
 
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
 div#modal {
   &.hidden {
     display: none;
@@ -20,5 +26,21 @@ div#modal {
 
   button {
     float: right;
+  }
+}
+
+.channels-list {
+  > li {
+    > i {
+      margin-right: 10px;
+      color: #C8C8C8;
+
+      &.invited {
+        color: #3BC363;
+      }
+      &.uninvited {
+        color: #FFC202;
+      }
+    }
   }
 }
