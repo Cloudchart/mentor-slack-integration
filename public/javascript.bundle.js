@@ -20587,7 +20587,7 @@
 	    key: 'componentWillUnmount',
 	    value: function componentWillUnmount() {
 	      this.initialRequest.abort();
-	      this.themeStatusRequest.abort();
+	      if (this.themeStatusRequest) this.themeStatusRequest.abort();
 	    }
 
 	    // requests
@@ -20655,6 +20655,8 @@
 	    key: 'handleThemeClick',
 	    value: function handleThemeClick(userTheme, event) {
 	      event.preventDefault();
+	      if (this.getSelectedThemesSize() === 3 && userTheme.status !== 'subscribed') return;
+
 	      var status = userTheme.status === 'subscribed' ? 'visible' : 'subscribed';
 
 	      // optimistic update

@@ -21,7 +21,7 @@ export default class ThemesList extends React.Component {
 
   componentWillUnmount() {
     this.initialRequest.abort()
-    this.themeStatusRequest.abort()
+    if (this.themeStatusRequest) this.themeStatusRequest.abort()
   }
 
   // requests
@@ -81,6 +81,8 @@ export default class ThemesList extends React.Component {
 
   handleThemeClick(userTheme, event) {
     event.preventDefault()
+    if (this.getSelectedThemesSize() === 3 && userTheme.status !== 'subscribed') return
+
     let status = userTheme.status === 'subscribed' ? 'visible' : 'subscribed'
 
     // optimistic update
