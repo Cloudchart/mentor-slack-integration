@@ -18,27 +18,35 @@ export default class ChannelsList extends React.Component {
   // lifecycle
   //
   componentDidMount() {
-    this.initialRequest = superagent
-     .get('/channels')
-     .set('Accept', 'application/json')
-     .end((err, res) => {
-       if (err || !res.ok) {
-         console.error(err)
-       } else {
-         this.setState(res.body)
-       }
-     })
+    this.getInitialData()
   }
 
   componentWillUnmount() {
     this.initialRequest.abort()
   }
 
+  // requests
+  //
+  getInitialData() {
+    this.initialRequest = superagent
+      .get('/channels')
+      .set('Accept', 'application/json')
+      .end((err, res) => {
+        if (err || !res.ok) {
+          console.error(err)
+        } else {
+          this.setState(res.body)
+        }
+      })
+  }
+
   // handlers
   //
   handleChannelClick(channelId, event) {
     event.preventDefault()
-    ReactDOM.render(<ThemesList channelId={ channelId }/>, document.getElementById('modal'))
+    ReactDOM.render(
+      <ThemesList channelId={ channelId }/>, document.getElementById('modal')
+    )
   }
 
   // renderers

@@ -7,7 +7,6 @@ import { errorMarker, callWebAppGraphQL } from '../lib'
 import { Team, Channel } from '../models'
 import { Theme, UserTheme, SlackChannel } from '../models/web_app'
 
-
 let router = Router()
 let SlackDefaultWeb = new WebClient('')
 
@@ -163,92 +162,6 @@ router.post('/themes', checkTeamId, async (req, res, next) => {
     res.status(500).json('something went wrong')
   })
 })
-
-
-// router.post('/channels', checkTeamId, async (req, res, next) => {
-//   let channelIds = req.body.channelIds
-//   if (!channelIds) return res.redirect('/channels')
-//   if (typeof channelIds === 'string') channelIds = [channelIds]
-
-//   let teamId = req.session.teamId
-
-//   // destroy all previously selected team channels
-//   await Channel.destroy({ where: { teamId: teamId } })
-
-//   // create team channels
-//   // call web app graphql server to create users and user themes
-//   let requests = channelIds.reduce((promiseChain, id) => {
-//     return promiseChain.then(async () => {
-//       await Channel.findOrCreate({ where: { id: id }, defaults: { teamId: req.session.teamId } })
-//     }).then(async () => {
-//       await callWebAppGraphQL(id, 'GET', '{viewer{themes{edges{node{id}}}}}')
-//     })
-//   }, Promise.resolve())
-
-//   requests.then(() => res.redirect('/themes'))
-// })
-
-// themes
-//
-// router.get('/themes', checkTeamId, async (req, res, next) => {
-  // let team = await Team.findById(req.session.teamId)
-  // let SlackWeb = new WebClient(team.accessToken)
-
-  // let teamChannels = await Channel.findAll({ where: { teamId: team.id } })
-  // let currentChannelIds = teamChannels.map(channel => channel.id)
-
-  // let slackChannels = await SlackChannel.findAll({ where: { id: currentChannelIds } })
-  // let userIds = slackChannels.map(channel => channel.user_id)
-
-  // let userThemes = await UserTheme.findAll({ include: [Theme], where: { user_id: userIds } })
-  // userThemes = userThemes.sort((a, b) => a.Theme.name.localeCompare(b.Theme.name))
-
-  // SlackWeb.channels.list((err, channels) => {
-  //   if (err) {
-  //     console.log(errorMarker, err)
-  //     res.redirect('/')
-  //   } else {
-  //     let reducedChannels = slackChannels.reduce((array, slackChannel) => {
-  //       let object = channels.channels.find(channel => channel.id === slackChannel.id)
-  //       object.themes = userThemes.filter(userTheme => userTheme.user_id === slackChannel.user_id)
-  //       array.push(object)
-  //       return array
-  //     }, [])
-
-  //     res.render('themes', { team: team, channels: reducedChannels })
-  //   }
-  // })
-// })
-
-// router.post('/themes', checkTeamId, async (req, res, next) => {
-//   let channelId = req.body.channelId
-//   let userThemeId = req.body.userThemeId
-//   let checked = req.body.checked
-//   let mutationName
-
-//   if (checked === 'true') {
-//     mutationName = 'subscribeOnTheme'
-//   } else if (checked === 'false') {
-//     mutationName = 'unsubscribeFromTheme'
-//   } else {
-//     return res.status(400).json({ error: 'bad request' })
-//   }
-
-//   callWebAppGraphQL(channelId, 'POST', `
-//     mutation m {
-//       ${mutationName}(input: {
-//         id: "${new Buffer(userThemeId).toString('base64')}",
-//         clientMutationId: "1"
-//       }) {
-//         themeID
-//       }
-//     }
-//   `).then(() => {
-//     res.json('ok')
-//   }).catch(() => {
-//     res.status(500).json('something went wrong')
-//   })
-// })
 
 
 export default router

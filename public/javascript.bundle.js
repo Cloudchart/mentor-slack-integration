@@ -18994,12 +18994,12 @@
 	var map = {
 		"./ChannelsList": 155,
 		"./ChannelsList.js": 155,
-		"./ConfigApp": 169,
-		"./ConfigApp.js": 169,
-		"./LandingApp": 170,
-		"./LandingApp.js": 170,
-		"./ThemesList": 159,
-		"./ThemesList.js": 159
+		"./ConfigApp": 170,
+		"./ConfigApp.js": 170,
+		"./LandingApp": 171,
+		"./LandingApp.js": 171,
+		"./ThemesList": 160,
+		"./ThemesList.js": 160
 	};
 	function webpackContext(req) {
 		return __webpack_require__(webpackContextResolve(req));
@@ -19039,11 +19039,11 @@
 
 	var _superagent2 = _interopRequireDefault(_superagent);
 
-	var _classnames = __webpack_require__(171);
+	var _classnames = __webpack_require__(159);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
-	var _ThemesList = __webpack_require__(159);
+	var _ThemesList = __webpack_require__(160);
 
 	var _ThemesList2 = _interopRequireDefault(_ThemesList);
 
@@ -19076,6 +19076,20 @@
 	  _createClass(ChannelsList, [{
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
+	      this.getInitialData();
+	    }
+	  }, {
+	    key: 'componentWillUnmount',
+	    value: function componentWillUnmount() {
+	      this.initialRequest.abort();
+	    }
+
+	    // requests
+	    //
+
+	  }, {
+	    key: 'getInitialData',
+	    value: function getInitialData() {
 	      var _this2 = this;
 
 	      this.initialRequest = _superagent2.default.get('/channels').set('Accept', 'application/json').end(function (err, res) {
@@ -19085,11 +19099,6 @@
 	          _this2.setState(res.body);
 	        }
 	      });
-	    }
-	  }, {
-	    key: 'componentWillUnmount',
-	    value: function componentWillUnmount() {
-	      this.initialRequest.abort();
 	    }
 
 	    // handlers
@@ -20539,6 +20548,60 @@
 /* 159 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
+	  Copyright (c) 2016 Jed Watson.
+	  Licensed under the MIT License (MIT), see
+	  http://jedwatson.github.io/classnames
+	*/
+	/* global define */
+
+	(function () {
+		'use strict';
+
+		var hasOwn = {}.hasOwnProperty;
+
+		function classNames () {
+			var classes = [];
+
+			for (var i = 0; i < arguments.length; i++) {
+				var arg = arguments[i];
+				if (!arg) continue;
+
+				var argType = typeof arg;
+
+				if (argType === 'string' || argType === 'number') {
+					classes.push(arg);
+				} else if (Array.isArray(arg)) {
+					classes.push(classNames.apply(null, arg));
+				} else if (argType === 'object') {
+					for (var key in arg) {
+						if (hasOwn.call(arg, key) && arg[key]) {
+							classes.push(key);
+						}
+					}
+				}
+			}
+
+			return classes.join(' ');
+		}
+
+		if (typeof module !== 'undefined' && module.exports) {
+			module.exports = classNames;
+		} else if (true) {
+			// register as 'classnames', consistent with npm package name
+			!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
+				return classNames;
+			}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+		} else {
+			window.classNames = classNames;
+		}
+	}());
+
+
+/***/ },
+/* 160 */
+/***/ function(module, exports, __webpack_require__) {
+
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
@@ -20555,7 +20618,7 @@
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _FadeModal = __webpack_require__(160);
+	var _FadeModal = __webpack_require__(161);
 
 	var _FadeModal2 = _interopRequireDefault(_FadeModal);
 
@@ -20731,12 +20794,12 @@
 	};
 
 /***/ },
-/* 160 */
+/* 161 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var modalFactory = __webpack_require__(161);
-	var insertKeyframesRule = __webpack_require__(166);
-	var appendVendorPrefix = __webpack_require__(163);
+	var modalFactory = __webpack_require__(162);
+	var insertKeyframesRule = __webpack_require__(167);
+	var appendVendorPrefix = __webpack_require__(164);
 
 	var animation = {
 	    show: {
@@ -20834,12 +20897,12 @@
 
 
 /***/ },
-/* 161 */
+/* 162 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var transitionEvents = __webpack_require__(162);
-	var appendVendorPrefix = __webpack_require__(163);
+	var transitionEvents = __webpack_require__(163);
+	var appendVendorPrefix = __webpack_require__(164);
 
 	module.exports = function(animation){
 
@@ -21018,7 +21081,7 @@
 
 
 /***/ },
-/* 162 */
+/* 163 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -21119,12 +21182,12 @@
 
 
 /***/ },
-/* 163 */
+/* 164 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var getVendorPropertyName = __webpack_require__(164);
+	var getVendorPropertyName = __webpack_require__(165);
 
 	module.exports = function(target, sources) {
 	  var to = Object(target);
@@ -21155,12 +21218,12 @@
 
 
 /***/ },
-/* 164 */
+/* 165 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var builtinStyle = __webpack_require__(165);
+	var builtinStyle = __webpack_require__(166);
 	var prefixes = ['Moz', 'Webkit', 'O', 'ms'];
 	var domVendorPrefix;
 
@@ -21198,7 +21261,7 @@
 
 
 /***/ },
-/* 165 */
+/* 166 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -21207,13 +21270,13 @@
 
 
 /***/ },
-/* 166 */
+/* 167 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var insertRule = __webpack_require__(167);
-	var vendorPrefix = __webpack_require__(168)();
+	var insertRule = __webpack_require__(168);
+	var vendorPrefix = __webpack_require__(169)();
 	var index = 0;
 
 	module.exports = function(keyframes) {
@@ -21243,7 +21306,7 @@
 
 
 /***/ },
-/* 167 */
+/* 168 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -21268,7 +21331,7 @@
 
 
 /***/ },
-/* 168 */
+/* 169 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -21287,7 +21350,7 @@
 
 
 /***/ },
-/* 169 */
+/* 170 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21350,7 +21413,7 @@
 	exports.default = ConfigApp;
 
 /***/ },
-/* 170 */
+/* 171 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -21420,60 +21483,6 @@
 
 	// LandingApp.defaultProps = {
 	// }
-
-/***/ },
-/* 171 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
-	  Copyright (c) 2016 Jed Watson.
-	  Licensed under the MIT License (MIT), see
-	  http://jedwatson.github.io/classnames
-	*/
-	/* global define */
-
-	(function () {
-		'use strict';
-
-		var hasOwn = {}.hasOwnProperty;
-
-		function classNames () {
-			var classes = [];
-
-			for (var i = 0; i < arguments.length; i++) {
-				var arg = arguments[i];
-				if (!arg) continue;
-
-				var argType = typeof arg;
-
-				if (argType === 'string' || argType === 'number') {
-					classes.push(arg);
-				} else if (Array.isArray(arg)) {
-					classes.push(classNames.apply(null, arg));
-				} else if (argType === 'object') {
-					for (var key in arg) {
-						if (hasOwn.call(arg, key) && arg[key]) {
-							classes.push(key);
-						}
-					}
-				}
-			}
-
-			return classes.join(' ');
-		}
-
-		if (typeof module !== 'undefined' && module.exports) {
-			module.exports = classNames;
-		} else if (true) {
-			// register as 'classnames', consistent with npm package name
-			!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
-				return classNames;
-			}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-		} else {
-			window.classNames = classNames;
-		}
-	}());
-
 
 /***/ }
 /******/ ]);
