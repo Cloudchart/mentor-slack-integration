@@ -20684,10 +20684,10 @@
 	    }
 	  }, {
 	    key: 'updateThemeStatus',
-	    value: function updateThemeStatus(userThemeId, status) {
+	    value: function updateThemeStatus(themeId, action) {
 	      this.themeStatusRequest = _superagent2.default.post('/themes').set('Accept', 'application/json').send({
-	        userThemeId: userThemeId,
-	        status: status,
+	        themeId: themeId,
+	        action: action,
 	        channelId: this.props.channelId,
 	        selectedThemesSize: this.getSelectedThemesSize()
 	      }).end(function (err, res) {
@@ -20713,7 +20713,7 @@
 	    key: 'getSelectedThemesSize',
 	    value: function getSelectedThemesSize() {
 	      return this.state.themes.filter(function (theme) {
-	        return theme.status === 'subscribed';
+	        return theme.isSubscribed;
 	      }).length;
 	    }
 
@@ -20727,19 +20727,19 @@
 	    }
 	  }, {
 	    key: 'handleThemeClick',
-	    value: function handleThemeClick(userTheme, event) {
+	    value: function handleThemeClick(theme, event) {
 	      // TODO: update channel status
 
 	      event.preventDefault();
-	      if (this.getSelectedThemesSize() === 3 && userTheme.status !== 'subscribed') return;
+	      if (this.getSelectedThemesSize() === 3 && !theme.isSubscribed) return;
 
-	      var status = userTheme.status === 'subscribed' ? 'visible' : 'subscribed';
+	      var action = theme.isSubscribed ? 'unsubscribe' : 'subscribe';
 
-	      // optimistic update
-	      userTheme.status = status;
+	      // temp optimistic update
+	      theme.isSubscribed = !theme.isSubscribed;
 	      this.setState({ themes: this.state.themes });
 
-	      this.updateThemeStatus(userTheme.id, status);
+	      this.updateThemeStatus(theme.id, action);
 	    }
 
 	    // renderers
@@ -20756,7 +20756,7 @@
 	          { href: '', onClick: this.handleThemeClick.bind(this, theme) },
 	          theme.name
 	        ),
-	        theme.status === 'subscribed' ? _react2.default.createElement('i', { className: 'fa fa-check' }) : null
+	        theme.isSubscribed ? _react2.default.createElement('i', { className: 'fa fa-check' }) : null
 	      );
 	    }
 	  }, {

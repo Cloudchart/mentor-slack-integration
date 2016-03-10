@@ -42,13 +42,13 @@ export default class ThemesList extends React.Component {
       })
   }
 
-  updateThemeStatus(userThemeId, status) {
+  updateThemeStatus(themeId, action) {
     this.themeStatusRequest = superagent
       .post('/themes')
       .set('Accept', 'application/json')
       .send({
-        userThemeId: userThemeId,
-        status: status,
+        themeId: themeId,
+        action: action,
         channelId: this.props.channelId,
         selectedThemesSize: this.getSelectedThemesSize(),
       })
@@ -70,7 +70,7 @@ export default class ThemesList extends React.Component {
   }
 
   getSelectedThemesSize() {
-    return this.state.themes.filter(theme => theme.status === 'subscribed').length
+    return this.state.themes.filter(theme => theme.isSubscribed).length
   }
 
   // handlers
@@ -79,19 +79,19 @@ export default class ThemesList extends React.Component {
     this.refs.modal.hide()
   }
 
-  handleThemeClick(userTheme, event) {
+  handleThemeClick(theme, event) {
     // TODO: update channel status
 
     event.preventDefault()
-    if (this.getSelectedThemesSize() === 3 && userTheme.status !== 'subscribed') return
+    if (this.getSelectedThemesSize() === 3 && !theme.isSubscribed) return
 
-    let status = userTheme.status === 'subscribed' ? 'visible' : 'subscribed'
+    let action = theme.isSubscribed ? 'unsubscribe' : 'subscribe'
 
-    // optimistic update
-    userTheme.status = status
+    // temp optimistic update
+    theme.isSubscribed = !theme.isSubscribed
     this.setState({ themes: this.state.themes })
 
-    this.updateThemeStatus(userTheme.id, status)
+    this.updateThemeStatus(theme.id, action)
   }
 
   // renderers
@@ -100,7 +100,7 @@ export default class ThemesList extends React.Component {
     return(
       <li>
         <a href="" onClick={ this.handleThemeClick.bind(this, theme) }>{ theme.name }</a>
-        { theme.status === 'subscribed' ? <i className="fa fa-check"/> : null }
+        { theme.isSubscribed ? <i className="fa fa-check"/> : null }
       </li>
     )
   }

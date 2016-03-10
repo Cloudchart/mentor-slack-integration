@@ -5,7 +5,6 @@ import { WebClient } from 'slack-client'
 import { errorMarker, callWebAppGraphQL } from '../lib'
 
 import { Team, Channel } from '../models'
-import { Theme, UserTheme, SlackChannel } from '../models/web_app'
 
 let router = Router()
 let SlackDefaultWeb = new WebClient('')
@@ -117,43 +116,52 @@ router.get('/channels', checkTeamId, async (req, res, next) => {
 router.get('/themes', checkTeamId, async (req, res, next) => {
   let channelId = req.query.channelId
 
-  // call web app graphql server to create users and user themes
-  await callWebAppGraphQL(channelId, 'GET', '{viewer{themes{edges{node{id}}}}}')
-
-  // get slack channel from web app
-  let slackChannel = await SlackChannel.findById(channelId)
-
   // get user themes from web app
-  let userThemes = await UserTheme.findAll({ include: [Theme], where: { user_id: slackChannel.user_id } })
-  userThemes = userThemes.map(userTheme => {
-    return { id: userTheme.id, name: userTheme.Theme.name, status: userTheme.status }
-  })
-  userThemes = userThemes.sort((a, b) => a.name.localeCompare(b.name))
+  // this will also create user and user themes if they aren't present
+  let themesRes = await callWebAppGraphQL(channelId, 'GET', `
+    {
+      viewer {
+        themes {
+          edges {
+            node {
+              id
+              name
+              isSubscribed
+            }
+          }
+        }
+      }
+    }
+  `)
 
-  res.json({ themes: userThemes })
+  let viewer = JSON.parse(themesRes).data.viewer
+  let themes = []
+  if (viewer && viewer.themes) themes = viewer.themes.edges.map(edge => edge.node)
+
+  res.json({ themes: themes })
 })
 
 router.post('/themes', checkTeamId, async (req, res, next) => {
   let teamId = req.session.teamId
   let channelId = req.body.channelId
-  let userThemeId = req.body.userThemeId
-  let status = req.body.status
+  let themeId = req.body.themeId
+  let action = req.body.action
   let selectedThemesSize = req.body.selectedThemesSize
-  let mutationName = status === 'subscribed' ? 'subscribeOnTheme' : 'unsubscribeFromTheme'
+  let mutationName = action === 'subscribe' ? 'subscribeOnTheme' : 'unsubscribeFromTheme'
 
   callWebAppGraphQL(channelId, 'POST', `
     mutation m {
       ${mutationName}(input: {
-        id: "${new Buffer(userThemeId).toString('base64')}",
+        id: "${themeId}",
         clientMutationId: "1"
       }) {
         themeID
       }
     }
-  `).then(async (data) => {
-    if (selectedThemesSize === 1 && status === 'subscribed') {
+  `).then(data => {
+    if (selectedThemesSize === 1 && action === 'subscribe') {
       Channel.findOrCreate({ where: { id: channelId }, defaults: { teamId: teamId } })
-    } else if (selectedThemesSize === 0 && status === 'visible') {
+    } else if (selectedThemesSize === 0 && action === 'unsubscribe') {
       Channel.destroy({ where: { id: channelId } })
     }
 
