@@ -1,52 +1,27 @@
-import React from 'react'
+import React, { Component, PropTypes } from 'react'
 import ReactDOM from 'react-dom'
-import superagent from 'superagent'
 import classNames from 'classnames'
 
 import ThemesList from './ThemesList'
 
 
-export default class ChannelsList extends React.Component {
-
-  constructor(props) {
-    super(props)
-    this.state = {
-      channels: [],
-    }
-  }
-
-  // lifecycle
-  //
-  componentDidMount() {
-    this.getInitialData()
-  }
-
-  componentWillUnmount() {
-    this.initialRequest.abort()
-  }
-
-  // requests
-  //
-  getInitialData() {
-    this.initialRequest = superagent
-      .get('/channels')
-      .set('Accept', 'application/json')
-      .end((err, res) => {
-        if (err || !res.ok) {
-          console.error(err)
-        } else {
-          this.setState(res.body)
-        }
-      })
-  }
+class ChannelsList extends Component {
 
   // handlers
   //
   handleChannelClick(channelId, event) {
     event.preventDefault()
-    ReactDOM.render(
-      <ThemesList channelId={ channelId }/>, document.getElementById('modal')
-    )
+    const { actions } = this.props
+
+    actions.fetchThemes(channelId).then(data => {
+      ReactDOM.render(
+        <ThemesList
+          channelId={ channelId }
+          themes={ this.props.themes }
+          actions={ actions }
+        />, document.getElementById('modal')
+      )
+    })
   }
 
   // renderers
@@ -66,11 +41,21 @@ export default class ChannelsList extends React.Component {
   }
 
   render() {
+    // console.log('ChannelsList', 'render', this.props.themes);
     return (
       <ul className="channels-list">
-        { this.state.channels.map(this.renderChannel.bind(this)) }
+        { this.props.channels.map(this.renderChannel.bind(this)) }
       </ul>
     )
   }
 
 }
+
+ChannelsList.propTypes = {
+  channels: PropTypes.array.isRequired,
+  themes: PropTypes.object.isRequired,
+  actions: PropTypes.object.isRequired,
+}
+
+
+export default ChannelsList

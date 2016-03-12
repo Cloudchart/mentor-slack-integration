@@ -1,10 +1,10 @@
-import React from 'react'
+import React, { Component, PropTypes } from 'react'
 
-export default class LandingApp extends React.Component {
+export default class LandingApp extends Component {
 
   render() {
     return (
-      <div className="container">
+      <div>
         <h2>Welcome</h2>
         <a href={ this.props.slackButtonUrl }>
           <img
@@ -22,8 +22,5 @@ export default class LandingApp extends React.Component {
 }
 
 LandingApp.propTypes = {
-  slackButtonUrl: React.PropTypes.string.isRequired,
+  slackButtonUrl: PropTypes.string.isRequired,
 }
-
-// LandingApp.defaultProps = {
-// }

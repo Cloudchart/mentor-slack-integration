@@ -43,7 +43,7 @@ router.get('/', (req, res, next) => {
     }
   })
 
-  res.render('landing', { slackButtonUrl: slackButtonUrl })
+  res.render('landing', { title: 'Add Virtual Mentor to Slack', slackButtonUrl: slackButtonUrl })
 })
 
 router.get('/oauth/callback', (req, res, next) => {
@@ -78,13 +78,6 @@ router.get('/oauth/callback', (req, res, next) => {
 //
 router.get('/configuration', checkTeamId, async (req, res, next) => {
   let team = await Team.findById(req.session.teamId)
-  res.render('configuration', { teamName: team.name })
-})
-
-// channels
-//
-router.get('/channels', checkTeamId, async (req, res, next) => {
-  let team = await Team.findById(req.session.teamId)
   let SlackWeb = new WebClient(team.accessToken)
 
   let teamChannels = await Channel.findAll({ where: { teamId: team.id } })
@@ -106,7 +99,12 @@ router.get('/channels', checkTeamId, async (req, res, next) => {
           status: status,
         }
       })
-      res.json({ channels: channels })
+
+      res.render('configuration', {
+        title: 'Configure Virtual Mentor integration',
+        team: { name: team.name },
+        channels: channels,
+      })
     }
   })
 })

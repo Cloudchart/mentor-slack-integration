@@ -3,5 +3,11 @@ extends layout
 block content
   main(
     data-react-class="ConfigApp"
-    data-react-props={ teamName: teamName }
   )
+
+block pagescript
+  script(type="text/javascript").
+    window.__INITIAL_STATE__ = {
+      team: !{JSON.stringify(team)},
+      channels: !{JSON.stringify(channels)}
+    }
