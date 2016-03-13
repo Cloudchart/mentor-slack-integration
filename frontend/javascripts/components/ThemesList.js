@@ -1,72 +1,24 @@
 import React, { Component, PropTypes } from 'react'
 import ReactDOM from 'react-dom'
 import Modal from 'boron/FadeModal'
+import classNames from 'classnames'
 
 
 class ThemesList extends Component {
 
-  // constructor(props) {
-  //   super(props)
-  //   this.state = {
-  //     themes: [],
-  //   }
-  // }
-
   // lifecycle
   //
-  componentDidMount() {
-    document.getElementById('modal').className = ''
-    this.refs.modal.show()
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.themes.items.length > 0) {
+      document.getElementById('modal').className = ''
+      this.refs.modal.show()
+    }
   }
-
-  // componentWillUnmount() {
-  //   // this.initialRequest.abort()
-  //   // if (this.themeStatusRequest) this.themeStatusRequest.abort()
-  // }
-
-  // requests
-  //
-  // getInitialData() {
-  //   this.initialRequest = superagent
-  //     .get('/themes')
-  //     .set('Accept', 'application/json')
-  //     .query({ channelId: this.props.channelId })
-  //     .end((err, res) => {
-  //       if (err || !res.ok) {
-  //         console.error(err)
-  //       } else {
-  //         this.setState(res.body)
-  //         document.getElementById('modal').className = ''
-  //         this.refs.modal.show()
-  //       }
-  //     })
-  // }
-
-  // updateThemeStatus(themeId, action) {
-  //   this.themeStatusRequest = superagent
-  //     .post('/themes')
-  //     .set('Accept', 'application/json')
-  //     .send({
-  //       themeId: themeId,
-  //       action: action,
-  //       channelId: this.props.channelId,
-  //       selectedThemesSize: this.getSelectedThemesSize(),
-  //     })
-  //     .end((err, res) => {
-  //       if (err || !res.ok) {
-  //         console.error(err)
-  //       } else {
-  //         // TODO: get data from the server and set state
-  //       }
-  //     })
-  // }
 
   // helpers
   //
-  unmountModal() {
-    let node = document.getElementById('modal')
-    ReactDOM.unmountComponentAtNode(node)
-    node.className = 'hidden'
+  hideContainer() {
+    document.getElementById('modal').className = 'hidden'
   }
 
   getSelectedThemesSize() {
@@ -81,42 +33,45 @@ class ThemesList extends Component {
 
   handleThemeClick(theme, event) {
     event.preventDefault()
-    if (this.getSelectedThemesSize() === 3 && !theme.isSubscribed) return
-    console.log('handleThemeClick');
-    // TODO: update channel status
+    const { channelId, actions } = this.props
+    const selectedThemesSize = this.getSelectedThemesSize()
+    if (selectedThemesSize === 3 && !theme.isSubscribed) return
 
-    // let action = theme.isSubscribed ? 'unsubscribe' : 'subscribe'
+    let action = theme.isSubscribed ? 'unsubscribe' : 'subscribe'
+    actions.updateThemeStatus(theme.id, channelId, action)
 
-    // // temp optimistic update
-    // theme.isSubscribed = !theme.isSubscribed
-    // this.setState({ themes: this.state.themes })
-
-    // this.updateThemeStatus(theme.id, action)
+    if (selectedThemesSize === 0 && action === 'subscribe') {
+      // actions.createChannel(channelId)
+    } else if (selectedThemesSize === 1 && action === 'unsubscribe') {
+      // actions.destroyChannel(channelId)
+    }
   }
 
   // renderers
   //
   renderTheme(theme) {
+    let iconClassNames = classNames('fa', 'fa-check', { 'is-fetching': theme.isFetching })
+
     return(
       <li>
         <a href="" onClick={ this.handleThemeClick.bind(this, theme) }>{ theme.name }</a>
-        { theme.isSubscribed ? <i className="fa fa-check"/> : null }
+        { theme.isSubscribed || theme.isFetching ? <i className={ iconClassNames } /> : null }
       </li>
     )
   }
 
   render() {
-    console.log('ThemesList', 'render', this.props.themes);
-
     return (
-      <Modal ref="modal" onHide={ this.unmountModal }>
-        <div className="modal-content">
-          <ul>
-            { this.props.themes.items.map(this.renderTheme.bind(this)) }
-          </ul>
-          <button onClick={ this.handleModalClose.bind(this) }>Close</button>
-        </div>
-      </Modal>
+      <div id="modal" className="hidden">
+        <Modal ref="modal" onHide={ this.hideContainer }>
+          <div className="modal-content">
+            <ul className="themes-list">
+              { this.props.themes.items.map(this.renderTheme.bind(this)) }
+            </ul>
+            <button onClick={ this.handleModalClose.bind(this) }>Close</button>
+          </div>
+        </Modal>
+      </div>
     )
   }
 

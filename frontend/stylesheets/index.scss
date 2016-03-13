@@ -1,5 +1,8 @@
 @import 'fontawesome';
 
+$primary-green: #3BC363;
+$primary-gray: #C8C8C8;
+
 body {
   padding: 50px;
   font: 14px Helvetica, Arial, sans-serif;
@@ -33,13 +36,26 @@ div#modal {
   > li {
     > i {
       margin-right: 10px;
-      color: #C8C8C8;
+      color: $primary-gray;
 
       &.invited {
-        color: #3BC363;
+        color: $primary-green;
       }
       &.uninvited {
         color: #FFC202;
+      }
+    }
+  }
+}
+
+.themes-list {
+  > li {
+    > i {
+      margin-left: 10px;
+      color: $primary-green;
+
+      &.is-fetching {
+        color: $primary-gray;
       }
     }
   }

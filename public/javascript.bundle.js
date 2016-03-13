@@ -72,7 +72,7 @@
 	if (reactType === 'plain') {
 	  _reactDom2.default.render(_react2.default.createElement(Component, JSON.parse(node.dataset.reactProps)), node);
 	} else {
-	  var reducers = __webpack_require__(195)("./" + reactClass).default;
+	  var reducers = __webpack_require__(194)("./" + reactClass).default;
 	  var store = (0, _redux.createStore)(reducers, window.__INITIAL_STATE__, (0, _redux.applyMiddleware)(_reduxThunk2.default));
 
 	  _reactDom2.default.render(_react2.default.createElement(
@@ -20486,8 +20486,8 @@
 	var map = {
 		"./ConfigApp": 177,
 		"./ConfigApp.js": 177,
-		"./LandingApp": 194,
-		"./LandingApp.js": 194
+		"./LandingApp": 193,
+		"./LandingApp.js": 193
 	};
 	function webpackContext(req) {
 		return __webpack_require__(webpackContextResolve(req));
@@ -20525,7 +20525,7 @@
 
 	var _actions = __webpack_require__(178);
 
-	var _ChannelsList = __webpack_require__(179);
+	var _ChannelsList = __webpack_require__(181);
 
 	var _ChannelsList2 = _interopRequireDefault(_ChannelsList);
 
@@ -20549,7 +20549,6 @@
 	  _createClass(ConfigApp, [{
 	    key: 'render',
 	    value: function render() {
-	      // console.log('ConfigApp', 'render', this.props);
 	      var _props = this.props;
 	      var team = _props.team;
 	      var channels = _props.channels;
@@ -20607,6 +20606,37 @@
 
 /***/ },
 /* 178 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.configActions = undefined;
+
+	var _fetchThemes = __webpack_require__(179);
+
+	var _fetchThemes2 = _interopRequireDefault(_fetchThemes);
+
+	var _updateThemeStatus = __webpack_require__(180);
+
+	var _updateThemeStatus2 = _interopRequireDefault(_updateThemeStatus);
+
+	var _createChannel = __webpack_require__(199);
+
+	var _createChannel2 = _interopRequireDefault(_createChannel);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var configActions = exports.configActions = {
+	  fetchThemes: _fetchThemes2.default,
+	  updateThemeStatus: _updateThemeStatus2.default,
+	  createChannel: _createChannel2.default
+	};
+
+/***/ },
+/* 179 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -20614,10 +20644,6 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	function selectChannel(id) {
-	  return { type: 'SELECT_CHANNEL', id: id };
-	}
-
 	function requestThemes(channelId) {
 	  return { type: 'REQUEST_THEMES', channelId: channelId };
 	}
@@ -20644,7 +20670,7 @@
 	  return function (dispatch) {
 	    dispatch(requestThemes(channelId));
 
-	    return fetch('/themes?channelId=' + channelId, {
+	    return fetch('/themes/' + channelId, {
 	      credentials: 'same-origin',
 	      headers: { 'Accept': 'application/json' }
 	    }).then(function (response) {
@@ -20657,13 +20683,62 @@
 	  };
 	}
 
-	var configActions = exports.configActions = {
-	  selectChannel: selectChannel,
-	  fetchThemes: fetchThemes
-	};
+	exports.default = fetchThemes;
 
 /***/ },
-/* 179 */
+/* 180 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	function requestUpdateThemeStatus(id) {
+	  return { type: 'REQUEST_UPDATE_THEME_STATUS', id: id };
+	}
+
+	function receiveUpdateThemeStatus(id, json) {
+	  return {
+	    type: 'RECEIVE_UPDATE_THEME_STATUS',
+	    id: id,
+	    isSubscribed: json.isSubscribed,
+	    receivedAt: Date.now()
+	  };
+	}
+
+	function catchUpdateThemeStatusError(id, error) {
+	  return {
+	    type: 'CATCH_UPDATE_THEME_STATUS_ERROR',
+	    id: id,
+	    error: error,
+	    receivedAt: Date.now()
+	  };
+	}
+
+	function updateThemeStatus(id, channelId, action) {
+	  return function (dispatch) {
+	    dispatch(requestUpdateThemeStatus(id));
+
+	    return fetch('/themes', {
+	      method: 'POST',
+	      body: JSON.stringify({ id: id, channelId: channelId, action: action }),
+	      credentials: 'same-origin',
+	      headers: { 'Content-Type': 'application/json' }
+	    }).then(function (response) {
+	      return response.json();
+	    }).then(function (json) {
+	      return dispatch(receiveUpdateThemeStatus(id, json));
+	    }, function (error) {
+	      return dispatch(catchUpdateThemeStatusError(id, error));
+	    });
+	  };
+	}
+
+	exports.default = updateThemeStatus;
+
+/***/ },
+/* 181 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -20682,11 +20757,11 @@
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _classnames = __webpack_require__(180);
+	var _classnames = __webpack_require__(182);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
-	var _ThemesList = __webpack_require__(181);
+	var _ThemesList = __webpack_require__(183);
 
 	var _ThemesList2 = _interopRequireDefault(_ThemesList);
 
@@ -20701,32 +20776,27 @@
 	var ChannelsList = function (_Component) {
 	  _inherits(ChannelsList, _Component);
 
-	  function ChannelsList() {
+	  function ChannelsList(props) {
 	    _classCallCheck(this, ChannelsList);
 
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(ChannelsList).apply(this, arguments));
+	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ChannelsList).call(this, props));
+
+	    _this.state = {
+	      channelId: ''
+	    };
+	    return _this;
 	  }
+
+	  // handlers
+	  //
+
 
 	  _createClass(ChannelsList, [{
 	    key: 'handleChannelClick',
-
-
-	    // handlers
-	    //
 	    value: function handleChannelClick(channelId, event) {
-	      var _this2 = this;
-
 	      event.preventDefault();
-	      var actions = this.props.actions;
-
-
-	      actions.fetchThemes(channelId).then(function (data) {
-	        _reactDom2.default.render(_react2.default.createElement(_ThemesList2.default, {
-	          channelId: channelId,
-	          themes: _this2.props.themes,
-	          actions: actions
-	        }), document.getElementById('modal'));
-	      });
+	      this.setState({ channelId: channelId });
+	      this.props.actions.fetchThemes(channelId);
 	    }
 
 	    // renderers
@@ -20756,11 +20826,19 @@
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      // console.log('ChannelsList', 'render', this.props.themes);
 	      return _react2.default.createElement(
-	        'ul',
-	        { className: 'channels-list' },
-	        this.props.channels.map(this.renderChannel.bind(this))
+	        'div',
+	        null,
+	        _react2.default.createElement(
+	          'ul',
+	          { className: 'channels-list' },
+	          this.props.channels.map(this.renderChannel.bind(this))
+	        ),
+	        _react2.default.createElement(_ThemesList2.default, {
+	          channelId: this.state.channelId,
+	          themes: this.props.themes,
+	          actions: this.props.actions
+	        })
 	      );
 	    }
 	  }]);
@@ -20777,7 +20855,7 @@
 	exports.default = ChannelsList;
 
 /***/ },
-/* 180 */
+/* 182 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -20831,7 +20909,7 @@
 
 
 /***/ },
-/* 181 */
+/* 183 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -20850,9 +20928,13 @@
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _FadeModal = __webpack_require__(182);
+	var _FadeModal = __webpack_require__(184);
 
 	var _FadeModal2 = _interopRequireDefault(_FadeModal);
+
+	var _classnames = __webpack_require__(182);
+
+	var _classnames2 = _interopRequireDefault(_classnames);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -20872,74 +20954,25 @@
 	  }
 
 	  _createClass(ThemesList, [{
-	    key: 'componentDidMount',
+	    key: 'componentWillReceiveProps',
 
-
-	    // constructor(props) {
-	    //   super(props)
-	    //   this.state = {
-	    //     themes: [],
-	    //   }
-	    // }
 
 	    // lifecycle
 	    //
-	    value: function componentDidMount() {
-	      document.getElementById('modal').className = '';
-	      this.refs.modal.show();
+	    value: function componentWillReceiveProps(nextProps) {
+	      if (nextProps.themes.items.length > 0) {
+	        document.getElementById('modal').className = '';
+	        this.refs.modal.show();
+	      }
 	    }
-
-	    // componentWillUnmount() {
-	    //   // this.initialRequest.abort()
-	    //   // if (this.themeStatusRequest) this.themeStatusRequest.abort()
-	    // }
-
-	    // requests
-	    //
-	    // getInitialData() {
-	    //   this.initialRequest = superagent
-	    //     .get('/themes')
-	    //     .set('Accept', 'application/json')
-	    //     .query({ channelId: this.props.channelId })
-	    //     .end((err, res) => {
-	    //       if (err || !res.ok) {
-	    //         console.error(err)
-	    //       } else {
-	    //         this.setState(res.body)
-	    //         document.getElementById('modal').className = ''
-	    //         this.refs.modal.show()
-	    //       }
-	    //     })
-	    // }
-
-	    // updateThemeStatus(themeId, action) {
-	    //   this.themeStatusRequest = superagent
-	    //     .post('/themes')
-	    //     .set('Accept', 'application/json')
-	    //     .send({
-	    //       themeId: themeId,
-	    //       action: action,
-	    //       channelId: this.props.channelId,
-	    //       selectedThemesSize: this.getSelectedThemesSize(),
-	    //     })
-	    //     .end((err, res) => {
-	    //       if (err || !res.ok) {
-	    //         console.error(err)
-	    //       } else {
-	    //         // TODO: get data from the server and set state
-	    //       }
-	    //     })
-	    // }
 
 	    // helpers
 	    //
 
 	  }, {
-	    key: 'unmountModal',
-	    value: function unmountModal() {
-	      var node = document.getElementById('modal');
-	      _reactDom2.default.unmountComponentAtNode(node);
-	      node.className = 'hidden';
+	    key: 'hideContainer',
+	    value: function hideContainer() {
+	      document.getElementById('modal').className = 'hidden';
 	    }
 	  }, {
 	    key: 'getSelectedThemesSize',
@@ -20961,17 +20994,21 @@
 	    key: 'handleThemeClick',
 	    value: function handleThemeClick(theme, event) {
 	      event.preventDefault();
-	      if (this.getSelectedThemesSize() === 3 && !theme.isSubscribed) return;
-	      console.log('handleThemeClick');
-	      // TODO: update channel status
+	      var _props = this.props;
+	      var channelId = _props.channelId;
+	      var actions = _props.actions;
 
-	      // let action = theme.isSubscribed ? 'unsubscribe' : 'subscribe'
+	      var selectedThemesSize = this.getSelectedThemesSize();
+	      if (selectedThemesSize === 3 && !theme.isSubscribed) return;
 
-	      // // temp optimistic update
-	      // theme.isSubscribed = !theme.isSubscribed
-	      // this.setState({ themes: this.state.themes })
+	      var action = theme.isSubscribed ? 'unsubscribe' : 'subscribe';
+	      actions.updateThemeStatus(theme.id, channelId, action);
 
-	      // this.updateThemeStatus(theme.id, action)
+	      if (selectedThemesSize === 0 && action === 'subscribe') {
+	        // actions.createChannel(channelId)
+	      } else if (selectedThemesSize === 1 && action === 'unsubscribe') {
+	          // actions.destroyChannel(channelId)
+	        }
 	    }
 
 	    // renderers
@@ -20980,6 +21017,8 @@
 	  }, {
 	    key: 'renderTheme',
 	    value: function renderTheme(theme) {
+	      var iconClassNames = (0, _classnames2.default)('fa', 'fa-check', { 'is-fetching': theme.isFetching });
+
 	      return _react2.default.createElement(
 	        'li',
 	        null,
@@ -20988,29 +21027,31 @@
 	          { href: '', onClick: this.handleThemeClick.bind(this, theme) },
 	          theme.name
 	        ),
-	        theme.isSubscribed ? _react2.default.createElement('i', { className: 'fa fa-check' }) : null
+	        theme.isSubscribed || theme.isFetching ? _react2.default.createElement('i', { className: iconClassNames }) : null
 	      );
 	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      console.log('ThemesList', 'render', this.props.themes);
-
 	      return _react2.default.createElement(
-	        _FadeModal2.default,
-	        { ref: 'modal', onHide: this.unmountModal },
+	        'div',
+	        { id: 'modal', className: 'hidden' },
 	        _react2.default.createElement(
-	          'div',
-	          { className: 'modal-content' },
+	          _FadeModal2.default,
+	          { ref: 'modal', onHide: this.hideContainer },
 	          _react2.default.createElement(
-	            'ul',
-	            null,
-	            this.props.themes.items.map(this.renderTheme.bind(this))
-	          ),
-	          _react2.default.createElement(
-	            'button',
-	            { onClick: this.handleModalClose.bind(this) },
-	            'Close'
+	            'div',
+	            { className: 'modal-content' },
+	            _react2.default.createElement(
+	              'ul',
+	              { className: 'themes-list' },
+	              this.props.themes.items.map(this.renderTheme.bind(this))
+	            ),
+	            _react2.default.createElement(
+	              'button',
+	              { onClick: this.handleModalClose.bind(this) },
+	              'Close'
+	            )
 	          )
 	        )
 	      );
@@ -21029,12 +21070,12 @@
 	exports.default = ThemesList;
 
 /***/ },
-/* 182 */
+/* 184 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var modalFactory = __webpack_require__(183);
-	var insertKeyframesRule = __webpack_require__(188);
-	var appendVendorPrefix = __webpack_require__(185);
+	var modalFactory = __webpack_require__(185);
+	var insertKeyframesRule = __webpack_require__(190);
+	var appendVendorPrefix = __webpack_require__(187);
 
 	var animation = {
 	    show: {
@@ -21132,12 +21173,12 @@
 
 
 /***/ },
-/* 183 */
+/* 185 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var transitionEvents = __webpack_require__(184);
-	var appendVendorPrefix = __webpack_require__(185);
+	var transitionEvents = __webpack_require__(186);
+	var appendVendorPrefix = __webpack_require__(187);
 
 	module.exports = function(animation){
 
@@ -21316,7 +21357,7 @@
 
 
 /***/ },
-/* 184 */
+/* 186 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -21417,12 +21458,12 @@
 
 
 /***/ },
-/* 185 */
+/* 187 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var getVendorPropertyName = __webpack_require__(186);
+	var getVendorPropertyName = __webpack_require__(188);
 
 	module.exports = function(target, sources) {
 	  var to = Object(target);
@@ -21453,12 +21494,12 @@
 
 
 /***/ },
-/* 186 */
+/* 188 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var builtinStyle = __webpack_require__(187);
+	var builtinStyle = __webpack_require__(189);
 	var prefixes = ['Moz', 'Webkit', 'O', 'ms'];
 	var domVendorPrefix;
 
@@ -21496,7 +21537,7 @@
 
 
 /***/ },
-/* 187 */
+/* 189 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -21505,13 +21546,13 @@
 
 
 /***/ },
-/* 188 */
+/* 190 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var insertRule = __webpack_require__(189);
-	var vendorPrefix = __webpack_require__(190)();
+	var insertRule = __webpack_require__(191);
+	var vendorPrefix = __webpack_require__(192)();
 	var index = 0;
 
 	module.exports = function(keyframes) {
@@ -21541,7 +21582,7 @@
 
 
 /***/ },
-/* 189 */
+/* 191 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -21566,7 +21607,7 @@
 
 
 /***/ },
-/* 190 */
+/* 192 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -21585,10 +21626,7 @@
 
 
 /***/ },
-/* 191 */,
-/* 192 */,
-/* 193 */,
-/* 194 */
+/* 193 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -21657,18 +21695,18 @@
 	};
 
 /***/ },
-/* 195 */
+/* 194 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var map = {
-		"./ConfigApp": 196,
-		"./ConfigApp.js": 196,
-		"./channels": 198,
-		"./channels.js": 198,
-		"./team": 197,
-		"./team.js": 197,
-		"./themes": 199,
-		"./themes.js": 199
+		"./ConfigApp": 195,
+		"./ConfigApp.js": 195,
+		"./channels": 197,
+		"./channels.js": 197,
+		"./team": 196,
+		"./team.js": 196,
+		"./themes": 198,
+		"./themes.js": 198
 	};
 	function webpackContext(req) {
 		return __webpack_require__(webpackContextResolve(req));
@@ -21681,11 +21719,11 @@
 	};
 	webpackContext.resolve = webpackContextResolve;
 	module.exports = webpackContext;
-	webpackContext.id = 195;
+	webpackContext.id = 194;
 
 
 /***/ },
-/* 196 */
+/* 195 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21696,15 +21734,15 @@
 
 	var _redux = __webpack_require__(154);
 
-	var _team = __webpack_require__(197);
+	var _team = __webpack_require__(196);
 
 	var _team2 = _interopRequireDefault(_team);
 
-	var _channels = __webpack_require__(198);
+	var _channels = __webpack_require__(197);
 
 	var _channels2 = _interopRequireDefault(_channels);
 
-	var _themes = __webpack_require__(199);
+	var _themes = __webpack_require__(198);
 
 	var _themes2 = _interopRequireDefault(_themes);
 
@@ -21717,7 +21755,7 @@
 	});
 
 /***/ },
-/* 197 */
+/* 196 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -21737,7 +21775,7 @@
 	}
 
 /***/ },
-/* 198 */
+/* 197 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -21759,7 +21797,7 @@
 	}
 
 /***/ },
-/* 199 */
+/* 198 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -21778,6 +21816,24 @@
 	  var action = arguments[1];
 
 	  switch (action.type) {
+	    case 'REQUEST_UPDATE_THEME_STATUS':
+	      return Object.assign({}, state, {
+	        items: state.items.map(function (theme) {
+	          return theme.id === action.id ? Object.assign({}, theme, { isFetching: true }) : theme;
+	        })
+	      });
+	    case 'RECEIVE_UPDATE_THEME_STATUS':
+	      return Object.assign({}, state, {
+	        items: state.items.map(function (theme) {
+	          return theme.id === action.id ? Object.assign({}, theme, { isFetching: false, isSubscribed: action.isSubscribed }) : theme;
+	        })
+	      });
+	    case 'CATCH_UPDATE_THEME_STATUS_ERROR':
+	      return Object.assign({}, state, {
+	        items: state.items.map(function (theme) {
+	          return theme.id === action.id ? Object.assign({}, theme, { isFetching: false }) : theme;
+	        })
+	      });
 	    case 'REQUEST_THEMES':
 	      return Object.assign({}, state, {
 	        isFetching: true
@@ -21796,6 +21852,58 @@
 	      return state;
 	  }
 	}
+
+/***/ },
+/* 199 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	function requestCreateChannel(id) {
+	  return { type: 'CREATE_CHANNEL_REQUEST', id: id };
+	}
+
+	function receiveCreateChannel(id, json) {
+	  return {
+	    type: 'CREATE_CHANNEL_RECEIVE',
+	    id: id,
+	    channel: json.channel,
+	    receivedAt: Date.now()
+	  };
+	}
+
+	function catchCreateChannelError(id, error) {
+	  return {
+	    type: 'CREATE_CHANNEL_CATCH_ERROR',
+	    id: id,
+	    error: error,
+	    receivedAt: Date.now()
+	  };
+	}
+
+	function createChannel(id) {
+	  return function (dispatch) {
+	    dispatch(requestCreateChannel(id));
+
+	    return fetch('/channels', {
+	      method: 'POST',
+	      body: JSON.stringify({ id: id }),
+	      credentials: 'same-origin',
+	      headers: { 'Content-Type': 'application/json' }
+	    }).then(function (response) {
+	      return response.json();
+	    }).then(function (json) {
+	      return dispatch(receiveCreateChannel(id, json));
+	    }, function (error) {
+	      return dispatch(catchCreateChannelError(id, error));
+	    });
+	  };
+	}
+
+	exports.default = createChannel;
 
 /***/ }
 /******/ ]);

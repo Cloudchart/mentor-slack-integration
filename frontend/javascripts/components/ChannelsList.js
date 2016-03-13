@@ -7,21 +7,19 @@ import ThemesList from './ThemesList'
 
 class ChannelsList extends Component {
 
+  constructor(props) {
+    super(props)
+    this.state = {
+      channelId: '',
+    }
+  }
+
   // handlers
   //
   handleChannelClick(channelId, event) {
     event.preventDefault()
-    const { actions } = this.props
-
-    actions.fetchThemes(channelId).then(data => {
-      ReactDOM.render(
-        <ThemesList
-          channelId={ channelId }
-          themes={ this.props.themes }
-          actions={ actions }
-        />, document.getElementById('modal')
-      )
-    })
+    this.setState({ channelId: channelId })
+    this.props.actions.fetchThemes(channelId)
   }
 
   // renderers
@@ -41,11 +39,17 @@ class ChannelsList extends Component {
   }
 
   render() {
-    // console.log('ChannelsList', 'render', this.props.themes);
     return (
-      <ul className="channels-list">
-        { this.props.channels.map(this.renderChannel.bind(this)) }
-      </ul>
+      <div>
+        <ul className="channels-list">
+          { this.props.channels.map(this.renderChannel.bind(this)) }
+        </ul>
+        <ThemesList
+          channelId={ this.state.channelId }
+          themes={ this.props.themes }
+          actions={ this.props.actions }
+        />
+      </div>
     )
   }
 

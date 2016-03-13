@@ -109,10 +109,37 @@ router.get('/configuration', checkTeamId, async (req, res, next) => {
   })
 })
 
+// channels
+//
+// router.post('/channels', checkTeamId, async (req, res, next) => {
+//   let id = req.body.id
+//   let teamId = req.session.teamId
+
+//   let channelChannel.findOrCreate({
+//     where: { id: id },
+//     defaults: { teamId: teamId }
+//   }).then(channel => {
+//     SlackWeb.channels.info(id, (error, data) => {
+//       if (error = error || data.error) {
+//         res.status(500).json({ error: error })
+//       } else {
+//         console.log('!!!!!', data);
+//         channel = {}
+//         res.status(201).json({ channel: channel })
+//       }
+//     })
+//   }).catch(error => {
+//     console.log('sequelize error');
+//     res.status(500).json({ error: error })
+//   })
+// })
+
+// Channel.destroy({ where: { id: channelId } })
+
 // themes
 //
-router.get('/themes', checkTeamId, async (req, res, next) => {
-  let channelId = req.query.channelId
+router.get('/themes/:channelId', checkTeamId, async (req, res, next) => {
+  let channelId = req.params.channelId
 
   // get user themes from web app
   // this will also create user and user themes if they aren't present
@@ -140,33 +167,25 @@ router.get('/themes', checkTeamId, async (req, res, next) => {
 })
 
 router.post('/themes', checkTeamId, async (req, res, next) => {
-  let teamId = req.session.teamId
+  let id = req.body.id
   let channelId = req.body.channelId
-  let themeId = req.body.themeId
   let action = req.body.action
-  let selectedThemesSize = req.body.selectedThemesSize
   let mutationName = action === 'subscribe' ? 'subscribeOnTheme' : 'unsubscribeFromTheme'
 
   callWebAppGraphQL(channelId, 'POST', `
     mutation m {
       ${mutationName}(input: {
-        id: "${themeId}",
+        id: "${id}",
         clientMutationId: "1"
       }) {
         themeID
       }
     }
   `).then(data => {
-    if (selectedThemesSize === 1 && action === 'subscribe') {
-      Channel.findOrCreate({ where: { id: channelId }, defaults: { teamId: teamId } })
-    } else if (selectedThemesSize === 0 && action === 'unsubscribe') {
-      Channel.destroy({ where: { id: channelId } })
-    }
-
-    res.json('ok')
-  }).catch(() => {
-    res.status(500).json('something went wrong')
-  })
+    data = JSON.parse(data).data
+    if (!data[mutationName]) return res.status(404).json('not found')
+    res.json({ isSubscribed: action === 'subscribe' ? true : false })
+  }).catch(error => res.status(500).json({ error: error }))
 })
 
 

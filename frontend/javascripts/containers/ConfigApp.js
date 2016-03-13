@@ -8,7 +8,6 @@ import ChannelsList from '../components/ChannelsList'
 class ConfigApp extends Component {
 
   render() {
-    // console.log('ConfigApp', 'render', this.props);
     const { team, channels, themes, actions } = this.props
 
     return (

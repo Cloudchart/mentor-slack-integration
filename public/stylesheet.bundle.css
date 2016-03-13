@@ -2104,3 +2104,9 @@ div#modal button {
     color: #3BC363; }
   .channels-list > li > i.uninvited {
     color: #FFC202; }
+
+.themes-list > li > i {
+  margin-left: 10px;
+  color: #3BC363; }
+  .themes-list > li > i.is-fetching {
+    color: #C8C8C8; }
