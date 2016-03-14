@@ -72,7 +72,7 @@
 	if (reactType === 'plain') {
 	  _reactDom2.default.render(_react2.default.createElement(Component, JSON.parse(node.dataset.reactProps)), node);
 	} else {
-	  var reducers = __webpack_require__(194)("./" + reactClass).default;
+	  var reducers = __webpack_require__(196)("./" + reactClass).default;
 	  var store = (0, _redux.createStore)(reducers, window.__INITIAL_STATE__, (0, _redux.applyMiddleware)(_reduxThunk2.default));
 
 	  _reactDom2.default.render(_react2.default.createElement(
@@ -20486,8 +20486,8 @@
 	var map = {
 		"./ConfigApp": 177,
 		"./ConfigApp.js": 177,
-		"./LandingApp": 193,
-		"./LandingApp.js": 193
+		"./LandingApp": 195,
+		"./LandingApp.js": 195
 	};
 	function webpackContext(req) {
 		return __webpack_require__(webpackContextResolve(req));
@@ -20525,7 +20525,7 @@
 
 	var _actions = __webpack_require__(178);
 
-	var _ChannelsList = __webpack_require__(181);
+	var _ChannelsList = __webpack_require__(183);
 
 	var _ChannelsList2 = _interopRequireDefault(_ChannelsList);
 
@@ -20623,11 +20623,11 @@
 
 	var _updateThemeStatus2 = _interopRequireDefault(_updateThemeStatus);
 
-	var _createChannel = __webpack_require__(199);
+	var _createChannel = __webpack_require__(181);
 
 	var _createChannel2 = _interopRequireDefault(_createChannel);
 
-	var _destroyChannel = __webpack_require__(200);
+	var _destroyChannel = __webpack_require__(182);
 
 	var _destroyChannel2 = _interopRequireDefault(_destroyChannel);
 
@@ -20744,6 +20744,110 @@
 
 /***/ },
 /* 181 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	function requestCreateChannel(id) {
+	  return { type: 'CREATE_CHANNEL_REQUEST', id: id };
+	}
+
+	function receiveCreateChannel(id, json) {
+	  return {
+	    type: 'CREATE_CHANNEL_RECEIVE',
+	    id: id,
+	    status: json.status,
+	    receivedAt: Date.now()
+	  };
+	}
+
+	function catchCreateChannelError(id, error) {
+	  return {
+	    type: 'CREATE_CHANNEL_ERROR',
+	    id: id,
+	    error: error,
+	    receivedAt: Date.now()
+	  };
+	}
+
+	function createChannel(id) {
+	  return function (dispatch) {
+	    dispatch(requestCreateChannel(id));
+
+	    return fetch('/channels', {
+	      method: 'POST',
+	      body: JSON.stringify({ id: id }),
+	      credentials: 'same-origin',
+	      headers: { 'Content-Type': 'application/json' }
+	    }).then(function (response) {
+	      return response.json();
+	    }).then(function (json) {
+	      return dispatch(receiveCreateChannel(id, json));
+	    }, function (error) {
+	      return dispatch(catchCreateChannelError(id, error));
+	    });
+	  };
+	}
+
+	exports.default = createChannel;
+
+/***/ },
+/* 182 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	function requestDestroyChannel(id) {
+	  return { type: 'DESTROY_CHANNEL_REQUEST', id: id };
+	}
+
+	function receiveDestroyChannel(id, json) {
+	  return {
+	    type: 'DESTROY_CHANNEL_RECEIVE',
+	    id: id,
+	    status: json.status,
+	    receivedAt: Date.now()
+	  };
+	}
+
+	function catchDestroyChannelError(id, error) {
+	  return {
+	    type: 'DESTROY_CHANNEL_ERROR',
+	    id: id,
+	    error: error,
+	    receivedAt: Date.now()
+	  };
+	}
+
+	function destroyChannel(id) {
+	  return function (dispatch) {
+	    dispatch(requestDestroyChannel(id));
+
+	    return fetch('/channels', {
+	      method: 'DELETE',
+	      body: JSON.stringify({ id: id }),
+	      credentials: 'same-origin',
+	      headers: { 'Content-Type': 'application/json' }
+	    }).then(function (response) {
+	      return response.json();
+	    }).then(function (json) {
+	      return dispatch(receiveDestroyChannel(id, json));
+	    }, function (error) {
+	      return dispatch(catchDestroyChannelError(id, error));
+	    });
+	  };
+	}
+
+	exports.default = destroyChannel;
+
+/***/ },
+/* 183 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -20762,11 +20866,11 @@
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _classnames = __webpack_require__(182);
+	var _classnames = __webpack_require__(184);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
-	var _ThemesList = __webpack_require__(183);
+	var _ThemesList = __webpack_require__(185);
 
 	var _ThemesList2 = _interopRequireDefault(_ThemesList);
 
@@ -20868,7 +20972,7 @@
 	exports.default = ChannelsList;
 
 /***/ },
-/* 182 */
+/* 184 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -20922,7 +21026,7 @@
 
 
 /***/ },
-/* 183 */
+/* 185 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -20941,11 +21045,11 @@
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _FadeModal = __webpack_require__(184);
+	var _FadeModal = __webpack_require__(186);
 
 	var _FadeModal2 = _interopRequireDefault(_FadeModal);
 
-	var _classnames = __webpack_require__(182);
+	var _classnames = __webpack_require__(184);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
@@ -21084,12 +21188,12 @@
 	exports.default = ThemesList;
 
 /***/ },
-/* 184 */
+/* 186 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var modalFactory = __webpack_require__(185);
-	var insertKeyframesRule = __webpack_require__(190);
-	var appendVendorPrefix = __webpack_require__(187);
+	var modalFactory = __webpack_require__(187);
+	var insertKeyframesRule = __webpack_require__(192);
+	var appendVendorPrefix = __webpack_require__(189);
 
 	var animation = {
 	    show: {
@@ -21187,12 +21291,12 @@
 
 
 /***/ },
-/* 185 */
+/* 187 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var transitionEvents = __webpack_require__(186);
-	var appendVendorPrefix = __webpack_require__(187);
+	var transitionEvents = __webpack_require__(188);
+	var appendVendorPrefix = __webpack_require__(189);
 
 	module.exports = function(animation){
 
@@ -21371,7 +21475,7 @@
 
 
 /***/ },
-/* 186 */
+/* 188 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -21472,12 +21576,12 @@
 
 
 /***/ },
-/* 187 */
+/* 189 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var getVendorPropertyName = __webpack_require__(188);
+	var getVendorPropertyName = __webpack_require__(190);
 
 	module.exports = function(target, sources) {
 	  var to = Object(target);
@@ -21508,12 +21612,12 @@
 
 
 /***/ },
-/* 188 */
+/* 190 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var builtinStyle = __webpack_require__(189);
+	var builtinStyle = __webpack_require__(191);
 	var prefixes = ['Moz', 'Webkit', 'O', 'ms'];
 	var domVendorPrefix;
 
@@ -21551,7 +21655,7 @@
 
 
 /***/ },
-/* 189 */
+/* 191 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -21560,13 +21664,13 @@
 
 
 /***/ },
-/* 190 */
+/* 192 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var insertRule = __webpack_require__(191);
-	var vendorPrefix = __webpack_require__(192)();
+	var insertRule = __webpack_require__(193);
+	var vendorPrefix = __webpack_require__(194)();
 	var index = 0;
 
 	module.exports = function(keyframes) {
@@ -21596,7 +21700,7 @@
 
 
 /***/ },
-/* 191 */
+/* 193 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -21621,7 +21725,7 @@
 
 
 /***/ },
-/* 192 */
+/* 194 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -21640,7 +21744,7 @@
 
 
 /***/ },
-/* 193 */
+/* 195 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -21709,18 +21813,18 @@
 	};
 
 /***/ },
-/* 194 */
+/* 196 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var map = {
-		"./ConfigApp": 195,
-		"./ConfigApp.js": 195,
-		"./channels": 197,
-		"./channels.js": 197,
-		"./team": 196,
-		"./team.js": 196,
-		"./themes": 198,
-		"./themes.js": 198
+		"./ConfigApp": 197,
+		"./ConfigApp.js": 197,
+		"./channels": 199,
+		"./channels.js": 199,
+		"./team": 198,
+		"./team.js": 198,
+		"./themes": 200,
+		"./themes.js": 200
 	};
 	function webpackContext(req) {
 		return __webpack_require__(webpackContextResolve(req));
@@ -21733,11 +21837,11 @@
 	};
 	webpackContext.resolve = webpackContextResolve;
 	module.exports = webpackContext;
-	webpackContext.id = 194;
+	webpackContext.id = 196;
 
 
 /***/ },
-/* 195 */
+/* 197 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21748,15 +21852,15 @@
 
 	var _redux = __webpack_require__(154);
 
-	var _team = __webpack_require__(196);
+	var _team = __webpack_require__(198);
 
 	var _team2 = _interopRequireDefault(_team);
 
-	var _channels = __webpack_require__(197);
+	var _channels = __webpack_require__(199);
 
 	var _channels2 = _interopRequireDefault(_channels);
 
-	var _themes = __webpack_require__(198);
+	var _themes = __webpack_require__(200);
 
 	var _themes2 = _interopRequireDefault(_themes);
 
@@ -21769,7 +21873,7 @@
 	});
 
 /***/ },
-/* 196 */
+/* 198 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -21789,7 +21893,7 @@
 	}
 
 /***/ },
-/* 197 */
+/* 199 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -21824,7 +21928,7 @@
 	}
 
 /***/ },
-/* 198 */
+/* 200 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -21879,110 +21983,6 @@
 	      return state;
 	  }
 	}
-
-/***/ },
-/* 199 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	function requestCreateChannel(id) {
-	  return { type: 'CREATE_CHANNEL_REQUEST', id: id };
-	}
-
-	function receiveCreateChannel(id, json) {
-	  return {
-	    type: 'CREATE_CHANNEL_RECEIVE',
-	    id: id,
-	    status: json.status,
-	    receivedAt: Date.now()
-	  };
-	}
-
-	function catchCreateChannelError(id, error) {
-	  return {
-	    type: 'CREATE_CHANNEL_ERROR',
-	    id: id,
-	    error: error,
-	    receivedAt: Date.now()
-	  };
-	}
-
-	function createChannel(id) {
-	  return function (dispatch) {
-	    dispatch(requestCreateChannel(id));
-
-	    return fetch('/channels', {
-	      method: 'POST',
-	      body: JSON.stringify({ id: id }),
-	      credentials: 'same-origin',
-	      headers: { 'Content-Type': 'application/json' }
-	    }).then(function (response) {
-	      return response.json();
-	    }).then(function (json) {
-	      return dispatch(receiveCreateChannel(id, json));
-	    }, function (error) {
-	      return dispatch(catchCreateChannelError(id, error));
-	    });
-	  };
-	}
-
-	exports.default = createChannel;
-
-/***/ },
-/* 200 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	function requestDestroyChannel(id) {
-	  return { type: 'DESTROY_CHANNEL_REQUEST', id: id };
-	}
-
-	function receiveDestroyChannel(id, json) {
-	  return {
-	    type: 'DESTROY_CHANNEL_RECEIVE',
-	    id: id,
-	    status: json.status,
-	    receivedAt: Date.now()
-	  };
-	}
-
-	function catchDestroyChannelError(id, error) {
-	  return {
-	    type: 'DESTROY_CHANNEL_ERROR',
-	    id: id,
-	    error: error,
-	    receivedAt: Date.now()
-	  };
-	}
-
-	function destroyChannel(id) {
-	  return function (dispatch) {
-	    dispatch(requestDestroyChannel(id));
-
-	    return fetch('/channels', {
-	      method: 'DELETE',
-	      body: JSON.stringify({ id: id }),
-	      credentials: 'same-origin',
-	      headers: { 'Content-Type': 'application/json' }
-	    }).then(function (response) {
-	      return response.json();
-	    }).then(function (json) {
-	      return dispatch(receiveDestroyChannel(id, json));
-	    }, function (error) {
-	      return dispatch(catchDestroyChannelError(id, error));
-	    });
-	  };
-	}
-
-	exports.default = destroyChannel;
 
 /***/ }
 /******/ ]);
