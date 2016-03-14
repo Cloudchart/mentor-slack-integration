@@ -21077,7 +21077,7 @@
 	    // lifecycle
 	    //
 	    value: function componentWillReceiveProps(nextProps) {
-	      if (nextProps.shouldRenderThemesList) {
+	      if (nextProps.shouldRenderThemesList && nextProps.themes.items.length > 0) {
 	        document.getElementById('modal').className = '';
 	        this.refs.modal.show();
 	      }
