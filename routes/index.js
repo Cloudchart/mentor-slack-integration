@@ -88,7 +88,7 @@ router.get('/configuration', checkTeamId, async (req, res, next) => {
       res.status(500).json({ error: err })
     } else {
       let channels = data.channels.map(channel => {
-        let status
+        let status = null
         if (selectedChannelIds.includes(channel.id)) {
           status = channel.is_member ? 'invited' : 'uninvited'
         }
@@ -111,30 +111,37 @@ router.get('/configuration', checkTeamId, async (req, res, next) => {
 
 // channels
 //
-// router.post('/channels', checkTeamId, async (req, res, next) => {
-//   let id = req.body.id
-//   let teamId = req.session.teamId
+router.post('/channels', checkTeamId, async (req, res, next) => {
+  let id = req.body.id
+  let team = await Team.findById(req.session.teamId)
+  let selectedChannel = await Channel.findOrCreate({ where: { id: id }, defaults: { teamId: team.id } })
+  if (!selectedChannel) return res.status(500).json({ message: 'something went wrong' })
 
-//   let channelChannel.findOrCreate({
-//     where: { id: id },
-//     defaults: { teamId: teamId }
-//   }).then(channel => {
-//     SlackWeb.channels.info(id, (error, data) => {
-//       if (error = error || data.error) {
-//         res.status(500).json({ error: error })
-//       } else {
-//         console.log('!!!!!', data);
-//         channel = {}
-//         res.status(201).json({ channel: channel })
-//       }
-//     })
-//   }).catch(error => {
-//     console.log('sequelize error');
-//     res.status(500).json({ error: error })
-//   })
-// })
+  let SlackWeb = new WebClient(team.accessToken)
 
-// Channel.destroy({ where: { id: channelId } })
+  SlackWeb.channels.info(id, (error, data) => {
+    if (error = error || data.error) {
+      res.status(500).json({ error: error })
+    } else {
+      res.status(201).json({ status: data.channel.is_member ? 'invited' : 'uninvited' })
+    }
+  })
+})
+
+router.delete('/channels', checkTeamId, async (req, res, next) => {
+  let id = req.body.id
+  let team = await Team.findById(req.session.teamId)
+  await Channel.destroy({ where: { id: id } })
+  let SlackWeb = new WebClient(team.accessToken)
+
+  SlackWeb.channels.info(id, (error, data) => {
+    if (error = error || data.error) {
+      res.status(500).json({ error: error })
+    } else {
+      res.json({ status: null })
+    }
+  })
+})
 
 // themes
 //
@@ -166,7 +173,7 @@ router.get('/themes/:channelId', checkTeamId, async (req, res, next) => {
   res.json({ themes: themes })
 })
 
-router.post('/themes', checkTeamId, async (req, res, next) => {
+router.patch('/themes', checkTeamId, async (req, res, next) => {
   let id = req.body.id
   let channelId = req.body.channelId
   let action = req.body.action
@@ -183,7 +190,7 @@ router.post('/themes', checkTeamId, async (req, res, next) => {
     }
   `).then(data => {
     data = JSON.parse(data).data
-    if (!data[mutationName]) return res.status(404).json('not found')
+    if (!data[mutationName]) return res.status(404).json({ message: 'not found' })
     res.json({ isSubscribed: action === 'subscribe' ? true : false })
   }).catch(error => res.status(500).json({ error: error }))
 })

@@ -20627,12 +20627,17 @@
 
 	var _createChannel2 = _interopRequireDefault(_createChannel);
 
+	var _destroyChannel = __webpack_require__(200);
+
+	var _destroyChannel2 = _interopRequireDefault(_destroyChannel);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var configActions = exports.configActions = {
 	  fetchThemes: _fetchThemes2.default,
 	  updateThemeStatus: _updateThemeStatus2.default,
-	  createChannel: _createChannel2.default
+	  createChannel: _createChannel2.default,
+	  destroyChannel: _destroyChannel2.default
 	};
 
 /***/ },
@@ -20645,12 +20650,12 @@
 	  value: true
 	});
 	function requestThemes(channelId) {
-	  return { type: 'REQUEST_THEMES', channelId: channelId };
+	  return { type: 'THEMES_REQUEST', channelId: channelId };
 	}
 
 	function receiveThemes(channelId, json) {
 	  return {
-	    type: 'RECEIVE_THEMES',
+	    type: 'THEMES_RECEIVE',
 	    channelId: channelId,
 	    themes: json.themes,
 	    receivedAt: Date.now()
@@ -20659,7 +20664,7 @@
 
 	function catchThemesError(channelId, error) {
 	  return {
-	    type: 'CATCH_THEMES_ERROR',
+	    type: 'THEMES_ERROR',
 	    channelId: channelId,
 	    error: error,
 	    receivedAt: Date.now()
@@ -20695,12 +20700,12 @@
 	  value: true
 	});
 	function requestUpdateThemeStatus(id) {
-	  return { type: 'REQUEST_UPDATE_THEME_STATUS', id: id };
+	  return { type: 'UPDATE_THEME_STATUS_REQUEST', id: id };
 	}
 
 	function receiveUpdateThemeStatus(id, json) {
 	  return {
-	    type: 'RECEIVE_UPDATE_THEME_STATUS',
+	    type: 'UPDATE_THEME_STATUS_RECEIVE',
 	    id: id,
 	    isSubscribed: json.isSubscribed,
 	    receivedAt: Date.now()
@@ -20709,7 +20714,7 @@
 
 	function catchUpdateThemeStatusError(id, error) {
 	  return {
-	    type: 'CATCH_UPDATE_THEME_STATUS_ERROR',
+	    type: 'UPDATE_THEME_STATUS_ERROR',
 	    id: id,
 	    error: error,
 	    receivedAt: Date.now()
@@ -20721,7 +20726,7 @@
 	    dispatch(requestUpdateThemeStatus(id));
 
 	    return fetch('/themes', {
-	      method: 'POST',
+	      method: 'PATCH',
 	      body: JSON.stringify({ id: id, channelId: channelId, action: action }),
 	      credentials: 'same-origin',
 	      headers: { 'Content-Type': 'application/json' }
@@ -20782,7 +20787,8 @@
 	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ChannelsList).call(this, props));
 
 	    _this.state = {
-	      channelId: ''
+	      channelId: '',
+	      shouldRenderThemesList: false
 	    };
 	    return _this;
 	  }
@@ -20795,8 +20801,13 @@
 	    key: 'handleChannelClick',
 	    value: function handleChannelClick(channelId, event) {
 	      event.preventDefault();
-	      this.setState({ channelId: channelId });
+	      this.setState({ channelId: channelId, shouldRenderThemesList: true });
 	      this.props.actions.fetchThemes(channelId);
+	    }
+	  }, {
+	    key: 'handleThemesListHide',
+	    value: function handleThemesListHide() {
+	      this.setState({ shouldRenderThemesList: false });
 	    }
 
 	    // renderers
@@ -20837,7 +20848,9 @@
 	        _react2.default.createElement(_ThemesList2.default, {
 	          channelId: this.state.channelId,
 	          themes: this.props.themes,
-	          actions: this.props.actions
+	          actions: this.props.actions,
+	          shouldRenderThemesList: this.state.shouldRenderThemesList,
+	          onHide: this.handleThemesListHide.bind(this)
 	        })
 	      );
 	    }
@@ -20960,7 +20973,7 @@
 	    // lifecycle
 	    //
 	    value: function componentWillReceiveProps(nextProps) {
-	      if (nextProps.themes.items.length > 0) {
+	      if (nextProps.shouldRenderThemesList) {
 	        document.getElementById('modal').className = '';
 	        this.refs.modal.show();
 	      }
@@ -20973,6 +20986,7 @@
 	    key: 'hideContainer',
 	    value: function hideContainer() {
 	      document.getElementById('modal').className = 'hidden';
+	      this.props.onHide();
 	    }
 	  }, {
 	    key: 'getSelectedThemesSize',
@@ -21005,10 +21019,10 @@
 	      actions.updateThemeStatus(theme.id, channelId, action);
 
 	      if (selectedThemesSize === 0 && action === 'subscribe') {
-	        // actions.createChannel(channelId)
+	        actions.createChannel(channelId);
 	      } else if (selectedThemesSize === 1 && action === 'unsubscribe') {
-	          // actions.destroyChannel(channelId)
-	        }
+	        actions.destroyChannel(channelId);
+	      }
 	    }
 
 	    // renderers
@@ -21038,7 +21052,7 @@
 	        { id: 'modal', className: 'hidden' },
 	        _react2.default.createElement(
 	          _FadeModal2.default,
-	          { ref: 'modal', onHide: this.hideContainer },
+	          { ref: 'modal', onHide: this.hideContainer.bind(this) },
 	          _react2.default.createElement(
 	            'div',
 	            { className: 'modal-content' },
@@ -21789,8 +21803,21 @@
 	  var action = arguments[1];
 
 	  switch (action.type) {
-	    case 'SELECT_CHANNEL':
-	      return state;
+	    case 'CREATE_CHANNEL_REQUEST':
+	    case 'DESTROY_CHANNEL_REQUEST':
+	      return state.map(function (channel) {
+	        return channel.id === action.id ? Object.assign({}, channel, { isFetching: true }) : channel;
+	      });
+	    case 'CREATE_CHANNEL_ERROR':
+	    case 'DESTROY_CHANNEL_ERROR':
+	      return state.map(function (channel) {
+	        return channel.id === action.id ? Object.assign({}, channel, { isFetching: false }) : channel;
+	      });
+	    case 'CREATE_CHANNEL_RECEIVE':
+	    case 'DESTROY_CHANNEL_RECEIVE':
+	      return state.map(function (channel) {
+	        return channel.id === action.id ? Object.assign({}, channel, { isFetching: false, status: action.status }) : channel;
+	      });
 	    default:
 	      return state;
 	  }
@@ -21816,35 +21843,35 @@
 	  var action = arguments[1];
 
 	  switch (action.type) {
-	    case 'REQUEST_UPDATE_THEME_STATUS':
+	    case 'UPDATE_THEME_STATUS_REQUEST':
 	      return Object.assign({}, state, {
 	        items: state.items.map(function (theme) {
 	          return theme.id === action.id ? Object.assign({}, theme, { isFetching: true }) : theme;
 	        })
 	      });
-	    case 'RECEIVE_UPDATE_THEME_STATUS':
+	    case 'UPDATE_THEME_STATUS_RECEIVE':
 	      return Object.assign({}, state, {
 	        items: state.items.map(function (theme) {
 	          return theme.id === action.id ? Object.assign({}, theme, { isFetching: false, isSubscribed: action.isSubscribed }) : theme;
 	        })
 	      });
-	    case 'CATCH_UPDATE_THEME_STATUS_ERROR':
+	    case 'UPDATE_THEME_STATUS_ERROR':
 	      return Object.assign({}, state, {
 	        items: state.items.map(function (theme) {
 	          return theme.id === action.id ? Object.assign({}, theme, { isFetching: false }) : theme;
 	        })
 	      });
-	    case 'REQUEST_THEMES':
+	    case 'THEMES_REQUEST':
 	      return Object.assign({}, state, {
 	        isFetching: true
 	      });
-	    case 'RECEIVE_THEMES':
+	    case 'THEMES_RECEIVE':
 	      return Object.assign({}, state, {
 	        isFetching: false,
 	        items: action.themes,
 	        lastUpdated: action.receivedAt
 	      });
-	    case 'CATCH_THEMES_ERROR':
+	    case 'THEMES_ERROR':
 	      return Object.assign({}, state, {
 	        isFetching: false
 	      });
@@ -21870,14 +21897,14 @@
 	  return {
 	    type: 'CREATE_CHANNEL_RECEIVE',
 	    id: id,
-	    channel: json.channel,
+	    status: json.status,
 	    receivedAt: Date.now()
 	  };
 	}
 
 	function catchCreateChannelError(id, error) {
 	  return {
-	    type: 'CREATE_CHANNEL_CATCH_ERROR',
+	    type: 'CREATE_CHANNEL_ERROR',
 	    id: id,
 	    error: error,
 	    receivedAt: Date.now()
@@ -21904,6 +21931,58 @@
 	}
 
 	exports.default = createChannel;
+
+/***/ },
+/* 200 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	function requestDestroyChannel(id) {
+	  return { type: 'DESTROY_CHANNEL_REQUEST', id: id };
+	}
+
+	function receiveDestroyChannel(id, json) {
+	  return {
+	    type: 'DESTROY_CHANNEL_RECEIVE',
+	    id: id,
+	    status: json.status,
+	    receivedAt: Date.now()
+	  };
+	}
+
+	function catchDestroyChannelError(id, error) {
+	  return {
+	    type: 'DESTROY_CHANNEL_ERROR',
+	    id: id,
+	    error: error,
+	    receivedAt: Date.now()
+	  };
+	}
+
+	function destroyChannel(id) {
+	  return function (dispatch) {
+	    dispatch(requestDestroyChannel(id));
+
+	    return fetch('/channels', {
+	      method: 'DELETE',
+	      body: JSON.stringify({ id: id }),
+	      credentials: 'same-origin',
+	      headers: { 'Content-Type': 'application/json' }
+	    }).then(function (response) {
+	      return response.json();
+	    }).then(function (json) {
+	      return dispatch(receiveDestroyChannel(id, json));
+	    }, function (error) {
+	      return dispatch(catchDestroyChannelError(id, error));
+	    });
+	  };
+	}
+
+	exports.default = destroyChannel;
 
 /***/ }
 /******/ ]);

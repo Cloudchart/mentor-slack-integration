@@ -5,7 +5,7 @@ const initialState = {
 
 export default function themes(state = initialState, action) {
   switch (action.type) {
-    case 'REQUEST_UPDATE_THEME_STATUS':
+    case 'UPDATE_THEME_STATUS_REQUEST':
       return Object.assign({}, state, {
         items: state.items.map(theme =>
           theme.id === action.id ?
@@ -13,7 +13,7 @@ export default function themes(state = initialState, action) {
             theme
         )
       })
-    case 'RECEIVE_UPDATE_THEME_STATUS':
+    case 'UPDATE_THEME_STATUS_RECEIVE':
       return Object.assign({}, state, {
         items: state.items.map(theme =>
           theme.id === action.id ?
@@ -21,7 +21,7 @@ export default function themes(state = initialState, action) {
             theme
         )
       })
-    case 'CATCH_UPDATE_THEME_STATUS_ERROR':
+    case 'UPDATE_THEME_STATUS_ERROR':
       return Object.assign({}, state, {
         items: state.items.map(theme =>
           theme.id === action.id ?
@@ -29,17 +29,17 @@ export default function themes(state = initialState, action) {
             theme
         )
       })
-    case 'REQUEST_THEMES':
+    case 'THEMES_REQUEST':
       return Object.assign({}, state, {
         isFetching: true,
       })
-    case 'RECEIVE_THEMES':
+    case 'THEMES_RECEIVE':
       return Object.assign({}, state, {
         isFetching: false,
         items: action.themes,
         lastUpdated: action.receivedAt,
       })
-    case 'CATCH_THEMES_ERROR':
+    case 'THEMES_ERROR':
       return Object.assign({}, state, {
         isFetching: false,
       })

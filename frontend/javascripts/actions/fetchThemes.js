@@ -1,10 +1,10 @@
 function requestThemes(channelId) {
-  return { type: 'REQUEST_THEMES', channelId }
+  return { type: 'THEMES_REQUEST', channelId }
 }
 
 function receiveThemes(channelId, json) {
   return {
-    type: 'RECEIVE_THEMES',
+    type: 'THEMES_RECEIVE',
     channelId,
     themes: json.themes,
     receivedAt: Date.now()
@@ -13,7 +13,7 @@ function receiveThemes(channelId, json) {
 
 function catchThemesError(channelId, error) {
   return {
-    type: 'CATCH_THEMES_ERROR',
+    type: 'THEMES_ERROR',
     channelId,
     error: error,
     receivedAt: Date.now()

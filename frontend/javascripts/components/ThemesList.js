@@ -9,7 +9,7 @@ class ThemesList extends Component {
   // lifecycle
   //
   componentWillReceiveProps(nextProps) {
-    if (nextProps.themes.items.length > 0) {
+    if (nextProps.shouldRenderThemesList) {
       document.getElementById('modal').className = ''
       this.refs.modal.show()
     }
@@ -19,6 +19,7 @@ class ThemesList extends Component {
   //
   hideContainer() {
     document.getElementById('modal').className = 'hidden'
+    this.props.onHide()
   }
 
   getSelectedThemesSize() {
@@ -41,9 +42,9 @@ class ThemesList extends Component {
     actions.updateThemeStatus(theme.id, channelId, action)
 
     if (selectedThemesSize === 0 && action === 'subscribe') {
-      // actions.createChannel(channelId)
+      actions.createChannel(channelId)
     } else if (selectedThemesSize === 1 && action === 'unsubscribe') {
-      // actions.destroyChannel(channelId)
+      actions.destroyChannel(channelId)
     }
   }
 
@@ -63,7 +64,7 @@ class ThemesList extends Component {
   render() {
     return (
       <div id="modal" className="hidden">
-        <Modal ref="modal" onHide={ this.hideContainer }>
+        <Modal ref="modal" onHide={ this.hideContainer.bind(this) }>
           <div className="modal-content">
             <ul className="themes-list">
               { this.props.themes.items.map(this.renderTheme.bind(this)) }

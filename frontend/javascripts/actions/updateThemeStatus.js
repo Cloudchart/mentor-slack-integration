@@ -1,10 +1,10 @@
 function requestUpdateThemeStatus(id) {
-  return { type: 'REQUEST_UPDATE_THEME_STATUS', id }
+  return { type: 'UPDATE_THEME_STATUS_REQUEST', id }
 }
 
 function receiveUpdateThemeStatus(id, json) {
   return {
-    type: 'RECEIVE_UPDATE_THEME_STATUS',
+    type: 'UPDATE_THEME_STATUS_RECEIVE',
     id,
     isSubscribed: json.isSubscribed,
     receivedAt: Date.now(),
@@ -13,7 +13,7 @@ function receiveUpdateThemeStatus(id, json) {
 
 function catchUpdateThemeStatusError(id, error) {
   return {
-    type: 'CATCH_UPDATE_THEME_STATUS_ERROR',
+    type: 'UPDATE_THEME_STATUS_ERROR',
     id,
     error: error,
     receivedAt: Date.now(),
@@ -25,7 +25,7 @@ function updateThemeStatus(id, channelId, action) {
     dispatch(requestUpdateThemeStatus(id))
 
     return fetch('/themes', {
-      method: 'POST',
+      method: 'PATCH',
       body: JSON.stringify({ id, channelId, action }),
       credentials: 'same-origin',
       headers: { 'Content-Type': 'application/json' },

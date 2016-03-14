@@ -11,6 +11,7 @@ class ChannelsList extends Component {
     super(props)
     this.state = {
       channelId: '',
+      shouldRenderThemesList: false,
     }
   }
 
@@ -18,8 +19,12 @@ class ChannelsList extends Component {
   //
   handleChannelClick(channelId, event) {
     event.preventDefault()
-    this.setState({ channelId: channelId })
+    this.setState({ channelId: channelId, shouldRenderThemesList: true })
     this.props.actions.fetchThemes(channelId)
+  }
+
+  handleThemesListHide() {
+    this.setState({ shouldRenderThemesList: false })
   }
 
   // renderers
@@ -48,6 +53,8 @@ class ChannelsList extends Component {
           channelId={ this.state.channelId }
           themes={ this.props.themes }
           actions={ this.props.actions }
+          shouldRenderThemesList={ this.state.shouldRenderThemesList }
+          onHide={ this.handleThemesListHide.bind(this) }
         />
       </div>
     )

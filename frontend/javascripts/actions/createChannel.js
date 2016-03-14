@@ -6,14 +6,14 @@ function receiveCreateChannel(id, json) {
   return {
     type: 'CREATE_CHANNEL_RECEIVE',
     id,
-    channel: json.channel,
+    status: json.status,
     receivedAt: Date.now()
   }
 }
 
 function catchCreateChannelError(id, error) {
   return {
-    type: 'CREATE_CHANNEL_CATCH_ERROR',
+    type: 'CREATE_CHANNEL_ERROR',
     id,
     error: error,
     receivedAt: Date.now()
