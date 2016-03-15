@@ -15,24 +15,41 @@ import {
 import { Channel, Message, Team } from '../models'
 import { SlackChannel, Insight, InsightOrigin, UserTheme, UserThemeInsight } from '../models/web_app'
 
+const workerName = 'sender'
+
 
 // helpers
 //
-function isEveryoneAsleep(SlackWeb) {
+function isEveryoneAsleep(SlackWeb, channelId) {
   return new Promise((resolve, reject) => {
-    SlackWeb.users.list(1, (err, data) => {
-      if (err = err || data.error) {
-        console.log(errorMarker, err)
+    SlackWeb.channels.info(channelId, (err, res) => {
+      if (err = err || res.error) {
+        console.log(errorMarker, err, workerName, 'channels.info')
         reject()
       } else {
-        // TODO: filter members by channelId
-        let activeUsers = data.members.filter(member => {
-          return !member.deleted && !member.is_ultra_restricted && !member.is_bot && member.presence === 'active'
-        })
+        let members = res.channel.members
 
-        resolve(activeUsers.length === 0)
+        SlackWeb.users.list(1, (err, res) => {
+          if (err = err || res.error) {
+            console.log(errorMarker, err, workerName, 'users.list')
+            reject()
+          } else {
+            let activeUsers = res.members.filter(member => {
+              return (
+                members.includes(member.id) &&
+                !member.deleted &&
+                !member.is_ultra_restricted &&
+                !member.is_bot &&
+                member.presence === 'active'
+              )
+            })
+
+            resolve(activeUsers.length === 0)
+          }
+        })
       }
     })
+
   })
 }
 
@@ -57,7 +74,7 @@ async function sendMessage(channelId, userThemeInsight, done) {
   // TODO: do nothing if there are no reactions for last 3 insights
 
   // do nothing if everyone is away
-  let everyoneIsAsleep = await isEveryoneAsleep(SlackWeb)
+  let everyoneIsAsleep = await isEveryoneAsleep(SlackWeb, channel.id)
   if (everyoneIsAsleep === true) return done(null, true)
 
   // get insight content and origin
