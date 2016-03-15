@@ -3,6 +3,7 @@ import { errorMarker, getRandomElementFromArray, botName } from '../lib'
 import { Channel, Team, TeamOwner, TeamOwnerNotification } from '../models'
 
 const workerName = 'notInChannelNotifier'
+const notificationType = 'not_in_channel'
 
 const textOptions = [
   "Hello human. If you want me to work in your channel, then use this command:",
@@ -15,26 +16,41 @@ const textOptions = [
 // helpers
 //
 function sendMessage(SlackWeb, teamOwner, channelId, done) {
-  // TODO: do nothing if bot is already invited to the channel
-  // TODO: do nothing if owner has already received 2 messages of this type
-
-  SlackWeb.channels.info(channelId, (err, res) => {
+  SlackWeb.channels.info(channelId, async (err, res) => {
     if (err = err || res.error) {
       console.log(errorMarker, err, workerName, 'channels.info')
       done(null)
     } else {
+      // do nothing if bot is already in the channel
+      if (res.channel.is_member) return done(null, true)
+      // do nothing if owner has already received 2 messages of this type
+      let teamOwnerNotifications = await TeamOwnerNotification.findAll({
+        where: {
+          teamOwnerId: teamOwner.id,
+          channelId: channelId,
+          type: notificationType
+        }
+      })
+      if (teamOwnerNotifications.length === 2) return done(null, true)
+
       // generate text
       let text = []
       text.push(getRandomElementFromArray(textOptions))
       text.push(`/invite @${botName} #${res.channel.name}`)
       text = text.join(' ')
 
-      SlackWeb.chat.postMessage(teamOwner.imId, text, { as_user: true }, (err, res) => {
+      SlackWeb.chat.postMessage(teamOwner.imId, text, { as_user: true }, async (err, res) => {
         if (err = err || res.error) {
           console.log(errorMarker, err, workerName, 'chat.postMessage')
           done(null)
         } else {
-          // TODO: leave trace of notification
+          // leave trace of notification
+          await TeamOwnerNotification.create({
+            teamOwnerId: teamOwner.id,
+            channelId: channelId,
+            type: notificationType
+          })
+
           done(null, true)
         }
       })

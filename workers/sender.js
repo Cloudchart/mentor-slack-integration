@@ -22,8 +22,6 @@ const workerName = 'sender'
 //
 function enqueueNotInChannelNotifier(channelId, done) {
   queue.scheduledAt('slack-integration', 'notInChannelNotifier', channelId, async (err, timestamps) => {
-    console.log('@@@', timestamps);
-
     // don't enqueue if already enqueued
     if (timestamps.length > 0) {
       done(null, true)
