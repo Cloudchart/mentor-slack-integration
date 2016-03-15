@@ -16,6 +16,7 @@ export let perform = async (messageId, userThemeInsightId, done) => {
     } else {
       if (data.message.reactions) {
         let userThemeInsight = await UserThemeInsight.findById(userThemeInsightId)
+        // TODO: reactions emoji comparison
         userThemeInsight.update({ rate: 1 })
       }
 
