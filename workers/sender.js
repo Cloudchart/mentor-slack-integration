@@ -3,13 +3,20 @@ import URL from 'url'
 import { queue } from '../initializers/node_resque'
 
 import { WebClient } from 'slack-client'
-import { eventMarker, errorMarker, oneDayInSeconds, callWebAppGraphQL } from '../lib'
+
+import {
+  eventMarker,
+  errorMarker,
+  reactionsCollectorDelay,
+  notInChannelNotifierDelay,
+  callWebAppGraphQL,
+} from '../lib'
 
 import { Channel, Message, Team } from '../models'
 import { SlackChannel, Insight, InsightOrigin, UserTheme, UserThemeInsight } from '../models/web_app'
 
 
-// Helpers
+// helpers
 //
 function isEveryoneAsleep(SlackWeb) {
   return new Promise((resolve, reject) => {
@@ -18,6 +25,7 @@ function isEveryoneAsleep(SlackWeb) {
         console.log(errorMarker, err)
         reject()
       } else {
+        // TODO: filter members by channelId
         let activeUsers = data.members.filter(member => {
           return !member.deleted && !member.is_ultra_restricted && !member.is_bot && member.presence === 'active'
         })
@@ -72,21 +80,27 @@ async function sendMessage(channelId, userThemeInsight, done) {
 
   // post message
   SlackWeb.chat.postMessage(channel.id, text, options, async (err, data) => {
-    // TODO: bot isn't invited, leave trace for the team owner notification
+    // if bot isn't invited, enqueue notInChannelNotifier
     if (err = err || data.error) {
-      console.log(errorMarker, err)
-      done(null, true)
-    // message sent, update rate to -1, save output and enqueue reactionsCollector
+      if (err === 'not_in_channel') {
+        // TODO: don't enqueue if already enqueued
+        queue.enqueueAt(Date.now() + notInChannelNotifierDelay, 'slack-integration', 'notInChannelNotifier', channel.id, () => {
+          console.log(eventMarker, 'enqueued notInChannelNotifier')
+          done(null, true)
+        })
+      } else {
+        done(null, true)
+      }
+    // message sent, update rate, save output and enqueue reactionsCollector
     } else {
-      userThemeInsight.update({ rate: -1 })
+      userThemeInsight.update({ rate: 0 })
       let message = await Message.create({
         channelId: data.channel,
-        userThemeInsightId: userThemeInsight.id,
         timestamp: data.ts,
         responseBody: JSON.stringify(data),
       })
 
-      queue.enqueueAt(Date.now() + 20000, 'slack-integration', 'reactionsCollector', message.id, () => {
+      queue.enqueueAt(Date.now() + oneDayInSeconds, 'slack-integration', 'reactionsCollector', [message.id, userThemeInsight.id], () => {
         console.log(eventMarker, 'enqueued reactionsCollector')
         done(null, true)
       })
@@ -95,7 +109,7 @@ async function sendMessage(channelId, userThemeInsight, done) {
 }
 
 
-// Worker – sends insights to a channel
+// worker – sends insights to a channel
 //
 export let perform = async (done) => {
   // get all channel ids

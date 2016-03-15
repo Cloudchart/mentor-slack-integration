@@ -1,41 +1,40 @@
 'use strict';
 
 module.exports = function(sequelize, DataTypes) {
-  var Message = sequelize.define('Message', {
+  var TeamOwnerNotification = sequelize.define('TeamOwnerNotification', {
     id: {
       type: DataTypes.UUID,
       primaryKey: true,
       defaultValue: DataTypes.UUIDV4
     },
 
+    teamOwnerId: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+
     channelId: {
-      type: DataTypes.STRING,
-      allowNull: false
+      type: DataTypes.STRING
     },
 
-    timestamp: {
+    type: {
       type: DataTypes.STRING,
-      allowNull: false
-    },
-
-    responseBody: {
-      type: DataTypes.TEXT,
       allowNull: false
     }
 
   }, {
 
     indexes: [{
-      fields: ['channelId'],
+      fields: ['teamOwnerId', 'channelId'],
     }],
 
     classMethods: {
       associate: function(models) {
-        Message.belongsTo(models.Channel, { foreignKey: 'channelId' })
+        TeamOwnerNotification.belongsTo(models.TeamOwner, { foreignKey: 'teamOwnerId' })
       }
     }
 
   });
 
-  return Message;
+  return TeamOwnerNotification;
 };

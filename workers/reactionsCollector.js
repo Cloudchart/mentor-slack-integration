@@ -5,7 +5,7 @@ import { UserThemeInsight } from '../models/web_app'
 
 // Worker – collects reactions
 //
-export let perform = async (messageId, done) => {
+export let perform = async (messageId, userThemeInsightId, done) => {
   let message = await Message.find({ include: [{ model: Channel, include: [Team] }], where: { id: messageId } })
   let SlackWeb = new WebClient(message.Channel.Team.accessToken)
 
@@ -15,7 +15,7 @@ export let perform = async (messageId, done) => {
       done(null)
     } else {
       if (data.message.reactions) {
-        let userThemeInsight = await UserThemeInsight.findById(message.userThemeInsightId)
+        let userThemeInsight = await UserThemeInsight.findById(userThemeInsightId)
         userThemeInsight.update({ rate: 1 })
       }
 

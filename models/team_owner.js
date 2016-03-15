@@ -1,19 +1,18 @@
 'use strict';
 
 module.exports = function(sequelize, DataTypes) {
-  var Message = sequelize.define('Message', {
+  var TeamOwner = sequelize.define('TeamOwner', {
     id: {
-      type: DataTypes.UUID,
-      primaryKey: true,
-      defaultValue: DataTypes.UUIDV4
+      type: DataTypes.STRING,
+      primaryKey: true
     },
 
-    channelId: {
+    teamId: {
       type: DataTypes.STRING,
       allowNull: false
     },
 
-    timestamp: {
+    imId: {
       type: DataTypes.STRING,
       allowNull: false
     },
@@ -26,16 +25,17 @@ module.exports = function(sequelize, DataTypes) {
   }, {
 
     indexes: [{
-      fields: ['channelId'],
+      fields: ['teamId'],
     }],
 
     classMethods: {
       associate: function(models) {
-        Message.belongsTo(models.Channel, { foreignKey: 'channelId' })
+        TeamOwner.belongsTo(models.Team, { foreignKey: 'teamId' })
+        TeamOwner.hasMany(models.TeamOwnerNotification, { foreignKey: 'teamOwnerId', onDelete: 'CASCADE' })
       }
     }
 
   });
 
-  return Message;
+  return TeamOwner;
 };
