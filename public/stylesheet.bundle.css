@@ -2097,6 +2097,19 @@ div#modal .modal-content {
 div#modal button {
   float: right; }
 
+.days-list {
+  display: inline-block;
+  margin-left: 20px; }
+  .days-list > li {
+    display: inline;
+    color: #C8C8C8;
+    font-weight: bold;
+    cursor: pointer; }
+    .days-list > li:not(:last-child) {
+      margin-right: 5px; }
+    .days-list > li.selected {
+      color: #3BC363; }
+
 .channels-list > li > i {
   margin-right: 10px;
   color: #C8C8C8; }

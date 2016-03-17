@@ -32,6 +32,26 @@ div#modal {
   }
 }
 
+.days-list {
+  display: inline-block;
+  margin-left: 20px;
+
+  > li {
+    display: inline;
+    color: $primary-gray;
+    font-weight: bold;
+    cursor: pointer;
+
+    &:not(:last-child) {
+      margin-right: 5px;
+    }
+
+    &.selected {
+      color: $primary-green;
+    }
+  }
+}
+
 .channels-list {
   > li {
     > i {

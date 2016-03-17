@@ -72,7 +72,7 @@
 	if (reactType === 'plain') {
 	  _reactDom2.default.render(_react2.default.createElement(Component, JSON.parse(node.dataset.reactProps)), node);
 	} else {
-	  var reducers = __webpack_require__(198)("./" + reactClass).default;
+	  var reducers = __webpack_require__(199)("./" + reactClass).default;
 	  var store = (0, _redux.createStore)(reducers, window.__INITIAL_STATE__, (0, _redux.applyMiddleware)(_reduxThunk2.default));
 
 	  _reactDom2.default.render(_react2.default.createElement(
@@ -20486,8 +20486,8 @@
 	var map = {
 		"./ConfigApp": 177,
 		"./ConfigApp.js": 177,
-		"./LandingApp": 197,
-		"./LandingApp.js": 197
+		"./LandingApp": 198,
+		"./LandingApp.js": 198
 	};
 	function webpackContext(req) {
 		return __webpack_require__(webpackContextResolve(req));
@@ -20529,7 +20529,7 @@
 
 	var _ChannelsList2 = _interopRequireDefault(_ChannelsList);
 
-	var _TimeSetting = __webpack_require__(204);
+	var _TimeSetting = __webpack_require__(195);
 
 	var _TimeSetting2 = _interopRequireDefault(_TimeSetting);
 
@@ -21756,8 +21756,201 @@
 
 
 /***/ },
-/* 195 */,
+/* 195 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _classnames = __webpack_require__(184);
+
+	var _classnames2 = _interopRequireDefault(_classnames);
+
+	var _data = __webpack_require__(196);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var TimeSetting = function (_Component) {
+	  _inherits(TimeSetting, _Component);
+
+	  function TimeSetting(props) {
+	    _classCallCheck(this, TimeSetting);
+
+	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(TimeSetting).call(this, props));
+
+	    _this.state = {
+	      tz: _this.props.timeSetting.tz,
+	      startTime: _this.props.timeSetting.startTime,
+	      endTime: _this.props.timeSetting.endTime,
+	      days: _this.props.timeSetting.days
+	    };
+	    return _this;
+	  }
+
+	  // handlers
+	  //
+
+
+	  _createClass(TimeSetting, [{
+	    key: 'handleAttributeChange',
+	    value: function handleAttributeChange(attr, event) {
+	      this.setState(_defineProperty({}, attr, event.target.value));
+	    }
+	  }, {
+	    key: 'handleDayClick',
+	    value: function handleDayClick(day, event) {
+	      console.log(day);
+	    }
+
+	    // renderers
+	    //
+
+	  }, {
+	    key: 'renderTimezoneOptions',
+	    value: function renderTimezoneOptions(timezone) {
+	      return _react2.default.createElement(
+	        'option',
+	        { value: timezone.id },
+	        timezone.text
+	      );
+	    }
+	  }, {
+	    key: 'renderStartTimeOptions',
+	    value: function renderStartTimeOptions(time) {
+	      return _react2.default.createElement(
+	        'option',
+	        { value: time },
+	        time
+	      );
+	    }
+	  }, {
+	    key: 'renderEndTimeOptions',
+	    value: function renderEndTimeOptions(time) {
+	      return _react2.default.createElement(
+	        'option',
+	        { value: time },
+	        time
+	      );
+	    }
+	  }, {
+	    key: 'renderDaysList',
+	    value: function renderDaysList(day) {
+	      var value = _data.daysOfWeek[day];
+	      var dayClassNames = (0, _classnames2.default)({ selected: this.state.days.includes(value) });
+
+	      return _react2.default.createElement(
+	        'li',
+	        { className: dayClassNames, onClick: this.handleDayClick.bind(this, value) },
+	        day
+	      );
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(
+	          'h2',
+	          null,
+	          'Select your team timezone:'
+	        ),
+	        _react2.default.createElement(
+	          'select',
+	          { value: this.state.tz, onChange: this.handleAttributeChange.bind(this, 'tz') },
+	          _data.timezones.map(this.renderTimezoneOptions.bind(this))
+	        ),
+	        _react2.default.createElement(
+	          'h2',
+	          null,
+	          'Mentoring time:'
+	        ),
+	        _react2.default.createElement(
+	          'select',
+	          { value: this.state.startTime, onChange: this.handleAttributeChange.bind(this, 'startTime') },
+	          _data.dayTimes.map(this.renderStartTimeOptions.bind(this))
+	        ),
+	        _react2.default.createElement(
+	          'span',
+	          null,
+	          '—'
+	        ),
+	        _react2.default.createElement(
+	          'select',
+	          { value: this.state.endTime, onChange: this.handleAttributeChange.bind(this, 'endTime') },
+	          _data.dayTimes.map(this.renderEndTimeOptions.bind(this))
+	        ),
+	        _react2.default.createElement(
+	          'ul',
+	          { className: 'days-list' },
+	          Object.keys(_data.daysOfWeek).map(this.renderDaysList.bind(this))
+	        )
+	      );
+	    }
+	  }]);
+
+	  return TimeSetting;
+	}(_react.Component);
+
+	TimeSetting.propTypes = {
+	  timeSetting: _react.PropTypes.object.isRequired,
+	  actions: _react.PropTypes.object.isRequired
+	};
+
+	exports.default = TimeSetting;
+
+/***/ },
 /* 196 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.daysOfWeek = exports.dayTimes = exports.timezones = undefined;
+
+	var _timezones = __webpack_require__(197);
+
+	var _timezones2 = _interopRequireDefault(_timezones);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var dayTimes = ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00', '24:00'];
+
+	var daysOfWeek = {
+	  Mon: 'mon',
+	  Tue: 'tue',
+	  Wed: 'wed',
+	  Thu: 'thu',
+	  Fri: 'fri',
+	  Sat: 'sat',
+	  Sun: 'sun'
+	};
+
+	exports.timezones = _timezones2.default;
+	exports.dayTimes = dayTimes;
+	exports.daysOfWeek = daysOfWeek;
+
+/***/ },
+/* 197 */
 /***/ function(module, exports) {
 
 	module.exports = [
@@ -22172,7 +22365,7 @@
 	];
 
 /***/ },
-/* 197 */
+/* 198 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -22241,20 +22434,20 @@
 	};
 
 /***/ },
-/* 198 */
+/* 199 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var map = {
-		"./ConfigApp": 199,
-		"./ConfigApp.js": 199,
-		"./channels": 201,
-		"./channels.js": 201,
-		"./team": 200,
-		"./team.js": 200,
-		"./themes": 202,
-		"./themes.js": 202,
-		"./timeSetting": 203,
-		"./timeSetting.js": 203
+		"./ConfigApp": 200,
+		"./ConfigApp.js": 200,
+		"./channels": 202,
+		"./channels.js": 202,
+		"./team": 201,
+		"./team.js": 201,
+		"./themes": 203,
+		"./themes.js": 203,
+		"./timeSetting": 204,
+		"./timeSetting.js": 204
 	};
 	function webpackContext(req) {
 		return __webpack_require__(webpackContextResolve(req));
@@ -22267,11 +22460,11 @@
 	};
 	webpackContext.resolve = webpackContextResolve;
 	module.exports = webpackContext;
-	webpackContext.id = 198;
+	webpackContext.id = 199;
 
 
 /***/ },
-/* 199 */
+/* 200 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -22282,19 +22475,19 @@
 
 	var _redux = __webpack_require__(154);
 
-	var _team = __webpack_require__(200);
+	var _team = __webpack_require__(201);
 
 	var _team2 = _interopRequireDefault(_team);
 
-	var _channels = __webpack_require__(201);
+	var _channels = __webpack_require__(202);
 
 	var _channels2 = _interopRequireDefault(_channels);
 
-	var _themes = __webpack_require__(202);
+	var _themes = __webpack_require__(203);
 
 	var _themes2 = _interopRequireDefault(_themes);
 
-	var _timeSetting = __webpack_require__(203);
+	var _timeSetting = __webpack_require__(204);
 
 	var _timeSetting2 = _interopRequireDefault(_timeSetting);
 
@@ -22308,7 +22501,7 @@
 	});
 
 /***/ },
-/* 200 */
+/* 201 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -22328,7 +22521,7 @@
 	}
 
 /***/ },
-/* 201 */
+/* 202 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -22363,7 +22556,7 @@
 	}
 
 /***/ },
-/* 202 */
+/* 203 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -22420,7 +22613,7 @@
 	}
 
 /***/ },
-/* 203 */
+/* 204 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -22438,145 +22631,6 @@
 	      return state;
 	  }
 	}
-
-/***/ },
-/* 204 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _data = __webpack_require__(206);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var TimeSetting = function (_Component) {
-	  _inherits(TimeSetting, _Component);
-
-	  function TimeSetting() {
-	    _classCallCheck(this, TimeSetting);
-
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(TimeSetting).apply(this, arguments));
-	  }
-
-	  _createClass(TimeSetting, [{
-	    key: 'renderStartTimeOptions',
-
-
-	    // renderers
-	    //
-	    value: function renderStartTimeOptions(time) {
-	      return _react2.default.createElement(
-	        'option',
-	        { value: time, selected: time === this.props.timeSetting.startTime },
-	        time
-	      );
-	    }
-	  }, {
-	    key: 'renderEndTimeOptions',
-	    value: function renderEndTimeOptions(time) {
-	      return _react2.default.createElement(
-	        'option',
-	        { value: time, selected: time === this.props.timeSetting.endTime },
-	        time
-	      );
-	    }
-	  }, {
-	    key: 'renderTimezoneOptions',
-	    value: function renderTimezoneOptions(timezone) {
-	      return _react2.default.createElement(
-	        'option',
-	        { value: timezone.id, selected: timezone.id === this.props.timeSetting.tz },
-	        timezone.text
-	      );
-	    }
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      return _react2.default.createElement(
-	        'div',
-	        null,
-	        _react2.default.createElement(
-	          'h2',
-	          null,
-	          'Select your team timezone:'
-	        ),
-	        _react2.default.createElement(
-	          'select',
-	          null,
-	          _data.timezones.map(this.renderTimezoneOptions.bind(this))
-	        ),
-	        _react2.default.createElement(
-	          'h2',
-	          null,
-	          'Mentoring time:'
-	        ),
-	        _react2.default.createElement(
-	          'select',
-	          null,
-	          _data.dayTimes.map(this.renderStartTimeOptions.bind(this))
-	        ),
-	        _react2.default.createElement(
-	          'span',
-	          null,
-	          '—'
-	        ),
-	        _react2.default.createElement(
-	          'select',
-	          null,
-	          _data.dayTimes.map(this.renderEndTimeOptions.bind(this))
-	        )
-	      );
-	    }
-	  }]);
-
-	  return TimeSetting;
-	}(_react.Component);
-
-	TimeSetting.propTypes = {
-	  timeSetting: _react.PropTypes.object.isRequired,
-	  actions: _react.PropTypes.object.isRequired
-	};
-
-	exports.default = TimeSetting;
-
-/***/ },
-/* 205 */,
-/* 206 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.timezones = exports.dayTimes = undefined;
-
-	var _timezones = __webpack_require__(196);
-
-	var _timezones2 = _interopRequireDefault(_timezones);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var dayTimes = ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00', '24:00'];
-
-	exports.dayTimes = dayTimes;
-	exports.timezones = _timezones2.default;
 
 /***/ }
 /******/ ]);

@@ -1,14 +1,43 @@
 import React, { Component, PropTypes } from 'react'
-import { dayTimes, timezones } from '../../data'
+import classNames from 'classnames'
+import { timezones, dayTimes, daysOfWeek } from '../../data'
 
 
 class TimeSetting extends Component {
 
+  constructor(props) {
+    super(props)
+    this.state = {
+      tz: this.props.timeSetting.tz,
+      startTime: this.props.timeSetting.startTime,
+      endTime: this.props.timeSetting.endTime,
+      days: this.props.timeSetting.days,
+    }
+  }
+
+  // handlers
+  //
+  handleAttributeChange(attr, event) {
+    this.setState({ [attr]: event.target.value })
+  }
+
+  handleDayClick(day, event) {
+    console.log(day);
+  }
+
   // renderers
   //
+  renderTimezoneOptions(timezone) {
+    return(
+      <option value={ timezone.id }>
+        { timezone.text }
+      </option>
+    )
+  }
+
   renderStartTimeOptions(time) {
     return(
-      <option value={ time } selected={ time === this.props.timeSetting.startTime }>
+      <option value={ time }>
         { time }
       </option>
     )
@@ -16,17 +45,20 @@ class TimeSetting extends Component {
 
   renderEndTimeOptions(time) {
     return(
-      <option value={ time } selected={ time === this.props.timeSetting.endTime }>
+      <option value={ time }>
         { time }
       </option>
     )
   }
 
-  renderTimezoneOptions(timezone) {
+  renderDaysList(day) {
+    let value = daysOfWeek[day]
+    let dayClassNames = classNames({ selected: this.state.days.includes(value) })
+
     return(
-      <option value={ timezone.id } selected={ timezone.id === this.props.timeSetting.tz }>
-        { timezone.text }
-      </option>
+      <li className={ dayClassNames } onClick={ this.handleDayClick.bind(this, value) }>
+        { day }
+      </li>
     )
   }
 
@@ -34,20 +66,24 @@ class TimeSetting extends Component {
     return (
       <div>
         <h2>Select your team timezone:</h2>
-        <select>
+        <select value={ this.state.tz } onChange={ this.handleAttributeChange.bind(this, 'tz') }>
           { timezones.map(this.renderTimezoneOptions.bind(this)) }
         </select>
 
         <h2>Mentoring time:</h2>
-        <select>
+        <select value={ this.state.startTime } onChange={ this.handleAttributeChange.bind(this, 'startTime') }>
           { dayTimes.map(this.renderStartTimeOptions.bind(this)) }
         </select>
 
         <span>—</span>
 
-        <select>
+        <select value={ this.state.endTime } onChange={ this.handleAttributeChange.bind(this, 'endTime') }>
           { dayTimes.map(this.renderEndTimeOptions.bind(this)) }
         </select>
+
+        <ul className="days-list">
+          { Object.keys(daysOfWeek).map(this.renderDaysList.bind(this)) }
+        </ul>
       </div>
     )
   }
