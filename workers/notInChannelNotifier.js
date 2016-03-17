@@ -75,15 +75,16 @@ async function perform(channelId, done) {
         console.log(errorMarker, err, workerName, 'users.list')
         done(null)
       } else {
-        // let teamOwner = res.members.find(member => member.is_primary_owner)
-        let teamOwner = res.members.find(member => member.name === 'peresleguine')
+        // TODO: change filter
+        // let primaryOwner = res.members.find(member => member.is_primary_owner)
+        let primaryOwner = res.members.find(member => member.name === 'peresleguine')
 
         SlackWeb.dm.list((err, res) => {
           if (err = err || res.error) {
             console.log(errorMarker, err, workerName, 'im.list')
             done(null)
           } else {
-            let im = res.ims.find(im => im.user === teamOwner.id)
+            let im = res.ims.find(im => im.user === primaryOwner.id)
 
             // save team owner for further notifications
             TeamOwner.findOrCreate({

@@ -4,7 +4,7 @@ import { Router } from 'express'
 import { WebClient } from 'slack-client'
 import { errorMarker, callWebAppGraphQL } from '../lib'
 
-import { Team, Channel } from '../models'
+import { Team, Channel, TimeSetting } from '../models'
 
 let router = Router()
 let SlackDefaultWeb = new WebClient('')
@@ -12,7 +12,21 @@ let SlackDefaultWeb = new WebClient('')
 
 // helpers
 //
-let checkTeamId = (req, res, next) => {
+async function initTimeSetting(req, res, next) {
+  // TODO: get tz from ip
+  await TimeSetting.findOrCreate({
+    where: { teamId: req.session.teamId },
+    defaults: {
+      tz: 'Europe/Moscow',
+      startTime: '10:00',
+      endTime: '22:00',
+      days: ['mon', 'tue', 'wed', 'thu', 'fri']
+    }
+  })
+  next()
+}
+
+function checkTeamId(req, res, next) {
   if (req.session.teamId) {
     next()
   } else {
@@ -76,10 +90,11 @@ router.get('/oauth/callback', (req, res, next) => {
 
 // config
 //
-router.get('/configuration', checkTeamId, async (req, res, next) => {
+router.get('/configuration', checkTeamId, initTimeSetting, async (req, res, next) => {
   let team = await Team.findById(req.session.teamId)
   let SlackWeb = new WebClient(team.accessToken)
 
+  let timeSetting = await TimeSetting.find({ where: { teamId: team.id } })
   let teamChannels = await Channel.findAll({ where: { teamId: team.id } })
   let selectedChannelIds = teamChannels.map(channel => channel.id)
 
@@ -104,6 +119,12 @@ router.get('/configuration', checkTeamId, async (req, res, next) => {
         title: 'Configure Virtual Mentor integration',
         team: { name: team.name },
         channels: channels,
+        timeSetting: {
+          tz: timeSetting.tz,
+          startTime: timeSetting.startTime,
+          endTime: timeSetting.endTime,
+          days: timeSetting.days,
+        }
       })
     }
   })

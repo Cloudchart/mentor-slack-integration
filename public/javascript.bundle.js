@@ -72,7 +72,7 @@
 	if (reactType === 'plain') {
 	  _reactDom2.default.render(_react2.default.createElement(Component, JSON.parse(node.dataset.reactProps)), node);
 	} else {
-	  var reducers = __webpack_require__(196)("./" + reactClass).default;
+	  var reducers = __webpack_require__(198)("./" + reactClass).default;
 	  var store = (0, _redux.createStore)(reducers, window.__INITIAL_STATE__, (0, _redux.applyMiddleware)(_reduxThunk2.default));
 
 	  _reactDom2.default.render(_react2.default.createElement(
@@ -20486,8 +20486,8 @@
 	var map = {
 		"./ConfigApp": 177,
 		"./ConfigApp.js": 177,
-		"./LandingApp": 195,
-		"./LandingApp.js": 195
+		"./LandingApp": 197,
+		"./LandingApp.js": 197
 	};
 	function webpackContext(req) {
 		return __webpack_require__(webpackContextResolve(req));
@@ -20529,6 +20529,10 @@
 
 	var _ChannelsList2 = _interopRequireDefault(_ChannelsList);
 
+	var _TimeSetting = __webpack_require__(204);
+
+	var _TimeSetting2 = _interopRequireDefault(_TimeSetting);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -20553,6 +20557,7 @@
 	      var team = _props.team;
 	      var channels = _props.channels;
 	      var themes = _props.themes;
+	      var timeSetting = _props.timeSetting;
 	      var actions = _props.actions;
 
 
@@ -20562,13 +20567,17 @@
 	        _react2.default.createElement(
 	          'h1',
 	          null,
-	          'Configure Virtual Mentor integration for ' + team.name
+	          _react2.default.createElement('i', { className: 'fa fa-cogs' }),
+	          _react2.default.createElement(
+	            'span',
+	            null,
+	            'Configure Virtual Mentor integration for ' + team.name
+	          )
 	        ),
-	        _react2.default.createElement(
-	          'h2',
-	          null,
-	          'Channels:'
-	        ),
+	        _react2.default.createElement(_TimeSetting2.default, {
+	          timeSetting: timeSetting,
+	          actions: actions
+	        }),
 	        _react2.default.createElement(_ChannelsList2.default, {
 	          channels: channels,
 	          themes: themes,
@@ -20585,14 +20594,16 @@
 	  team: _react.PropTypes.object.isRequired,
 	  channels: _react.PropTypes.array.isRequired,
 	  themes: _react.PropTypes.object.isRequired,
-	  actions: _react.PropTypes.object.isRequired
+	  actions: _react.PropTypes.object.isRequired,
+	  timeSetting: _react.PropTypes.object.isRequired
 	};
 
 	function mapStateToProps(state) {
 	  return {
 	    team: state.team,
 	    channels: state.channels,
-	    themes: state.themes
+	    themes: state.themes,
+	    timeSetting: state.timeSetting
 	  };
 	}
 
@@ -20945,6 +20956,11 @@
 	        'div',
 	        null,
 	        _react2.default.createElement(
+	          'h2',
+	          null,
+	          'Channels:'
+	        ),
+	        _react2.default.createElement(
 	          'ul',
 	          { className: 'channels-list' },
 	          this.props.channels.map(this.renderChannel.bind(this))
@@ -21040,10 +21056,6 @@
 	var _react = __webpack_require__(1);
 
 	var _react2 = _interopRequireDefault(_react);
-
-	var _reactDom = __webpack_require__(153);
-
-	var _reactDom2 = _interopRequireDefault(_reactDom);
 
 	var _FadeModal = __webpack_require__(186);
 
@@ -21744,7 +21756,423 @@
 
 
 /***/ },
-/* 195 */
+/* 195 */,
+/* 196 */
+/***/ function(module, exports) {
+
+	module.exports = [
+		{
+			"id": "Pacific/Midway",
+			"text": "(UTC-11:00) Midway Island, American Samoa"
+		},
+		{
+			"id": "Pacific/Honolulu",
+			"text": "(UTC-10:00) Hawaii"
+		},
+		{
+			"id": "America/Anchorage",
+			"text": "(UTC-08:00) Alaska"
+		},
+		{
+			"id": "America/Tijuana",
+			"text": "(UTC-07:00) Baja California"
+		},
+		{
+			"id": "America/Los_Angeles",
+			"text": "(UTC-07:00) Pacific Time (US and Canada)"
+		},
+		{
+			"id": "America/Phoenix",
+			"text": "(UTC-07:00) Arizona"
+		},
+		{
+			"id": "America/Chihuahua",
+			"text": "(UTC-07:00) Chihuahua, La Paz, Mazatlan"
+		},
+		{
+			"id": "America/Denver",
+			"text": "(UTC-06:00) Mountain Time (US and Canada)"
+		},
+		{
+			"id": "America/Belize",
+			"text": "(UTC-06:00) Central America"
+		},
+		{
+			"id": "America/Mexico_City",
+			"text": "(UTC-06:00) Guadalajara, Mexico City, Monterrey"
+		},
+		{
+			"id": "America/Regina",
+			"text": "(UTC-06:00) Saskatchewan"
+		},
+		{
+			"id": "America/Chicago",
+			"text": "(UTC-05:00) Central Time (US and Canada)"
+		},
+		{
+			"id": "America/Bogota",
+			"text": "(UTC-05:00) Bogota, Lima, Quito"
+		},
+		{
+			"id": "America/Jamaica",
+			"text": "(UTC-05:00) Kingston, George Town"
+		},
+		{
+			"id": "America/Caracas",
+			"text": "(UTC-04:30) Caracas"
+		},
+		{
+			"id": "America/New_York",
+			"text": "(UTC-04:00) Eastern Time (US and Canada)"
+		},
+		{
+			"id": "America/Indiana/Indianapolis",
+			"text": "(UTC-04:00) Indiana (East)"
+		},
+		{
+			"id": "America/Cuiaba",
+			"text": "(UTC-04:00) Cuiaba"
+		},
+		{
+			"id": "America/Manaus",
+			"text": "(UTC-04:00) Georgetown, La Paz, Manaus, San Juan"
+		},
+		{
+			"id": "America/Asuncion",
+			"text": "(UTC-03:00) Asuncion"
+		},
+		{
+			"id": "America/Halifax",
+			"text": "(UTC-03:00) Atlantic Time (Canada)"
+		},
+		{
+			"id": "America/Sao_Paulo",
+			"text": "(UTC-03:00) Brasilia"
+		},
+		{
+			"id": "America/Buenos_Aires",
+			"text": "(UTC-03:00) Buenos Aires"
+		},
+		{
+			"id": "America/Cayenne",
+			"text": "(UTC-03:00) Cayenne, Fortaleza"
+		},
+		{
+			"id": "America/Godthab",
+			"text": "(UTC-03:00) Greenland"
+		},
+		{
+			"id": "America/Montevideo",
+			"text": "(UTC-03:00) Montevideo"
+		},
+		{
+			"id": "America/Bahia",
+			"text": "(UTC-03:00) Salvador"
+		},
+		{
+			"id": "America/Santiago",
+			"text": "(UTC-03:00) Santiago"
+		},
+		{
+			"id": "America/St_Johns",
+			"text": "(UTC-02:30) Newfoundland and Labrador"
+		},
+		{
+			"id": "America/Noronha",
+			"text": "(UTC-02:00) Mid-Atlantic"
+		},
+		{
+			"id": "Atlantic/Azores",
+			"text": "(UTC-01:00) Azores"
+		},
+		{
+			"id": "Atlantic/Cape_Verde",
+			"text": "(UTC-01:00) Cape Verde Islands"
+		},
+		{
+			"id": "Europe/London",
+			"text": "(UTC+00:00) Dublin, Edinburgh, Lisbon, London"
+		},
+		{
+			"id": "Africa/Casablanca",
+			"text": "(UTC+00:00) Casablanca"
+		},
+		{
+			"id": "Africa/Monrovia",
+			"text": "(UTC+00:00) Monrovia, Reykjavik"
+		},
+		{
+			"id": "Europe/Amsterdam",
+			"text": "(UTC+01:00) Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna"
+		},
+		{
+			"id": "Europe/Belgrade",
+			"text": "(UTC+01:00) Belgrade, Bratislava, Budapest, Ljubljana, Prague"
+		},
+		{
+			"id": "Europe/Brussels",
+			"text": "(UTC+01:00) Brussels, Copenhagen, Madrid, Paris"
+		},
+		{
+			"id": "Europe/Warsaw",
+			"text": "(UTC+01:00) Sarajevo, Skopje, Warsaw, Zagreb"
+		},
+		{
+			"id": "Africa/Algiers",
+			"text": "(UTC+01:00) West Central Africa"
+		},
+		{
+			"id": "Africa/Windhoek",
+			"text": "(UTC+02:00) Windhoek"
+		},
+		{
+			"id": "Europe/Athens",
+			"text": "(UTC+02:00) Athens, Bucharest"
+		},
+		{
+			"id": "Asia/Beirut",
+			"text": "(UTC+02:00) Beirut"
+		},
+		{
+			"id": "Africa/Cairo",
+			"text": "(UTC+02:00) Cairo"
+		},
+		{
+			"id": "Asia/Damascus",
+			"text": "(UTC+02:00) Damascus"
+		},
+		{
+			"id": "EET",
+			"text": "(UTC+02:00) Eastern Europe"
+		},
+		{
+			"id": "Africa/Harare",
+			"text": "(UTC+02:00) Harare, Pretoria"
+		},
+		{
+			"id": "Europe/Helsinki",
+			"text": "(UTC+02:00) Helsinki, Kiev, Riga, Sofia, Tallinn, Vilnius"
+		},
+		{
+			"id": "Asia/Istanbul",
+			"text": "(UTC+02:00) Istanbul"
+		},
+		{
+			"id": "Asia/Jerusalem",
+			"text": "(UTC+02:00) Jerusalem"
+		},
+		{
+			"id": "Europe/Kaliningrad",
+			"text": "(UTC+02:00) Kaliningrad"
+		},
+		{
+			"id": "Africa/Tripoli",
+			"text": "(UTC+02:00) Tripoli"
+		},
+		{
+			"id": "Asia/Amman",
+			"text": "(UTC+02:00) Amman"
+		},
+		{
+			"id": "Asia/Baghdad",
+			"text": "(UTC+03:00) Baghdad"
+		},
+		{
+			"id": "Asia/Kuwait",
+			"text": "(UTC+03:00) Kuwait, Riyadh"
+		},
+		{
+			"id": "Europe/Minsk",
+			"text": "(UTC+03:00) Minsk"
+		},
+		{
+			"id": "Europe/Moscow",
+			"text": "(UTC+03:00) Moscow, St. Petersburg, Volgograd"
+		},
+		{
+			"id": "Africa/Nairobi",
+			"text": "(UTC+03:00) Nairobi"
+		},
+		{
+			"id": "Asia/Tehran",
+			"text": "(UTC+03:30) Tehran"
+		},
+		{
+			"id": "Asia/Muscat",
+			"text": "(UTC+04:00) Abu Dhabi, Muscat"
+		},
+		{
+			"id": "Asia/Baku",
+			"text": "(UTC+04:00) Baku"
+		},
+		{
+			"id": "Europe/Samara",
+			"text": "(UTC+04:00) Izhevsk, Samara"
+		},
+		{
+			"id": "Indian/Mauritius",
+			"text": "(UTC+04:00) Port Louis"
+		},
+		{
+			"id": "Asia/Tbilisi",
+			"text": "(UTC+04:00) Tbilisi"
+		},
+		{
+			"id": "Asia/Yerevan",
+			"text": "(UTC+04:00) Yerevan"
+		},
+		{
+			"id": "Asia/Kabul",
+			"text": "(UTC+04:30) Kabul"
+		},
+		{
+			"id": "Asia/Tashkent",
+			"text": "(UTC+05:00) Tashkent, Ashgabat"
+		},
+		{
+			"id": "Asia/Yekaterinburg",
+			"text": "(UTC+05:00) Ekaterinburg"
+		},
+		{
+			"id": "Asia/Karachi",
+			"text": "(UTC+05:00) Islamabad, Karachi"
+		},
+		{
+			"id": "Asia/Kolkata",
+			"text": "(UTC+05:30) Chennai, Kolkata, Mumbai, New Delhi"
+		},
+		{
+			"id": "Asia/Colombo",
+			"text": "(UTC+05:30) Sri Jayawardenepura"
+		},
+		{
+			"id": "Asia/Katmandu",
+			"text": "(UTC+05:45) Kathmandu"
+		},
+		{
+			"id": "Asia/Almaty",
+			"text": "(UTC+06:00) Astana"
+		},
+		{
+			"id": "Asia/Dhaka",
+			"text": "(UTC+06:00) Dhaka"
+		},
+		{
+			"id": "Asia/Novosibirsk",
+			"text": "(UTC+06:00) Novosibirsk"
+		},
+		{
+			"id": "Asia/Rangoon",
+			"text": "(UTC+06:30) Yangon (Rangoon)"
+		},
+		{
+			"id": "Asia/Bangkok",
+			"text": "(UTC+07:00) Bangkok, Hanoi, Jakarta"
+		},
+		{
+			"id": "Asia/Krasnoyarsk",
+			"text": "(UTC+07:00) Krasnoyarsk"
+		},
+		{
+			"id": "Asia/Chongqing",
+			"text": "(UTC+08:00) Beijing, Chongqing, Hong Kong SAR, Urumqi"
+		},
+		{
+			"id": "Asia/Irkutsk",
+			"text": "(UTC+08:00) Irkutsk"
+		},
+		{
+			"id": "Asia/Kuala_Lumpur",
+			"text": "(UTC+08:00) Kuala Lumpur, Singapore"
+		},
+		{
+			"id": "Australia/Perth",
+			"text": "(UTC+08:00) Perth"
+		},
+		{
+			"id": "Asia/Taipei",
+			"text": "(UTC+08:00) Taipei"
+		},
+		{
+			"id": "Asia/Ulaanbaatar",
+			"text": "(UTC+08:00) Ulaanbaatar"
+		},
+		{
+			"id": "Asia/Tokyo",
+			"text": "(UTC+09:00) Osaka, Sapporo, Tokyo"
+		},
+		{
+			"id": "Asia/Seoul",
+			"text": "(UTC+09:00) Seoul"
+		},
+		{
+			"id": "Asia/Yakutsk",
+			"text": "(UTC+09:00) Yakutsk"
+		},
+		{
+			"id": "Australia/Darwin",
+			"text": "(UTC+09:30) Darwin"
+		},
+		{
+			"id": "Australia/Brisbane",
+			"text": "(UTC+10:00) Brisbane"
+		},
+		{
+			"id": "Pacific/Guam",
+			"text": "(UTC+10:00) Guam, Port Moresby"
+		},
+		{
+			"id": "Asia/Magadan",
+			"text": "(UTC+10:00) Magadan"
+		},
+		{
+			"id": "Asia/Vladivostok",
+			"text": "(UTC+10:00) Vladivostok, Magadan"
+		},
+		{
+			"id": "Australia/Adelaide",
+			"text": "(UTC+10:30) Adelaide"
+		},
+		{
+			"id": "Australia/Canberra",
+			"text": "(UTC+11:00) Canberra, Melbourne, Sydney"
+		},
+		{
+			"id": "Australia/Hobart",
+			"text": "(UTC+11:00) Hobart"
+		},
+		{
+			"id": "Asia/Srednekolymsk",
+			"text": "(UTC+11:00) Chokirdakh"
+		},
+		{
+			"id": "Pacific/Guadalcanal",
+			"text": "(UTC+11:00) Solomon Islands, New Caledonia"
+		},
+		{
+			"id": "Asia/Anadyr",
+			"text": "(UTC+12:00) Anadyr, Petropavlovsk-Kamchatsky"
+		},
+		{
+			"id": "Pacific/Fiji",
+			"text": "(UTC+12:00) Fiji Islands, Kamchatka, Marshall Islands"
+		},
+		{
+			"id": "Pacific/Auckland",
+			"text": "(UTC+13:00) Auckland, Wellington"
+		},
+		{
+			"id": "Pacific/Tongatapu",
+			"text": "(UTC+13:00) Nuku'alofa"
+		},
+		{
+			"id": "Pacific/Apia",
+			"text": "(UTC+14:00) Samoa"
+		}
+	];
+
+/***/ },
+/* 197 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -21813,18 +22241,20 @@
 	};
 
 /***/ },
-/* 196 */
+/* 198 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var map = {
-		"./ConfigApp": 197,
-		"./ConfigApp.js": 197,
-		"./channels": 199,
-		"./channels.js": 199,
-		"./team": 198,
-		"./team.js": 198,
-		"./themes": 200,
-		"./themes.js": 200
+		"./ConfigApp": 199,
+		"./ConfigApp.js": 199,
+		"./channels": 201,
+		"./channels.js": 201,
+		"./team": 200,
+		"./team.js": 200,
+		"./themes": 202,
+		"./themes.js": 202,
+		"./timeSetting": 203,
+		"./timeSetting.js": 203
 	};
 	function webpackContext(req) {
 		return __webpack_require__(webpackContextResolve(req));
@@ -21837,11 +22267,11 @@
 	};
 	webpackContext.resolve = webpackContextResolve;
 	module.exports = webpackContext;
-	webpackContext.id = 196;
+	webpackContext.id = 198;
 
 
 /***/ },
-/* 197 */
+/* 199 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21852,28 +22282,33 @@
 
 	var _redux = __webpack_require__(154);
 
-	var _team = __webpack_require__(198);
+	var _team = __webpack_require__(200);
 
 	var _team2 = _interopRequireDefault(_team);
 
-	var _channels = __webpack_require__(199);
+	var _channels = __webpack_require__(201);
 
 	var _channels2 = _interopRequireDefault(_channels);
 
-	var _themes = __webpack_require__(200);
+	var _themes = __webpack_require__(202);
 
 	var _themes2 = _interopRequireDefault(_themes);
+
+	var _timeSetting = __webpack_require__(203);
+
+	var _timeSetting2 = _interopRequireDefault(_timeSetting);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	exports.default = (0, _redux.combineReducers)({
 	  team: _team2.default,
 	  channels: _channels2.default,
-	  themes: _themes2.default
+	  themes: _themes2.default,
+	  timeSetting: _timeSetting2.default
 	});
 
 /***/ },
-/* 198 */
+/* 200 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -21893,7 +22328,7 @@
 	}
 
 /***/ },
-/* 199 */
+/* 201 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -21928,7 +22363,7 @@
 	}
 
 /***/ },
-/* 200 */
+/* 202 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -21983,6 +22418,165 @@
 	      return state;
 	  }
 	}
+
+/***/ },
+/* 203 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = timeSetting;
+	function timeSetting() {
+	  var state = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+	  var action = arguments[1];
+
+	  switch (action.type) {
+	    default:
+	      return state;
+	  }
+	}
+
+/***/ },
+/* 204 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _data = __webpack_require__(206);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var TimeSetting = function (_Component) {
+	  _inherits(TimeSetting, _Component);
+
+	  function TimeSetting() {
+	    _classCallCheck(this, TimeSetting);
+
+	    return _possibleConstructorReturn(this, Object.getPrototypeOf(TimeSetting).apply(this, arguments));
+	  }
+
+	  _createClass(TimeSetting, [{
+	    key: 'renderStartTimeOptions',
+
+
+	    // renderers
+	    //
+	    value: function renderStartTimeOptions(time) {
+	      return _react2.default.createElement(
+	        'option',
+	        { value: time, selected: time === this.props.timeSetting.startTime },
+	        time
+	      );
+	    }
+	  }, {
+	    key: 'renderEndTimeOptions',
+	    value: function renderEndTimeOptions(time) {
+	      return _react2.default.createElement(
+	        'option',
+	        { value: time, selected: time === this.props.timeSetting.endTime },
+	        time
+	      );
+	    }
+	  }, {
+	    key: 'renderTimezoneOptions',
+	    value: function renderTimezoneOptions(timezone) {
+	      return _react2.default.createElement(
+	        'option',
+	        { value: timezone.id, selected: timezone.id === this.props.timeSetting.tz },
+	        timezone.text
+	      );
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(
+	          'h2',
+	          null,
+	          'Select your team timezone:'
+	        ),
+	        _react2.default.createElement(
+	          'select',
+	          null,
+	          _data.timezones.map(this.renderTimezoneOptions.bind(this))
+	        ),
+	        _react2.default.createElement(
+	          'h2',
+	          null,
+	          'Mentoring time:'
+	        ),
+	        _react2.default.createElement(
+	          'select',
+	          null,
+	          _data.dayTimes.map(this.renderStartTimeOptions.bind(this))
+	        ),
+	        _react2.default.createElement(
+	          'span',
+	          null,
+	          '—'
+	        ),
+	        _react2.default.createElement(
+	          'select',
+	          null,
+	          _data.dayTimes.map(this.renderEndTimeOptions.bind(this))
+	        )
+	      );
+	    }
+	  }]);
+
+	  return TimeSetting;
+	}(_react.Component);
+
+	TimeSetting.propTypes = {
+	  timeSetting: _react.PropTypes.object.isRequired,
+	  actions: _react.PropTypes.object.isRequired
+	};
+
+	exports.default = TimeSetting;
+
+/***/ },
+/* 205 */,
+/* 206 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.timezones = exports.dayTimes = undefined;
+
+	var _timezones = __webpack_require__(196);
+
+	var _timezones2 = _interopRequireDefault(_timezones);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var dayTimes = ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00', '24:00'];
+
+	exports.dayTimes = dayTimes;
+	exports.timezones = _timezones2.default;
 
 /***/ }
 /******/ ]);

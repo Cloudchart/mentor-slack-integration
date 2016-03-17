@@ -26,6 +26,11 @@ module.exports = {
         loader: 'babel',
       },
       {
+        test: /\.json$/,
+        include: /frontend/,
+        loader: 'json',
+      },
+      {
         test: /\.scss$/,
         include: /frontend/,
         loader: ExtractTextWebpackPlugin.extract('style', 'css!postcss!sass')

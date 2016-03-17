@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from 'react'
-import ReactDOM from 'react-dom'
 import Modal from 'boron/FadeModal'
 import classNames from 'classnames'
 

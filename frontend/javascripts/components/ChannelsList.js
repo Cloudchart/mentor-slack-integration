@@ -46,6 +46,7 @@ class ChannelsList extends Component {
   render() {
     return (
       <div>
+        <h2>Channels:</h2>
         <ul className="channels-list">
           { this.props.channels.map(this.renderChannel.bind(this)) }
         </ul>
