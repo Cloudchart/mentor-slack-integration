@@ -72,7 +72,7 @@
 	if (reactType === 'plain') {
 	  _reactDom2.default.render(_react2.default.createElement(Component, JSON.parse(node.dataset.reactProps)), node);
 	} else {
-	  var reducers = __webpack_require__(200)("./" + reactClass).default;
+	  var reducers = __webpack_require__(202)("./" + reactClass).default;
 	  var store = (0, _redux.createStore)(reducers, window.__INITIAL_STATE__, (0, _redux.applyMiddleware)(_reduxThunk2.default));
 
 	  _reactDom2.default.render(_react2.default.createElement(
@@ -20486,8 +20486,8 @@
 	var map = {
 		"./ConfigApp": 177,
 		"./ConfigApp.js": 177,
-		"./LandingApp": 199,
-		"./LandingApp.js": 199
+		"./LandingApp": 201,
+		"./LandingApp.js": 201
 	};
 	function webpackContext(req) {
 		return __webpack_require__(webpackContextResolve(req));
@@ -20525,11 +20525,13 @@
 
 	var _actions = __webpack_require__(178);
 
-	var _ChannelsList = __webpack_require__(184);
+	var _selectors = __webpack_require__(184);
+
+	var _ChannelsList = __webpack_require__(188);
 
 	var _ChannelsList2 = _interopRequireDefault(_ChannelsList);
 
-	var _TimeSetting = __webpack_require__(196);
+	var _TimeSetting = __webpack_require__(200);
 
 	var _TimeSetting2 = _interopRequireDefault(_TimeSetting);
 
@@ -20558,6 +20560,8 @@
 	      var channels = _props.channels;
 	      var themes = _props.themes;
 	      var timeSetting = _props.timeSetting;
+	      var startTimeRange = _props.startTimeRange;
+	      var endTimeRange = _props.endTimeRange;
 	      var actions = _props.actions;
 
 
@@ -20576,6 +20580,8 @@
 	        ),
 	        _react2.default.createElement(_TimeSetting2.default, {
 	          timeSetting: timeSetting,
+	          startTimeRange: startTimeRange,
+	          endTimeRange: endTimeRange,
 	          actions: actions
 	        }),
 	        _react2.default.createElement(_ChannelsList2.default, {
@@ -20595,7 +20601,9 @@
 	  channels: _react.PropTypes.array.isRequired,
 	  themes: _react.PropTypes.object.isRequired,
 	  actions: _react.PropTypes.object.isRequired,
-	  timeSetting: _react.PropTypes.object.isRequired
+	  timeSetting: _react.PropTypes.object.isRequired,
+	  startTimeRange: _react.PropTypes.array.isRequired,
+	  endTimeRange: _react.PropTypes.array.isRequired
 	};
 
 	function mapStateToProps(state) {
@@ -20603,7 +20611,9 @@
 	    team: state.team,
 	    channels: state.channels,
 	    themes: state.themes,
-	    timeSetting: state.timeSetting
+	    timeSetting: state.timeSetting,
+	    startTimeRange: (0, _selectors.getStartTimeRange)(state),
+	    endTimeRange: (0, _selectors.getEndTimeRange)(state)
 	  };
 	}
 
@@ -20926,180 +20936,149 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	exports.getEndTimeRange = exports.getStartTimeRange = undefined;
 
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	var _reselect = __webpack_require__(185);
 
-	var _react = __webpack_require__(1);
+	var _data = __webpack_require__(186);
 
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactDom = __webpack_require__(153);
-
-	var _reactDom2 = _interopRequireDefault(_reactDom);
-
-	var _classnames = __webpack_require__(185);
-
-	var _classnames2 = _interopRequireDefault(_classnames);
-
-	var _ThemesList = __webpack_require__(186);
-
-	var _ThemesList2 = _interopRequireDefault(_ThemesList);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var ChannelsList = function (_Component) {
-	  _inherits(ChannelsList, _Component);
-
-	  function ChannelsList(props) {
-	    _classCallCheck(this, ChannelsList);
-
-	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ChannelsList).call(this, props));
-
-	    _this.state = {
-	      channelId: '',
-	      shouldRenderThemesList: false
-	    };
-	    return _this;
-	  }
-
-	  // handlers
-	  //
-
-
-	  _createClass(ChannelsList, [{
-	    key: 'handleChannelClick',
-	    value: function handleChannelClick(channelId, event) {
-	      event.preventDefault();
-	      this.setState({ channelId: channelId, shouldRenderThemesList: true });
-	      this.props.actions.fetchThemes(channelId);
-	    }
-	  }, {
-	    key: 'handleThemesListHide',
-	    value: function handleThemesListHide() {
-	      this.setState({ shouldRenderThemesList: false });
-	    }
-
-	    // renderers
-	    //
-
-	  }, {
-	    key: 'renderChannel',
-	    value: function renderChannel(channel) {
-	      var iconClassNames = (0, _classnames2.default)('fa', 'fa-circle', channel.status);
-
-	      return _react2.default.createElement(
-	        'li',
-	        null,
-	        _react2.default.createElement('i', { className: iconClassNames }),
-	        _react2.default.createElement(
-	          'span',
-	          null,
-	          '#'
-	        ),
-	        _react2.default.createElement(
-	          'a',
-	          { href: '', onClick: this.handleChannelClick.bind(this, channel.id) },
-	          channel.name
-	        )
-	      );
-	    }
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      return _react2.default.createElement(
-	        'div',
-	        null,
-	        _react2.default.createElement(
-	          'h2',
-	          null,
-	          'Channels:'
-	        ),
-	        _react2.default.createElement(
-	          'ul',
-	          { className: 'channels-list' },
-	          this.props.channels.map(this.renderChannel.bind(this))
-	        ),
-	        _react2.default.createElement(_ThemesList2.default, {
-	          channelId: this.state.channelId,
-	          themes: this.props.themes,
-	          actions: this.props.actions,
-	          shouldRenderThemesList: this.state.shouldRenderThemesList,
-	          onHide: this.handleThemesListHide.bind(this)
-	        })
-	      );
-	    }
-	  }]);
-
-	  return ChannelsList;
-	}(_react.Component);
-
-	ChannelsList.propTypes = {
-	  channels: _react.PropTypes.array.isRequired,
-	  themes: _react.PropTypes.object.isRequired,
-	  actions: _react.PropTypes.object.isRequired
+	var getEndTime = function getEndTime(state) {
+	  return state.timeSetting.endTime;
+	};
+	var getStartTime = function getStartTime(state) {
+	  return state.timeSetting.startTime;
 	};
 
-	exports.default = ChannelsList;
+	var getStartTimeRange = exports.getStartTimeRange = (0, _reselect.createSelector)([getEndTime], function (endTime) {
+	  return _data.dayTimes.filter(function (time) {
+	    return time < endTime;
+	  });
+	});
+
+	var getEndTimeRange = exports.getEndTimeRange = (0, _reselect.createSelector)([getStartTime], function (startTime) {
+	  return _data.dayTimes.filter(function (time) {
+	    return time > startTime;
+	  });
+	});
 
 /***/ },
 /* 185 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
-	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
-	  Copyright (c) 2016 Jed Watson.
-	  Licensed under the MIT License (MIT), see
-	  http://jedwatson.github.io/classnames
-	*/
-	/* global define */
+	'use strict';
 
-	(function () {
-		'use strict';
+	exports.__esModule = true;
+	exports.defaultMemoize = defaultMemoize;
+	exports.createSelectorCreator = createSelectorCreator;
+	exports.createSelector = createSelector;
+	exports.createStructuredSelector = createStructuredSelector;
 
-		var hasOwn = {}.hasOwnProperty;
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } else { return Array.from(arr); } }
 
-		function classNames () {
-			var classes = [];
+	function defaultEqualityCheck(a, b) {
+	  return a === b;
+	}
 
-			for (var i = 0; i < arguments.length; i++) {
-				var arg = arguments[i];
-				if (!arg) continue;
+	function defaultMemoize(func) {
+	  var equalityCheck = arguments.length <= 1 || arguments[1] === undefined ? defaultEqualityCheck : arguments[1];
 
-				var argType = typeof arg;
+	  var lastArgs = null;
+	  var lastResult = null;
+	  return function () {
+	    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	      args[_key] = arguments[_key];
+	    }
 
-				if (argType === 'string' || argType === 'number') {
-					classes.push(arg);
-				} else if (Array.isArray(arg)) {
-					classes.push(classNames.apply(null, arg));
-				} else if (argType === 'object') {
-					for (var key in arg) {
-						if (hasOwn.call(arg, key) && arg[key]) {
-							classes.push(key);
-						}
-					}
-				}
-			}
+	    if (lastArgs !== null && lastArgs.length === args.length && args.every(function (value, index) {
+	      return equalityCheck(value, lastArgs[index]);
+	    })) {
+	      return lastResult;
+	    }
+	    lastArgs = args;
+	    lastResult = func.apply(undefined, args);
+	    return lastResult;
+	  };
+	}
 
-			return classes.join(' ');
-		}
+	function getDependencies(funcs) {
+	  var dependencies = Array.isArray(funcs[0]) ? funcs[0] : funcs;
 
-		if (typeof module !== 'undefined' && module.exports) {
-			module.exports = classNames;
-		} else if (true) {
-			// register as 'classnames', consistent with npm package name
-			!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
-				return classNames;
-			}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-		} else {
-			window.classNames = classNames;
-		}
-	}());
+	  if (!dependencies.every(function (dep) {
+	    return typeof dep === 'function';
+	  })) {
+	    var dependencyTypes = dependencies.map(function (dep) {
+	      return typeof dep;
+	    }).join(', ');
+	    throw new Error('Selector creators expect all input-selectors to be functions, ' + ('instead received the following types: [' + dependencyTypes + ']'));
+	  }
 
+	  return dependencies;
+	}
+
+	function createSelectorCreator(memoize) {
+	  for (var _len2 = arguments.length, memoizeOptions = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+	    memoizeOptions[_key2 - 1] = arguments[_key2];
+	  }
+
+	  return function () {
+	    for (var _len3 = arguments.length, funcs = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+	      funcs[_key3] = arguments[_key3];
+	    }
+
+	    var recomputations = 0;
+	    var resultFunc = funcs.pop();
+	    var dependencies = getDependencies(funcs);
+
+	    var memoizedResultFunc = memoize.apply(undefined, [function () {
+	      recomputations++;
+	      return resultFunc.apply(undefined, arguments);
+	    }].concat(memoizeOptions));
+
+	    var selector = function selector(state, props) {
+	      for (var _len4 = arguments.length, args = Array(_len4 > 2 ? _len4 - 2 : 0), _key4 = 2; _key4 < _len4; _key4++) {
+	        args[_key4 - 2] = arguments[_key4];
+	      }
+
+	      var params = dependencies.map(function (dependency) {
+	        return dependency.apply(undefined, [state, props].concat(args));
+	      });
+	      return memoizedResultFunc.apply(undefined, _toConsumableArray(params));
+	    };
+
+	    selector.recomputations = function () {
+	      return recomputations;
+	    };
+	    selector.resetRecomputations = function () {
+	      return recomputations = 0;
+	    };
+	    return selector;
+	  };
+	}
+
+	function createSelector() {
+	  return createSelectorCreator(defaultMemoize).apply(undefined, arguments);
+	}
+
+	function createStructuredSelector(selectors) {
+	  var selectorCreator = arguments.length <= 1 || arguments[1] === undefined ? createSelector : arguments[1];
+
+	  if (typeof selectors !== 'object') {
+	    throw new Error('createStructuredSelector expects first argument to be an object ' + ('where each property is a selector, instead received a ' + typeof selectors));
+	  }
+	  var objectKeys = Object.keys(selectors);
+	  return selectorCreator(objectKeys.map(function (key) {
+	    return selectors[key];
+	  }), function () {
+	    for (var _len5 = arguments.length, values = Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
+	      values[_key5] = arguments[_key5];
+	    }
+
+	    return values.reduce(function (composition, value, index) {
+	      composition[objectKeys[index]] = value;
+	      return composition;
+	    }, {});
+	  });
+	}
 
 /***/ },
 /* 186 */
@@ -21110,896 +21089,9 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _FadeModal = __webpack_require__(187);
-
-	var _FadeModal2 = _interopRequireDefault(_FadeModal);
-
-	var _classnames = __webpack_require__(185);
-
-	var _classnames2 = _interopRequireDefault(_classnames);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var ThemesList = function (_Component) {
-	  _inherits(ThemesList, _Component);
-
-	  function ThemesList() {
-	    _classCallCheck(this, ThemesList);
-
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(ThemesList).apply(this, arguments));
-	  }
-
-	  _createClass(ThemesList, [{
-	    key: 'componentWillReceiveProps',
-
-
-	    // lifecycle
-	    //
-	    value: function componentWillReceiveProps(nextProps) {
-	      if (nextProps.shouldRenderThemesList && nextProps.themes.items.length > 0) {
-	        document.getElementById('modal').className = '';
-	        this.refs.modal.show();
-	      }
-	    }
-
-	    // helpers
-	    //
-
-	  }, {
-	    key: 'hideContainer',
-	    value: function hideContainer() {
-	      document.getElementById('modal').className = 'hidden';
-	      this.props.onHide();
-	    }
-	  }, {
-	    key: 'getSelectedThemesSize',
-	    value: function getSelectedThemesSize() {
-	      return this.props.themes.items.filter(function (theme) {
-	        return theme.isSubscribed;
-	      }).length;
-	    }
-
-	    // handlers
-	    //
-
-	  }, {
-	    key: 'handleModalClose',
-	    value: function handleModalClose(event) {
-	      this.refs.modal.hide();
-	    }
-	  }, {
-	    key: 'handleThemeClick',
-	    value: function handleThemeClick(theme, event) {
-	      event.preventDefault();
-	      var _props = this.props;
-	      var channelId = _props.channelId;
-	      var actions = _props.actions;
-
-	      var selectedThemesSize = this.getSelectedThemesSize();
-	      if (selectedThemesSize === 3 && !theme.isSubscribed) return;
-
-	      var action = theme.isSubscribed ? 'unsubscribe' : 'subscribe';
-	      actions.updateThemeStatus(theme.id, channelId, action);
-
-	      if (selectedThemesSize === 0 && action === 'subscribe') {
-	        actions.createChannel(channelId);
-	      } else if (selectedThemesSize === 1 && action === 'unsubscribe') {
-	        actions.destroyChannel(channelId);
-	      }
-	    }
-
-	    // renderers
-	    //
-
-	  }, {
-	    key: 'renderTheme',
-	    value: function renderTheme(theme) {
-	      var iconClassNames = (0, _classnames2.default)('fa', 'fa-check', { 'is-fetching': theme.isFetching });
-
-	      return _react2.default.createElement(
-	        'li',
-	        null,
-	        _react2.default.createElement(
-	          'a',
-	          { href: '', onClick: this.handleThemeClick.bind(this, theme) },
-	          theme.name
-	        ),
-	        theme.isSubscribed || theme.isFetching ? _react2.default.createElement('i', { className: iconClassNames }) : null
-	      );
-	    }
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      return _react2.default.createElement(
-	        'div',
-	        { id: 'modal', className: 'hidden' },
-	        _react2.default.createElement(
-	          _FadeModal2.default,
-	          { ref: 'modal', onHide: this.hideContainer.bind(this) },
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'modal-content' },
-	            _react2.default.createElement(
-	              'ul',
-	              { className: 'themes-list' },
-	              this.props.themes.items.map(this.renderTheme.bind(this))
-	            ),
-	            _react2.default.createElement(
-	              'button',
-	              { onClick: this.handleModalClose.bind(this) },
-	              'Close'
-	            )
-	          )
-	        )
-	      );
-	    }
-	  }]);
-
-	  return ThemesList;
-	}(_react.Component);
-
-	ThemesList.propTypes = {
-	  channelId: _react.PropTypes.string.isRequired,
-	  themes: _react.PropTypes.object.isRequired,
-	  actions: _react.PropTypes.object.isRequired
-	};
-
-	exports.default = ThemesList;
-
-/***/ },
-/* 187 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var modalFactory = __webpack_require__(188);
-	var insertKeyframesRule = __webpack_require__(193);
-	var appendVendorPrefix = __webpack_require__(190);
-
-	var animation = {
-	    show: {
-	        animationDuration: '0.3s',
-	        animationTimingFunction: 'ease-out'
-	    },
-	    hide: {
-	        animationDuration: '0.3s',
-	        animationTimingFunction: 'ease-out'
-	    },
-	    showContentAnimation: insertKeyframesRule({
-	        '0%': {
-	            opacity: 0
-	        },
-	        '100%': {
-	            opacity: 1
-	        }
-	    }),
-
-	    hideContentAnimation: insertKeyframesRule({
-	        '0%': {
-	            opacity: 1
-	        },
-	        '100%': {
-	            opacity: 0
-	        }
-	    }),
-
-	    showBackdropAnimation: insertKeyframesRule({
-	        '0%': {
-	            opacity: 0
-	        },
-	        '100%': {
-	            opacity: 0.9
-	        },
-	    }),
-
-	    hideBackdropAnimation: insertKeyframesRule({
-	        '0%': {
-	            opacity: 0.9
-	        },
-	        '100%': {
-	            opacity: 0
-	        }
-	    })
-	};
-
-	var showAnimation = animation.show;
-	var hideAnimation = animation.hide;
-	var showContentAnimation = animation.showContentAnimation;
-	var hideContentAnimation = animation.hideContentAnimation;
-	var showBackdropAnimation = animation.showBackdropAnimation;
-	var hideBackdropAnimation = animation.hideBackdropAnimation;
-
-	module.exports = modalFactory({
-	    getRef: function(willHidden) {
-	        return 'content';
-	    },
-	    getModalStyle: function(willHidden) {
-	        return appendVendorPrefix({
-	            zIndex: 1050,
-	            position: "fixed",
-	            width: "500px",
-	            transform: "translate3d(-50%, -50%, 0)",
-	            top: "50%",
-	            left: "50%"
-	        })
-	    },
-	    getBackdropStyle: function(willHidden) {
-	        return appendVendorPrefix({
-	            position: "fixed",
-	            top: 0,
-	            right: 0,
-	            bottom: 0,
-	            left: 0,
-	            zIndex: 1040,
-	            backgroundColor: "#373A47",
-	            animationFillMode: 'forwards',
-	            animationDuration: '0.3s',
-	            animationName: willHidden ? hideBackdropAnimation : showBackdropAnimation,
-	            animationTimingFunction: (willHidden ? hideAnimation : showAnimation).animationTimingFunction
-	        });
-	    },
-	    getContentStyle: function(willHidden) {
-	        return appendVendorPrefix({
-	            margin: 0,
-	            backgroundColor: "white",
-	            animationDuration: (willHidden ? hideAnimation : showAnimation).animationDuration,
-	            animationFillMode: 'forwards',
-	            animationName: willHidden ? hideContentAnimation : showContentAnimation,
-	            animationTimingFunction: (willHidden ? hideAnimation : showAnimation).animationTimingFunction
-	        })
-	    }
-	});
-
-
-/***/ },
-/* 188 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var transitionEvents = __webpack_require__(189);
-	var appendVendorPrefix = __webpack_require__(190);
-
-	module.exports = function(animation){
-
-	    return React.createClass({
-	        propTypes: {
-	            className: React.PropTypes.string,
-	            // Close the modal when esc is pressed? Defaults to true.
-	            keyboard: React.PropTypes.bool,
-	            onShow: React.PropTypes.func,
-	            onHide: React.PropTypes.func,
-	            animation: React.PropTypes.object,
-	            backdrop: React.PropTypes.bool,
-	            closeOnClick: React.PropTypes.bool,
-	            modalStyle: React.PropTypes.object,
-	            backdropStyle: React.PropTypes.object,
-	            contentStyle: React.PropTypes.object,
-	        },
-
-	        getDefaultProps: function() {
-	            return {
-	                className: "",
-	                onShow: function(){},
-	                onHide: function(){},
-	                animation: animation,
-	                keyboard: true,
-	                backdrop: true,
-	                closeOnClick: true,
-	                modalStyle: {},
-	                backdropStyle: {},
-	                contentStyle: {},
-	            };
-	        },
-
-	        getInitialState: function(){
-	            return {
-	                willHidden: false,
-	                hidden: true
-	            }
-	        },
-
-	        hasHidden: function(){
-	            return this.state.hidden;
-	        },
-
-	        addTransitionListener: function(node, handle){
-	            if (node) {
-	              var endListener = function(e) {
-	                  if (e && e.target !== node) {
-	                      return;
-	                  }
-	                  transitionEvents.removeEndEventListener(node, endListener);
-	                  handle();
-	              };
-	              transitionEvents.addEndEventListener(node, endListener);
-	            }
-	        },
-
-	        handleBackdropClick: function() {
-	            if (this.props.closeOnClick) {
-	                this.hide();
-	            }
-	        },
-
-	        render: function() {
-
-	            var hidden = this.hasHidden();
-	            if (hidden) return null;
-
-	            var willHidden = this.state.willHidden;
-	            var animation = this.props.animation;
-	            var modalStyle = animation.getModalStyle(willHidden);
-	            var backdropStyle = animation.getBackdropStyle(willHidden);
-	            var contentStyle = animation.getContentStyle(willHidden);
-	            var ref = animation.getRef(willHidden);
-	            var sharp = animation.getSharp && animation.getSharp(willHidden);
-
-	            // Apply custom style properties
-	            if (this.props.modalStyle) {
-	                var prefixedModalStyle = appendVendorPrefix(this.props.modalStyle);
-	                for (var style in prefixedModalStyle) {
-	                    modalStyle[style] = prefixedModalStyle[style];
-	                }
-	            }
-
-	            if (this.props.backdropStyle) {
-	              var prefixedBackdropStyle = appendVendorPrefix(this.props.backdropStyle);
-	                for (var style in prefixedBackdropStyle) {
-	                    backdropStyle[style] = prefixedBackdropStyle[style];
-	                }
-	            }
-
-	            if (this.props.contentStyle) {
-	              var prefixedContentStyle = appendVendorPrefix(this.props.contentStyle);
-	                for (var style in prefixedContentStyle) {
-	                    contentStyle[style] = prefixedContentStyle[style];
-	                }
-	            }
-
-	            var backdrop = this.props.backdrop? React.createElement("div", {style: backdropStyle, onClick: this.props.closeOnClick? this.handleBackdropClick: null}): undefined;
-
-	            if(willHidden) {
-	                var node = this.refs[ref];
-	                this.addTransitionListener(node, this.leave);
-	            }
-
-	            return (React.createElement("span", null, 
-	                React.createElement("div", {ref: "modal", style: modalStyle, className: this.props.className}, 
-	                    sharp, 
-	                    React.createElement("div", {ref: "content", tabIndex: "-1", style: contentStyle}, 
-	                        this.props.children
-	                    )
-	                ), 
-	                backdrop
-	             ))
-	            ;
-	        },
-
-	        leave: function(){
-	            this.setState({
-	                hidden: true
-	            });
-	            this.props.onHide();
-	        },
-
-	        enter: function(){
-	            this.props.onShow();
-	        },
-
-	        show: function(){
-	            if (!this.hasHidden()) return;
-
-	            this.setState({
-	                willHidden: false,
-	                hidden: false
-	            });
-
-	            setTimeout(function(){
-	              var ref = this.props.animation.getRef();
-	              var node = this.refs[ref];
-	              this.addTransitionListener(node, this.enter);
-	            }.bind(this), 0);
-	        },
-
-	        hide: function(){
-	            if (this.hasHidden()) return;
-
-	            this.setState({
-	                willHidden: true
-	            });
-	        },
-
-	        toggle: function(){
-	            if (this.hasHidden())
-	                this.show();
-	            else
-	                this.hide();
-	        },
-
-	        listenKeyboard: function(event) {
-	            if (this.props.keyboard &&
-	                    (event.key === "Escape" ||
-	                     event.keyCode === 27)) {
-	                this.hide();
-	            }
-	        },
-
-	        componentDidMount: function(){
-	            window.addEventListener("keydown", this.listenKeyboard, true);
-	        },
-
-	        componentWillUnmount: function() {
-	            window.removeEventListener("keydown", this.listenKeyboard, true);
-	        }
-	    });
-	}
-
-
-/***/ },
-/* 189 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	/**
-	 * EVENT_NAME_MAP is used to determine which event fired when a
-	 * transition/animation ends, based on the style property used to
-	 * define that event.
-	 */
-	var EVENT_NAME_MAP = {
-	  transitionend: {
-	    'transition': 'transitionend',
-	    'WebkitTransition': 'webkitTransitionEnd',
-	    'MozTransition': 'mozTransitionEnd',
-	    'OTransition': 'oTransitionEnd',
-	    'msTransition': 'MSTransitionEnd'
-	  },
-
-	  animationend: {
-	    'animation': 'animationend',
-	    'WebkitAnimation': 'webkitAnimationEnd',
-	    'MozAnimation': 'mozAnimationEnd',
-	    'OAnimation': 'oAnimationEnd',
-	    'msAnimation': 'MSAnimationEnd'
-	  }
-	};
-
-	var endEvents = [];
-
-	function detectEvents() {
-	  var testEl = document.createElement('div');
-	  var style = testEl.style;
-
-	  // On some platforms, in particular some releases of Android 4.x,
-	  // the un-prefixed "animation" and "transition" properties are defined on the
-	  // style object but the events that fire will still be prefixed, so we need
-	  // to check if the un-prefixed events are useable, and if not remove them
-	  // from the map
-	  if (!('AnimationEvent' in window)) {
-	    delete EVENT_NAME_MAP.animationend.animation;
-	  }
-
-	  if (!('TransitionEvent' in window)) {
-	    delete EVENT_NAME_MAP.transitionend.transition;
-	  }
-
-	  for (var baseEventName in EVENT_NAME_MAP) {
-	    var baseEvents = EVENT_NAME_MAP[baseEventName];
-	    for (var styleName in baseEvents) {
-	      if (styleName in style) {
-	        endEvents.push(baseEvents[styleName]);
-	        break;
-	      }
-	    }
-	  }
-	}
-
-	if (typeof window !== 'undefined') {
-	  detectEvents();
-	}
-
-
-	// We use the raw {add|remove}EventListener() call because EventListener
-	// does not know how to remove event listeners and we really should
-	// clean up. Also, these events are not triggered in older browsers
-	// so we should be A-OK here.
-
-	function addEventListener(node, eventName, eventListener) {
-	  node.addEventListener(eventName, eventListener, false);
-	}
-
-	function removeEventListener(node, eventName, eventListener) {
-	  node.removeEventListener(eventName, eventListener, false);
-	}
-
-	module.exports = {
-	  addEndEventListener: function(node, eventListener) {
-	    if (endEvents.length === 0) {
-	      // If CSS transitions are not supported, trigger an "end animation"
-	      // event immediately.
-	      window.setTimeout(eventListener, 0);
-	      return;
-	    }
-	    endEvents.forEach(function(endEvent) {
-	      addEventListener(node, endEvent, eventListener);
-	    });
-	  },
-
-	  removeEndEventListener: function(node, eventListener) {
-	    if (endEvents.length === 0) {
-	      return;
-	    }
-	    endEvents.forEach(function(endEvent) {
-	      removeEventListener(node, endEvent, eventListener);
-	    });
-	  }
-	};
-
-
-/***/ },
-/* 190 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var getVendorPropertyName = __webpack_require__(191);
-
-	module.exports = function(target, sources) {
-	  var to = Object(target);
-	  var hasOwnProperty = Object.prototype.hasOwnProperty;
-
-	  for (var nextIndex = 1; nextIndex < arguments.length; nextIndex++) {
-	    var nextSource = arguments[nextIndex];
-	    if (nextSource == null) {
-	      continue;
-	    }
-
-	    var from = Object(nextSource);
-
-	    for (var key in from) {
-	      if (hasOwnProperty.call(from, key)) {
-	        to[key] = from[key];
-	      }
-	    }
-	  }
-
-	  var prefixed = {};
-	  for (var key in to) {
-	    prefixed[getVendorPropertyName(key)] = to[key]
-	  }
-
-	  return prefixed
-	}
-
-
-/***/ },
-/* 191 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var builtinStyle = __webpack_require__(192);
-	var prefixes = ['Moz', 'Webkit', 'O', 'ms'];
-	var domVendorPrefix;
-
-	// Helper function to get the proper vendor property name. (transition => WebkitTransition)
-	module.exports = function(prop, isSupportTest) {
-
-	  var vendorProp;
-	  if (prop in builtinStyle) return prop;
-
-	  var UpperProp = prop.charAt(0).toUpperCase() + prop.substr(1);
-
-	  if (domVendorPrefix) {
-
-	    vendorProp = domVendorPrefix + UpperProp;
-	    if (vendorProp in builtinStyle) {
-	      return vendorProp;
-	    }
-	  } else {
-
-	    for (var i = 0; i < prefixes.length; ++i) {
-	      vendorProp = prefixes[i] + UpperProp;
-	      if (vendorProp in builtinStyle) {
-	        domVendorPrefix = prefixes[i];
-	        return vendorProp;
-	      }
-	    }
-	  }
-
-	  // if support test, not fallback to origin prop name
-	  if (!isSupportTest) {
-	    return prop;
-	  }
-
-	}
-
-
-/***/ },
-/* 192 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	module.exports = document.createElement('div').style;
-
-
-/***/ },
-/* 193 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var insertRule = __webpack_require__(194);
-	var vendorPrefix = __webpack_require__(195)();
-	var index = 0;
-
-	module.exports = function(keyframes) {
-	  // random name
-	  var name = 'anim_' + (++index) + (+new Date);
-	  var css = "@" + vendorPrefix + "keyframes " + name + " {";
-
-	  for (var key in keyframes) {
-	    css += key + " {";
-
-	    for (var property in keyframes[key]) {
-	      var part = ":" + keyframes[key][property] + ";";
-	      // We do vendor prefix for every property
-	      css += vendorPrefix + property + part;
-	      css += property + part;
-	    }
-
-	    css += "}";
-	  }
-
-	  css += "}";
-
-	  insertRule(css);
-
-	  return name
-	}
-
-
-/***/ },
-/* 194 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	var extraSheet;
-
-	module.exports = function(css) {
-
-	  if (!extraSheet) {
-	    // First time, create an extra stylesheet for adding rules
-	    extraSheet = document.createElement('style');
-	    document.getElementsByTagName('head')[0].appendChild(extraSheet);
-	    // Keep reference to actual StyleSheet object (`styleSheet` for IE < 9)
-	    extraSheet = extraSheet.sheet || extraSheet.styleSheet;
-	  }
-
-	  var index = (extraSheet.cssRules || extraSheet.rules).length;
-	  extraSheet.insertRule(css, index);
-
-	  return extraSheet;
-	}
-
-
-/***/ },
-/* 195 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	var cssVendorPrefix;
-
-	module.exports = function() {
-
-	  if (cssVendorPrefix) return cssVendorPrefix;
-
-	  var styles = window.getComputedStyle(document.documentElement, '');
-	  var pre = (Array.prototype.slice.call(styles).join('').match(/-(moz|webkit|ms)-/) || (styles.OLink === '' && ['', 'o']))[1];
-
-	  return cssVendorPrefix = '-' + pre + '-';
-	}
-
-
-/***/ },
-/* 196 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _classnames = __webpack_require__(185);
-
-	var _classnames2 = _interopRequireDefault(_classnames);
-
-	var _data = __webpack_require__(197);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var TimeSetting = function (_Component) {
-	  _inherits(TimeSetting, _Component);
-
-	  function TimeSetting() {
-	    _classCallCheck(this, TimeSetting);
-
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(TimeSetting).apply(this, arguments));
-	  }
-
-	  _createClass(TimeSetting, [{
-	    key: 'handleAttributeChange',
-
-
-	    // handlers
-	    //
-	    value: function handleAttributeChange(attr, event) {
-	      this.props.actions.updateTimeSetting(attr, event.target.value);
-	    }
-	  }, {
-	    key: 'handleDayClick',
-	    value: function handleDayClick(value, event) {
-	      var days = this.props.timeSetting.days;
-
-	      var selectedDays = undefined;
-
-	      if (days.includes(value)) {
-	        selectedDays = days.filter(function (day) {
-	          return day !== value;
-	        });
-	      } else {
-	        selectedDays = days.concat(value);
-	      }
-
-	      if (selectedDays.length === 0) return;
-	      this.props.actions.updateTimeSetting('days', selectedDays);
-	    }
-
-	    // renderers
-	    //
-
-	  }, {
-	    key: 'renderTimezoneOption',
-	    value: function renderTimezoneOption(timezone) {
-	      return _react2.default.createElement(
-	        'option',
-	        { value: timezone.id },
-	        timezone.text
-	      );
-	    }
-	  }, {
-	    key: 'renderStartTimeOption',
-	    value: function renderStartTimeOption(time) {
-	      return _react2.default.createElement(
-	        'option',
-	        { value: time },
-	        time
-	      );
-	    }
-	  }, {
-	    key: 'renderEndTimeOption',
-	    value: function renderEndTimeOption(time) {
-	      return _react2.default.createElement(
-	        'option',
-	        { value: time },
-	        time
-	      );
-	    }
-	  }, {
-	    key: 'renderDayElement',
-	    value: function renderDayElement(day) {
-	      var days = this.props.timeSetting.days;
-
-	      var value = _data.daysOfWeek[day];
-	      var dayClassNames = (0, _classnames2.default)({ selected: days.includes(value) });
-
-	      return _react2.default.createElement(
-	        'li',
-	        { className: dayClassNames, onClick: this.handleDayClick.bind(this, value) },
-	        day
-	      );
-	    }
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      var _props$timeSetting = this.props.timeSetting;
-	      var tz = _props$timeSetting.tz;
-	      var startTime = _props$timeSetting.startTime;
-	      var endTime = _props$timeSetting.endTime;
-	      var days = _props$timeSetting.days;
-
-
-	      return _react2.default.createElement(
-	        'div',
-	        null,
-	        _react2.default.createElement(
-	          'h2',
-	          null,
-	          'Select your team timezone:'
-	        ),
-	        _react2.default.createElement(
-	          'select',
-	          { value: tz, onChange: this.handleAttributeChange.bind(this, 'tz') },
-	          _data.timezones.map(this.renderTimezoneOption.bind(this))
-	        ),
-	        _react2.default.createElement(
-	          'h2',
-	          null,
-	          'Mentoring time:'
-	        ),
-	        _react2.default.createElement(
-	          'select',
-	          { value: startTime, onChange: this.handleAttributeChange.bind(this, 'startTime') },
-	          _data.dayTimes.map(this.renderStartTimeOption.bind(this))
-	        ),
-	        _react2.default.createElement(
-	          'span',
-	          null,
-	          '—'
-	        ),
-	        _react2.default.createElement(
-	          'select',
-	          { value: endTime, onChange: this.handleAttributeChange.bind(this, 'endTime') },
-	          _data.dayTimes.map(this.renderEndTimeOption.bind(this))
-	        ),
-	        _react2.default.createElement(
-	          'ul',
-	          { className: 'days-list' },
-	          Object.keys(_data.daysOfWeek).map(this.renderDayElement.bind(this))
-	        )
-	      );
-	    }
-	  }]);
-
-	  return TimeSetting;
-	}(_react.Component);
-
-	TimeSetting.propTypes = {
-	  timeSetting: _react.PropTypes.object.isRequired,
-	  actions: _react.PropTypes.object.isRequired
-	};
-
-	exports.default = TimeSetting;
-
-/***/ },
-/* 197 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
 	exports.daysOfWeek = exports.dayTimes = exports.timezones = undefined;
 
-	var _timezones = __webpack_require__(198);
+	var _timezones = __webpack_require__(187);
 
 	var _timezones2 = _interopRequireDefault(_timezones);
 
@@ -22022,7 +21114,7 @@
 	exports.daysOfWeek = daysOfWeek;
 
 /***/ },
-/* 198 */
+/* 187 */
 /***/ function(module, exports) {
 
 	module.exports = [
@@ -22437,7 +21529,1083 @@
 	];
 
 /***/ },
+/* 188 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactDom = __webpack_require__(153);
+
+	var _reactDom2 = _interopRequireDefault(_reactDom);
+
+	var _classnames = __webpack_require__(189);
+
+	var _classnames2 = _interopRequireDefault(_classnames);
+
+	var _ThemesList = __webpack_require__(190);
+
+	var _ThemesList2 = _interopRequireDefault(_ThemesList);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var ChannelsList = function (_Component) {
+	  _inherits(ChannelsList, _Component);
+
+	  function ChannelsList(props) {
+	    _classCallCheck(this, ChannelsList);
+
+	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ChannelsList).call(this, props));
+
+	    _this.state = {
+	      channelId: '',
+	      shouldRenderThemesList: false
+	    };
+	    return _this;
+	  }
+
+	  // handlers
+	  //
+
+
+	  _createClass(ChannelsList, [{
+	    key: 'handleChannelClick',
+	    value: function handleChannelClick(channelId, event) {
+	      event.preventDefault();
+	      this.setState({ channelId: channelId, shouldRenderThemesList: true });
+	      this.props.actions.fetchThemes(channelId);
+	    }
+	  }, {
+	    key: 'handleThemesListHide',
+	    value: function handleThemesListHide() {
+	      this.setState({ shouldRenderThemesList: false });
+	    }
+
+	    // renderers
+	    //
+
+	  }, {
+	    key: 'renderChannel',
+	    value: function renderChannel(channel) {
+	      var iconClassNames = (0, _classnames2.default)('fa', 'fa-circle', channel.status);
+
+	      return _react2.default.createElement(
+	        'li',
+	        null,
+	        _react2.default.createElement('i', { className: iconClassNames }),
+	        _react2.default.createElement(
+	          'span',
+	          null,
+	          '#'
+	        ),
+	        _react2.default.createElement(
+	          'a',
+	          { href: '', onClick: this.handleChannelClick.bind(this, channel.id) },
+	          channel.name
+	        )
+	      );
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(
+	          'h2',
+	          null,
+	          'Channels:'
+	        ),
+	        _react2.default.createElement(
+	          'ul',
+	          { className: 'channels-list' },
+	          this.props.channels.map(this.renderChannel.bind(this))
+	        ),
+	        _react2.default.createElement(_ThemesList2.default, {
+	          channelId: this.state.channelId,
+	          themes: this.props.themes,
+	          actions: this.props.actions,
+	          shouldRenderThemesList: this.state.shouldRenderThemesList,
+	          onHide: this.handleThemesListHide.bind(this)
+	        })
+	      );
+	    }
+	  }]);
+
+	  return ChannelsList;
+	}(_react.Component);
+
+	ChannelsList.propTypes = {
+	  channels: _react.PropTypes.array.isRequired,
+	  themes: _react.PropTypes.object.isRequired,
+	  actions: _react.PropTypes.object.isRequired
+	};
+
+	exports.default = ChannelsList;
+
+/***/ },
+/* 189 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
+	  Copyright (c) 2016 Jed Watson.
+	  Licensed under the MIT License (MIT), see
+	  http://jedwatson.github.io/classnames
+	*/
+	/* global define */
+
+	(function () {
+		'use strict';
+
+		var hasOwn = {}.hasOwnProperty;
+
+		function classNames () {
+			var classes = [];
+
+			for (var i = 0; i < arguments.length; i++) {
+				var arg = arguments[i];
+				if (!arg) continue;
+
+				var argType = typeof arg;
+
+				if (argType === 'string' || argType === 'number') {
+					classes.push(arg);
+				} else if (Array.isArray(arg)) {
+					classes.push(classNames.apply(null, arg));
+				} else if (argType === 'object') {
+					for (var key in arg) {
+						if (hasOwn.call(arg, key) && arg[key]) {
+							classes.push(key);
+						}
+					}
+				}
+			}
+
+			return classes.join(' ');
+		}
+
+		if (typeof module !== 'undefined' && module.exports) {
+			module.exports = classNames;
+		} else if (true) {
+			// register as 'classnames', consistent with npm package name
+			!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
+				return classNames;
+			}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+		} else {
+			window.classNames = classNames;
+		}
+	}());
+
+
+/***/ },
+/* 190 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _FadeModal = __webpack_require__(191);
+
+	var _FadeModal2 = _interopRequireDefault(_FadeModal);
+
+	var _classnames = __webpack_require__(189);
+
+	var _classnames2 = _interopRequireDefault(_classnames);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var ThemesList = function (_Component) {
+	  _inherits(ThemesList, _Component);
+
+	  function ThemesList() {
+	    _classCallCheck(this, ThemesList);
+
+	    return _possibleConstructorReturn(this, Object.getPrototypeOf(ThemesList).apply(this, arguments));
+	  }
+
+	  _createClass(ThemesList, [{
+	    key: 'componentWillReceiveProps',
+
+
+	    // lifecycle
+	    //
+	    value: function componentWillReceiveProps(nextProps) {
+	      if (nextProps.shouldRenderThemesList && nextProps.themes.items.length > 0) {
+	        document.getElementById('modal').className = '';
+	        this.refs.modal.show();
+	      }
+	    }
+
+	    // helpers
+	    //
+
+	  }, {
+	    key: 'hideContainer',
+	    value: function hideContainer() {
+	      document.getElementById('modal').className = 'hidden';
+	      this.props.onHide();
+	    }
+	  }, {
+	    key: 'getSelectedThemesSize',
+	    value: function getSelectedThemesSize() {
+	      return this.props.themes.items.filter(function (theme) {
+	        return theme.isSubscribed;
+	      }).length;
+	    }
+
+	    // handlers
+	    //
+
+	  }, {
+	    key: 'handleModalClose',
+	    value: function handleModalClose(event) {
+	      this.refs.modal.hide();
+	    }
+	  }, {
+	    key: 'handleThemeClick',
+	    value: function handleThemeClick(theme, event) {
+	      event.preventDefault();
+	      var _props = this.props;
+	      var channelId = _props.channelId;
+	      var actions = _props.actions;
+
+	      var selectedThemesSize = this.getSelectedThemesSize();
+	      if (selectedThemesSize === 3 && !theme.isSubscribed) return;
+
+	      var action = theme.isSubscribed ? 'unsubscribe' : 'subscribe';
+	      actions.updateThemeStatus(theme.id, channelId, action);
+
+	      if (selectedThemesSize === 0 && action === 'subscribe') {
+	        actions.createChannel(channelId);
+	      } else if (selectedThemesSize === 1 && action === 'unsubscribe') {
+	        actions.destroyChannel(channelId);
+	      }
+	    }
+
+	    // renderers
+	    //
+
+	  }, {
+	    key: 'renderTheme',
+	    value: function renderTheme(theme) {
+	      var iconClassNames = (0, _classnames2.default)('fa', 'fa-check', { 'is-fetching': theme.isFetching });
+
+	      return _react2.default.createElement(
+	        'li',
+	        null,
+	        _react2.default.createElement(
+	          'a',
+	          { href: '', onClick: this.handleThemeClick.bind(this, theme) },
+	          theme.name
+	        ),
+	        theme.isSubscribed || theme.isFetching ? _react2.default.createElement('i', { className: iconClassNames }) : null
+	      );
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        { id: 'modal', className: 'hidden' },
+	        _react2.default.createElement(
+	          _FadeModal2.default,
+	          { ref: 'modal', onHide: this.hideContainer.bind(this) },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'modal-content' },
+	            _react2.default.createElement(
+	              'ul',
+	              { className: 'themes-list' },
+	              this.props.themes.items.map(this.renderTheme.bind(this))
+	            ),
+	            _react2.default.createElement(
+	              'button',
+	              { onClick: this.handleModalClose.bind(this) },
+	              'Close'
+	            )
+	          )
+	        )
+	      );
+	    }
+	  }]);
+
+	  return ThemesList;
+	}(_react.Component);
+
+	ThemesList.propTypes = {
+	  channelId: _react.PropTypes.string.isRequired,
+	  themes: _react.PropTypes.object.isRequired,
+	  actions: _react.PropTypes.object.isRequired
+	};
+
+	exports.default = ThemesList;
+
+/***/ },
+/* 191 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var modalFactory = __webpack_require__(192);
+	var insertKeyframesRule = __webpack_require__(197);
+	var appendVendorPrefix = __webpack_require__(194);
+
+	var animation = {
+	    show: {
+	        animationDuration: '0.3s',
+	        animationTimingFunction: 'ease-out'
+	    },
+	    hide: {
+	        animationDuration: '0.3s',
+	        animationTimingFunction: 'ease-out'
+	    },
+	    showContentAnimation: insertKeyframesRule({
+	        '0%': {
+	            opacity: 0
+	        },
+	        '100%': {
+	            opacity: 1
+	        }
+	    }),
+
+	    hideContentAnimation: insertKeyframesRule({
+	        '0%': {
+	            opacity: 1
+	        },
+	        '100%': {
+	            opacity: 0
+	        }
+	    }),
+
+	    showBackdropAnimation: insertKeyframesRule({
+	        '0%': {
+	            opacity: 0
+	        },
+	        '100%': {
+	            opacity: 0.9
+	        },
+	    }),
+
+	    hideBackdropAnimation: insertKeyframesRule({
+	        '0%': {
+	            opacity: 0.9
+	        },
+	        '100%': {
+	            opacity: 0
+	        }
+	    })
+	};
+
+	var showAnimation = animation.show;
+	var hideAnimation = animation.hide;
+	var showContentAnimation = animation.showContentAnimation;
+	var hideContentAnimation = animation.hideContentAnimation;
+	var showBackdropAnimation = animation.showBackdropAnimation;
+	var hideBackdropAnimation = animation.hideBackdropAnimation;
+
+	module.exports = modalFactory({
+	    getRef: function(willHidden) {
+	        return 'content';
+	    },
+	    getModalStyle: function(willHidden) {
+	        return appendVendorPrefix({
+	            zIndex: 1050,
+	            position: "fixed",
+	            width: "500px",
+	            transform: "translate3d(-50%, -50%, 0)",
+	            top: "50%",
+	            left: "50%"
+	        })
+	    },
+	    getBackdropStyle: function(willHidden) {
+	        return appendVendorPrefix({
+	            position: "fixed",
+	            top: 0,
+	            right: 0,
+	            bottom: 0,
+	            left: 0,
+	            zIndex: 1040,
+	            backgroundColor: "#373A47",
+	            animationFillMode: 'forwards',
+	            animationDuration: '0.3s',
+	            animationName: willHidden ? hideBackdropAnimation : showBackdropAnimation,
+	            animationTimingFunction: (willHidden ? hideAnimation : showAnimation).animationTimingFunction
+	        });
+	    },
+	    getContentStyle: function(willHidden) {
+	        return appendVendorPrefix({
+	            margin: 0,
+	            backgroundColor: "white",
+	            animationDuration: (willHidden ? hideAnimation : showAnimation).animationDuration,
+	            animationFillMode: 'forwards',
+	            animationName: willHidden ? hideContentAnimation : showContentAnimation,
+	            animationTimingFunction: (willHidden ? hideAnimation : showAnimation).animationTimingFunction
+	        })
+	    }
+	});
+
+
+/***/ },
+/* 192 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var transitionEvents = __webpack_require__(193);
+	var appendVendorPrefix = __webpack_require__(194);
+
+	module.exports = function(animation){
+
+	    return React.createClass({
+	        propTypes: {
+	            className: React.PropTypes.string,
+	            // Close the modal when esc is pressed? Defaults to true.
+	            keyboard: React.PropTypes.bool,
+	            onShow: React.PropTypes.func,
+	            onHide: React.PropTypes.func,
+	            animation: React.PropTypes.object,
+	            backdrop: React.PropTypes.bool,
+	            closeOnClick: React.PropTypes.bool,
+	            modalStyle: React.PropTypes.object,
+	            backdropStyle: React.PropTypes.object,
+	            contentStyle: React.PropTypes.object,
+	        },
+
+	        getDefaultProps: function() {
+	            return {
+	                className: "",
+	                onShow: function(){},
+	                onHide: function(){},
+	                animation: animation,
+	                keyboard: true,
+	                backdrop: true,
+	                closeOnClick: true,
+	                modalStyle: {},
+	                backdropStyle: {},
+	                contentStyle: {},
+	            };
+	        },
+
+	        getInitialState: function(){
+	            return {
+	                willHidden: false,
+	                hidden: true
+	            }
+	        },
+
+	        hasHidden: function(){
+	            return this.state.hidden;
+	        },
+
+	        addTransitionListener: function(node, handle){
+	            if (node) {
+	              var endListener = function(e) {
+	                  if (e && e.target !== node) {
+	                      return;
+	                  }
+	                  transitionEvents.removeEndEventListener(node, endListener);
+	                  handle();
+	              };
+	              transitionEvents.addEndEventListener(node, endListener);
+	            }
+	        },
+
+	        handleBackdropClick: function() {
+	            if (this.props.closeOnClick) {
+	                this.hide();
+	            }
+	        },
+
+	        render: function() {
+
+	            var hidden = this.hasHidden();
+	            if (hidden) return null;
+
+	            var willHidden = this.state.willHidden;
+	            var animation = this.props.animation;
+	            var modalStyle = animation.getModalStyle(willHidden);
+	            var backdropStyle = animation.getBackdropStyle(willHidden);
+	            var contentStyle = animation.getContentStyle(willHidden);
+	            var ref = animation.getRef(willHidden);
+	            var sharp = animation.getSharp && animation.getSharp(willHidden);
+
+	            // Apply custom style properties
+	            if (this.props.modalStyle) {
+	                var prefixedModalStyle = appendVendorPrefix(this.props.modalStyle);
+	                for (var style in prefixedModalStyle) {
+	                    modalStyle[style] = prefixedModalStyle[style];
+	                }
+	            }
+
+	            if (this.props.backdropStyle) {
+	              var prefixedBackdropStyle = appendVendorPrefix(this.props.backdropStyle);
+	                for (var style in prefixedBackdropStyle) {
+	                    backdropStyle[style] = prefixedBackdropStyle[style];
+	                }
+	            }
+
+	            if (this.props.contentStyle) {
+	              var prefixedContentStyle = appendVendorPrefix(this.props.contentStyle);
+	                for (var style in prefixedContentStyle) {
+	                    contentStyle[style] = prefixedContentStyle[style];
+	                }
+	            }
+
+	            var backdrop = this.props.backdrop? React.createElement("div", {style: backdropStyle, onClick: this.props.closeOnClick? this.handleBackdropClick: null}): undefined;
+
+	            if(willHidden) {
+	                var node = this.refs[ref];
+	                this.addTransitionListener(node, this.leave);
+	            }
+
+	            return (React.createElement("span", null, 
+	                React.createElement("div", {ref: "modal", style: modalStyle, className: this.props.className}, 
+	                    sharp, 
+	                    React.createElement("div", {ref: "content", tabIndex: "-1", style: contentStyle}, 
+	                        this.props.children
+	                    )
+	                ), 
+	                backdrop
+	             ))
+	            ;
+	        },
+
+	        leave: function(){
+	            this.setState({
+	                hidden: true
+	            });
+	            this.props.onHide();
+	        },
+
+	        enter: function(){
+	            this.props.onShow();
+	        },
+
+	        show: function(){
+	            if (!this.hasHidden()) return;
+
+	            this.setState({
+	                willHidden: false,
+	                hidden: false
+	            });
+
+	            setTimeout(function(){
+	              var ref = this.props.animation.getRef();
+	              var node = this.refs[ref];
+	              this.addTransitionListener(node, this.enter);
+	            }.bind(this), 0);
+	        },
+
+	        hide: function(){
+	            if (this.hasHidden()) return;
+
+	            this.setState({
+	                willHidden: true
+	            });
+	        },
+
+	        toggle: function(){
+	            if (this.hasHidden())
+	                this.show();
+	            else
+	                this.hide();
+	        },
+
+	        listenKeyboard: function(event) {
+	            if (this.props.keyboard &&
+	                    (event.key === "Escape" ||
+	                     event.keyCode === 27)) {
+	                this.hide();
+	            }
+	        },
+
+	        componentDidMount: function(){
+	            window.addEventListener("keydown", this.listenKeyboard, true);
+	        },
+
+	        componentWillUnmount: function() {
+	            window.removeEventListener("keydown", this.listenKeyboard, true);
+	        }
+	    });
+	}
+
+
+/***/ },
+/* 193 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	/**
+	 * EVENT_NAME_MAP is used to determine which event fired when a
+	 * transition/animation ends, based on the style property used to
+	 * define that event.
+	 */
+	var EVENT_NAME_MAP = {
+	  transitionend: {
+	    'transition': 'transitionend',
+	    'WebkitTransition': 'webkitTransitionEnd',
+	    'MozTransition': 'mozTransitionEnd',
+	    'OTransition': 'oTransitionEnd',
+	    'msTransition': 'MSTransitionEnd'
+	  },
+
+	  animationend: {
+	    'animation': 'animationend',
+	    'WebkitAnimation': 'webkitAnimationEnd',
+	    'MozAnimation': 'mozAnimationEnd',
+	    'OAnimation': 'oAnimationEnd',
+	    'msAnimation': 'MSAnimationEnd'
+	  }
+	};
+
+	var endEvents = [];
+
+	function detectEvents() {
+	  var testEl = document.createElement('div');
+	  var style = testEl.style;
+
+	  // On some platforms, in particular some releases of Android 4.x,
+	  // the un-prefixed "animation" and "transition" properties are defined on the
+	  // style object but the events that fire will still be prefixed, so we need
+	  // to check if the un-prefixed events are useable, and if not remove them
+	  // from the map
+	  if (!('AnimationEvent' in window)) {
+	    delete EVENT_NAME_MAP.animationend.animation;
+	  }
+
+	  if (!('TransitionEvent' in window)) {
+	    delete EVENT_NAME_MAP.transitionend.transition;
+	  }
+
+	  for (var baseEventName in EVENT_NAME_MAP) {
+	    var baseEvents = EVENT_NAME_MAP[baseEventName];
+	    for (var styleName in baseEvents) {
+	      if (styleName in style) {
+	        endEvents.push(baseEvents[styleName]);
+	        break;
+	      }
+	    }
+	  }
+	}
+
+	if (typeof window !== 'undefined') {
+	  detectEvents();
+	}
+
+
+	// We use the raw {add|remove}EventListener() call because EventListener
+	// does not know how to remove event listeners and we really should
+	// clean up. Also, these events are not triggered in older browsers
+	// so we should be A-OK here.
+
+	function addEventListener(node, eventName, eventListener) {
+	  node.addEventListener(eventName, eventListener, false);
+	}
+
+	function removeEventListener(node, eventName, eventListener) {
+	  node.removeEventListener(eventName, eventListener, false);
+	}
+
+	module.exports = {
+	  addEndEventListener: function(node, eventListener) {
+	    if (endEvents.length === 0) {
+	      // If CSS transitions are not supported, trigger an "end animation"
+	      // event immediately.
+	      window.setTimeout(eventListener, 0);
+	      return;
+	    }
+	    endEvents.forEach(function(endEvent) {
+	      addEventListener(node, endEvent, eventListener);
+	    });
+	  },
+
+	  removeEndEventListener: function(node, eventListener) {
+	    if (endEvents.length === 0) {
+	      return;
+	    }
+	    endEvents.forEach(function(endEvent) {
+	      removeEventListener(node, endEvent, eventListener);
+	    });
+	  }
+	};
+
+
+/***/ },
+/* 194 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var getVendorPropertyName = __webpack_require__(195);
+
+	module.exports = function(target, sources) {
+	  var to = Object(target);
+	  var hasOwnProperty = Object.prototype.hasOwnProperty;
+
+	  for (var nextIndex = 1; nextIndex < arguments.length; nextIndex++) {
+	    var nextSource = arguments[nextIndex];
+	    if (nextSource == null) {
+	      continue;
+	    }
+
+	    var from = Object(nextSource);
+
+	    for (var key in from) {
+	      if (hasOwnProperty.call(from, key)) {
+	        to[key] = from[key];
+	      }
+	    }
+	  }
+
+	  var prefixed = {};
+	  for (var key in to) {
+	    prefixed[getVendorPropertyName(key)] = to[key]
+	  }
+
+	  return prefixed
+	}
+
+
+/***/ },
+/* 195 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var builtinStyle = __webpack_require__(196);
+	var prefixes = ['Moz', 'Webkit', 'O', 'ms'];
+	var domVendorPrefix;
+
+	// Helper function to get the proper vendor property name. (transition => WebkitTransition)
+	module.exports = function(prop, isSupportTest) {
+
+	  var vendorProp;
+	  if (prop in builtinStyle) return prop;
+
+	  var UpperProp = prop.charAt(0).toUpperCase() + prop.substr(1);
+
+	  if (domVendorPrefix) {
+
+	    vendorProp = domVendorPrefix + UpperProp;
+	    if (vendorProp in builtinStyle) {
+	      return vendorProp;
+	    }
+	  } else {
+
+	    for (var i = 0; i < prefixes.length; ++i) {
+	      vendorProp = prefixes[i] + UpperProp;
+	      if (vendorProp in builtinStyle) {
+	        domVendorPrefix = prefixes[i];
+	        return vendorProp;
+	      }
+	    }
+	  }
+
+	  // if support test, not fallback to origin prop name
+	  if (!isSupportTest) {
+	    return prop;
+	  }
+
+	}
+
+
+/***/ },
+/* 196 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	module.exports = document.createElement('div').style;
+
+
+/***/ },
+/* 197 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var insertRule = __webpack_require__(198);
+	var vendorPrefix = __webpack_require__(199)();
+	var index = 0;
+
+	module.exports = function(keyframes) {
+	  // random name
+	  var name = 'anim_' + (++index) + (+new Date);
+	  var css = "@" + vendorPrefix + "keyframes " + name + " {";
+
+	  for (var key in keyframes) {
+	    css += key + " {";
+
+	    for (var property in keyframes[key]) {
+	      var part = ":" + keyframes[key][property] + ";";
+	      // We do vendor prefix for every property
+	      css += vendorPrefix + property + part;
+	      css += property + part;
+	    }
+
+	    css += "}";
+	  }
+
+	  css += "}";
+
+	  insertRule(css);
+
+	  return name
+	}
+
+
+/***/ },
+/* 198 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	var extraSheet;
+
+	module.exports = function(css) {
+
+	  if (!extraSheet) {
+	    // First time, create an extra stylesheet for adding rules
+	    extraSheet = document.createElement('style');
+	    document.getElementsByTagName('head')[0].appendChild(extraSheet);
+	    // Keep reference to actual StyleSheet object (`styleSheet` for IE < 9)
+	    extraSheet = extraSheet.sheet || extraSheet.styleSheet;
+	  }
+
+	  var index = (extraSheet.cssRules || extraSheet.rules).length;
+	  extraSheet.insertRule(css, index);
+
+	  return extraSheet;
+	}
+
+
+/***/ },
 /* 199 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	var cssVendorPrefix;
+
+	module.exports = function() {
+
+	  if (cssVendorPrefix) return cssVendorPrefix;
+
+	  var styles = window.getComputedStyle(document.documentElement, '');
+	  var pre = (Array.prototype.slice.call(styles).join('').match(/-(moz|webkit|ms)-/) || (styles.OLink === '' && ['', 'o']))[1];
+
+	  return cssVendorPrefix = '-' + pre + '-';
+	}
+
+
+/***/ },
+/* 200 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _classnames = __webpack_require__(189);
+
+	var _classnames2 = _interopRequireDefault(_classnames);
+
+	var _data = __webpack_require__(186);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var TimeSetting = function (_Component) {
+	  _inherits(TimeSetting, _Component);
+
+	  function TimeSetting() {
+	    _classCallCheck(this, TimeSetting);
+
+	    return _possibleConstructorReturn(this, Object.getPrototypeOf(TimeSetting).apply(this, arguments));
+	  }
+
+	  _createClass(TimeSetting, [{
+	    key: 'handleAttributeChange',
+
+
+	    // handlers
+	    //
+	    value: function handleAttributeChange(attr, event) {
+	      this.props.actions.updateTimeSetting(attr, event.target.value);
+	    }
+	  }, {
+	    key: 'handleDayClick',
+	    value: function handleDayClick(value, event) {
+	      var days = this.props.timeSetting.days;
+
+	      var selectedDays = undefined;
+
+	      if (days.includes(value)) {
+	        selectedDays = days.filter(function (day) {
+	          return day !== value;
+	        });
+	      } else {
+	        selectedDays = days.concat(value);
+	      }
+
+	      if (selectedDays.length === 0) return;
+	      this.props.actions.updateTimeSetting('days', selectedDays);
+	    }
+
+	    // renderers
+	    //
+
+	  }, {
+	    key: 'renderTimezoneOption',
+	    value: function renderTimezoneOption(timezone) {
+	      return _react2.default.createElement(
+	        'option',
+	        { value: timezone.id },
+	        timezone.text
+	      );
+	    }
+	  }, {
+	    key: 'renderStartTimeOption',
+	    value: function renderStartTimeOption(time) {
+	      return _react2.default.createElement(
+	        'option',
+	        { value: time },
+	        time
+	      );
+	    }
+	  }, {
+	    key: 'renderEndTimeOption',
+	    value: function renderEndTimeOption(time) {
+	      return _react2.default.createElement(
+	        'option',
+	        { value: time },
+	        time
+	      );
+	    }
+	  }, {
+	    key: 'renderDayElement',
+	    value: function renderDayElement(day) {
+	      var days = this.props.timeSetting.days;
+
+	      var value = _data.daysOfWeek[day];
+	      var dayClassNames = (0, _classnames2.default)({ selected: days.includes(value) });
+
+	      return _react2.default.createElement(
+	        'li',
+	        { className: dayClassNames, onClick: this.handleDayClick.bind(this, value) },
+	        day
+	      );
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _props = this.props;
+	      var startTimeRange = _props.startTimeRange;
+	      var endTimeRange = _props.endTimeRange;
+	      var _props$timeSetting = this.props.timeSetting;
+	      var tz = _props$timeSetting.tz;
+	      var startTime = _props$timeSetting.startTime;
+	      var endTime = _props$timeSetting.endTime;
+	      var days = _props$timeSetting.days;
+
+
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(
+	          'h2',
+	          null,
+	          'Select your team timezone:'
+	        ),
+	        _react2.default.createElement(
+	          'select',
+	          { value: tz, onChange: this.handleAttributeChange.bind(this, 'tz') },
+	          _data.timezones.map(this.renderTimezoneOption.bind(this))
+	        ),
+	        _react2.default.createElement(
+	          'h2',
+	          null,
+	          'Mentoring time:'
+	        ),
+	        _react2.default.createElement(
+	          'select',
+	          { value: startTime, onChange: this.handleAttributeChange.bind(this, 'startTime') },
+	          startTimeRange.map(this.renderStartTimeOption.bind(this))
+	        ),
+	        _react2.default.createElement(
+	          'span',
+	          null,
+	          '—'
+	        ),
+	        _react2.default.createElement(
+	          'select',
+	          { value: endTime, onChange: this.handleAttributeChange.bind(this, 'endTime') },
+	          endTimeRange.map(this.renderEndTimeOption.bind(this))
+	        ),
+	        _react2.default.createElement(
+	          'ul',
+	          { className: 'days-list' },
+	          Object.keys(_data.daysOfWeek).map(this.renderDayElement.bind(this))
+	        )
+	      );
+	    }
+	  }]);
+
+	  return TimeSetting;
+	}(_react.Component);
+
+	TimeSetting.propTypes = {
+	  timeSetting: _react.PropTypes.object.isRequired,
+	  startTimeRange: _react.PropTypes.array.isRequired,
+	  endTimeRange: _react.PropTypes.array.isRequired,
+	  actions: _react.PropTypes.object.isRequired
+	};
+
+	exports.default = TimeSetting;
+
+/***/ },
+/* 201 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -22506,20 +22674,20 @@
 	};
 
 /***/ },
-/* 200 */
+/* 202 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var map = {
-		"./ConfigApp": 201,
-		"./ConfigApp.js": 201,
-		"./channels": 203,
-		"./channels.js": 203,
-		"./team": 202,
-		"./team.js": 202,
-		"./themes": 204,
-		"./themes.js": 204,
-		"./timeSetting": 205,
-		"./timeSetting.js": 205
+		"./ConfigApp": 203,
+		"./ConfigApp.js": 203,
+		"./channels": 205,
+		"./channels.js": 205,
+		"./team": 204,
+		"./team.js": 204,
+		"./themes": 206,
+		"./themes.js": 206,
+		"./timeSetting": 207,
+		"./timeSetting.js": 207
 	};
 	function webpackContext(req) {
 		return __webpack_require__(webpackContextResolve(req));
@@ -22532,11 +22700,11 @@
 	};
 	webpackContext.resolve = webpackContextResolve;
 	module.exports = webpackContext;
-	webpackContext.id = 200;
+	webpackContext.id = 202;
 
 
 /***/ },
-/* 201 */
+/* 203 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -22547,19 +22715,19 @@
 
 	var _redux = __webpack_require__(154);
 
-	var _team = __webpack_require__(202);
+	var _team = __webpack_require__(204);
 
 	var _team2 = _interopRequireDefault(_team);
 
-	var _channels = __webpack_require__(203);
+	var _channels = __webpack_require__(205);
 
 	var _channels2 = _interopRequireDefault(_channels);
 
-	var _themes = __webpack_require__(204);
+	var _themes = __webpack_require__(206);
 
 	var _themes2 = _interopRequireDefault(_themes);
 
-	var _timeSetting = __webpack_require__(205);
+	var _timeSetting = __webpack_require__(207);
 
 	var _timeSetting2 = _interopRequireDefault(_timeSetting);
 
@@ -22573,7 +22741,7 @@
 	});
 
 /***/ },
-/* 202 */
+/* 204 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -22593,7 +22761,7 @@
 	}
 
 /***/ },
-/* 203 */
+/* 205 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -22628,7 +22796,7 @@
 	}
 
 /***/ },
-/* 204 */
+/* 206 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -22685,7 +22853,7 @@
 	}
 
 /***/ },
-/* 205 */
+/* 207 */
 /***/ function(module, exports) {
 
 	'use strict';

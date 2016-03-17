@@ -16,16 +16,19 @@ module.exports = function(sequelize, DataTypes) {
     },
 
     tz: {
+      // TODO: add validation
       type: DataTypes.STRING,
       allowNull: false
     },
 
     startTime: {
+      // TODO: add validation
       type: DataTypes.STRING(5),
       allowNull: false
     },
 
     endTime: {
+      // TODO: add validation
       type: DataTypes.STRING(5),
       allowNull: false
     },

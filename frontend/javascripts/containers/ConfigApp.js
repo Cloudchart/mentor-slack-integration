@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { configActions } from '../actions'
+import { getStartTimeRange, getEndTimeRange } from '../selectors'
 
 import ChannelsList from '../components/ChannelsList'
 import TimeSetting from '../components/TimeSetting'
@@ -10,7 +11,14 @@ import TimeSetting from '../components/TimeSetting'
 class ConfigApp extends Component {
 
   render() {
-    const { team, channels, themes, timeSetting, actions } = this.props
+    const {
+      team,
+      channels,
+      themes,
+      timeSetting,
+      startTimeRange,
+      endTimeRange,
+      actions } = this.props
 
     return (
       <div className="configuration-container">
@@ -21,6 +29,8 @@ class ConfigApp extends Component {
 
         <TimeSetting
           timeSetting={ timeSetting }
+          startTimeRange={ startTimeRange }
+          endTimeRange={ endTimeRange }
           actions={ actions }
         />
 
@@ -40,6 +50,8 @@ ConfigApp.propTypes = {
   themes: PropTypes.object.isRequired,
   actions: PropTypes.object.isRequired,
   timeSetting: PropTypes.object.isRequired,
+  startTimeRange: PropTypes.array.isRequired,
+  endTimeRange: PropTypes.array.isRequired,
 }
 
 function mapStateToProps(state) {
@@ -48,6 +60,8 @@ function mapStateToProps(state) {
     channels: state.channels,
     themes: state.themes,
     timeSetting: state.timeSetting,
+    startTimeRange: getStartTimeRange(state),
+    endTimeRange: getEndTimeRange(state),
   }
 }
 

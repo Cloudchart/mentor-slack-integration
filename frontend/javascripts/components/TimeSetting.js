@@ -52,6 +52,7 @@ class TimeSetting extends Component {
   }
 
   render() {
+    const { startTimeRange, endTimeRange } = this.props
     const { tz, startTime, endTime, days } = this.props.timeSetting
 
     return (
@@ -63,13 +64,13 @@ class TimeSetting extends Component {
 
         <h2>Mentoring time:</h2>
         <select value={ startTime } onChange={ this.handleAttributeChange.bind(this, 'startTime') }>
-          { dayTimes.map(this.renderStartTimeOption.bind(this)) }
+          { startTimeRange.map(this.renderStartTimeOption.bind(this)) }
         </select>
 
         <span>—</span>
 
         <select value={ endTime } onChange={ this.handleAttributeChange.bind(this, 'endTime') }>
-          { dayTimes.map(this.renderEndTimeOption.bind(this)) }
+          { endTimeRange.map(this.renderEndTimeOption.bind(this)) }
         </select>
 
         <ul className="days-list">
@@ -83,6 +84,8 @@ class TimeSetting extends Component {
 
 TimeSetting.propTypes = {
   timeSetting: PropTypes.object.isRequired,
+  startTimeRange: PropTypes.array.isRequired,
+  endTimeRange: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired,
 }
 
