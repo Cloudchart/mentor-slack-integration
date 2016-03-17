@@ -32,6 +32,15 @@ div#modal {
   }
 }
 
+.configuration-container {
+  > h1 {
+    > i {
+      color: $primary-green;
+      margin-right: 10px;
+    }
+  }
+}
+
 .days-list {
   display: inline-block;
   margin-left: 20px;

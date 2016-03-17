@@ -2097,6 +2097,10 @@ div#modal .modal-content {
 div#modal button {
   float: right; }
 
+.configuration-container > h1 > i {
+  color: #3BC363;
+  margin-right: 10px; }
+
 .days-list {
   display: inline-block;
   margin-left: 20px; }

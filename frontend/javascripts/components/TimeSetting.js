@@ -5,55 +5,44 @@ import { timezones, dayTimes, daysOfWeek } from '../../data'
 
 class TimeSetting extends Component {
 
-  constructor(props) {
-    super(props)
-    this.state = {
-      tz: this.props.timeSetting.tz,
-      startTime: this.props.timeSetting.startTime,
-      endTime: this.props.timeSetting.endTime,
-      days: this.props.timeSetting.days,
-    }
-  }
-
   // handlers
   //
   handleAttributeChange(attr, event) {
-    this.setState({ [attr]: event.target.value })
+    this.props.actions.updateTimeSetting(attr, event.target.value)
   }
 
-  handleDayClick(day, event) {
-    console.log(day);
+  handleDayClick(value, event) {
+    const { days } = this.props.timeSetting
+    let selectedDays
+
+    if (days.includes(value)) {
+      selectedDays = days.filter(day => day !== value)
+    } else {
+      selectedDays = days.concat(value)
+    }
+
+    if (selectedDays.length === 0) return
+    this.props.actions.updateTimeSetting('days', selectedDays)
   }
 
   // renderers
   //
-  renderTimezoneOptions(timezone) {
-    return(
-      <option value={ timezone.id }>
-        { timezone.text }
-      </option>
-    )
+  renderTimezoneOption(timezone) {
+    return <option value={ timezone.id }>{ timezone.text }</option>
   }
 
-  renderStartTimeOptions(time) {
-    return(
-      <option value={ time }>
-        { time }
-      </option>
-    )
+  renderStartTimeOption(time) {
+    return <option value={ time }>{ time }</option>
   }
 
-  renderEndTimeOptions(time) {
-    return(
-      <option value={ time }>
-        { time }
-      </option>
-    )
+  renderEndTimeOption(time) {
+    return <option value={ time }>{ time }</option>
   }
 
-  renderDaysList(day) {
-    let value = daysOfWeek[day]
-    let dayClassNames = classNames({ selected: this.state.days.includes(value) })
+  renderDayElement(day) {
+    const { days } = this.props.timeSetting
+    const value = daysOfWeek[day]
+    const dayClassNames = classNames({ selected: days.includes(value) })
 
     return(
       <li className={ dayClassNames } onClick={ this.handleDayClick.bind(this, value) }>
@@ -63,26 +52,28 @@ class TimeSetting extends Component {
   }
 
   render() {
+    const { tz, startTime, endTime, days } = this.props.timeSetting
+
     return (
       <div>
         <h2>Select your team timezone:</h2>
-        <select value={ this.state.tz } onChange={ this.handleAttributeChange.bind(this, 'tz') }>
-          { timezones.map(this.renderTimezoneOptions.bind(this)) }
+        <select value={ tz } onChange={ this.handleAttributeChange.bind(this, 'tz') }>
+          { timezones.map(this.renderTimezoneOption.bind(this)) }
         </select>
 
         <h2>Mentoring time:</h2>
-        <select value={ this.state.startTime } onChange={ this.handleAttributeChange.bind(this, 'startTime') }>
-          { dayTimes.map(this.renderStartTimeOptions.bind(this)) }
+        <select value={ startTime } onChange={ this.handleAttributeChange.bind(this, 'startTime') }>
+          { dayTimes.map(this.renderStartTimeOption.bind(this)) }
         </select>
 
         <span>—</span>
 
-        <select value={ this.state.endTime } onChange={ this.handleAttributeChange.bind(this, 'endTime') }>
-          { dayTimes.map(this.renderEndTimeOptions.bind(this)) }
+        <select value={ endTime } onChange={ this.handleAttributeChange.bind(this, 'endTime') }>
+          { dayTimes.map(this.renderEndTimeOption.bind(this)) }
         </select>
 
         <ul className="days-list">
-          { Object.keys(daysOfWeek).map(this.renderDaysList.bind(this)) }
+          { Object.keys(daysOfWeek).map(this.renderDayElement.bind(this)) }
         </ul>
       </div>
     )

@@ -13,7 +13,7 @@ class ConfigApp extends Component {
     const { team, channels, themes, timeSetting, actions } = this.props
 
     return (
-      <div>
+      <div className="configuration-container">
         <h1>
           <i className="fa fa-cogs" />
           <span>{ `Configure Virtual Mentor integration for ${team.name}` }</span>

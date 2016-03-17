@@ -72,7 +72,7 @@
 	if (reactType === 'plain') {
 	  _reactDom2.default.render(_react2.default.createElement(Component, JSON.parse(node.dataset.reactProps)), node);
 	} else {
-	  var reducers = __webpack_require__(199)("./" + reactClass).default;
+	  var reducers = __webpack_require__(200)("./" + reactClass).default;
 	  var store = (0, _redux.createStore)(reducers, window.__INITIAL_STATE__, (0, _redux.applyMiddleware)(_reduxThunk2.default));
 
 	  _reactDom2.default.render(_react2.default.createElement(
@@ -20486,8 +20486,8 @@
 	var map = {
 		"./ConfigApp": 177,
 		"./ConfigApp.js": 177,
-		"./LandingApp": 198,
-		"./LandingApp.js": 198
+		"./LandingApp": 199,
+		"./LandingApp.js": 199
 	};
 	function webpackContext(req) {
 		return __webpack_require__(webpackContextResolve(req));
@@ -20525,11 +20525,11 @@
 
 	var _actions = __webpack_require__(178);
 
-	var _ChannelsList = __webpack_require__(183);
+	var _ChannelsList = __webpack_require__(184);
 
 	var _ChannelsList2 = _interopRequireDefault(_ChannelsList);
 
-	var _TimeSetting = __webpack_require__(195);
+	var _TimeSetting = __webpack_require__(196);
 
 	var _TimeSetting2 = _interopRequireDefault(_TimeSetting);
 
@@ -20563,7 +20563,7 @@
 
 	      return _react2.default.createElement(
 	        'div',
-	        null,
+	        { className: 'configuration-container' },
 	        _react2.default.createElement(
 	          'h1',
 	          null,
@@ -20642,13 +20642,18 @@
 
 	var _destroyChannel2 = _interopRequireDefault(_destroyChannel);
 
+	var _updateTimeSetting = __webpack_require__(183);
+
+	var _updateTimeSetting2 = _interopRequireDefault(_updateTimeSetting);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var configActions = exports.configActions = {
 	  fetchThemes: _fetchThemes2.default,
 	  updateThemeStatus: _updateThemeStatus2.default,
 	  createChannel: _createChannel2.default,
-	  destroyChannel: _destroyChannel2.default
+	  destroyChannel: _destroyChannel2.default,
+	  updateTimeSetting: _updateTimeSetting2.default
 	};
 
 /***/ },
@@ -20859,6 +20864,61 @@
 
 /***/ },
 /* 183 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	function requestUpdateTimeSetting(attr, value) {
+	  return {
+	    type: 'UPDATE_TIME_SETTING_REQUEST',
+	    attr: attr,
+	    value: value
+	  };
+	}
+
+	function receiveUpdateTimeSetting(attr, json) {
+	  return {
+	    type: 'UPDATE_TIME_SETTING_RECEIVE',
+	    attr: attr,
+	    value: json[attr]
+	  };
+	}
+
+	function catchUpdateTimeSettingError(attr, error) {
+	  return {
+	    type: 'UPDATE_TIME_SETTING_ERROR',
+	    attr: attr,
+	    value: json[attr],
+	    error: error
+	  };
+	}
+
+	function updateTimeSetting(attr, value) {
+	  return function (dispatch) {
+	    dispatch(requestUpdateTimeSetting(attr, value));
+
+	    return fetch('/time_settings', {
+	      method: 'PUT',
+	      body: JSON.stringify({ attr: attr, value: value }),
+	      credentials: 'same-origin',
+	      headers: { 'Content-Type': 'application/json' }
+	    }).then(function (response) {
+	      return response.json();
+	    }).then(function (json) {
+	      return dispatch(receiveUpdateTimeSetting(attr, json));
+	    }, function (error) {
+	      return dispatch(catchUpdateTimeSettingError(attr, error));
+	    });
+	  };
+	}
+
+	exports.default = updateTimeSetting;
+
+/***/ },
+/* 184 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -20877,11 +20937,11 @@
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _classnames = __webpack_require__(184);
+	var _classnames = __webpack_require__(185);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
-	var _ThemesList = __webpack_require__(185);
+	var _ThemesList = __webpack_require__(186);
 
 	var _ThemesList2 = _interopRequireDefault(_ThemesList);
 
@@ -20988,7 +21048,7 @@
 	exports.default = ChannelsList;
 
 /***/ },
-/* 184 */
+/* 185 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -21042,7 +21102,7 @@
 
 
 /***/ },
-/* 185 */
+/* 186 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21057,11 +21117,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _FadeModal = __webpack_require__(186);
+	var _FadeModal = __webpack_require__(187);
 
 	var _FadeModal2 = _interopRequireDefault(_FadeModal);
 
-	var _classnames = __webpack_require__(184);
+	var _classnames = __webpack_require__(185);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
@@ -21200,12 +21260,12 @@
 	exports.default = ThemesList;
 
 /***/ },
-/* 186 */
+/* 187 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var modalFactory = __webpack_require__(187);
-	var insertKeyframesRule = __webpack_require__(192);
-	var appendVendorPrefix = __webpack_require__(189);
+	var modalFactory = __webpack_require__(188);
+	var insertKeyframesRule = __webpack_require__(193);
+	var appendVendorPrefix = __webpack_require__(190);
 
 	var animation = {
 	    show: {
@@ -21303,12 +21363,12 @@
 
 
 /***/ },
-/* 187 */
+/* 188 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var transitionEvents = __webpack_require__(188);
-	var appendVendorPrefix = __webpack_require__(189);
+	var transitionEvents = __webpack_require__(189);
+	var appendVendorPrefix = __webpack_require__(190);
 
 	module.exports = function(animation){
 
@@ -21487,7 +21547,7 @@
 
 
 /***/ },
-/* 188 */
+/* 189 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -21588,12 +21648,12 @@
 
 
 /***/ },
-/* 189 */
+/* 190 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var getVendorPropertyName = __webpack_require__(190);
+	var getVendorPropertyName = __webpack_require__(191);
 
 	module.exports = function(target, sources) {
 	  var to = Object(target);
@@ -21624,12 +21684,12 @@
 
 
 /***/ },
-/* 190 */
+/* 191 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var builtinStyle = __webpack_require__(191);
+	var builtinStyle = __webpack_require__(192);
 	var prefixes = ['Moz', 'Webkit', 'O', 'ms'];
 	var domVendorPrefix;
 
@@ -21667,7 +21727,7 @@
 
 
 /***/ },
-/* 191 */
+/* 192 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -21676,13 +21736,13 @@
 
 
 /***/ },
-/* 192 */
+/* 193 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var insertRule = __webpack_require__(193);
-	var vendorPrefix = __webpack_require__(194)();
+	var insertRule = __webpack_require__(194);
+	var vendorPrefix = __webpack_require__(195)();
 	var index = 0;
 
 	module.exports = function(keyframes) {
@@ -21712,7 +21772,7 @@
 
 
 /***/ },
-/* 193 */
+/* 194 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -21737,7 +21797,7 @@
 
 
 /***/ },
-/* 194 */
+/* 195 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -21756,7 +21816,7 @@
 
 
 /***/ },
-/* 195 */
+/* 196 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21771,15 +21831,13 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _classnames = __webpack_require__(184);
+	var _classnames = __webpack_require__(185);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
-	var _data = __webpack_require__(196);
+	var _data = __webpack_require__(197);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -21790,41 +21848,46 @@
 	var TimeSetting = function (_Component) {
 	  _inherits(TimeSetting, _Component);
 
-	  function TimeSetting(props) {
+	  function TimeSetting() {
 	    _classCallCheck(this, TimeSetting);
 
-	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(TimeSetting).call(this, props));
-
-	    _this.state = {
-	      tz: _this.props.timeSetting.tz,
-	      startTime: _this.props.timeSetting.startTime,
-	      endTime: _this.props.timeSetting.endTime,
-	      days: _this.props.timeSetting.days
-	    };
-	    return _this;
+	    return _possibleConstructorReturn(this, Object.getPrototypeOf(TimeSetting).apply(this, arguments));
 	  }
-
-	  // handlers
-	  //
-
 
 	  _createClass(TimeSetting, [{
 	    key: 'handleAttributeChange',
+
+
+	    // handlers
+	    //
 	    value: function handleAttributeChange(attr, event) {
-	      this.setState(_defineProperty({}, attr, event.target.value));
+	      this.props.actions.updateTimeSetting(attr, event.target.value);
 	    }
 	  }, {
 	    key: 'handleDayClick',
-	    value: function handleDayClick(day, event) {
-	      console.log(day);
+	    value: function handleDayClick(value, event) {
+	      var days = this.props.timeSetting.days;
+
+	      var selectedDays = undefined;
+
+	      if (days.includes(value)) {
+	        selectedDays = days.filter(function (day) {
+	          return day !== value;
+	        });
+	      } else {
+	        selectedDays = days.concat(value);
+	      }
+
+	      if (selectedDays.length === 0) return;
+	      this.props.actions.updateTimeSetting('days', selectedDays);
 	    }
 
 	    // renderers
 	    //
 
 	  }, {
-	    key: 'renderTimezoneOptions',
-	    value: function renderTimezoneOptions(timezone) {
+	    key: 'renderTimezoneOption',
+	    value: function renderTimezoneOption(timezone) {
 	      return _react2.default.createElement(
 	        'option',
 	        { value: timezone.id },
@@ -21832,8 +21895,8 @@
 	      );
 	    }
 	  }, {
-	    key: 'renderStartTimeOptions',
-	    value: function renderStartTimeOptions(time) {
+	    key: 'renderStartTimeOption',
+	    value: function renderStartTimeOption(time) {
 	      return _react2.default.createElement(
 	        'option',
 	        { value: time },
@@ -21841,8 +21904,8 @@
 	      );
 	    }
 	  }, {
-	    key: 'renderEndTimeOptions',
-	    value: function renderEndTimeOptions(time) {
+	    key: 'renderEndTimeOption',
+	    value: function renderEndTimeOption(time) {
 	      return _react2.default.createElement(
 	        'option',
 	        { value: time },
@@ -21850,10 +21913,12 @@
 	      );
 	    }
 	  }, {
-	    key: 'renderDaysList',
-	    value: function renderDaysList(day) {
+	    key: 'renderDayElement',
+	    value: function renderDayElement(day) {
+	      var days = this.props.timeSetting.days;
+
 	      var value = _data.daysOfWeek[day];
-	      var dayClassNames = (0, _classnames2.default)({ selected: this.state.days.includes(value) });
+	      var dayClassNames = (0, _classnames2.default)({ selected: days.includes(value) });
 
 	      return _react2.default.createElement(
 	        'li',
@@ -21864,6 +21929,13 @@
 	  }, {
 	    key: 'render',
 	    value: function render() {
+	      var _props$timeSetting = this.props.timeSetting;
+	      var tz = _props$timeSetting.tz;
+	      var startTime = _props$timeSetting.startTime;
+	      var endTime = _props$timeSetting.endTime;
+	      var days = _props$timeSetting.days;
+
+
 	      return _react2.default.createElement(
 	        'div',
 	        null,
@@ -21874,8 +21946,8 @@
 	        ),
 	        _react2.default.createElement(
 	          'select',
-	          { value: this.state.tz, onChange: this.handleAttributeChange.bind(this, 'tz') },
-	          _data.timezones.map(this.renderTimezoneOptions.bind(this))
+	          { value: tz, onChange: this.handleAttributeChange.bind(this, 'tz') },
+	          _data.timezones.map(this.renderTimezoneOption.bind(this))
 	        ),
 	        _react2.default.createElement(
 	          'h2',
@@ -21884,8 +21956,8 @@
 	        ),
 	        _react2.default.createElement(
 	          'select',
-	          { value: this.state.startTime, onChange: this.handleAttributeChange.bind(this, 'startTime') },
-	          _data.dayTimes.map(this.renderStartTimeOptions.bind(this))
+	          { value: startTime, onChange: this.handleAttributeChange.bind(this, 'startTime') },
+	          _data.dayTimes.map(this.renderStartTimeOption.bind(this))
 	        ),
 	        _react2.default.createElement(
 	          'span',
@@ -21894,13 +21966,13 @@
 	        ),
 	        _react2.default.createElement(
 	          'select',
-	          { value: this.state.endTime, onChange: this.handleAttributeChange.bind(this, 'endTime') },
-	          _data.dayTimes.map(this.renderEndTimeOptions.bind(this))
+	          { value: endTime, onChange: this.handleAttributeChange.bind(this, 'endTime') },
+	          _data.dayTimes.map(this.renderEndTimeOption.bind(this))
 	        ),
 	        _react2.default.createElement(
 	          'ul',
 	          { className: 'days-list' },
-	          Object.keys(_data.daysOfWeek).map(this.renderDaysList.bind(this))
+	          Object.keys(_data.daysOfWeek).map(this.renderDayElement.bind(this))
 	        )
 	      );
 	    }
@@ -21917,7 +21989,7 @@
 	exports.default = TimeSetting;
 
 /***/ },
-/* 196 */
+/* 197 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21927,7 +21999,7 @@
 	});
 	exports.daysOfWeek = exports.dayTimes = exports.timezones = undefined;
 
-	var _timezones = __webpack_require__(197);
+	var _timezones = __webpack_require__(198);
 
 	var _timezones2 = _interopRequireDefault(_timezones);
 
@@ -21950,7 +22022,7 @@
 	exports.daysOfWeek = daysOfWeek;
 
 /***/ },
-/* 197 */
+/* 198 */
 /***/ function(module, exports) {
 
 	module.exports = [
@@ -22365,7 +22437,7 @@
 	];
 
 /***/ },
-/* 198 */
+/* 199 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -22434,20 +22506,20 @@
 	};
 
 /***/ },
-/* 199 */
+/* 200 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var map = {
-		"./ConfigApp": 200,
-		"./ConfigApp.js": 200,
-		"./channels": 202,
-		"./channels.js": 202,
-		"./team": 201,
-		"./team.js": 201,
-		"./themes": 203,
-		"./themes.js": 203,
-		"./timeSetting": 204,
-		"./timeSetting.js": 204
+		"./ConfigApp": 201,
+		"./ConfigApp.js": 201,
+		"./channels": 203,
+		"./channels.js": 203,
+		"./team": 202,
+		"./team.js": 202,
+		"./themes": 204,
+		"./themes.js": 204,
+		"./timeSetting": 205,
+		"./timeSetting.js": 205
 	};
 	function webpackContext(req) {
 		return __webpack_require__(webpackContextResolve(req));
@@ -22460,11 +22532,11 @@
 	};
 	webpackContext.resolve = webpackContextResolve;
 	module.exports = webpackContext;
-	webpackContext.id = 199;
+	webpackContext.id = 200;
 
 
 /***/ },
-/* 200 */
+/* 201 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -22475,19 +22547,19 @@
 
 	var _redux = __webpack_require__(154);
 
-	var _team = __webpack_require__(201);
+	var _team = __webpack_require__(202);
 
 	var _team2 = _interopRequireDefault(_team);
 
-	var _channels = __webpack_require__(202);
+	var _channels = __webpack_require__(203);
 
 	var _channels2 = _interopRequireDefault(_channels);
 
-	var _themes = __webpack_require__(203);
+	var _themes = __webpack_require__(204);
 
 	var _themes2 = _interopRequireDefault(_themes);
 
-	var _timeSetting = __webpack_require__(204);
+	var _timeSetting = __webpack_require__(205);
 
 	var _timeSetting2 = _interopRequireDefault(_timeSetting);
 
@@ -22501,7 +22573,7 @@
 	});
 
 /***/ },
-/* 201 */
+/* 202 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -22521,7 +22593,7 @@
 	}
 
 /***/ },
-/* 202 */
+/* 203 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -22556,7 +22628,7 @@
 	}
 
 /***/ },
-/* 203 */
+/* 204 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -22613,20 +22685,37 @@
 	}
 
 /***/ },
-/* 204 */
+/* 205 */
 /***/ function(module, exports) {
 
-	"use strict";
+	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
 	exports.default = timeSetting;
+
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 	function timeSetting() {
+	  var _Object$assign3;
+
 	  var state = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 	  var action = arguments[1];
 
 	  switch (action.type) {
+	    case 'UPDATE_TIME_SETTING_REQUEST':
+	      return Object.assign({}, state, _defineProperty({
+	        isFetching: true
+	      }, action.attr, action.value));
+	    case 'UPDATE_TIME_SETTING_RECEIVE':
+	      return Object.assign({}, state, _defineProperty({
+	        isFetching: false
+	      }, action.attr, action.value));
+	    case 'UPDATE_TIME_SETTING_ERROR':
+	      return Object.assign({}, state, (_Object$assign3 = {
+	        isFetching: false
+	      }, _defineProperty(_Object$assign3, action.attr, action.value), _defineProperty(_Object$assign3, 'error', action.error), _Object$assign3));
 	    default:
 	      return state;
 	  }
