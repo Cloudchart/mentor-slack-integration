@@ -31,7 +31,7 @@ function createChannel(id) {
       headers: { 'Content-Type': 'application/json' },
     }).then(response => response.json()).then(json => {
       return dispatch(receiveCreateChannel(id, json))
-    }, error => {
+    }).catch(error => {
       return dispatch(catchCreateChannelError(id, error))
     })
   }

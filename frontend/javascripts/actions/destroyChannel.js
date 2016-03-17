@@ -31,7 +31,7 @@ function destroyChannel(id) {
       headers: { 'Content-Type': 'application/json' },
     }).then(response => response.json()).then(json => {
       return dispatch(receiveDestroyChannel(id, json))
-    }, error => {
+    }).catch(error => {
       return dispatch(catchDestroyChannelError(id, error))
     })
   }

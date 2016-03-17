@@ -1,6 +1,7 @@
 'use strict';
 
-var daysOfWeek = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+var dayTimes = require('../lib').dayTimes;
+var daysOfWeek = require('../lib').daysOfWeek;
 
 module.exports = function(sequelize, DataTypes) {
   var TimeSetting = sequelize.define('TimeSetting', {
@@ -16,20 +17,33 @@ module.exports = function(sequelize, DataTypes) {
     },
 
     tz: {
-      // TODO: add validation
       type: DataTypes.STRING,
       allowNull: false
     },
 
     startTime: {
-      // TODO: add validation
       type: DataTypes.STRING(5),
+      validate: {
+        isIn: [dayTimes],
+        ltEndTime: function() {
+          if (this.startTime > this.endTime) {
+            throw new Error("can't be greater than end time")
+          }
+        }
+      },
       allowNull: false
     },
 
     endTime: {
-      // TODO: add validation
       type: DataTypes.STRING(5),
+      validate: {
+        isIn: [dayTimes],
+        gtStartTime: function() {
+          if (this.endTime < this.startTime) {
+            throw new Error("can't be less than start time")
+          }
+        }
+      },
       allowNull: false
     },
 

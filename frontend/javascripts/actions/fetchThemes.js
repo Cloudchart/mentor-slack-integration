@@ -29,7 +29,7 @@ function fetchThemes(channelId) {
       headers: { 'Accept': 'application/json' },
     }).then(response => response.json()).then(json => {
       return dispatch(receiveThemes(channelId, json))
-    }, error => {
+    }).catch(error => {
       return dispatch(catchThemesError(channelId, error))
     })
   }

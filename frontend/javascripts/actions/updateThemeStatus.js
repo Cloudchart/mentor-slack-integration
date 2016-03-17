@@ -31,7 +31,7 @@ function updateThemeStatus(id, channelId, action) {
       headers: { 'Content-Type': 'application/json' },
     }).then(response => response.json()).then(json => {
       return dispatch(receiveUpdateThemeStatus(id, json))
-    }, error => {
+    }).catch(error => {
       return dispatch(catchUpdateThemeStatusError(id, error))
     })
   }

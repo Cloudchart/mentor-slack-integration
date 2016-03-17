@@ -11,9 +11,9 @@ export default function timeSetting(state = {}, action) {
         [action.attr]: action.value,
       })
     case 'UPDATE_TIME_SETTING_ERROR':
+      // TODO: think about how to restore previous state
       return Object.assign({}, state, {
         isFetching: false,
-        [action.attr]: action.value,
         error: action.error,
       })
     default:

@@ -20708,7 +20708,7 @@
 	      return response.json();
 	    }).then(function (json) {
 	      return dispatch(receiveThemes(channelId, json));
-	    }, function (error) {
+	    }).catch(function (error) {
 	      return dispatch(catchThemesError(channelId, error));
 	    });
 	  };
@@ -20760,7 +20760,7 @@
 	      return response.json();
 	    }).then(function (json) {
 	      return dispatch(receiveUpdateThemeStatus(id, json));
-	    }, function (error) {
+	    }).catch(function (error) {
 	      return dispatch(catchUpdateThemeStatusError(id, error));
 	    });
 	  };
@@ -20812,7 +20812,7 @@
 	      return response.json();
 	    }).then(function (json) {
 	      return dispatch(receiveCreateChannel(id, json));
-	    }, function (error) {
+	    }).catch(function (error) {
 	      return dispatch(catchCreateChannelError(id, error));
 	    });
 	  };
@@ -20864,7 +20864,7 @@
 	      return response.json();
 	    }).then(function (json) {
 	      return dispatch(receiveDestroyChannel(id, json));
-	    }, function (error) {
+	    }).catch(function (error) {
 	      return dispatch(catchDestroyChannelError(id, error));
 	    });
 	  };
@@ -20901,7 +20901,6 @@
 	  return {
 	    type: 'UPDATE_TIME_SETTING_ERROR',
 	    attr: attr,
-	    value: json[attr],
 	    error: error
 	  };
 	}
@@ -20918,8 +20917,12 @@
 	    }).then(function (response) {
 	      return response.json();
 	    }).then(function (json) {
-	      return dispatch(receiveUpdateTimeSetting(attr, json));
-	    }, function (error) {
+	      if (json.error) {
+	        return dispatch(catchUpdateTimeSettingError(attr, json.error));
+	      } else {
+	        return dispatch(receiveUpdateTimeSetting(attr, json));
+	      }
+	    }).catch(function (error) {
 	      return dispatch(catchUpdateTimeSettingError(attr, error));
 	    });
 	  };
@@ -22866,8 +22869,6 @@
 	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 	function timeSetting() {
-	  var _Object$assign3;
-
 	  var state = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 	  var action = arguments[1];
 
@@ -22881,9 +22882,11 @@
 	        isFetching: false
 	      }, action.attr, action.value));
 	    case 'UPDATE_TIME_SETTING_ERROR':
-	      return Object.assign({}, state, (_Object$assign3 = {
-	        isFetching: false
-	      }, _defineProperty(_Object$assign3, action.attr, action.value), _defineProperty(_Object$assign3, 'error', action.error), _Object$assign3));
+	      // TODO: think about how to restore previous state
+	      return Object.assign({}, state, {
+	        isFetching: false,
+	        error: action.error
+	      });
 	    default:
 	      return state;
 	  }

@@ -11,8 +11,11 @@ router.put('/', checkTeamId, async (req, res, next) => {
 
   if (permittedAttrs.includes(attr)) {
     let timeSetting = await TimeSetting.find({ where: { teamId: req.session.teamId } })
-    await timeSetting.update({ [attr]: value })
-    res.json({ [attr]: timeSetting[attr] })
+    timeSetting.update({ [attr]: value }).then(timeSetting => {
+      res.json({ [attr]: timeSetting[attr] })
+    }).catch(error => {
+      res.status(400).json({ error })
+    })
   } else {
     res.status(400).json({ message: 'bad request' })
   }

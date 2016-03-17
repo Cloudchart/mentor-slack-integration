@@ -2,7 +2,7 @@ function requestUpdateTimeSetting(attr, value) {
   return {
     type: 'UPDATE_TIME_SETTING_REQUEST',
     attr,
-    value
+    value,
   }
 }
 
@@ -18,7 +18,6 @@ function catchUpdateTimeSettingError(attr, error) {
   return {
     type: 'UPDATE_TIME_SETTING_ERROR',
     attr,
-    value: json[attr],
     error: error,
   }
 }
@@ -33,8 +32,12 @@ function updateTimeSetting(attr, value) {
       credentials: 'same-origin',
       headers: { 'Content-Type': 'application/json' },
     }).then(response => response.json()).then(json => {
-      return dispatch(receiveUpdateTimeSetting(attr, json))
-    }, error => {
+      if (json.error) {
+        return dispatch(catchUpdateTimeSettingError(attr, json.error))
+      } else {
+        return dispatch(receiveUpdateTimeSetting(attr, json))
+      }
+    }).catch(error => {
       return dispatch(catchUpdateTimeSettingError(attr, error))
     })
   }

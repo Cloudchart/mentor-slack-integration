@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import classNames from 'classnames'
-import { timezones, dayTimes, daysOfWeek } from '../../data'
+import { timezones, daysOfWeek } from '../../data'
 
 
 class TimeSetting extends Component {
