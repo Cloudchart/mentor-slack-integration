@@ -3,7 +3,7 @@ import { errorMarker } from '../lib'
 import { Channel, Message, Team } from '../models'
 import { UserThemeInsight } from '../models/web_app'
 
-// Worker – collects reactions
+// worker – collects reactions
 //
 export let perform = async (messageId, userThemeInsightId, done) => {
   let message = await Message.find({ include: [{ model: Channel, include: [Team] }], where: { id: messageId } })

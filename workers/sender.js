@@ -6,6 +6,7 @@ import { queue } from '../initializers/node_resque'
 import {
   eventMarker,
   errorMarker,
+  noticeMarker,
   reactionsCollectorDelay,
   notInChannelNotifierDelay,
   callWebAppGraphQL,
@@ -92,18 +93,19 @@ function findUnratedInsight(userId) {
 }
 
 async function sendMessage(channelId, userThemeInsight, done) {
-  // find channel and init web client
-  let channel = await Channel.findOne({ include: [{ model: Team, include: [TimeSetting] }], where: { id: channelId } })
+  // find channel
+  let channel = await Channel.findOne({
+    include: [{ model: Team, include: [TimeSetting] }],
+    where: { id: channelId }
+  })
+  // init web client
   let SlackWeb = new WebClient(channel.Team.accessToken)
 
   // do nothing if it's contrary to the time settings
   if (isContraryToTimeSetting(channel)) return done(null, true)
-
   // do nothing if everyone is away
   let everyoneIsAsleep = await isEveryoneAsleep(SlackWeb, channel.id)
   if (everyoneIsAsleep) return done(null, true)
-
-  // TODO: do nothing if there are no reactions for last 3 insights
 
   // get insight content and origin
   let insight = await Insight.findById(userThemeInsight.insight_id)
@@ -197,7 +199,8 @@ async function perform(done) {
         if (unratedInsight) {
           sendMessage(slackChannel.id, unratedInsight, done)
         } else {
-          done(null, `couldn't find unrated insight for slackChannel: ${slackChannel.id}`)
+          console.log(noticeMarker, `couldn't find unrated insight for slackChannel: ${slackChannel.id}`)
+          done(null)
         }
       })
     }
