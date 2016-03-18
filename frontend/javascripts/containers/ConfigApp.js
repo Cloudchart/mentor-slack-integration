@@ -21,7 +21,7 @@ class ConfigApp extends Component {
       actions } = this.props
 
     return (
-      <div className="configuration-container">
+      <div id="configuration-container">
         <h1>
           <i className="fa fa-cogs" />
           <span>{ `Configure Virtual Mentor integration for ${team.name}` }</span>

@@ -1,0 +1,107 @@
+#landing-container {
+  section.top {
+    @include gradient-horizontal(#2BAA4C, #40CC64)
+
+    position: relative;
+    padding: 30px;
+    color: #FFFFFF;
+    z-index: 1;
+
+    .bg {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      opacity: 0.04;
+      z-index: -1;
+      background-image: url('/images/MB-bg.png');
+      background-repeat: repeat;
+      background-size: 400px;
+    }
+
+    header {
+      @include flexbox;
+      @include justify-content(space-between);
+      @include align-items(center);
+
+      font-size: 32px;
+
+      .logo {
+        @include flexbox;
+        @include align-items(center);
+
+        font-weight: 200;
+
+        strong {
+          font-weight: 500;
+        }
+
+        .main-logo {
+          margin-right: 15px;
+          width: 71px;
+          height: 67px;
+          background-image: url('/images/BorisIcon@2x.png');
+          background-size: cover;
+        }
+      }
+    }
+
+    .boris {
+      font-size: 52px;
+      width: 800px;
+      margin: 40px auto 60px auto;
+      text-align: center;
+
+      .main-action {
+        @include flexbox;
+        @include justify-content(center);
+        @include align-items(center);
+
+        margin-top: 60px;
+
+        .boris-logo {
+          background-image: url('/images/Boris@2x.png');
+          background-size: cover;
+          width: 122px;
+          height: 123px;
+          margin-right: 10px;
+        }
+
+        .dashed-arrow {
+          background-image: url('/images/Arrow@2x.png');
+          background-size: cover;
+          width: 74px;
+          height: 13px;
+          margin-right: 20px;
+        }
+
+        .slack-button {
+          @include flexbox;
+          @include align-items(center);
+
+          background: #FFFFFF;
+          border: 1px solid $primary-gray;
+          border-radius: 8px;
+          cursor: pointer;
+          color: #222222;
+          font-size: 22px;
+          padding: 10px 15px;
+
+          > i {
+            background-image: url('/images/slack-logo@2x.png');
+            background-size: cover;
+            width: 50px;
+            height: 48px;
+            margin-right: 15px;
+          }
+        }
+      }
+    }
+
+    > p {
+      font-size: 32px;
+      text-align: center;
+    }
+  }
+}

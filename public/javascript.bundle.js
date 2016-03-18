@@ -20567,7 +20567,7 @@
 
 	      return _react2.default.createElement(
 	        'div',
-	        { className: 'configuration-container' },
+	        { id: 'configuration-container' },
 	        _react2.default.createElement(
 	          'h1',
 	          null,
@@ -22636,23 +22636,88 @@
 	    value: function render() {
 	      return _react2.default.createElement(
 	        "div",
-	        null,
+	        { id: "landing-container" },
 	        _react2.default.createElement(
-	          "h2",
-	          null,
-	          "Welcome"
+	          "section",
+	          { className: "top" },
+	          _react2.default.createElement("div", { className: "bg" }),
+	          _react2.default.createElement(
+	            "header",
+	            null,
+	            _react2.default.createElement(
+	              "div",
+	              { className: "logo" },
+	              _react2.default.createElement("span", { className: "main-logo" }),
+	              _react2.default.createElement(
+	                "span",
+	                null,
+	                "Virtual ",
+	                _react2.default.createElement(
+	                  "strong",
+	                  null,
+	                  "Mentor"
+	                )
+	              )
+	            ),
+	            _react2.default.createElement(
+	              "a",
+	              { href: this.props.slackButtonUrl },
+	              _react2.default.createElement("img", {
+	                alt: "Add to Slack",
+	                height: "40",
+	                width: "139",
+	                src: "https://platform.slack-edge.com/img/add_to_slack.png",
+	                srcSet: "https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x"
+	              })
+	            )
+	          ),
+	          _react2.default.createElement(
+	            "div",
+	            { className: "boris" },
+	            _react2.default.createElement(
+	              "p",
+	              null,
+	              "Get actionable entrepreneurial advice from the",
+	              _react2.default.createElement(
+	                "strong",
+	                null,
+	                "Virtual Mentor"
+	              ),
+	              " right in your ",
+	              _react2.default.createElement("i", { className: "fa fa-slack" }),
+	              "Slack"
+	            ),
+	            _react2.default.createElement(
+	              "div",
+	              { className: "main-action" },
+	              _react2.default.createElement("span", { className: "boris-logo" }),
+	              _react2.default.createElement("i", { className: "dashed-arrow" }),
+	              _react2.default.createElement(
+	                "div",
+	                { className: "slack-button" },
+	                _react2.default.createElement("i", null),
+	                _react2.default.createElement(
+	                  "span",
+	                  null,
+	                  "Add ",
+	                  _react2.default.createElement(
+	                    "strong",
+	                    null,
+	                    "Mentor"
+	                  ),
+	                  " to Slack"
+	                )
+	              )
+	            )
+	          ),
+	          _react2.default.createElement(
+	            "p",
+	            null,
+	            "Put the advices to work instantly, share with your team, and get smarter without distracting from your work"
+	          )
 	        ),
-	        _react2.default.createElement(
-	          "a",
-	          { href: this.props.slackButtonUrl },
-	          _react2.default.createElement("img", {
-	            alt: "Add to Slack",
-	            height: "40",
-	            width: "139",
-	            src: "https://platform.slack-edge.com/img/add_to_slack.png",
-	            srcSet: "https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x"
-	          })
-	        )
+	        _react2.default.createElement("section", { className: "features" }),
+	        _react2.default.createElement("section", { className: "bottom" })
 	      );
 	    }
 	  }]);

@@ -1,11 +1,14 @@
 @import 'fontawesome';
+@import 'flexbox';
+@import 'gradients';
 
 $primary-green: #3BC363;
 $primary-gray: #C8C8C8;
 
 body {
-  padding: 50px;
-  font: 14px Helvetica, Arial, sans-serif;
+  display: block;
+  margin: 0;
+  font: 14px Helvetica Neue, Helvetica, Arial, sans-serif;
 }
 
 a {
@@ -18,7 +21,13 @@ ul {
   padding: 0;
 }
 
-div#modal {
+p {
+  margin: 0;
+}
+
+@import 'landing';
+
+#modal {
   &.hidden {
     display: none;
   }
@@ -32,7 +41,7 @@ div#modal {
   }
 }
 
-.configuration-container {
+#configuration-container {
   > h1 {
     > i {
       color: $primary-green;

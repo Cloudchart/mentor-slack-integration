@@ -2077,8 +2077,9 @@
   content: "\F295"; }
 
 body {
-  padding: 50px;
-  font: 14px Helvetica, Arial, sans-serif; }
+  display: block;
+  margin: 0;
+  font: 14px Helvetica Neue, Helvetica, Arial, sans-serif; }
 
 a {
   color: #00B7FF; }
@@ -2088,16 +2089,127 @@ ul {
   margin: 0;
   padding: 0; }
 
-div#modal.hidden {
+p {
+  margin: 0; }
+
+#landing-container section.top {
+  background-image: linear-gradient(to right, #2BAA4C 0%, #40CC64 100%);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF2BAA4C', endColorstr='#FF40CC64', GradientType=1);
+  position: relative;
+  padding: 30px;
+  color: #FFFFFF;
+  z-index: 1; }
+  #landing-container section.top .bg {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    opacity: 0.04;
+    z-index: -1;
+    background-image: url("/images/MB-bg.png");
+    background-repeat: repeat;
+    background-size: 400px; }
+  #landing-container section.top header {
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-pack: justify;
+    -webkit-justify-content: space-between;
+    -moz-justify-content: space-between;
+    justify-content: space-between;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    -moz-align-items: center;
+    align-items: center;
+    font-size: 32px; }
+    #landing-container section.top header .logo {
+      display: -webkit-flex;
+      display: -moz-flex;
+      display: -ms-flexbox;
+      display: flex;
+      -ms-flex-align: center;
+      -webkit-align-items: center;
+      -moz-align-items: center;
+      align-items: center;
+      font-weight: 200; }
+      #landing-container section.top header .logo strong {
+        font-weight: 500; }
+      #landing-container section.top header .logo .main-logo {
+        margin-right: 15px;
+        width: 71px;
+        height: 67px;
+        background-image: url("/images/BorisIcon@2x.png");
+        background-size: cover; }
+  #landing-container section.top .boris {
+    font-size: 52px;
+    width: 800px;
+    margin: 40px auto 60px auto;
+    text-align: center; }
+    #landing-container section.top .boris .main-action {
+      display: -webkit-flex;
+      display: -moz-flex;
+      display: -ms-flexbox;
+      display: flex;
+      -ms-flex-pack: center;
+      -webkit-justify-content: center;
+      -moz-justify-content: center;
+      justify-content: center;
+      -ms-flex-align: center;
+      -webkit-align-items: center;
+      -moz-align-items: center;
+      align-items: center;
+      margin-top: 60px; }
+      #landing-container section.top .boris .main-action .boris-logo {
+        background-image: url("/images/Boris@2x.png");
+        background-size: cover;
+        width: 122px;
+        height: 123px;
+        margin-right: 10px; }
+      #landing-container section.top .boris .main-action .dashed-arrow {
+        background-image: url("/images/Arrow@2x.png");
+        background-size: cover;
+        width: 74px;
+        height: 13px;
+        margin-right: 20px; }
+      #landing-container section.top .boris .main-action .slack-button {
+        display: -webkit-flex;
+        display: -moz-flex;
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex-align: center;
+        -webkit-align-items: center;
+        -moz-align-items: center;
+        align-items: center;
+        background: #FFFFFF;
+        border: 1px solid #C8C8C8;
+        border-radius: 8px;
+        cursor: pointer;
+        color: #222222;
+        font-size: 22px;
+        padding: 10px 15px; }
+        #landing-container section.top .boris .main-action .slack-button > i {
+          background-image: url("/images/slack-logo@2x.png");
+          background-size: cover;
+          width: 50px;
+          height: 48px;
+          margin-right: 15px; }
+  #landing-container section.top > p {
+    font-size: 32px;
+    text-align: center; }
+
+#modal.hidden {
   display: none; }
 
-div#modal .modal-content {
+#modal .modal-content {
   padding: 30px; }
 
-div#modal button {
+#modal button {
   float: right; }
 
-.configuration-container > h1 > i {
+#configuration-container > h1 > i {
   color: #3BC363;
   margin-right: 10px; }
 
