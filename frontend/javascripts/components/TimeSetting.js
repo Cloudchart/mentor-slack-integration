@@ -41,11 +41,10 @@ class TimeSetting extends Component {
 
   renderDayElement(day) {
     const { days } = this.props.timeSetting
-    const value = daysOfWeek[day]
-    const dayClassNames = classNames({ selected: days.includes(value) })
+    const dayClassNames = classNames({ selected: days.includes(day) })
 
     return(
-      <li className={ dayClassNames } onClick={ this.handleDayClick.bind(this, value) }>
+      <li className={ dayClassNames } onClick={ this.handleDayClick.bind(this, day) }>
         { day }
       </li>
     )
@@ -74,7 +73,7 @@ class TimeSetting extends Component {
         </select>
 
         <ul className="days-list">
-          { Object.keys(daysOfWeek).map(this.renderDayElement.bind(this)) }
+          { daysOfWeek.map(this.renderDayElement.bind(this)) }
         </ul>
       </div>
     )

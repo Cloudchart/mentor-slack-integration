@@ -1,8 +1,7 @@
 import URL from 'url'
-
-import { queue } from '../initializers/node_resque'
-
+import moment from 'moment-timezone'
 import { WebClient } from 'slack-client'
+import { queue } from '../initializers/node_resque'
 
 import {
   eventMarker,
@@ -12,7 +11,7 @@ import {
   callWebAppGraphQL,
 } from '../lib'
 
-import { Channel, Message, Team } from '../models'
+import { Channel, Message, Team, TimeSetting } from '../models'
 import { SlackChannel, Insight, InsightOrigin, UserTheme, UserThemeInsight } from '../models/web_app'
 
 const workerName = 'sender'
@@ -32,6 +31,19 @@ function enqueueNotInChannelNotifier(channelId, done) {
       })
     }
   })
+}
+
+function isContraryToTimeSetting(channel) {
+  const timeSetting = channel.Team.TimeSetting
+  const now = moment().tz(timeSetting.tz)
+  const day = now.format('ddd')
+  const time = now.format('HH:mm')
+
+  return !(
+    timeSetting.days.includes(day) &&
+    time >= timeSetting.startTime &&
+    time <= timeSetting.endTime
+  )
 }
 
 function isEveryoneAsleep(SlackWeb, channelId) {
@@ -81,14 +93,17 @@ function findUnratedInsight(userId) {
 
 async function sendMessage(channelId, userThemeInsight, done) {
   // find channel and init web client
-  let channel = await Channel.findOne({ include: [Team], where: { id: channelId } })
+  let channel = await Channel.findOne({ include: [{ model: Team, include: [TimeSetting] }], where: { id: channelId } })
   let SlackWeb = new WebClient(channel.Team.accessToken)
 
-  // TODO: do nothing if there are no reactions for last 3 insights
+  // do nothing if it's contrary to the time settings
+  if (isContraryToTimeSetting(channel)) return done(null, true)
 
   // do nothing if everyone is away
   let everyoneIsAsleep = await isEveryoneAsleep(SlackWeb, channel.id)
-  if (everyoneIsAsleep === true) return done(null, true)
+  if (everyoneIsAsleep) return done(null, true)
+
+  // TODO: do nothing if there are no reactions for last 3 insights
 
   // get insight content and origin
   let insight = await Insight.findById(userThemeInsight.insight_id)
@@ -145,7 +160,6 @@ async function perform(done) {
 
   // get user ids from web app
   let slackChannels = await SlackChannel.findAll({ where: { id: channelIds } })
-  // let userIds = slackChannels.map(channel => channel.user_id)
 
   // for each slack channel
   slackChannels.forEach(async (slackChannel) => {

@@ -1,4 +1,5 @@
 import URL from 'url'
+// import moment from 'moment-timezone'
 
 import { Router } from 'express'
 import { WebClient } from 'slack-client'
@@ -14,14 +15,15 @@ let SlackDefaultWeb = new WebClient('')
 // helpers
 //
 async function initTimeSetting(req, res, next) {
-  // TODO: get tz from ip
+  // TODO: get tz from moment-timezone
+  // TODO: update timezones.json to tz database 2016b version
   await TimeSetting.findOrCreate({
     where: { teamId: req.session.teamId },
     defaults: {
       tz: 'Europe/Moscow',
       startTime: '10:00',
       endTime: '22:00',
-      days: ['mon', 'tue', 'wed', 'thu', 'fri']
+      days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri']
     }
   })
   next()

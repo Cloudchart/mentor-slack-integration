@@ -23,6 +23,9 @@ module.exports = function(sequelize, DataTypes) {
 
     classMethods: {
       associate: function(models) {
+        Team.hasMany(models.Channel, { foreignKey: 'teamId', onDelete: 'CASCADE' })
+        Team.hasOne(models.TeamOwner, { foreignKey: 'teamId', onDelete: 'CASCADE' })
+        Team.hasOne(models.TimeSetting, { foreignKey: 'teamId', onDelete: 'CASCADE' })
       }
     }
 

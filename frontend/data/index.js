@@ -8,14 +8,6 @@ const dayTimes = [
  '20:00','21:00','22:00','23:00','24:00'
 ]
 
-const daysOfWeek = {
-  Mon: 'mon',
-  Tue: 'tue',
-  Wed: 'wed',
-  Thu: 'thu',
-  Fri: 'fri',
-  Sat: 'sat',
-  Sun: 'sun'
-}
+const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 
 export { timezones, dayTimes, daysOfWeek }

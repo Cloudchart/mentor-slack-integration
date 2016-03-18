@@ -21102,15 +21102,7 @@
 
 	var dayTimes = ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00', '24:00'];
 
-	var daysOfWeek = {
-	  Mon: 'mon',
-	  Tue: 'tue',
-	  Wed: 'wed',
-	  Thu: 'thu',
-	  Fri: 'fri',
-	  Sat: 'sat',
-	  Sun: 'sun'
-	};
+	var daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
 	exports.timezones = _timezones2.default;
 	exports.dayTimes = dayTimes;
@@ -22531,12 +22523,11 @@
 	    value: function renderDayElement(day) {
 	      var days = this.props.timeSetting.days;
 
-	      var value = _data.daysOfWeek[day];
-	      var dayClassNames = (0, _classnames2.default)({ selected: days.includes(value) });
+	      var dayClassNames = (0, _classnames2.default)({ selected: days.includes(day) });
 
 	      return _react2.default.createElement(
 	        'li',
-	        { className: dayClassNames, onClick: this.handleDayClick.bind(this, value) },
+	        { className: dayClassNames, onClick: this.handleDayClick.bind(this, day) },
 	        day
 	      );
 	    }
@@ -22589,7 +22580,7 @@
 	        _react2.default.createElement(
 	          'ul',
 	          { className: 'days-list' },
-	          Object.keys(_data.daysOfWeek).map(this.renderDayElement.bind(this))
+	          _data.daysOfWeek.map(this.renderDayElement.bind(this))
 	        )
 	      );
 	    }
