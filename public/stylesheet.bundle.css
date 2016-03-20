@@ -2466,3 +2466,6 @@ footer {
       font-size: 18px;
       color: #FFFFFF;
       cursor: pointer; }
+
+#configuration-container > footer {
+  border-top: 1px solid #CBD0CD; }
