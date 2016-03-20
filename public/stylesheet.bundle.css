@@ -2101,10 +2101,35 @@ p {
   margin: 0;
   line-height: 1.5em; }
 
-#landing-container section.top {
-  background-image: linear-gradient(to right, #2BAA4C 0%, #40CC64 100%);
+.slack-button {
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  -moz-align-items: center;
+  align-items: center;
+  background: #FFFFFF;
+  border: 1px solid #C8C8C8;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #222222;
+  font-size: 22px;
+  padding: 10px 15px; }
+  .slack-button > i {
+    background-image: url("/images/slack-logo@2x.png");
+    background-size: cover;
+    width: 50px;
+    height: 48px;
+    margin-right: 15px; }
+
+#landing-container section.top, #landing-container section.bottom {
+  background-image: linear-gradient(to right, #2BAA4C 0%, #3DA44C 100%);
   background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF2BAA4C', endColorstr='#FF40CC64', GradientType=1);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF2BAA4C', endColorstr='#FF3DA44C', GradientType=1); }
+
+#landing-container section.top {
   position: relative;
   padding: 30px;
   color: #FFFFFF;
@@ -2183,28 +2208,6 @@ p {
         width: 74px;
         height: 13px;
         margin-right: 20px; }
-      #landing-container section.top .boris .main-action .slack-button {
-        display: -webkit-flex;
-        display: -moz-flex;
-        display: -ms-flexbox;
-        display: flex;
-        -ms-flex-align: center;
-        -webkit-align-items: center;
-        -moz-align-items: center;
-        align-items: center;
-        background: #FFFFFF;
-        border: 1px solid #C8C8C8;
-        border-radius: 8px;
-        cursor: pointer;
-        color: #222222;
-        font-size: 22px;
-        padding: 10px 15px; }
-        #landing-container section.top .boris .main-action .slack-button > i {
-          background-image: url("/images/slack-logo@2x.png");
-          background-size: cover;
-          width: 50px;
-          height: 48px;
-          margin-right: 15px; }
   #landing-container section.top > p {
     max-width: 1000px;
     margin: 0 auto;
@@ -2250,6 +2253,32 @@ p {
           position: absolute;
           left: -2em;
           top: 2px; }
+
+#landing-container section.bottom {
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -moz-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  -moz-align-items: center;
+  align-items: center;
+  padding: 30px;
+  color: #FFFFFF; }
+  #landing-container section.bottom a {
+    color: #FFFFFF; }
+  #landing-container section.bottom > p {
+    font-size: 22px;
+    text-align: center;
+    max-width: 1000px; }
+    #landing-container section.bottom > p:first-of-type {
+      margin: 40px 0; }
+    #landing-container section.bottom > p:last-of-type {
+      font-size: 26px; }
 
 #modal.hidden {
   display: none; }

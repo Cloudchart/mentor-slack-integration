@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react'
+import SlackButton from '../components/SlackButton'
 
 export default class LandingApp extends Component {
 
@@ -39,10 +40,7 @@ export default class LandingApp extends Component {
           <div className="main-action">
             <span className="boris-logo"></span>
             <i className="dashed-arrow"/>
-            <div className="slack-button" onClick={ this.handleSlackButtonClick.bind(this) }>
-              <i/>
-              <span>Add <strong>Mentor</strong> to Slack</span>
-            </div>
+            <SlackButton slackButtonUrl={ this.props.slackButtonUrl } />
           </div>
         </div>
 
@@ -82,7 +80,17 @@ export default class LandingApp extends Component {
 
   renderBottomSection() {
     return(
-      <section className="bottom"></section>
+      <section className="bottom">
+        <SlackButton slackButtonUrl={ this.props.slackButtonUrl } />
+        <p>
+          This Slack bot is part of The Virtual Mentor app (currently in beta).
+          Whant to have your own mentor to give you proven
+          actionable advice on the go? <a href="">Sign up for the private beta!</a>
+        </p>
+        <p>
+          Follow <i className="fa fa-twitter"/> <a href="https://twitter.com/thementorapp">@thementorapp</a>
+        </p>
+      </section>
     )
   }
 

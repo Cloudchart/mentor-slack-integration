@@ -1,10 +1,14 @@
 $primary-font-size: 32px;
 $giant-font-size: $primary-font-size * 1.5;
 
-#landing-container {
-  section.top {
-    @include gradient-horizontal(#2BAA4C, #40CC64);
+@import 'slack_button';
 
+#landing-container {
+  section.top, section.bottom {
+    @include gradient-horizontal(#2BAA4C, #3DA44C);
+  }
+
+  section.top {
     position: relative;
     padding: 30px;
     color: #FFFFFF;
@@ -78,27 +82,6 @@ $giant-font-size: $primary-font-size * 1.5;
           height: 13px;
           margin-right: 20px;
         }
-
-        .slack-button {
-          @include flexbox;
-          @include align-items(center);
-
-          background: #FFFFFF;
-          border: 1px solid $primary-gray;
-          border-radius: 8px;
-          cursor: pointer;
-          color: #222222;
-          font-size: 22px;
-          padding: 10px 15px;
-
-          > i {
-            background-image: url('/images/slack-logo@2x.png');
-            background-size: cover;
-            width: 50px;
-            height: 48px;
-            margin-right: 15px;
-          }
-        }
       }
     }
 
@@ -157,5 +140,30 @@ $giant-font-size: $primary-font-size * 1.5;
   }
 
   section.bottom {
+    @include flexbox;
+    @include flex-direction(column);
+    @include align-items(center);
+
+    padding: 30px;
+    color: #FFFFFF;
+
+    a {
+      color: #FFFFFF;
+    }
+
+    > p {
+      font-size: 22px;
+      text-align: center;
+      max-width: 1000px;
+
+      &:first-of-type {
+        margin: 40px 0;
+      }
+
+      &:last-of-type {
+        font-size: 26px;
+      }
+    }
+
   }
 }

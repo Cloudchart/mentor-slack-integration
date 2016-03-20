@@ -22602,7 +22602,7 @@
 /* 201 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -22613,6 +22613,10 @@
 	var _react = __webpack_require__(1);
 
 	var _react2 = _interopRequireDefault(_react);
+
+	var _SlackButton = __webpack_require__(208);
+
+	var _SlackButton2 = _interopRequireDefault(_SlackButton);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -22632,7 +22636,7 @@
 	  }
 
 	  _createClass(LandingApp, [{
-	    key: "handleSlackButtonClick",
+	    key: 'handleSlackButtonClick',
 
 
 	    // handlers
@@ -22645,142 +22649,153 @@
 	    //
 
 	  }, {
-	    key: "renderTopSection",
+	    key: 'renderTopSection',
 	    value: function renderTopSection() {
 	      return _react2.default.createElement(
-	        "section",
-	        { className: "top" },
-	        _react2.default.createElement("div", { className: "bg" }),
+	        'section',
+	        { className: 'top' },
+	        _react2.default.createElement('div', { className: 'bg' }),
 	        _react2.default.createElement(
-	          "header",
+	          'header',
 	          null,
 	          _react2.default.createElement(
-	            "div",
-	            { className: "logo" },
-	            _react2.default.createElement("span", { className: "main-logo" }),
+	            'div',
+	            { className: 'logo' },
+	            _react2.default.createElement('span', { className: 'main-logo' }),
 	            _react2.default.createElement(
-	              "span",
+	              'span',
 	              null,
-	              "Virtual ",
+	              'Virtual ',
 	              _react2.default.createElement(
-	                "strong",
+	                'strong',
 	                null,
-	                "Mentor"
+	                'Mentor'
 	              )
 	            )
 	          ),
 	          _react2.default.createElement(
-	            "a",
+	            'a',
 	            { href: this.props.slackButtonUrl },
-	            _react2.default.createElement("img", {
-	              alt: "Add to Slack",
-	              height: "40",
-	              width: "139",
-	              src: "https://platform.slack-edge.com/img/add_to_slack.png",
-	              srcSet: "https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x"
+	            _react2.default.createElement('img', {
+	              alt: 'Add to Slack',
+	              height: '40',
+	              width: '139',
+	              src: 'https://platform.slack-edge.com/img/add_to_slack.png',
+	              srcSet: 'https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x'
 	            })
 	          )
 	        ),
 	        _react2.default.createElement(
-	          "div",
-	          { className: "boris" },
+	          'div',
+	          { className: 'boris' },
 	          _react2.default.createElement(
-	            "p",
+	            'p',
 	            null,
-	            "Get actionable entrepreneurial advice from the ",
+	            'Get actionable entrepreneurial advice from the ',
 	            _react2.default.createElement(
-	              "strong",
+	              'strong',
 	              null,
-	              "Virtual Mentor"
+	              'Virtual Mentor'
 	            ),
-	            " right in your ",
-	            _react2.default.createElement("i", { className: "fa fa-slack" }),
-	            "Slack"
+	            ' right in your ',
+	            _react2.default.createElement('i', { className: 'fa fa-slack' }),
+	            'Slack'
 	          ),
 	          _react2.default.createElement(
-	            "div",
-	            { className: "main-action" },
-	            _react2.default.createElement("span", { className: "boris-logo" }),
-	            _react2.default.createElement("i", { className: "dashed-arrow" }),
-	            _react2.default.createElement(
-	              "div",
-	              { className: "slack-button", onClick: this.handleSlackButtonClick.bind(this) },
-	              _react2.default.createElement("i", null),
-	              _react2.default.createElement(
-	                "span",
-	                null,
-	                "Add ",
-	                _react2.default.createElement(
-	                  "strong",
-	                  null,
-	                  "Mentor"
-	                ),
-	                " to Slack"
-	              )
-	            )
+	            'div',
+	            { className: 'main-action' },
+	            _react2.default.createElement('span', { className: 'boris-logo' }),
+	            _react2.default.createElement('i', { className: 'dashed-arrow' }),
+	            _react2.default.createElement(_SlackButton2.default, { slackButtonUrl: this.props.slackButtonUrl })
 	          )
 	        ),
 	        _react2.default.createElement(
-	          "p",
+	          'p',
 	          null,
-	          "Put the advices to work instantly, share with your team, and get smarter without distracting from your work"
+	          'Put the advices to work instantly, share with your team, and get smarter without distracting from your work'
 	        )
 	      );
 	    }
 	  }, {
-	    key: "renderFeatures",
+	    key: 'renderFeatures',
 	    value: function renderFeatures() {
 	      return _react2.default.createElement(
-	        "section",
-	        { className: "features" },
-	        _react2.default.createElement("div", { className: "slack-window" }),
+	        'section',
+	        { className: 'features' },
+	        _react2.default.createElement('div', { className: 'slack-window' }),
 	        _react2.default.createElement(
-	          "div",
-	          { className: "description" },
+	          'div',
+	          { className: 'description' },
 	          _react2.default.createElement(
-	            "h1",
+	            'h1',
 	            null,
-	            "What ",
+	            'What ',
 	            _react2.default.createElement(
-	              "strong",
+	              'strong',
 	              null,
-	              "Virtual Mentor"
+	              'Virtual Mentor'
 	            ),
-	            " can do for you"
+	            ' can do for you'
 	          ),
 	          _react2.default.createElement(
-	            "ul",
+	            'ul',
 	            null,
 	            _react2.default.createElement(
-	              "li",
+	              'li',
 	              null,
-	              "Give you actionable advice by successful entrepreneurs on growth hacking, product management, design, culture, and other key topics"
+	              'Give you actionable advice by successful entrepreneurs on growth hacking, product management, design, culture, and other key topics'
 	            ),
 	            _react2.default.createElement(
-	              "li",
+	              'li',
 	              null,
-	              "Post relevant advice to specific channels"
+	              'Post relevant advice to specific channels'
 	            ),
 	            _react2.default.createElement(
-	              "li",
+	              'li',
 	              null,
-	              "Provide links to advice sources for further study"
+	              'Provide links to advice sources for further study'
 	            )
 	          )
 	        )
 	      );
 	    }
 	  }, {
-	    key: "renderBottomSection",
+	    key: 'renderBottomSection',
 	    value: function renderBottomSection() {
-	      return _react2.default.createElement("section", { className: "bottom" });
+	      return _react2.default.createElement(
+	        'section',
+	        { className: 'bottom' },
+	        _react2.default.createElement(_SlackButton2.default, { slackButtonUrl: this.props.slackButtonUrl }),
+	        _react2.default.createElement(
+	          'p',
+	          null,
+	          'This Slack bot is part of The Virtual Mentor app (currently in beta). Whant to have your own mentor to give you proven actionable advice on the go? ',
+	          _react2.default.createElement(
+	            'a',
+	            { href: '' },
+	            'Sign up for the private beta!'
+	          )
+	        ),
+	        _react2.default.createElement(
+	          'p',
+	          null,
+	          'Follow ',
+	          _react2.default.createElement('i', { className: 'fa fa-twitter' }),
+	          ' ',
+	          _react2.default.createElement(
+	            'a',
+	            { href: 'https://twitter.com/thementorapp' },
+	            '@thementorapp'
+	          )
+	        )
+	      );
 	    }
 	  }, {
-	    key: "render",
+	    key: 'render',
 	    value: function render() {
 	      return _react2.default.createElement(
-	        "div",
-	        { id: "landing-container" },
+	        'div',
+	        { id: 'landing-container' },
 	        this.renderTopSection(),
 	        this.renderFeatures(),
 	        this.renderBottomSection()
@@ -23013,6 +23028,76 @@
 	      return state;
 	  }
 	}
+
+/***/ },
+/* 208 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var SlackButton = function (_Component) {
+	  _inherits(SlackButton, _Component);
+
+	  function SlackButton() {
+	    _classCallCheck(this, SlackButton);
+
+	    return _possibleConstructorReturn(this, Object.getPrototypeOf(SlackButton).apply(this, arguments));
+	  }
+
+	  _createClass(SlackButton, [{
+	    key: "handleSlackButtonClick",
+	    value: function handleSlackButtonClick(event) {
+	      window.location = this.props.slackButtonUrl;
+	    }
+	  }, {
+	    key: "render",
+	    value: function render() {
+	      return _react2.default.createElement(
+	        "div",
+	        { className: "slack-button", onClick: this.handleSlackButtonClick.bind(this) },
+	        _react2.default.createElement("i", null),
+	        _react2.default.createElement(
+	          "span",
+	          null,
+	          "Add ",
+	          _react2.default.createElement(
+	            "strong",
+	            null,
+	            "Mentor"
+	          ),
+	          " to Slack"
+	        )
+	      );
+	    }
+	  }]);
+
+	  return SlackButton;
+	}(_react.Component);
+
+	exports.default = SlackButton;
+
+
+	SlackButton.propTypes = {
+	  slackButtonUrl: _react.PropTypes.string.isRequired
+	};
 
 /***/ }
 /******/ ]);
