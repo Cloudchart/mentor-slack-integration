@@ -1,0 +1,22 @@
+footer {
+  padding: 30px;
+
+  > ul {
+    @include flexbox;
+    @include justify-content(center);
+
+    font-size: $regular-font-size;
+
+    > li {
+      &:not(:last-child) {
+        margin-right: 20px;
+      }
+
+      > a {
+        color: $primary-gray;
+        text-decoration: none;
+      }
+    }
+
+  }
+}

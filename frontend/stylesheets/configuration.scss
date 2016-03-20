@@ -1,0 +1,60 @@
+#configuration-container {
+  padding: 30px;
+
+  > h1 {
+    > i {
+      color: $primary-green;
+      margin-right: 10px;
+    }
+  }
+
+  .days-list {
+    display: inline-block;
+    margin-left: 20px;
+
+    > li {
+      display: inline;
+      color: $primary-gray;
+      font-weight: bold;
+      cursor: pointer;
+
+      &:not(:last-child) {
+        margin-right: 5px;
+      }
+
+      &.selected {
+        color: $primary-green;
+      }
+    }
+  }
+
+  .channels-list {
+    > li {
+      > i {
+        margin-right: 10px;
+        color: $primary-gray;
+
+        &.invited {
+          color: $primary-green;
+        }
+        &.uninvited {
+          color: #FFC202;
+        }
+      }
+    }
+  }
+
+  .themes-list {
+    > li {
+      > i {
+        margin-left: 10px;
+        color: $primary-green;
+
+        &.is-fetching {
+          color: $primary-gray;
+        }
+      }
+    }
+  }
+
+}

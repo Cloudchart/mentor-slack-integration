@@ -8,13 +8,13 @@ $giant-font-size: $primary-font-size * 1.5;
     @include gradient-horizontal(#2BAA4C, #3DA44C);
   }
 
-  section.top {
+  > section.top {
     position: relative;
     padding: 30px;
     color: #FFFFFF;
     z-index: 1;
 
-    .bg {
+    > .bg {
       position: absolute;
       top: 0;
       bottom: 0;
@@ -27,7 +27,7 @@ $giant-font-size: $primary-font-size * 1.5;
       background-size: 400px;
     }
 
-    header {
+    > header {
       @include flexbox;
       @include justify-content(space-between);
       @include align-items(center);
@@ -54,46 +54,51 @@ $giant-font-size: $primary-font-size * 1.5;
       }
     }
 
-    .boris {
-      font-size: $giant-font-size;
-      max-width: 800px;
-      margin: 40px auto 60px auto;
-      text-align: center;
+    > .content {
+      @include flexbox;
+      @include flex-direction(column);
+      @include align-items(center);
 
-      .main-action {
-        @include flexbox;
-        @include justify-content(center);
-        @include align-items(center);
+      > .boris {
+        font-size: $giant-font-size;
+        max-width: 800px;
+        margin: 40px 0 60px 0;
+        text-align: center;
 
-        margin-top: 60px;
+        .main-action {
+          @include flexbox;
+          @include justify-content(center);
+          @include align-items(center);
 
-        .boris-logo {
-          background-image: url('/images/Boris@2x.png');
-          background-size: cover;
-          width: 122px;
-          height: 123px;
-          margin-right: 10px;
-        }
+          margin-top: 60px;
 
-        .dashed-arrow {
-          background-image: url('/images/Arrow@2x.png');
-          background-size: cover;
-          width: 74px;
-          height: 13px;
-          margin-right: 20px;
+          .boris-logo {
+            background-image: url('/images/Boris@2x.png');
+            background-size: cover;
+            width: 122px;
+            height: 123px;
+            margin-right: 10px;
+          }
+
+          .dashed-arrow {
+            background-image: url('/images/Arrow@2x.png');
+            background-size: cover;
+            width: 74px;
+            height: 13px;
+            margin-right: 20px;
+          }
         }
       }
-    }
 
-    > p {
-      max-width: 1000px;
-      margin: 0 auto;
-      font-size: $primary-font-size;
-      text-align: center;
+      > p {
+        max-width: 1000px;
+        font-size: $primary-font-size;
+        text-align: center;
+      }
     }
   }
 
-  section.features {
+  > section.features {
     @include flexbox;
     @include justify-content(center);
     @include flex-wrap(wrap);
@@ -139,7 +144,7 @@ $giant-font-size: $primary-font-size * 1.5;
     }
   }
 
-  section.bottom {
+  > section.bottom {
     @include flexbox;
     @include flex-direction(column);
     @include align-items(center);

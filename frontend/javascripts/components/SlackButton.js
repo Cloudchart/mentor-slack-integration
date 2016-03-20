@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 
-export default class SlackButton extends Component {
+
+class SlackButton extends Component {
 
   handleSlackButtonClick(event) {
     window.location = this.props.slackButtonUrl
@@ -20,3 +21,6 @@ export default class SlackButton extends Component {
 SlackButton.propTypes = {
   slackButtonUrl: PropTypes.string.isRequired,
 }
+
+
+export default SlackButton

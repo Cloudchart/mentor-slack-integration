@@ -1,12 +1,15 @@
 import React, { Component, PropTypes } from 'react'
-import SlackButton from '../components/SlackButton'
 
-export default class LandingApp extends Component {
+import SlackButton from '../components/SlackButton'
+import Footer from '../components/Footer'
+
+
+class LandingApp extends Component {
 
   // handlers
   //
-  handleSlackButtonClick(event) {
-    window.location = this.props.slackButtonUrl
+  handleSignUpLink(event) {
+    event.preventDefault()
   }
 
   // renderers
@@ -32,22 +35,24 @@ export default class LandingApp extends Component {
           </a>
         </header>
 
-        <div className="boris">
-          <p>
-            Get actionable entrepreneurial advice from the <strong>Virtual Mentor</strong> right
-            in your <i className="fa fa-slack"/>Slack
-          </p>
-          <div className="main-action">
-            <span className="boris-logo"></span>
-            <i className="dashed-arrow"/>
-            <SlackButton slackButtonUrl={ this.props.slackButtonUrl } />
+        <div className="content">
+          <div className="boris">
+            <p>
+              Get actionable entrepreneurial advice from the <strong>Virtual Mentor</strong> right
+              in your <i className="fa fa-slack"/>Slack
+            </p>
+            <div className="main-action">
+              <span className="boris-logo"></span>
+              <i className="dashed-arrow"/>
+              <SlackButton slackButtonUrl={ this.props.slackButtonUrl } />
+            </div>
           </div>
-        </div>
 
-        <p>
-          Put the advices to work instantly, share with your team,
-          and get smarter without distracting from your work
-        </p>
+          <p>
+            Put the advices to work instantly, share with your team,
+            and get smarter without distracting from your work
+          </p>
+        </div>
       </section>
     )
   }
@@ -84,11 +89,11 @@ export default class LandingApp extends Component {
         <SlackButton slackButtonUrl={ this.props.slackButtonUrl } />
         <p>
           This Slack bot is part of The Virtual Mentor app (currently in beta).
-          Whant to have your own mentor to give you proven
-          actionable advice on the go? <a href="">Sign up for the private beta!</a>
+          Whant to have your own mentor to give you proven actionable advice
+          on the go? <a href="" onClick={ this.handleSignUpLink.bind(this) }>Sign up for the private beta!</a>
         </p>
         <p>
-          Follow <i className="fa fa-twitter"/> <a href="https://twitter.com/thementorapp">@thementorapp</a>
+          Follow <i className="fa fa-twitter"/> <a href="https://twitter.com/thementorapp" target="_blank">@thementorapp</a>
         </p>
       </section>
     )
@@ -100,6 +105,7 @@ export default class LandingApp extends Component {
         { this.renderTopSection() }
         { this.renderFeatures() }
         { this.renderBottomSection() }
+        <Footer/>
       </div>
     )
   }
@@ -109,3 +115,6 @@ export default class LandingApp extends Component {
 LandingApp.propTypes = {
   slackButtonUrl: PropTypes.string.isRequired,
 }
+
+
+export default LandingApp

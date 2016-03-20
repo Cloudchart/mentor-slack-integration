@@ -1,0 +1,13 @@
+#modal {
+  &.hidden {
+    display: none;
+  }
+
+  .modal-content {
+    padding: 30px;
+  }
+
+  button {
+    float: right;
+  }
+}
