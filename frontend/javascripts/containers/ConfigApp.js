@@ -25,7 +25,8 @@ class ConfigApp extends Component {
     return (
       <div id="configuration-container">
         <Header/>
-        <div className="wrapper">
+
+        <div className="content">
           <h1>
             <i className="fa fa-cogs" />
             Configure Virtual Mentor integration for <strong>{ team.name }</strong>
@@ -43,8 +44,9 @@ class ConfigApp extends Component {
             themes={ themes }
             actions={ actions }
           />
-
         </div>
+
+        <Footer/>
       </div>
     )
   }

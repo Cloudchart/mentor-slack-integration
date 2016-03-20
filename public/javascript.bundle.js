@@ -20579,7 +20579,7 @@
 	        _react2.default.createElement(_Header2.default, null),
 	        _react2.default.createElement(
 	          'div',
-	          { className: 'wrapper' },
+	          { className: 'content' },
 	          _react2.default.createElement(
 	            'h1',
 	            null,
@@ -20602,7 +20602,8 @@
 	            themes: themes,
 	            actions: actions
 	          })
-	        )
+	        ),
+	        _react2.default.createElement(_Footer2.default, null)
 	      );
 	    }
 	  }]);

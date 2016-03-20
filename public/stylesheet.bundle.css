@@ -2357,65 +2357,67 @@ footer {
     #landing-container > section.bottom > p:last-of-type {
       font-size: 26px; }
 
-#configuration-container > .wrapper {
+#configuration-container > .content {
   max-width: 800px;
   margin: 0 auto;
   padding: 30px; }
-  #configuration-container > .wrapper > h1 > i {
+  #configuration-container > .content > h1 > i {
     color: #3BC363;
     margin-right: 10px; }
-  #configuration-container > .wrapper .select {
+  #configuration-container > .content .select {
     position: relative;
     display: inline-block; }
-    #configuration-container > .wrapper .select:before {
+    #configuration-container > .content .select:before {
       content: "\F078";
       font-size: 16px;
       font-family: FontAwesome;
       color: #3BC363;
       position: absolute;
       right: 1em;
-      top: 1em; }
-    #configuration-container > .wrapper .select > select {
+      top: 1em;
+      cursor: pointer; }
+    #configuration-container > .content .select > select {
       -webkit-appearance: none;
       -moz-appearance: none;
       appearance: none;
+      cursor: pointer;
       padding: 15px 42px 15px 15px;
       background-color: #FFFFFF;
       border: 1px solid #CBD0CD;
       border-radius: 5px;
       font-size: 16px; }
-  #configuration-container > .wrapper .days-list {
+  #configuration-container > .content .days-list {
     display: inline-block;
     margin-left: 30px; }
-    #configuration-container > .wrapper .days-list > li {
+    #configuration-container > .content .days-list > li {
       display: inline-block;
       color: #CBD0CD;
       font-weight: bold;
       font-size: 16px;
       cursor: pointer; }
-      #configuration-container > .wrapper .days-list > li:not(:last-child) {
+      #configuration-container > .content .days-list > li:not(:last-child) {
         margin-right: 15px; }
-      #configuration-container > .wrapper .days-list > li.selected {
+      #configuration-container > .content .days-list > li.selected {
         color: #3BC363; }
-  #configuration-container > .wrapper .channels-list > li {
+  #configuration-container > .content .channels-list > li {
     font-size: 16px;
     display: table;
     border-radius: 5px;
     padding: 5px;
     cursor: pointer; }
-    #configuration-container > .wrapper .channels-list > li:hover {
+    #configuration-container > .content .channels-list > li:hover {
       background-color: #F6F5F2; }
-    #configuration-container > .wrapper .channels-list > li > i {
+    #configuration-container > .content .channels-list > li > i {
       margin-right: 10px;
       color: #CBD0CD; }
-      #configuration-container > .wrapper .channels-list > li > i.invited {
+      #configuration-container > .content .channels-list > li > i.invited {
         color: #3BC363; }
-      #configuration-container > .wrapper .channels-list > li > i.uninvited {
+      #configuration-container > .content .channels-list > li > i.uninvited {
         color: #FFC202; }
-  #configuration-container > .wrapper .themes-list > h1 {
+  #configuration-container > .content .themes-list > h1 {
     text-align: center;
     margin-bottom: 30px; }
-  #configuration-container > .wrapper .themes-list > ul {
+  #configuration-container > .content .themes-list > ul {
     display: -webkit-flex;
     display: -moz-flex;
     display: -ms-flexbox;
@@ -2429,7 +2431,7 @@ footer {
     -moz-align-items: center;
     align-items: center;
     margin-bottom: 30px; }
-    #configuration-container > .wrapper .themes-list > ul > li {
+    #configuration-container > .content .themes-list > ul > li {
       padding: 15px;
       border: 1px solid #3BC363;
       border-radius: 5px;
@@ -2438,15 +2440,15 @@ footer {
       margin-bottom: 15px;
       font-size: 18px;
       position: relative; }
-      #configuration-container > .wrapper .themes-list > ul > li > i {
+      #configuration-container > .content .themes-list > ul > li > i {
         margin-left: 10px;
         color: #3BC363;
         position: absolute;
         right: 1em;
         top: 1em; }
-        #configuration-container > .wrapper .themes-list > ul > li > i.is-fetching {
+        #configuration-container > .content .themes-list > ul > li > i.is-fetching {
           color: #CBD0CD; }
-  #configuration-container > .wrapper .themes-list > .actions {
+  #configuration-container > .content .themes-list > .actions {
     display: -webkit-flex;
     display: -moz-flex;
     display: -ms-flexbox;
@@ -2455,7 +2457,7 @@ footer {
     -webkit-justify-content: flex-end;
     -moz-justify-content: flex-end;
     justify-content: flex-end; }
-    #configuration-container > .wrapper .themes-list > .actions > button {
+    #configuration-container > .content .themes-list > .actions > button {
       padding: 15px 20px;
       background-color: #3BC363;
       border: 1px solid #1E7433;

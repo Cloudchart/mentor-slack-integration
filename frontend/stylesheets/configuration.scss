@@ -1,5 +1,5 @@
 #configuration-container {
-  > .wrapper {
+  > .content {
     max-width: 800px;
     margin: 0 auto;
     padding: 30px;
@@ -23,11 +23,13 @@
         position: absolute;
         right: 1em;
         top: 1em;
+        cursor: pointer;
       }
 
       > select {
         @include x-appearance(none);
 
+        cursor: pointer;
         padding: 15px 42px 15px 15px;
         background-color: #FFFFFF;
         border: 1px solid $primary-gray;
