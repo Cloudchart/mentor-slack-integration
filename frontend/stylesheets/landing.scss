@@ -1,6 +1,9 @@
+$primary-font-size: 32px;
+$giant-font-size: $primary-font-size * 1.5;
+
 #landing-container {
   section.top {
-    @include gradient-horizontal(#2BAA4C, #40CC64)
+    @include gradient-horizontal(#2BAA4C, #40CC64);
 
     position: relative;
     padding: 30px;
@@ -25,7 +28,7 @@
       @include justify-content(space-between);
       @include align-items(center);
 
-      font-size: 32px;
+      font-size: $primary-font-size;
 
       .logo {
         @include flexbox;
@@ -48,8 +51,8 @@
     }
 
     .boris {
-      font-size: 52px;
-      width: 800px;
+      font-size: $giant-font-size;
+      max-width: 800px;
       margin: 40px auto 60px auto;
       text-align: center;
 
@@ -100,8 +103,59 @@
     }
 
     > p {
-      font-size: 32px;
+      max-width: 1000px;
+      margin: 0 auto;
+      font-size: $primary-font-size;
       text-align: center;
     }
+  }
+
+  section.features {
+    @include flexbox;
+    @include justify-content(center);
+    @include flex-wrap(wrap);
+
+    background-color: #FFFFFF;
+    padding: 30px;
+
+    > .slack-window {
+      margin: 0 30px 10px 0;
+      width: 660px;
+      height: 491px;
+      background-image: url('/images/SlackWindow@2x.png');
+      background-size: cover;
+    }
+
+    > .description {
+      width: 660px;
+      padding-top: 3px;
+
+      > h1 {
+        font-size: $primary-font-size;
+        margin-bottom: 30px;
+      }
+
+      > ul {
+        font-size: 22px;
+        margin-left: 2em;
+
+        > li {
+          position: relative;
+          margin-bottom: 20px;
+
+          &:before {
+            content: "\f111";
+            font-family: FontAwesome;
+            color: $primary-green;
+            position: absolute;
+            left: -2em;
+            top: 2px;
+          }
+        }
+      }
+    }
+  }
+
+  section.bottom {
   }
 }

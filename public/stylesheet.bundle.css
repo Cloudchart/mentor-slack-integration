@@ -2081,16 +2081,25 @@ body {
   margin: 0;
   font: 14px Helvetica Neue, Helvetica, Arial, sans-serif; }
 
+main {
+  min-width: 750px; }
+
+h1 {
+  margin: 0;
+  font-weight: normal; }
+
 a {
   color: #00B7FF; }
 
 ul {
   list-style: none;
   margin: 0;
-  padding: 0; }
+  padding: 0;
+  line-height: 1.5em; }
 
 p {
-  margin: 0; }
+  margin: 0;
+  line-height: 1.5em; }
 
 #landing-container section.top {
   background-image: linear-gradient(to right, #2BAA4C 0%, #40CC64 100%);
@@ -2144,8 +2153,8 @@ p {
         background-image: url("/images/BorisIcon@2x.png");
         background-size: cover; }
   #landing-container section.top .boris {
-    font-size: 52px;
-    width: 800px;
+    font-size: 48px;
+    max-width: 800px;
     margin: 40px auto 60px auto;
     text-align: center; }
     #landing-container section.top .boris .main-action {
@@ -2197,8 +2206,50 @@ p {
           height: 48px;
           margin-right: 15px; }
   #landing-container section.top > p {
+    max-width: 1000px;
+    margin: 0 auto;
     font-size: 32px;
     text-align: center; }
+
+#landing-container section.features {
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  -moz-justify-content: center;
+  justify-content: center;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  background-color: #FFFFFF;
+  padding: 30px; }
+  #landing-container section.features > .slack-window {
+    margin: 0 30px 10px 0;
+    width: 660px;
+    height: 491px;
+    background-image: url("/images/SlackWindow@2x.png");
+    background-size: cover; }
+  #landing-container section.features > .description {
+    width: 660px;
+    padding-top: 3px; }
+    #landing-container section.features > .description > h1 {
+      font-size: 32px;
+      margin-bottom: 30px; }
+    #landing-container section.features > .description > ul {
+      font-size: 22px;
+      margin-left: 2em; }
+      #landing-container section.features > .description > ul > li {
+        position: relative;
+        margin-bottom: 20px; }
+        #landing-container section.features > .description > ul > li:before {
+          content: "\F111";
+          font-family: FontAwesome;
+          color: #3BC363;
+          position: absolute;
+          left: -2em;
+          top: 2px; }
 
 #modal.hidden {
   display: none; }
