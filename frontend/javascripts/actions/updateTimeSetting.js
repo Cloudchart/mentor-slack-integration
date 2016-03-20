@@ -1,3 +1,6 @@
+import fetch from 'isomorphic-fetch'
+
+
 function requestUpdateTimeSetting(attr, value) {
   return {
     type: 'UPDATE_TIME_SETTING_REQUEST',

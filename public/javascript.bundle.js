@@ -72,7 +72,7 @@
 	if (reactType === 'plain') {
 	  _reactDom2.default.render(_react2.default.createElement(Component, JSON.parse(node.dataset.reactProps)), node);
 	} else {
-	  var reducers = __webpack_require__(202)("./" + reactClass).default;
+	  var reducers = __webpack_require__(207)("./" + reactClass).default;
 	  var store = (0, _redux.createStore)(reducers, window.__INITIAL_STATE__, (0, _redux.applyMiddleware)(_reduxThunk2.default));
 
 	  _reactDom2.default.render(_react2.default.createElement(
@@ -20486,8 +20486,8 @@
 	var map = {
 		"./ConfigApp": 177,
 		"./ConfigApp.js": 177,
-		"./LandingApp": 201,
-		"./LandingApp.js": 201
+		"./LandingApp": 205,
+		"./LandingApp.js": 205
 	};
 	function webpackContext(req) {
 		return __webpack_require__(webpackContextResolve(req));
@@ -20525,21 +20525,21 @@
 
 	var _actions = __webpack_require__(178);
 
-	var _selectors = __webpack_require__(184);
+	var _selectors = __webpack_require__(186);
 
-	var _Header = __webpack_require__(210);
+	var _Header = __webpack_require__(190);
 
 	var _Header2 = _interopRequireDefault(_Header);
 
-	var _Footer = __webpack_require__(209);
+	var _Footer = __webpack_require__(191);
 
 	var _Footer2 = _interopRequireDefault(_Footer);
 
-	var _ChannelsList = __webpack_require__(188);
+	var _ChannelsList = __webpack_require__(192);
 
 	var _ChannelsList2 = _interopRequireDefault(_ChannelsList);
 
-	var _TimeSetting = __webpack_require__(200);
+	var _TimeSetting = __webpack_require__(204);
 
 	var _TimeSetting2 = _interopRequireDefault(_TimeSetting);
 
@@ -20655,19 +20655,19 @@
 
 	var _fetchThemes2 = _interopRequireDefault(_fetchThemes);
 
-	var _updateThemeStatus = __webpack_require__(180);
+	var _updateThemeStatus = __webpack_require__(182);
 
 	var _updateThemeStatus2 = _interopRequireDefault(_updateThemeStatus);
 
-	var _createChannel = __webpack_require__(181);
+	var _createChannel = __webpack_require__(183);
 
 	var _createChannel2 = _interopRequireDefault(_createChannel);
 
-	var _destroyChannel = __webpack_require__(182);
+	var _destroyChannel = __webpack_require__(184);
 
 	var _destroyChannel2 = _interopRequireDefault(_destroyChannel);
 
-	var _updateTimeSetting = __webpack_require__(183);
+	var _updateTimeSetting = __webpack_require__(185);
 
 	var _updateTimeSetting2 = _interopRequireDefault(_updateTimeSetting);
 
@@ -20683,13 +20683,20 @@
 
 /***/ },
 /* 179 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+
+	var _isomorphicFetch = __webpack_require__(180);
+
+	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 	function requestThemes(channelId) {
 	  return { type: 'THEMES_REQUEST', channelId: channelId };
 	}
@@ -20716,7 +20723,7 @@
 	  return function (dispatch) {
 	    dispatch(requestThemes(channelId));
 
-	    return fetch('/themes/' + channelId, {
+	    return (0, _isomorphicFetch2.default)('/themes/' + channelId, {
 	      credentials: 'same-origin',
 	      headers: { 'Accept': 'application/json' }
 	    }).then(function (response) {
@@ -20733,13 +20740,427 @@
 
 /***/ },
 /* 180 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// the whatwg-fetch polyfill installs the fetch() function
+	// on the global object (window or self)
+	//
+	// Return that as the export for use in Webpack, Browserify etc.
+	__webpack_require__(181);
+	module.exports = self.fetch.bind(self);
+
+
+/***/ },
+/* 181 */
 /***/ function(module, exports) {
+
+	(function(self) {
+	  'use strict';
+
+	  if (self.fetch) {
+	    return
+	  }
+
+	  function normalizeName(name) {
+	    if (typeof name !== 'string') {
+	      name = String(name)
+	    }
+	    if (/[^a-z0-9\-#$%&'*+.\^_`|~]/i.test(name)) {
+	      throw new TypeError('Invalid character in header field name')
+	    }
+	    return name.toLowerCase()
+	  }
+
+	  function normalizeValue(value) {
+	    if (typeof value !== 'string') {
+	      value = String(value)
+	    }
+	    return value
+	  }
+
+	  function Headers(headers) {
+	    this.map = {}
+
+	    if (headers instanceof Headers) {
+	      headers.forEach(function(value, name) {
+	        this.append(name, value)
+	      }, this)
+
+	    } else if (headers) {
+	      Object.getOwnPropertyNames(headers).forEach(function(name) {
+	        this.append(name, headers[name])
+	      }, this)
+	    }
+	  }
+
+	  Headers.prototype.append = function(name, value) {
+	    name = normalizeName(name)
+	    value = normalizeValue(value)
+	    var list = this.map[name]
+	    if (!list) {
+	      list = []
+	      this.map[name] = list
+	    }
+	    list.push(value)
+	  }
+
+	  Headers.prototype['delete'] = function(name) {
+	    delete this.map[normalizeName(name)]
+	  }
+
+	  Headers.prototype.get = function(name) {
+	    var values = this.map[normalizeName(name)]
+	    return values ? values[0] : null
+	  }
+
+	  Headers.prototype.getAll = function(name) {
+	    return this.map[normalizeName(name)] || []
+	  }
+
+	  Headers.prototype.has = function(name) {
+	    return this.map.hasOwnProperty(normalizeName(name))
+	  }
+
+	  Headers.prototype.set = function(name, value) {
+	    this.map[normalizeName(name)] = [normalizeValue(value)]
+	  }
+
+	  Headers.prototype.forEach = function(callback, thisArg) {
+	    Object.getOwnPropertyNames(this.map).forEach(function(name) {
+	      this.map[name].forEach(function(value) {
+	        callback.call(thisArg, value, name, this)
+	      }, this)
+	    }, this)
+	  }
+
+	  function consumed(body) {
+	    if (body.bodyUsed) {
+	      return Promise.reject(new TypeError('Already read'))
+	    }
+	    body.bodyUsed = true
+	  }
+
+	  function fileReaderReady(reader) {
+	    return new Promise(function(resolve, reject) {
+	      reader.onload = function() {
+	        resolve(reader.result)
+	      }
+	      reader.onerror = function() {
+	        reject(reader.error)
+	      }
+	    })
+	  }
+
+	  function readBlobAsArrayBuffer(blob) {
+	    var reader = new FileReader()
+	    reader.readAsArrayBuffer(blob)
+	    return fileReaderReady(reader)
+	  }
+
+	  function readBlobAsText(blob) {
+	    var reader = new FileReader()
+	    reader.readAsText(blob)
+	    return fileReaderReady(reader)
+	  }
+
+	  var support = {
+	    blob: 'FileReader' in self && 'Blob' in self && (function() {
+	      try {
+	        new Blob();
+	        return true
+	      } catch(e) {
+	        return false
+	      }
+	    })(),
+	    formData: 'FormData' in self,
+	    arrayBuffer: 'ArrayBuffer' in self
+	  }
+
+	  function Body() {
+	    this.bodyUsed = false
+
+
+	    this._initBody = function(body) {
+	      this._bodyInit = body
+	      if (typeof body === 'string') {
+	        this._bodyText = body
+	      } else if (support.blob && Blob.prototype.isPrototypeOf(body)) {
+	        this._bodyBlob = body
+	      } else if (support.formData && FormData.prototype.isPrototypeOf(body)) {
+	        this._bodyFormData = body
+	      } else if (!body) {
+	        this._bodyText = ''
+	      } else if (support.arrayBuffer && ArrayBuffer.prototype.isPrototypeOf(body)) {
+	        // Only support ArrayBuffers for POST method.
+	        // Receiving ArrayBuffers happens via Blobs, instead.
+	      } else {
+	        throw new Error('unsupported BodyInit type')
+	      }
+
+	      if (!this.headers.get('content-type')) {
+	        if (typeof body === 'string') {
+	          this.headers.set('content-type', 'text/plain;charset=UTF-8')
+	        } else if (this._bodyBlob && this._bodyBlob.type) {
+	          this.headers.set('content-type', this._bodyBlob.type)
+	        }
+	      }
+	    }
+
+	    if (support.blob) {
+	      this.blob = function() {
+	        var rejected = consumed(this)
+	        if (rejected) {
+	          return rejected
+	        }
+
+	        if (this._bodyBlob) {
+	          return Promise.resolve(this._bodyBlob)
+	        } else if (this._bodyFormData) {
+	          throw new Error('could not read FormData body as blob')
+	        } else {
+	          return Promise.resolve(new Blob([this._bodyText]))
+	        }
+	      }
+
+	      this.arrayBuffer = function() {
+	        return this.blob().then(readBlobAsArrayBuffer)
+	      }
+
+	      this.text = function() {
+	        var rejected = consumed(this)
+	        if (rejected) {
+	          return rejected
+	        }
+
+	        if (this._bodyBlob) {
+	          return readBlobAsText(this._bodyBlob)
+	        } else if (this._bodyFormData) {
+	          throw new Error('could not read FormData body as text')
+	        } else {
+	          return Promise.resolve(this._bodyText)
+	        }
+	      }
+	    } else {
+	      this.text = function() {
+	        var rejected = consumed(this)
+	        return rejected ? rejected : Promise.resolve(this._bodyText)
+	      }
+	    }
+
+	    if (support.formData) {
+	      this.formData = function() {
+	        return this.text().then(decode)
+	      }
+	    }
+
+	    this.json = function() {
+	      return this.text().then(JSON.parse)
+	    }
+
+	    return this
+	  }
+
+	  // HTTP methods whose capitalization should be normalized
+	  var methods = ['DELETE', 'GET', 'HEAD', 'OPTIONS', 'POST', 'PUT']
+
+	  function normalizeMethod(method) {
+	    var upcased = method.toUpperCase()
+	    return (methods.indexOf(upcased) > -1) ? upcased : method
+	  }
+
+	  function Request(input, options) {
+	    options = options || {}
+	    var body = options.body
+	    if (Request.prototype.isPrototypeOf(input)) {
+	      if (input.bodyUsed) {
+	        throw new TypeError('Already read')
+	      }
+	      this.url = input.url
+	      this.credentials = input.credentials
+	      if (!options.headers) {
+	        this.headers = new Headers(input.headers)
+	      }
+	      this.method = input.method
+	      this.mode = input.mode
+	      if (!body) {
+	        body = input._bodyInit
+	        input.bodyUsed = true
+	      }
+	    } else {
+	      this.url = input
+	    }
+
+	    this.credentials = options.credentials || this.credentials || 'omit'
+	    if (options.headers || !this.headers) {
+	      this.headers = new Headers(options.headers)
+	    }
+	    this.method = normalizeMethod(options.method || this.method || 'GET')
+	    this.mode = options.mode || this.mode || null
+	    this.referrer = null
+
+	    if ((this.method === 'GET' || this.method === 'HEAD') && body) {
+	      throw new TypeError('Body not allowed for GET or HEAD requests')
+	    }
+	    this._initBody(body)
+	  }
+
+	  Request.prototype.clone = function() {
+	    return new Request(this)
+	  }
+
+	  function decode(body) {
+	    var form = new FormData()
+	    body.trim().split('&').forEach(function(bytes) {
+	      if (bytes) {
+	        var split = bytes.split('=')
+	        var name = split.shift().replace(/\+/g, ' ')
+	        var value = split.join('=').replace(/\+/g, ' ')
+	        form.append(decodeURIComponent(name), decodeURIComponent(value))
+	      }
+	    })
+	    return form
+	  }
+
+	  function headers(xhr) {
+	    var head = new Headers()
+	    var pairs = xhr.getAllResponseHeaders().trim().split('\n')
+	    pairs.forEach(function(header) {
+	      var split = header.trim().split(':')
+	      var key = split.shift().trim()
+	      var value = split.join(':').trim()
+	      head.append(key, value)
+	    })
+	    return head
+	  }
+
+	  Body.call(Request.prototype)
+
+	  function Response(bodyInit, options) {
+	    if (!options) {
+	      options = {}
+	    }
+
+	    this.type = 'default'
+	    this.status = options.status
+	    this.ok = this.status >= 200 && this.status < 300
+	    this.statusText = options.statusText
+	    this.headers = options.headers instanceof Headers ? options.headers : new Headers(options.headers)
+	    this.url = options.url || ''
+	    this._initBody(bodyInit)
+	  }
+
+	  Body.call(Response.prototype)
+
+	  Response.prototype.clone = function() {
+	    return new Response(this._bodyInit, {
+	      status: this.status,
+	      statusText: this.statusText,
+	      headers: new Headers(this.headers),
+	      url: this.url
+	    })
+	  }
+
+	  Response.error = function() {
+	    var response = new Response(null, {status: 0, statusText: ''})
+	    response.type = 'error'
+	    return response
+	  }
+
+	  var redirectStatuses = [301, 302, 303, 307, 308]
+
+	  Response.redirect = function(url, status) {
+	    if (redirectStatuses.indexOf(status) === -1) {
+	      throw new RangeError('Invalid status code')
+	    }
+
+	    return new Response(null, {status: status, headers: {location: url}})
+	  }
+
+	  self.Headers = Headers;
+	  self.Request = Request;
+	  self.Response = Response;
+
+	  self.fetch = function(input, init) {
+	    return new Promise(function(resolve, reject) {
+	      var request
+	      if (Request.prototype.isPrototypeOf(input) && !init) {
+	        request = input
+	      } else {
+	        request = new Request(input, init)
+	      }
+
+	      var xhr = new XMLHttpRequest()
+
+	      function responseURL() {
+	        if ('responseURL' in xhr) {
+	          return xhr.responseURL
+	        }
+
+	        // Avoid security warnings on getResponseHeader when not allowed by CORS
+	        if (/^X-Request-URL:/m.test(xhr.getAllResponseHeaders())) {
+	          return xhr.getResponseHeader('X-Request-URL')
+	        }
+
+	        return;
+	      }
+
+	      xhr.onload = function() {
+	        var status = (xhr.status === 1223) ? 204 : xhr.status
+	        if (status < 100 || status > 599) {
+	          reject(new TypeError('Network request failed'))
+	          return
+	        }
+	        var options = {
+	          status: status,
+	          statusText: xhr.statusText,
+	          headers: headers(xhr),
+	          url: responseURL()
+	        }
+	        var body = 'response' in xhr ? xhr.response : xhr.responseText;
+	        resolve(new Response(body, options))
+	      }
+
+	      xhr.onerror = function() {
+	        reject(new TypeError('Network request failed'))
+	      }
+
+	      xhr.open(request.method, request.url, true)
+
+	      if (request.credentials === 'include') {
+	        xhr.withCredentials = true
+	      }
+
+	      if ('responseType' in xhr && support.blob) {
+	        xhr.responseType = 'blob'
+	      }
+
+	      request.headers.forEach(function(value, name) {
+	        xhr.setRequestHeader(name, value)
+	      })
+
+	      xhr.send(typeof request._bodyInit === 'undefined' ? null : request._bodyInit)
+	    })
+	  }
+	  self.fetch.polyfill = true
+	})(typeof self !== 'undefined' ? self : this);
+
+
+/***/ },
+/* 182 */
+/***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+
+	var _isomorphicFetch = __webpack_require__(180);
+
+	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 	function requestUpdateThemeStatus(id) {
 	  return { type: 'UPDATE_THEME_STATUS_REQUEST', id: id };
 	}
@@ -20766,7 +21187,7 @@
 	  return function (dispatch) {
 	    dispatch(requestUpdateThemeStatus(id));
 
-	    return fetch('/themes', {
+	    return (0, _isomorphicFetch2.default)('/themes', {
 	      method: 'PATCH',
 	      body: JSON.stringify({ id: id, channelId: channelId, action: action }),
 	      credentials: 'same-origin',
@@ -20784,14 +21205,21 @@
 	exports.default = updateThemeStatus;
 
 /***/ },
-/* 181 */
-/***/ function(module, exports) {
+/* 183 */
+/***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+
+	var _isomorphicFetch = __webpack_require__(180);
+
+	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 	function requestCreateChannel(id) {
 	  return { type: 'CREATE_CHANNEL_REQUEST', id: id };
 	}
@@ -20818,7 +21246,7 @@
 	  return function (dispatch) {
 	    dispatch(requestCreateChannel(id));
 
-	    return fetch('/channels', {
+	    return (0, _isomorphicFetch2.default)('/channels', {
 	      method: 'POST',
 	      body: JSON.stringify({ id: id }),
 	      credentials: 'same-origin',
@@ -20836,14 +21264,21 @@
 	exports.default = createChannel;
 
 /***/ },
-/* 182 */
-/***/ function(module, exports) {
+/* 184 */
+/***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+
+	var _isomorphicFetch = __webpack_require__(180);
+
+	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 	function requestDestroyChannel(id) {
 	  return { type: 'DESTROY_CHANNEL_REQUEST', id: id };
 	}
@@ -20870,7 +21305,7 @@
 	  return function (dispatch) {
 	    dispatch(requestDestroyChannel(id));
 
-	    return fetch('/channels', {
+	    return (0, _isomorphicFetch2.default)('/channels', {
 	      method: 'DELETE',
 	      body: JSON.stringify({ id: id }),
 	      credentials: 'same-origin',
@@ -20888,14 +21323,21 @@
 	exports.default = destroyChannel;
 
 /***/ },
-/* 183 */
-/***/ function(module, exports) {
+/* 185 */
+/***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+
+	var _isomorphicFetch = __webpack_require__(180);
+
+	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 	function requestUpdateTimeSetting(attr, value) {
 	  return {
 	    type: 'UPDATE_TIME_SETTING_REQUEST',
@@ -20924,7 +21366,7 @@
 	  return function (dispatch) {
 	    dispatch(requestUpdateTimeSetting(attr, value));
 
-	    return fetch('/time_settings', {
+	    return (0, _isomorphicFetch2.default)('/time_settings', {
 	      method: 'PUT',
 	      body: JSON.stringify({ attr: attr, value: value }),
 	      credentials: 'same-origin',
@@ -20946,7 +21388,7 @@
 	exports.default = updateTimeSetting;
 
 /***/ },
-/* 184 */
+/* 186 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -20956,9 +21398,9 @@
 	});
 	exports.getEndTimeRange = exports.getStartTimeRange = undefined;
 
-	var _reselect = __webpack_require__(185);
+	var _reselect = __webpack_require__(187);
 
-	var _data = __webpack_require__(186);
+	var _data = __webpack_require__(188);
 
 	var getEndTime = function getEndTime(state) {
 	  return state.timeSetting.endTime;
@@ -20980,7 +21422,7 @@
 	});
 
 /***/ },
-/* 185 */
+/* 187 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -21099,7 +21541,7 @@
 	}
 
 /***/ },
-/* 186 */
+/* 188 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21109,7 +21551,7 @@
 	});
 	exports.daysOfWeek = exports.dayTimes = exports.timezones = undefined;
 
-	var _timezones = __webpack_require__(187);
+	var _timezones = __webpack_require__(189);
 
 	var _timezones2 = _interopRequireDefault(_timezones);
 
@@ -21124,7 +21566,7 @@
 	exports.daysOfWeek = daysOfWeek;
 
 /***/ },
-/* 187 */
+/* 189 */
 /***/ function(module, exports) {
 
 	module.exports = [
@@ -21539,7 +21981,159 @@
 	];
 
 /***/ },
-/* 188 */
+/* 190 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Header = function (_Component) {
+	  _inherits(Header, _Component);
+
+	  function Header() {
+	    _classCallCheck(this, Header);
+
+	    return _possibleConstructorReturn(this, Object.getPrototypeOf(Header).apply(this, arguments));
+	  }
+
+	  _createClass(Header, [{
+	    key: "handleLinkClick",
+	    value: function handleLinkClick(event) {
+	      event.preventDefault();
+	    }
+	  }, {
+	    key: "render",
+	    value: function render() {
+	      return _react2.default.createElement(
+	        "header",
+	        { className: "main" },
+	        _react2.default.createElement(
+	          "div",
+	          { className: "logo" },
+	          _react2.default.createElement("span", { className: "main-logo" }),
+	          _react2.default.createElement(
+	            "span",
+	            null,
+	            "Virtual ",
+	            _react2.default.createElement(
+	              "strong",
+	              null,
+	              "Mentor"
+	            )
+	          )
+	        )
+	      );
+	    }
+	  }]);
+
+	  return Header;
+	}(_react.Component);
+
+	exports.default = Header;
+
+/***/ },
+/* 191 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Footer = function (_Component) {
+	  _inherits(Footer, _Component);
+
+	  function Footer() {
+	    _classCallCheck(this, Footer);
+
+	    return _possibleConstructorReturn(this, Object.getPrototypeOf(Footer).apply(this, arguments));
+	  }
+
+	  _createClass(Footer, [{
+	    key: "handleLinkClick",
+	    value: function handleLinkClick(event) {
+	      event.preventDefault();
+	    }
+	  }, {
+	    key: "render",
+	    value: function render() {
+	      return _react2.default.createElement(
+	        "footer",
+	        null,
+	        _react2.default.createElement(
+	          "ul",
+	          null,
+	          _react2.default.createElement(
+	            "li",
+	            null,
+	            _react2.default.createElement(
+	              "a",
+	              { href: "", onClick: this.handleLinkClick.bind(this) },
+	              "Disclaimer"
+	            )
+	          ),
+	          _react2.default.createElement(
+	            "li",
+	            null,
+	            _react2.default.createElement(
+	              "a",
+	              { href: "", onClick: this.handleLinkClick.bind(this) },
+	              "Legal"
+	            )
+	          ),
+	          _react2.default.createElement(
+	            "li",
+	            null,
+	            _react2.default.createElement(
+	              "a",
+	              { href: "", onClick: this.handleLinkClick.bind(this) },
+	              "Contact"
+	            )
+	          )
+	        )
+	      );
+	    }
+	  }]);
+
+	  return Footer;
+	}(_react.Component);
+
+	exports.default = Footer;
+
+/***/ },
+/* 192 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21558,11 +22152,11 @@
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _classnames = __webpack_require__(189);
+	var _classnames = __webpack_require__(193);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
-	var _ThemesList = __webpack_require__(190);
+	var _ThemesList = __webpack_require__(194);
 
 	var _ThemesList2 = _interopRequireDefault(_ThemesList);
 
@@ -21664,7 +22258,7 @@
 	exports.default = ChannelsList;
 
 /***/ },
-/* 189 */
+/* 193 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -21718,7 +22312,7 @@
 
 
 /***/ },
-/* 190 */
+/* 194 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21733,11 +22327,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _FadeModal = __webpack_require__(191);
+	var _FadeModal = __webpack_require__(195);
 
 	var _FadeModal2 = _interopRequireDefault(_FadeModal);
 
-	var _classnames = __webpack_require__(189);
+	var _classnames = __webpack_require__(193);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
@@ -21891,12 +22485,12 @@
 	exports.default = ThemesList;
 
 /***/ },
-/* 191 */
+/* 195 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var modalFactory = __webpack_require__(192);
-	var insertKeyframesRule = __webpack_require__(197);
-	var appendVendorPrefix = __webpack_require__(194);
+	var modalFactory = __webpack_require__(196);
+	var insertKeyframesRule = __webpack_require__(201);
+	var appendVendorPrefix = __webpack_require__(198);
 
 	var animation = {
 	    show: {
@@ -21994,12 +22588,12 @@
 
 
 /***/ },
-/* 192 */
+/* 196 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var transitionEvents = __webpack_require__(193);
-	var appendVendorPrefix = __webpack_require__(194);
+	var transitionEvents = __webpack_require__(197);
+	var appendVendorPrefix = __webpack_require__(198);
 
 	module.exports = function(animation){
 
@@ -22178,7 +22772,7 @@
 
 
 /***/ },
-/* 193 */
+/* 197 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -22279,12 +22873,12 @@
 
 
 /***/ },
-/* 194 */
+/* 198 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var getVendorPropertyName = __webpack_require__(195);
+	var getVendorPropertyName = __webpack_require__(199);
 
 	module.exports = function(target, sources) {
 	  var to = Object(target);
@@ -22315,12 +22909,12 @@
 
 
 /***/ },
-/* 195 */
+/* 199 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var builtinStyle = __webpack_require__(196);
+	var builtinStyle = __webpack_require__(200);
 	var prefixes = ['Moz', 'Webkit', 'O', 'ms'];
 	var domVendorPrefix;
 
@@ -22358,7 +22952,7 @@
 
 
 /***/ },
-/* 196 */
+/* 200 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -22367,13 +22961,13 @@
 
 
 /***/ },
-/* 197 */
+/* 201 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var insertRule = __webpack_require__(198);
-	var vendorPrefix = __webpack_require__(199)();
+	var insertRule = __webpack_require__(202);
+	var vendorPrefix = __webpack_require__(203)();
 	var index = 0;
 
 	module.exports = function(keyframes) {
@@ -22403,7 +22997,7 @@
 
 
 /***/ },
-/* 198 */
+/* 202 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -22428,7 +23022,7 @@
 
 
 /***/ },
-/* 199 */
+/* 203 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -22447,7 +23041,7 @@
 
 
 /***/ },
-/* 200 */
+/* 204 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -22462,11 +23056,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _classnames = __webpack_require__(189);
+	var _classnames = __webpack_require__(193);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
-	var _data = __webpack_require__(186);
+	var _data = __webpack_require__(188);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -22636,7 +23230,7 @@
 	exports.default = TimeSetting;
 
 /***/ },
-/* 201 */
+/* 205 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -22651,11 +23245,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _SlackButton = __webpack_require__(208);
+	var _SlackButton = __webpack_require__(206);
 
 	var _SlackButton2 = _interopRequireDefault(_SlackButton);
 
-	var _Footer = __webpack_require__(209);
+	var _Footer = __webpack_require__(191);
 
 	var _Footer2 = _interopRequireDefault(_Footer);
 
@@ -22859,223 +23453,7 @@
 	exports.default = LandingApp;
 
 /***/ },
-/* 202 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var map = {
-		"./ConfigApp": 203,
-		"./ConfigApp.js": 203,
-		"./channels": 205,
-		"./channels.js": 205,
-		"./team": 204,
-		"./team.js": 204,
-		"./themes": 206,
-		"./themes.js": 206,
-		"./timeSetting": 207,
-		"./timeSetting.js": 207
-	};
-	function webpackContext(req) {
-		return __webpack_require__(webpackContextResolve(req));
-	};
-	function webpackContextResolve(req) {
-		return map[req] || (function() { throw new Error("Cannot find module '" + req + "'.") }());
-	};
-	webpackContext.keys = function webpackContextKeys() {
-		return Object.keys(map);
-	};
-	webpackContext.resolve = webpackContextResolve;
-	module.exports = webpackContext;
-	webpackContext.id = 202;
-
-
-/***/ },
-/* 203 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _redux = __webpack_require__(154);
-
-	var _team = __webpack_require__(204);
-
-	var _team2 = _interopRequireDefault(_team);
-
-	var _channels = __webpack_require__(205);
-
-	var _channels2 = _interopRequireDefault(_channels);
-
-	var _themes = __webpack_require__(206);
-
-	var _themes2 = _interopRequireDefault(_themes);
-
-	var _timeSetting = __webpack_require__(207);
-
-	var _timeSetting2 = _interopRequireDefault(_timeSetting);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	exports.default = (0, _redux.combineReducers)({
-	  team: _team2.default,
-	  channels: _channels2.default,
-	  themes: _themes2.default,
-	  timeSetting: _timeSetting2.default
-	});
-
-/***/ },
-/* 204 */
-/***/ function(module, exports) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.default = team;
-	function team() {
-	  var state = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
-	  var action = arguments[1];
-
-	  switch (action.type) {
-	    default:
-	      return state;
-	  }
-	}
-
-/***/ },
-/* 205 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.default = channels;
-	function channels() {
-	  var state = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
-	  var action = arguments[1];
-
-	  switch (action.type) {
-	    case 'CREATE_CHANNEL_REQUEST':
-	    case 'DESTROY_CHANNEL_REQUEST':
-	      return state.map(function (channel) {
-	        return channel.id === action.id ? Object.assign({}, channel, { isFetching: true }) : channel;
-	      });
-	    case 'CREATE_CHANNEL_ERROR':
-	    case 'DESTROY_CHANNEL_ERROR':
-	      return state.map(function (channel) {
-	        return channel.id === action.id ? Object.assign({}, channel, { isFetching: false }) : channel;
-	      });
-	    case 'CREATE_CHANNEL_RECEIVE':
-	    case 'DESTROY_CHANNEL_RECEIVE':
-	      return state.map(function (channel) {
-	        return channel.id === action.id ? Object.assign({}, channel, { isFetching: false, status: action.status }) : channel;
-	      });
-	    default:
-	      return state;
-	  }
-	}
-
-/***/ },
 /* 206 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.default = themes;
-	var initialState = {
-	  isFetching: false,
-	  items: []
-	};
-
-	function themes() {
-	  var state = arguments.length <= 0 || arguments[0] === undefined ? initialState : arguments[0];
-	  var action = arguments[1];
-
-	  switch (action.type) {
-	    case 'UPDATE_THEME_STATUS_REQUEST':
-	      return Object.assign({}, state, {
-	        items: state.items.map(function (theme) {
-	          return theme.id === action.id ? Object.assign({}, theme, { isFetching: true }) : theme;
-	        })
-	      });
-	    case 'UPDATE_THEME_STATUS_RECEIVE':
-	      return Object.assign({}, state, {
-	        items: state.items.map(function (theme) {
-	          return theme.id === action.id ? Object.assign({}, theme, { isFetching: false, isSubscribed: action.isSubscribed }) : theme;
-	        })
-	      });
-	    case 'UPDATE_THEME_STATUS_ERROR':
-	      return Object.assign({}, state, {
-	        items: state.items.map(function (theme) {
-	          return theme.id === action.id ? Object.assign({}, theme, { isFetching: false }) : theme;
-	        })
-	      });
-	    case 'THEMES_REQUEST':
-	      return Object.assign({}, state, {
-	        isFetching: true
-	      });
-	    case 'THEMES_RECEIVE':
-	      return Object.assign({}, state, {
-	        isFetching: false,
-	        items: action.themes,
-	        lastUpdated: action.receivedAt
-	      });
-	    case 'THEMES_ERROR':
-	      return Object.assign({}, state, {
-	        isFetching: false
-	      });
-	    default:
-	      return state;
-	  }
-	}
-
-/***/ },
-/* 207 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.default = timeSetting;
-
-	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-	function timeSetting() {
-	  var state = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
-	  var action = arguments[1];
-
-	  switch (action.type) {
-	    case 'UPDATE_TIME_SETTING_REQUEST':
-	      return Object.assign({}, state, _defineProperty({
-	        isFetching: true
-	      }, action.attr, action.value));
-	    case 'UPDATE_TIME_SETTING_RECEIVE':
-	      return Object.assign({}, state, _defineProperty({
-	        isFetching: false
-	      }, action.attr, action.value));
-	    case 'UPDATE_TIME_SETTING_ERROR':
-	      // TODO: think about how to restore previous state
-	      return Object.assign({}, state, {
-	        isFetching: false,
-	        error: action.error
-	      });
-	    default:
-	      return state;
-	  }
-	}
-
-/***/ },
-/* 208 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -23144,156 +23522,220 @@
 	exports.default = SlackButton;
 
 /***/ },
-/* 209 */
+/* 207 */
 /***/ function(module, exports, __webpack_require__) {
+
+	var map = {
+		"./ConfigApp": 208,
+		"./ConfigApp.js": 208,
+		"./channels": 210,
+		"./channels.js": 210,
+		"./team": 209,
+		"./team.js": 209,
+		"./themes": 211,
+		"./themes.js": 211,
+		"./timeSetting": 212,
+		"./timeSetting.js": 212
+	};
+	function webpackContext(req) {
+		return __webpack_require__(webpackContextResolve(req));
+	};
+	function webpackContextResolve(req) {
+		return map[req] || (function() { throw new Error("Cannot find module '" + req + "'.") }());
+	};
+	webpackContext.keys = function webpackContextKeys() {
+		return Object.keys(map);
+	};
+	webpackContext.resolve = webpackContextResolve;
+	module.exports = webpackContext;
+	webpackContext.id = 207;
+
+
+/***/ },
+/* 208 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _redux = __webpack_require__(154);
+
+	var _team = __webpack_require__(209);
+
+	var _team2 = _interopRequireDefault(_team);
+
+	var _channels = __webpack_require__(210);
+
+	var _channels2 = _interopRequireDefault(_channels);
+
+	var _themes = __webpack_require__(211);
+
+	var _themes2 = _interopRequireDefault(_themes);
+
+	var _timeSetting = __webpack_require__(212);
+
+	var _timeSetting2 = _interopRequireDefault(_timeSetting);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.default = (0, _redux.combineReducers)({
+	  team: _team2.default,
+	  channels: _channels2.default,
+	  themes: _themes2.default,
+	  timeSetting: _timeSetting2.default
+	});
+
+/***/ },
+/* 209 */
+/***/ function(module, exports) {
 
 	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	exports.default = team;
+	function team() {
+	  var state = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+	  var action = arguments[1];
 
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var Footer = function (_Component) {
-	  _inherits(Footer, _Component);
-
-	  function Footer() {
-	    _classCallCheck(this, Footer);
-
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(Footer).apply(this, arguments));
+	  switch (action.type) {
+	    default:
+	      return state;
 	  }
-
-	  _createClass(Footer, [{
-	    key: "handleLinkClick",
-	    value: function handleLinkClick(event) {
-	      event.preventDefault();
-	    }
-	  }, {
-	    key: "render",
-	    value: function render() {
-	      return _react2.default.createElement(
-	        "footer",
-	        null,
-	        _react2.default.createElement(
-	          "ul",
-	          null,
-	          _react2.default.createElement(
-	            "li",
-	            null,
-	            _react2.default.createElement(
-	              "a",
-	              { href: "", onClick: this.handleLinkClick.bind(this) },
-	              "Disclaimer"
-	            )
-	          ),
-	          _react2.default.createElement(
-	            "li",
-	            null,
-	            _react2.default.createElement(
-	              "a",
-	              { href: "", onClick: this.handleLinkClick.bind(this) },
-	              "Legal"
-	            )
-	          ),
-	          _react2.default.createElement(
-	            "li",
-	            null,
-	            _react2.default.createElement(
-	              "a",
-	              { href: "", onClick: this.handleLinkClick.bind(this) },
-	              "Contact"
-	            )
-	          )
-	        )
-	      );
-	    }
-	  }]);
-
-	  return Footer;
-	}(_react.Component);
-
-	exports.default = Footer;
+	}
 
 /***/ },
 /* 210 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
-	"use strict";
+	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	exports.default = channels;
+	function channels() {
+	  var state = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
+	  var action = arguments[1];
 
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var Header = function (_Component) {
-	  _inherits(Header, _Component);
-
-	  function Header() {
-	    _classCallCheck(this, Header);
-
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(Header).apply(this, arguments));
+	  switch (action.type) {
+	    case 'CREATE_CHANNEL_REQUEST':
+	    case 'DESTROY_CHANNEL_REQUEST':
+	      return state.map(function (channel) {
+	        return channel.id === action.id ? Object.assign({}, channel, { isFetching: true }) : channel;
+	      });
+	    case 'CREATE_CHANNEL_ERROR':
+	    case 'DESTROY_CHANNEL_ERROR':
+	      return state.map(function (channel) {
+	        return channel.id === action.id ? Object.assign({}, channel, { isFetching: false }) : channel;
+	      });
+	    case 'CREATE_CHANNEL_RECEIVE':
+	    case 'DESTROY_CHANNEL_RECEIVE':
+	      return state.map(function (channel) {
+	        return channel.id === action.id ? Object.assign({}, channel, { isFetching: false, status: action.status }) : channel;
+	      });
+	    default:
+	      return state;
 	  }
+	}
 
-	  _createClass(Header, [{
-	    key: "handleLinkClick",
-	    value: function handleLinkClick(event) {
-	      event.preventDefault();
-	    }
-	  }, {
-	    key: "render",
-	    value: function render() {
-	      return _react2.default.createElement(
-	        "header",
-	        { className: "main" },
-	        _react2.default.createElement(
-	          "div",
-	          { className: "logo" },
-	          _react2.default.createElement("span", { className: "main-logo" }),
-	          _react2.default.createElement(
-	            "span",
-	            null,
-	            "Virtual ",
-	            _react2.default.createElement(
-	              "strong",
-	              null,
-	              "Mentor"
-	            )
-	          )
-	        )
-	      );
-	    }
-	  }]);
+/***/ },
+/* 211 */
+/***/ function(module, exports) {
 
-	  return Header;
-	}(_react.Component);
+	'use strict';
 
-	exports.default = Header;
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = themes;
+	var initialState = {
+	  isFetching: false,
+	  items: []
+	};
+
+	function themes() {
+	  var state = arguments.length <= 0 || arguments[0] === undefined ? initialState : arguments[0];
+	  var action = arguments[1];
+
+	  switch (action.type) {
+	    case 'UPDATE_THEME_STATUS_REQUEST':
+	      return Object.assign({}, state, {
+	        items: state.items.map(function (theme) {
+	          return theme.id === action.id ? Object.assign({}, theme, { isFetching: true }) : theme;
+	        })
+	      });
+	    case 'UPDATE_THEME_STATUS_RECEIVE':
+	      return Object.assign({}, state, {
+	        items: state.items.map(function (theme) {
+	          return theme.id === action.id ? Object.assign({}, theme, { isFetching: false, isSubscribed: action.isSubscribed }) : theme;
+	        })
+	      });
+	    case 'UPDATE_THEME_STATUS_ERROR':
+	      return Object.assign({}, state, {
+	        items: state.items.map(function (theme) {
+	          return theme.id === action.id ? Object.assign({}, theme, { isFetching: false }) : theme;
+	        })
+	      });
+	    case 'THEMES_REQUEST':
+	      return Object.assign({}, state, {
+	        isFetching: true
+	      });
+	    case 'THEMES_RECEIVE':
+	      return Object.assign({}, state, {
+	        isFetching: false,
+	        items: action.themes,
+	        lastUpdated: action.receivedAt
+	      });
+	    case 'THEMES_ERROR':
+	      return Object.assign({}, state, {
+	        isFetching: false
+	      });
+	    default:
+	      return state;
+	  }
+	}
+
+/***/ },
+/* 212 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = timeSetting;
+
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+	function timeSetting() {
+	  var state = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+	  var action = arguments[1];
+
+	  switch (action.type) {
+	    case 'UPDATE_TIME_SETTING_REQUEST':
+	      return Object.assign({}, state, _defineProperty({
+	        isFetching: true
+	      }, action.attr, action.value));
+	    case 'UPDATE_TIME_SETTING_RECEIVE':
+	      return Object.assign({}, state, _defineProperty({
+	        isFetching: false
+	      }, action.attr, action.value));
+	    case 'UPDATE_TIME_SETTING_ERROR':
+	      // TODO: think about how to restore previous state
+	      return Object.assign({}, state, {
+	        isFetching: false,
+	        error: action.error
+	      });
+	    default:
+	      return state;
+	  }
+	}
 
 /***/ }
 /******/ ]);

@@ -1,3 +1,6 @@
+import fetch from 'isomorphic-fetch'
+
+
 function requestThemes(channelId) {
   return { type: 'THEMES_REQUEST', channelId }
 }

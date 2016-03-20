@@ -1,3 +1,6 @@
+import fetch from 'isomorphic-fetch'
+
+
 function requestUpdateThemeStatus(id) {
   return { type: 'UPDATE_THEME_STATUS_REQUEST', id }
 }

@@ -1,3 +1,6 @@
+import fetch from 'isomorphic-fetch'
+
+
 function requestDestroyChannel(id) {
   return { type: 'DESTROY_CHANNEL_REQUEST', id }
 }
