@@ -1,9 +1,11 @@
 @import 'fontawesome';
 @import 'flexbox';
 @import 'gradients';
+@import 'appearance';
 
 $primary-green: #3BC363;
 $primary-gray: #CBD0CD;
+$primary-font-size: 32px;
 $regular-font-size: 22px;
 
 body {
@@ -37,6 +39,7 @@ p {
   line-height: 1.5em;
 }
 
+@import 'header';
 @import 'footer';
 @import 'modal';
 @import 'landing';

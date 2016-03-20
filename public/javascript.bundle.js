@@ -20527,6 +20527,14 @@
 
 	var _selectors = __webpack_require__(184);
 
+	var _Header = __webpack_require__(210);
+
+	var _Header2 = _interopRequireDefault(_Header);
+
+	var _Footer = __webpack_require__(209);
+
+	var _Footer2 = _interopRequireDefault(_Footer);
+
 	var _ChannelsList = __webpack_require__(188);
 
 	var _ChannelsList2 = _interopRequireDefault(_ChannelsList);
@@ -20568,27 +20576,33 @@
 	      return _react2.default.createElement(
 	        'div',
 	        { id: 'configuration-container' },
+	        _react2.default.createElement(_Header2.default, null),
 	        _react2.default.createElement(
-	          'h1',
-	          null,
-	          _react2.default.createElement('i', { className: 'fa fa-cogs' }),
+	          'div',
+	          { className: 'wrapper' },
 	          _react2.default.createElement(
-	            'span',
+	            'h1',
 	            null,
-	            'Configure Virtual Mentor integration for ' + team.name
-	          )
-	        ),
-	        _react2.default.createElement(_TimeSetting2.default, {
-	          timeSetting: timeSetting,
-	          startTimeRange: startTimeRange,
-	          endTimeRange: endTimeRange,
-	          actions: actions
-	        }),
-	        _react2.default.createElement(_ChannelsList2.default, {
-	          channels: channels,
-	          themes: themes,
-	          actions: actions
-	        })
+	            _react2.default.createElement('i', { className: 'fa fa-cogs' }),
+	            'Configure Virtual Mentor integration for ',
+	            _react2.default.createElement(
+	              'strong',
+	              null,
+	              team.name
+	            )
+	          ),
+	          _react2.default.createElement(_TimeSetting2.default, {
+	            timeSetting: timeSetting,
+	            startTimeRange: startTimeRange,
+	            endTimeRange: endTimeRange,
+	            actions: actions
+	          }),
+	          _react2.default.createElement(_ChannelsList2.default, {
+	            channels: channels,
+	            themes: themes,
+	            actions: actions
+	          })
+	        )
 	      );
 	    }
 	  }]);
@@ -21568,7 +21582,7 @@
 	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ChannelsList).call(this, props));
 
 	    _this.state = {
-	      channelId: '',
+	      channel: {},
 	      shouldRenderThemesList: false
 	    };
 	    return _this;
@@ -21580,10 +21594,10 @@
 
 	  _createClass(ChannelsList, [{
 	    key: 'handleChannelClick',
-	    value: function handleChannelClick(channelId, event) {
+	    value: function handleChannelClick(channel, event) {
 	      event.preventDefault();
-	      this.setState({ channelId: channelId, shouldRenderThemesList: true });
-	      this.props.actions.fetchThemes(channelId);
+	      this.setState({ channel: channel, shouldRenderThemesList: true });
+	      this.props.actions.fetchThemes(channel.id);
 	    }
 	  }, {
 	    key: 'handleThemesListHide',
@@ -21601,17 +21615,12 @@
 
 	      return _react2.default.createElement(
 	        'li',
-	        null,
+	        { onClick: this.handleChannelClick.bind(this, channel) },
 	        _react2.default.createElement('i', { className: iconClassNames }),
 	        _react2.default.createElement(
 	          'span',
 	          null,
-	          '#'
-	        ),
-	        _react2.default.createElement(
-	          'a',
-	          { href: '', onClick: this.handleChannelClick.bind(this, channel.id) },
-	          channel.name
+	          '#' + channel.name
 	        )
 	      );
 	    }
@@ -21632,7 +21641,7 @@
 	          this.props.channels.map(this.renderChannel.bind(this))
 	        ),
 	        _react2.default.createElement(_ThemesList2.default, {
-	          channelId: this.state.channelId,
+	          channel: this.state.channel,
 	          themes: this.props.themes,
 	          actions: this.props.actions,
 	          shouldRenderThemesList: this.state.shouldRenderThemesList,
@@ -21791,19 +21800,19 @@
 	    value: function handleThemeClick(theme, event) {
 	      event.preventDefault();
 	      var _props = this.props;
-	      var channelId = _props.channelId;
+	      var channel = _props.channel;
 	      var actions = _props.actions;
 
 	      var selectedThemesSize = this.getSelectedThemesSize();
 	      if (selectedThemesSize === 3 && !theme.isSubscribed) return;
 
 	      var action = theme.isSubscribed ? 'unsubscribe' : 'subscribe';
-	      actions.updateThemeStatus(theme.id, channelId, action);
+	      actions.updateThemeStatus(theme.id, channel.id, action);
 
 	      if (selectedThemesSize === 0 && action === 'subscribe') {
-	        actions.createChannel(channelId);
+	        actions.createChannel(channel.id);
 	      } else if (selectedThemesSize === 1 && action === 'unsubscribe') {
-	        actions.destroyChannel(channelId);
+	        actions.destroyChannel(channel.id);
 	      }
 	    }
 
@@ -21817,10 +21826,10 @@
 
 	      return _react2.default.createElement(
 	        'li',
-	        null,
+	        { onClick: this.handleThemeClick.bind(this, theme) },
 	        _react2.default.createElement(
-	          'a',
-	          { href: '', onClick: this.handleThemeClick.bind(this, theme) },
+	          'span',
+	          null,
 	          theme.name
 	        ),
 	        theme.isSubscribed || theme.isFetching ? _react2.default.createElement('i', { className: iconClassNames }) : null
@@ -21837,16 +21846,31 @@
 	          { ref: 'modal', onHide: this.hideContainer.bind(this) },
 	          _react2.default.createElement(
 	            'div',
-	            { className: 'modal-content' },
+	            { className: 'modal-content themes-list' },
+	            _react2.default.createElement(
+	              'h1',
+	              null,
+	              'Subscribe ',
+	              _react2.default.createElement(
+	                'strong',
+	                null,
+	                '#' + this.props.channel.name
+	              ),
+	              ' to the following topics:'
+	            ),
 	            _react2.default.createElement(
 	              'ul',
-	              { className: 'themes-list' },
+	              null,
 	              this.props.themes.items.map(this.renderTheme.bind(this))
 	            ),
 	            _react2.default.createElement(
-	              'button',
-	              { onClick: this.handleModalClose.bind(this) },
-	              'Close'
+	              'div',
+	              { className: 'actions' },
+	              _react2.default.createElement(
+	                'button',
+	                { onClick: this.handleModalClose.bind(this) },
+	                'Close'
+	              )
 	            )
 	          )
 	        )
@@ -21858,7 +21882,7 @@
 	}(_react.Component);
 
 	ThemesList.propTypes = {
-	  channelId: _react.PropTypes.string.isRequired,
+	  channel: _react.PropTypes.object.isRequired,
 	  themes: _react.PropTypes.object.isRequired,
 	  actions: _react.PropTypes.object.isRequired
 	};
@@ -22553,9 +22577,13 @@
 	          'Select your team timezone:'
 	        ),
 	        _react2.default.createElement(
-	          'select',
-	          { value: tz, onChange: this.handleAttributeChange.bind(this, 'tz') },
-	          _data.timezones.map(this.renderTimezoneOption.bind(this))
+	          'div',
+	          { className: 'select' },
+	          _react2.default.createElement(
+	            'select',
+	            { value: tz, onChange: this.handleAttributeChange.bind(this, 'tz') },
+	            _data.timezones.map(this.renderTimezoneOption.bind(this))
+	          )
 	        ),
 	        _react2.default.createElement(
 	          'h2',
@@ -22563,19 +22591,27 @@
 	          'Mentoring time:'
 	        ),
 	        _react2.default.createElement(
-	          'select',
-	          { value: startTime, onChange: this.handleAttributeChange.bind(this, 'startTime') },
-	          startTimeRange.map(this.renderStartTimeOption.bind(this))
+	          'div',
+	          { className: 'select' },
+	          _react2.default.createElement(
+	            'select',
+	            { value: startTime, onChange: this.handleAttributeChange.bind(this, 'startTime') },
+	            startTimeRange.map(this.renderStartTimeOption.bind(this))
+	          )
 	        ),
 	        _react2.default.createElement(
 	          'span',
 	          null,
-	          '—'
+	          ' — '
 	        ),
 	        _react2.default.createElement(
-	          'select',
-	          { value: endTime, onChange: this.handleAttributeChange.bind(this, 'endTime') },
-	          endTimeRange.map(this.renderEndTimeOption.bind(this))
+	          'div',
+	          { className: 'select' },
+	          _react2.default.createElement(
+	            'select',
+	            { value: endTime, onChange: this.handleAttributeChange.bind(this, 'endTime') },
+	            endTimeRange.map(this.renderEndTimeOption.bind(this))
+	          )
 	        ),
 	        _react2.default.createElement(
 	          'ul',
@@ -23189,6 +23225,74 @@
 	}(_react.Component);
 
 	exports.default = Footer;
+
+/***/ },
+/* 210 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Header = function (_Component) {
+	  _inherits(Header, _Component);
+
+	  function Header() {
+	    _classCallCheck(this, Header);
+
+	    return _possibleConstructorReturn(this, Object.getPrototypeOf(Header).apply(this, arguments));
+	  }
+
+	  _createClass(Header, [{
+	    key: "handleLinkClick",
+	    value: function handleLinkClick(event) {
+	      event.preventDefault();
+	    }
+	  }, {
+	    key: "render",
+	    value: function render() {
+	      return _react2.default.createElement(
+	        "header",
+	        { className: "main" },
+	        _react2.default.createElement(
+	          "div",
+	          { className: "logo" },
+	          _react2.default.createElement("span", { className: "main-logo" }),
+	          _react2.default.createElement(
+	            "span",
+	            null,
+	            "Virtual ",
+	            _react2.default.createElement(
+	              "strong",
+	              null,
+	              "Mentor"
+	            )
+	          )
+	        )
+	      );
+	    }
+	  }]);
+
+	  return Header;
+	}(_react.Component);
+
+	exports.default = Header;
 
 /***/ }
 /******/ ]);

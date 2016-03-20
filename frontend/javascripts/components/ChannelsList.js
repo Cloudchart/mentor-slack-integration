@@ -10,17 +10,17 @@ class ChannelsList extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      channelId: '',
+      channel: {},
       shouldRenderThemesList: false,
     }
   }
 
   // handlers
   //
-  handleChannelClick(channelId, event) {
+  handleChannelClick(channel, event) {
     event.preventDefault()
-    this.setState({ channelId: channelId, shouldRenderThemesList: true })
-    this.props.actions.fetchThemes(channelId)
+    this.setState({ channel: channel, shouldRenderThemesList: true })
+    this.props.actions.fetchThemes(channel.id)
   }
 
   handleThemesListHide() {
@@ -33,12 +33,9 @@ class ChannelsList extends Component {
     let iconClassNames = classNames('fa', 'fa-circle', channel.status)
 
     return (
-      <li>
-        <i className={ iconClassNames }/>
-        <span>#</span>
-        <a href="" onClick={ this.handleChannelClick.bind(this, channel.id) }>
-          { channel.name }
-        </a>
+      <li onClick={ this.handleChannelClick.bind(this, channel) }>
+        <i className={ iconClassNames } />
+        <span>{ `#${channel.name}` }</span>
       </li>
     )
   }
@@ -51,7 +48,7 @@ class ChannelsList extends Component {
           { this.props.channels.map(this.renderChannel.bind(this)) }
         </ul>
         <ThemesList
-          channelId={ this.state.channelId }
+          channel={ this.state.channel }
           themes={ this.props.themes }
           actions={ this.props.actions }
           shouldRenderThemesList={ this.state.shouldRenderThemesList }

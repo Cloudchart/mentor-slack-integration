@@ -1,60 +1,141 @@
 #configuration-container {
-  padding: 30px;
+  > .wrapper {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 30px;
 
-  > h1 {
-    > i {
-      color: $primary-green;
-      margin-right: 10px;
-    }
-  }
-
-  .days-list {
-    display: inline-block;
-    margin-left: 20px;
-
-    > li {
-      display: inline;
-      color: $primary-gray;
-      font-weight: bold;
-      cursor: pointer;
-
-      &:not(:last-child) {
-        margin-right: 5px;
-      }
-
-      &.selected {
-        color: $primary-green;
-      }
-    }
-  }
-
-  .channels-list {
-    > li {
+    > h1 {
       > i {
+        color: $primary-green;
         margin-right: 10px;
-        color: $primary-gray;
+      }
+    }
 
-        &.invited {
+    .select {
+      position: relative;
+      display: inline-block;
+
+      &:before {
+        content: "\f078";
+        font-size: 16px;
+        font-family: FontAwesome;
+        color: $primary-green;
+        position: absolute;
+        right: 1em;
+        top: 1em;
+      }
+
+      > select {
+        @include x-appearance(none);
+
+        padding: 15px 42px 15px 15px;
+        background-color: #FFFFFF;
+        border: 1px solid $primary-gray;
+        border-radius: 5px;
+        font-size: 16px;
+      }
+    }
+
+    .days-list {
+      display: inline-block;
+      margin-left: 30px;
+
+      > li {
+        display: inline-block;
+        color: $primary-gray;
+        font-weight: bold;
+        font-size: 16px;
+        cursor: pointer;
+
+        &:not(:last-child) {
+          margin-right: 15px;
+        }
+
+        &.selected {
           color: $primary-green;
         }
-        &.uninvited {
-          color: #FFC202;
-        }
       }
     }
-  }
 
-  .themes-list {
-    > li {
-      > i {
-        margin-left: 10px;
-        color: $primary-green;
+    .channels-list {
+      > li {
+        font-size: 16px;
+        display: table;
+        border-radius: 5px;
+        padding: 5px;
+        cursor: pointer;
 
-        &.is-fetching {
+        &:hover {
+          background-color: #F6F5F2;
+        }
+
+        > i {
+          margin-right: 10px;
           color: $primary-gray;
+
+          &.invited {
+            color: $primary-green;
+          }
+          &.uninvited {
+            color: #FFC202;
+          }
         }
       }
     }
-  }
 
+    .themes-list {
+      > h1 {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+
+      > ul {
+        @include flexbox;
+        @include flex-direction(column);
+        @include align-items(center);
+
+        margin-bottom: 30px;
+
+        > li {
+          padding: 15px;
+          border: 1px solid $primary-green;
+          border-radius: 5px;
+          cursor: pointer;
+          width: 400px;
+          margin-bottom: 15px;
+          font-size: 18px;
+          position: relative;
+
+          > i {
+            margin-left: 10px;
+            color: $primary-green;
+            position: absolute;
+            right: 1em;
+            top: 1em;
+
+            &.is-fetching {
+              color: $primary-gray;
+            }
+          }
+        }
+      }
+
+      > .actions {
+        @include flexbox;
+        @include justify-content(flex-end);
+
+        > button {
+          padding: 15px 20px;
+          background-color: $primary-green;
+          border: 1px solid #1E7433;
+          border-bottom: 2px solid #1E7433;
+          border-radius: 5px;
+          font-size: 18px;
+          color: #FFFFFF;
+          cursor: pointer;
+        }
+      }
+    }
+
+  }
 }

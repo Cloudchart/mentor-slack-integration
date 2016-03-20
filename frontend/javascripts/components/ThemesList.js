@@ -33,17 +33,17 @@ class ThemesList extends Component {
 
   handleThemeClick(theme, event) {
     event.preventDefault()
-    const { channelId, actions } = this.props
+    const { channel, actions } = this.props
     const selectedThemesSize = this.getSelectedThemesSize()
     if (selectedThemesSize === 3 && !theme.isSubscribed) return
 
     let action = theme.isSubscribed ? 'unsubscribe' : 'subscribe'
-    actions.updateThemeStatus(theme.id, channelId, action)
+    actions.updateThemeStatus(theme.id, channel.id, action)
 
     if (selectedThemesSize === 0 && action === 'subscribe') {
-      actions.createChannel(channelId)
+      actions.createChannel(channel.id)
     } else if (selectedThemesSize === 1 && action === 'unsubscribe') {
-      actions.destroyChannel(channelId)
+      actions.destroyChannel(channel.id)
     }
   }
 
@@ -53,8 +53,8 @@ class ThemesList extends Component {
     let iconClassNames = classNames('fa', 'fa-check', { 'is-fetching': theme.isFetching })
 
     return(
-      <li>
-        <a href="" onClick={ this.handleThemeClick.bind(this, theme) }>{ theme.name }</a>
+      <li onClick={ this.handleThemeClick.bind(this, theme) }>
+        <span>{ theme.name }</span>
         { theme.isSubscribed || theme.isFetching ? <i className={ iconClassNames } /> : null }
       </li>
     )
@@ -64,11 +64,16 @@ class ThemesList extends Component {
     return (
       <div id="modal" className="hidden">
         <Modal ref="modal" onHide={ this.hideContainer.bind(this) }>
-          <div className="modal-content">
-            <ul className="themes-list">
+          <div className="modal-content themes-list">
+            <h1>Subscribe <strong>{ `#${this.props.channel.name}` }</strong> to the following topics:</h1>
+
+            <ul>
               { this.props.themes.items.map(this.renderTheme.bind(this)) }
             </ul>
-            <button onClick={ this.handleModalClose.bind(this) }>Close</button>
+
+            <div className="actions">
+              <button onClick={ this.handleModalClose.bind(this) }>Close</button>
+            </div>
           </div>
         </Modal>
       </div>
@@ -78,7 +83,7 @@ class ThemesList extends Component {
 }
 
 ThemesList.propTypes = {
-  channelId: PropTypes.string.isRequired,
+  channel: PropTypes.object.isRequired,
   themes: PropTypes.object.isRequired,
   actions: PropTypes.object.isRequired,
 }

@@ -3,11 +3,11 @@
     display: none;
   }
 
-  .modal-content {
-    padding: 30px;
+  > span > div:first-of-type {
+    width: 800px !important;
   }
 
-  button {
-    float: right;
+  .modal-content {
+    padding: 30px;
   }
 }

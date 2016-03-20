@@ -57,20 +57,26 @@ class TimeSetting extends Component {
     return (
       <div>
         <h2>Select your team timezone:</h2>
-        <select value={ tz } onChange={ this.handleAttributeChange.bind(this, 'tz') }>
-          { timezones.map(this.renderTimezoneOption.bind(this)) }
-        </select>
+        <div className="select">
+          <select value={ tz } onChange={ this.handleAttributeChange.bind(this, 'tz') }>
+            { timezones.map(this.renderTimezoneOption.bind(this)) }
+          </select>
+        </div>
 
         <h2>Mentoring time:</h2>
-        <select value={ startTime } onChange={ this.handleAttributeChange.bind(this, 'startTime') }>
-          { startTimeRange.map(this.renderStartTimeOption.bind(this)) }
-        </select>
+        <div className="select">
+          <select value={ startTime } onChange={ this.handleAttributeChange.bind(this, 'startTime') }>
+            { startTimeRange.map(this.renderStartTimeOption.bind(this)) }
+          </select>
+        </div>
 
-        <span>—</span>
+        <span> — </span>
 
-        <select value={ endTime } onChange={ this.handleAttributeChange.bind(this, 'endTime') }>
-          { endTimeRange.map(this.renderEndTimeOption.bind(this)) }
-        </select>
+        <div className="select">
+          <select value={ endTime } onChange={ this.handleAttributeChange.bind(this, 'endTime') }>
+            { endTimeRange.map(this.renderEndTimeOption.bind(this)) }
+          </select>
+        </div>
 
         <ul className="days-list">
           { daysOfWeek.map(this.renderDayElement.bind(this)) }

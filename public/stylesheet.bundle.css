@@ -2101,6 +2101,44 @@ p {
   margin: 0;
   line-height: 1.5em; }
 
+header.main {
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-pack: justify;
+  -webkit-justify-content: space-between;
+  -moz-justify-content: space-between;
+  justify-content: space-between;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  -moz-align-items: center;
+  align-items: center;
+  background-image: linear-gradient(to right, #2BAA4C 0%, #3DA44C 100%);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF2BAA4C', endColorstr='#FF3DA44C', GradientType=1);
+  font-size: 32px;
+  color: #FFFFFF;
+  padding: 30px; }
+  header.main > .logo {
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    -moz-align-items: center;
+    align-items: center;
+    font-weight: 200; }
+    header.main > .logo strong {
+      font-weight: 500; }
+    header.main > .logo > .main-logo {
+      margin-right: 15px;
+      width: 71px;
+      height: 67px;
+      background-image: url("/images/BorisIcon@2x.png");
+      background-size: cover; }
+
 footer {
   padding: 30px; }
   footer > ul {
@@ -2122,11 +2160,11 @@ footer {
 #modal.hidden {
   display: none; }
 
+#modal > span > div:first-of-type {
+  width: 800px !important; }
+
 #modal .modal-content {
   padding: 30px; }
-
-#modal button {
-  float: right; }
 
 .slack-button {
   display: -webkit-flex;
@@ -2186,7 +2224,7 @@ footer {
     -moz-align-items: center;
     align-items: center;
     font-size: 32px; }
-    #landing-container > section.top > header .logo {
+    #landing-container > section.top > header > .logo {
       display: -webkit-flex;
       display: -moz-flex;
       display: -ms-flexbox;
@@ -2196,9 +2234,9 @@ footer {
       -moz-align-items: center;
       align-items: center;
       font-weight: 200; }
-      #landing-container > section.top > header .logo strong {
+      #landing-container > section.top > header > .logo strong {
         font-weight: 500; }
-      #landing-container > section.top > header .logo .main-logo {
+      #landing-container > section.top > header > .logo > .main-logo {
         margin-right: 15px;
         width: 71px;
         height: 67px;
@@ -2306,7 +2344,7 @@ footer {
   -webkit-align-items: center;
   -moz-align-items: center;
   align-items: center;
-  padding: 30px;
+  padding: 50px 30px 30px 30px;
   color: #FFFFFF; }
   #landing-container > section.bottom a {
     color: #FFFFFF; }
@@ -2319,32 +2357,110 @@ footer {
     #landing-container > section.bottom > p:last-of-type {
       font-size: 26px; }
 
-#configuration-container {
+#configuration-container > .wrapper {
+  max-width: 800px;
+  margin: 0 auto;
   padding: 30px; }
-  #configuration-container > h1 > i {
+  #configuration-container > .wrapper > h1 > i {
     color: #3BC363;
     margin-right: 10px; }
-  #configuration-container .days-list {
+  #configuration-container > .wrapper .select {
+    position: relative;
+    display: inline-block; }
+    #configuration-container > .wrapper .select:before {
+      content: "\F078";
+      font-size: 16px;
+      font-family: FontAwesome;
+      color: #3BC363;
+      position: absolute;
+      right: 1em;
+      top: 1em; }
+    #configuration-container > .wrapper .select > select {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      padding: 15px 42px 15px 15px;
+      background-color: #FFFFFF;
+      border: 1px solid #CBD0CD;
+      border-radius: 5px;
+      font-size: 16px; }
+  #configuration-container > .wrapper .days-list {
     display: inline-block;
-    margin-left: 20px; }
-    #configuration-container .days-list > li {
-      display: inline;
+    margin-left: 30px; }
+    #configuration-container > .wrapper .days-list > li {
+      display: inline-block;
       color: #CBD0CD;
       font-weight: bold;
+      font-size: 16px;
       cursor: pointer; }
-      #configuration-container .days-list > li:not(:last-child) {
-        margin-right: 5px; }
-      #configuration-container .days-list > li.selected {
+      #configuration-container > .wrapper .days-list > li:not(:last-child) {
+        margin-right: 15px; }
+      #configuration-container > .wrapper .days-list > li.selected {
         color: #3BC363; }
-  #configuration-container .channels-list > li > i {
-    margin-right: 10px;
-    color: #CBD0CD; }
-    #configuration-container .channels-list > li > i.invited {
-      color: #3BC363; }
-    #configuration-container .channels-list > li > i.uninvited {
-      color: #FFC202; }
-  #configuration-container .themes-list > li > i {
-    margin-left: 10px;
-    color: #3BC363; }
-    #configuration-container .themes-list > li > i.is-fetching {
+  #configuration-container > .wrapper .channels-list > li {
+    font-size: 16px;
+    display: table;
+    border-radius: 5px;
+    padding: 5px;
+    cursor: pointer; }
+    #configuration-container > .wrapper .channels-list > li:hover {
+      background-color: #F6F5F2; }
+    #configuration-container > .wrapper .channels-list > li > i {
+      margin-right: 10px;
       color: #CBD0CD; }
+      #configuration-container > .wrapper .channels-list > li > i.invited {
+        color: #3BC363; }
+      #configuration-container > .wrapper .channels-list > li > i.uninvited {
+        color: #FFC202; }
+  #configuration-container > .wrapper .themes-list > h1 {
+    text-align: center;
+    margin-bottom: 30px; }
+  #configuration-container > .wrapper .themes-list > ul {
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -moz-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    -moz-align-items: center;
+    align-items: center;
+    margin-bottom: 30px; }
+    #configuration-container > .wrapper .themes-list > ul > li {
+      padding: 15px;
+      border: 1px solid #3BC363;
+      border-radius: 5px;
+      cursor: pointer;
+      width: 400px;
+      margin-bottom: 15px;
+      font-size: 18px;
+      position: relative; }
+      #configuration-container > .wrapper .themes-list > ul > li > i {
+        margin-left: 10px;
+        color: #3BC363;
+        position: absolute;
+        right: 1em;
+        top: 1em; }
+        #configuration-container > .wrapper .themes-list > ul > li > i.is-fetching {
+          color: #CBD0CD; }
+  #configuration-container > .wrapper .themes-list > .actions {
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-pack: end;
+    -webkit-justify-content: flex-end;
+    -moz-justify-content: flex-end;
+    justify-content: flex-end; }
+    #configuration-container > .wrapper .themes-list > .actions > button {
+      padding: 15px 20px;
+      background-color: #3BC363;
+      border: 1px solid #1E7433;
+      border-bottom: 2px solid #1E7433;
+      border-radius: 5px;
+      font-size: 18px;
+      color: #FFFFFF;
+      cursor: pointer; }

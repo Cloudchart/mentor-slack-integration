@@ -4,6 +4,8 @@ import { connect } from 'react-redux'
 import { configActions } from '../actions'
 import { getStartTimeRange, getEndTimeRange } from '../selectors'
 
+import Header from '../components/Header'
+import Footer from '../components/Footer'
 import ChannelsList from '../components/ChannelsList'
 import TimeSetting from '../components/TimeSetting'
 
@@ -22,23 +24,27 @@ class ConfigApp extends Component {
 
     return (
       <div id="configuration-container">
-        <h1>
-          <i className="fa fa-cogs" />
-          <span>{ `Configure Virtual Mentor integration for ${team.name}` }</span>
-        </h1>
+        <Header/>
+        <div className="wrapper">
+          <h1>
+            <i className="fa fa-cogs" />
+            Configure Virtual Mentor integration for <strong>{ team.name }</strong>
+          </h1>
 
-        <TimeSetting
-          timeSetting={ timeSetting }
-          startTimeRange={ startTimeRange }
-          endTimeRange={ endTimeRange }
-          actions={ actions }
-        />
+          <TimeSetting
+            timeSetting={ timeSetting }
+            startTimeRange={ startTimeRange }
+            endTimeRange={ endTimeRange }
+            actions={ actions }
+          />
 
-        <ChannelsList
-          channels={ channels }
-          themes={ themes }
-          actions={ actions }
-        />
+          <ChannelsList
+            channels={ channels }
+            themes={ themes }
+            actions={ actions }
+          />
+
+        </div>
       </div>
     )
   }
