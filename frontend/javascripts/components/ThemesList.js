@@ -72,7 +72,7 @@ class ThemesList extends Component {
             </ul>
 
             <div className="actions">
-              <button onClick={ this.handleModalClose.bind(this) }>Close</button>
+              <button className="msi" onClick={ this.handleModalClose.bind(this) }>Done</button>
             </div>
           </div>
         </Modal>

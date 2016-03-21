@@ -10,4 +10,6 @@ const dayTimes = [
 
 const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 
-export { timezones, dayTimes, daysOfWeek }
+const botName = 'boris'
+
+export { timezones, dayTimes, daysOfWeek, botName }

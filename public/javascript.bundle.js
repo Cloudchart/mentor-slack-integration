@@ -21549,7 +21549,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.daysOfWeek = exports.dayTimes = exports.timezones = undefined;
+	exports.botName = exports.daysOfWeek = exports.dayTimes = exports.timezones = undefined;
 
 	var _timezones = __webpack_require__(189);
 
@@ -21561,9 +21561,12 @@
 
 	var daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
+	var botName = 'boris';
+
 	exports.timezones = _timezones2.default;
 	exports.dayTimes = dayTimes;
 	exports.daysOfWeek = daysOfWeek;
+	exports.botName = botName;
 
 /***/ },
 /* 189 */
@@ -22160,6 +22163,8 @@
 
 	var _ThemesList2 = _interopRequireDefault(_ThemesList);
 
+	var _data = __webpack_require__(188);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -22188,6 +22193,11 @@
 
 
 	  _createClass(ChannelsList, [{
+	    key: 'handleTestIntegrationClick',
+	    value: function handleTestIntegrationClick(event) {
+	      console.log('to be implemented');
+	    }
+	  }, {
 	    key: 'handleChannelClick',
 	    value: function handleChannelClick(channel, event) {
 	      event.preventDefault();
@@ -22204,6 +22214,15 @@
 	    //
 
 	  }, {
+	    key: 'renderNotInvited',
+	    value: function renderNotInvited(channel) {
+	      return channel.status === 'uninvited' ? _react2.default.createElement(
+	        'span',
+	        null,
+	        ' — /invite @' + _data.botName + ' to #' + channel.name
+	      ) : null;
+	    }
+	  }, {
 	    key: 'renderChannel',
 	    value: function renderChannel(channel) {
 	      var iconClassNames = (0, _classnames2.default)('fa', 'fa-circle', channel.status);
@@ -22216,7 +22235,8 @@
 	          'span',
 	          null,
 	          '#' + channel.name
-	        )
+	        ),
+	        this.renderNotInvited(channel)
 	      );
 	    }
 	  }, {
@@ -22241,7 +22261,12 @@
 	          actions: this.props.actions,
 	          shouldRenderThemesList: this.state.shouldRenderThemesList,
 	          onHide: this.handleThemesListHide.bind(this)
-	        })
+	        }),
+	        _react2.default.createElement(
+	          'button',
+	          { className: 'msi', onClick: this.handleTestIntegrationClick.bind(this) },
+	          'Test Boris integration'
+	        )
 	      );
 	    }
 	  }]);
@@ -22463,8 +22488,8 @@
 	              { className: 'actions' },
 	              _react2.default.createElement(
 	                'button',
-	                { onClick: this.handleModalClose.bind(this) },
-	                'Close'
+	                { className: 'msi', onClick: this.handleModalClose.bind(this) },
+	                'Done'
 	              )
 	            )
 	          )
@@ -23091,6 +23116,8 @@
 	  }, {
 	    key: 'handleDayClick',
 	    value: function handleDayClick(value, event) {
+	      event.preventDefault();
+
 	      var days = this.props.timeSetting.days;
 
 	      var selectedDays = undefined;
@@ -23408,7 +23435,7 @@
 	        _react2.default.createElement(
 	          'p',
 	          null,
-	          'This Slack bot is part of The Virtual Mentor app (currently in beta). Whant to have your own mentor to give you proven actionable advice on the go? ',
+	          'This Slack bot is part of The Virtual Mentor app (currently in beta). Want to have your own mentor to give you proven actionable advice on the go? ',
 	          _react2.default.createElement(
 	            'a',
 	            { href: '', onClick: this.handleSignUpLink.bind(this) },

@@ -12,6 +12,8 @@ class TimeSetting extends Component {
   }
 
   handleDayClick(value, event) {
+    event.preventDefault()
+
     const { days } = this.props.timeSetting
     let selectedDays
 

@@ -90,7 +90,7 @@ $giant-font-size: $primary-font-size * 1.5;
       }
 
       > p {
-        max-width: 1000px;
+        max-width: 800px;
         font-size: $primary-font-size;
         text-align: center;
       }
@@ -102,19 +102,23 @@ $giant-font-size: $primary-font-size * 1.5;
     @include justify-content(center);
     @include flex-wrap(wrap);
 
+    $slack-window-width: 1320px;
+    $slack-window-height: 982px;
+    $reduction-ratio: 2.3;
+
     background-color: #FFFFFF;
     padding: 30px;
 
     > .slack-window {
       margin: 0 30px 10px 0;
-      width: 660px;
-      height: 491px;
+      width: $slack-window-width / $reduction-ratio;
+      height: $slack-window-height / $reduction-ratio;
       background-image: url('/images/SlackWindow@2x.png');
       background-size: cover;
     }
 
     > .description {
-      width: 660px;
+      width: $slack-window-width / $reduction-ratio;
       padding-top: 3px;
 
       > h1 {

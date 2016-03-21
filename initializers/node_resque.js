@@ -4,7 +4,7 @@ import schedule from 'node-schedule'
 import NR from 'node-resque'
 import Redis from 'ioredis'
 import workers from '../workers'
-import { eventMarker } from '../lib'
+import { eventMarker, senderTicInMin } from '../lib'
 
 const redisClient = new Redis(process.env.REDIS_URL)
 const queue = new NR.queue({ connection: { redis: redisClient } }, workers)
@@ -41,7 +41,7 @@ function start() {
     // TODO: move next line to the test suite
     // queue.enqueue('slack-integration', 'sender')
 
-    schedule.scheduleJob('*/15 * * * *', () => {
+    schedule.scheduleJob(`*/${senderTicInMin} * * * *`, () => {
       if (scheduler.master) {
         queue.enqueue('slack-integration', 'sender')
         console.log(eventMarker, 'enqueued scheduled job')

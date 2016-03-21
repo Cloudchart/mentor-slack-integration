@@ -75,9 +75,8 @@ async function perform(channelId, done) {
         console.log(errorMarker, err, workerName, 'users.list')
         done(null)
       } else {
-        // TODO: change filter
-        // let primaryOwner = res.members.find(member => member.is_primary_owner)
-        let primaryOwner = res.members.find(member => member.name === 'peresleguine')
+        let primaryOwner = res.members.find(member => member.is_primary_owner)
+        // let primaryOwner = res.members.find(member => member.name === 'peresleguine')
 
         SlackWeb.dm.list((err, res) => {
           if (err = err || res.error) {

@@ -89,7 +89,7 @@ class LandingApp extends Component {
         <SlackButton slackButtonUrl={ this.props.slackButtonUrl } />
         <p>
           This Slack bot is part of The Virtual Mentor app (currently in beta).
-          Whant to have your own mentor to give you proven actionable advice
+          Want to have your own mentor to give you proven actionable advice
           on the go? <a href="" onClick={ this.handleSignUpLink.bind(this) }>Sign up for the private beta!</a>
         </p>
         <p>

@@ -2,6 +2,7 @@
 @import 'flexbox';
 @import 'gradients';
 @import 'appearance';
+@import 'user-select';
 
 $primary-green: #3BC363;
 $primary-gray: #CBD0CD;
@@ -39,6 +40,7 @@ p {
   line-height: 1.5em;
 }
 
+@import 'buttons';
 @import 'header';
 @import 'footer';
 @import 'modal';

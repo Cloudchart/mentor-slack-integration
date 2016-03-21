@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom'
 import classNames from 'classnames'
 
 import ThemesList from './ThemesList'
+import { botName } from '../../data'
 
 
 class ChannelsList extends Component {
@@ -17,6 +18,10 @@ class ChannelsList extends Component {
 
   // handlers
   //
+  handleTestIntegrationClick(event) {
+    console.log('to be implemented')
+  }
+
   handleChannelClick(channel, event) {
     event.preventDefault()
     this.setState({ channel: channel, shouldRenderThemesList: true })
@@ -29,6 +34,12 @@ class ChannelsList extends Component {
 
   // renderers
   //
+  renderNotInvited(channel) {
+    return channel.status === 'uninvited' ?
+      <span>{ ` — /invite @${botName} to #${channel.name}` }</span> :
+      null
+  }
+
   renderChannel(channel) {
     let iconClassNames = classNames('fa', 'fa-circle', channel.status)
 
@@ -36,6 +47,7 @@ class ChannelsList extends Component {
       <li onClick={ this.handleChannelClick.bind(this, channel) }>
         <i className={ iconClassNames } />
         <span>{ `#${channel.name}` }</span>
+        { this.renderNotInvited(channel) }
       </li>
     )
   }
@@ -44,9 +56,11 @@ class ChannelsList extends Component {
     return (
       <div>
         <h2>Channels:</h2>
+
         <ul className="channels-list">
           { this.props.channels.map(this.renderChannel.bind(this)) }
         </ul>
+
         <ThemesList
           channel={ this.state.channel }
           themes={ this.props.themes }
@@ -54,6 +68,10 @@ class ChannelsList extends Component {
           shouldRenderThemesList={ this.state.shouldRenderThemesList }
           onHide={ this.handleThemesListHide.bind(this) }
         />
+
+        <button className="msi" onClick={ this.handleTestIntegrationClick.bind(this) }>
+          Test Boris integration
+        </button>
       </div>
     )
   }
