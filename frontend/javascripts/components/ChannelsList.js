@@ -36,7 +36,7 @@ class ChannelsList extends Component {
   //
   renderNotInvited(channel) {
     return channel.status === 'uninvited' ?
-      <span>{ ` — /invite @${botName} to #${channel.name}` }</span> :
+      <span>{ ` — /invite @${botName} #${channel.name}` }</span> :
       null
   }
 

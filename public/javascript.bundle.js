@@ -22219,7 +22219,7 @@
 	      return channel.status === 'uninvited' ? _react2.default.createElement(
 	        'span',
 	        null,
-	        ' — /invite @' + _data.botName + ' to #' + channel.name
+	        ' — /invite @' + _data.botName + ' #' + channel.name
 	      ) : null;
 	    }
 	  }, {

@@ -59,11 +59,16 @@ router.get('/oauth/callback', (req, res, next) => {
           console.log(errorMarker, err)
           res.redirect('/')
         } else {
-          Team.findOrCreate({ where: { id: data.team_id }, defaults: {
+          const attrs = {
             name: data.team_name,
             accessToken: data.bot.bot_access_token,
             responseBody: JSON.stringify(data),
-          } }).spread((team, created) => {
+          }
+
+          Team.findOrCreate({
+            where: { id: data.team_id }, defaults: attrs
+          }).spread(async (team, created) => {
+            if (!created) await team.update(attrs)
             req.session.teamId = team.id
             res.redirect('/configuration')
           })
