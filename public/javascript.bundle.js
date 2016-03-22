@@ -22475,13 +22475,12 @@
 	            _react2.default.createElement(
 	              'h1',
 	              null,
-	              'Subscribe ',
+	              'Choose topics you want Virtual Mentor to post to ',
 	              _react2.default.createElement(
 	                'strong',
 	                null,
 	                '#' + this.props.channel.name
-	              ),
-	              ' to the following topics:'
+	              )
 	            ),
 	            _react2.default.createElement(
 	              'ul',
@@ -23361,15 +23360,19 @@
 	            _react2.default.createElement(
 	              'p',
 	              null,
-	              'Get actionable entrepreneurial advice from the ',
+	              'Get actionable entrepreneurial slackbot from the ',
 	              _react2.default.createElement(
 	                'strong',
 	                null,
 	                'Virtual Mentor'
 	              ),
 	              ' right in your ',
-	              _react2.default.createElement('i', { className: 'fa fa-slack' }),
-	              'Slack'
+	              _react2.default.createElement(
+	                'span',
+	                { className: 'slack' },
+	                _react2.default.createElement('i', { className: 'fa fa-slack' }),
+	                'Slack'
+	              )
 	            ),
 	            _react2.default.createElement(
 	              'div',

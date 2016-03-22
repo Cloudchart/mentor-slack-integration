@@ -65,7 +65,10 @@ class ThemesList extends Component {
       <div id="modal" className="hidden">
         <Modal ref="modal" onHide={ this.hideContainer.bind(this) }>
           <div className="modal-content themes-list">
-            <h1>Subscribe <strong>{ `#${this.props.channel.name}` }</strong> to the following topics:</h1>
+            <h1>
+              Choose topics you want Virtual Mentor to post
+              to <strong>{ `#${this.props.channel.name}` }</strong>
+            </h1>
 
             <ul>
               { this.props.themes.items.map(this.renderTheme.bind(this)) }

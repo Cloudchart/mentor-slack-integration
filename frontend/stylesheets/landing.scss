@@ -60,9 +60,16 @@ $giant-font-size: $primary-font-size * 1.5;
 
       > .boris {
         font-size: $giant-font-size;
-        max-width: 800px;
+        max-width: 1000px;
         margin: 40px 0 60px 0;
         text-align: center;
+
+        > p {
+          > span.slack {
+            white-space: nowrap;
+            display: inline-block;
+          }
+        }
 
         .main-action {
           @include flexbox;

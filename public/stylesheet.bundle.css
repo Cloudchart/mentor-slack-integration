@@ -2082,7 +2082,7 @@ body {
   font: 14px Helvetica Neue, Helvetica, Arial, sans-serif; }
 
 main {
-  min-width: 750px; }
+  min-width: 800px; }
 
 h1 {
   margin: 0;
@@ -2111,7 +2111,8 @@ button.msi {
   color: #FFFFFF;
   cursor: pointer; }
   button.msi:disabled {
-    background-color: #9AA19F; }
+    background-color: #9AA19F;
+    border-color: #9AA19F; }
 
 header.main {
   display: -webkit-flex;
@@ -2181,7 +2182,7 @@ footer {
   width: 800px !important; }
 
 #modal .modal-content {
-  padding: 30px; }
+  padding: 20px; }
 
 .slack-button {
   display: -webkit-flex;
@@ -2274,9 +2275,12 @@ footer {
     align-items: center; }
     #landing-container > section.top > .content > .boris {
       font-size: 48px;
-      max-width: 800px;
+      max-width: 1000px;
       margin: 40px 0 60px 0;
       text-align: center; }
+      #landing-container > section.top > .content > .boris > p > span.slack {
+        white-space: nowrap;
+        display: inline-block; }
       #landing-container > section.top > .content > .boris .main-action {
         display: -webkit-flex;
         display: -moz-flex;
