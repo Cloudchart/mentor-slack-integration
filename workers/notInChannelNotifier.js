@@ -61,9 +61,9 @@ function sendMessage(SlackWeb, teamOwner, channelId, done) {
 // worker – notifies team owner if bot isn't invited to the channel
 //
 async function perform(channelId, done) {
-  let channel = await Channel.find({ include: [Team], where: { id: channelId } })
+  let channel = await Channel.findOne({ include: [Team], where: { id: channelId } })
   let SlackWeb = new WebClient(channel.Team.accessToken)
-  let teamOwner = await TeamOwner.find({ where: { teamId: channel.Team.id } })
+  let teamOwner = await TeamOwner.findOne({ where: { teamId: channel.Team.id } })
 
   // get data from db if we have sent notifications before
   if (teamOwner) {
