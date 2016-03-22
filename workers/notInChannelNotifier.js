@@ -16,14 +16,11 @@ const textOptions = [
 // helpers
 //
 function sendMessage(SlackWeb, teamOwner, channelId, done) {
-  console.log('###', workerName, 'sendMessage');
-
   SlackWeb.channels.info(channelId, async (err, res) => {
     if (err = err || res.error) {
       console.log(errorMarker, err, workerName, 'channels.info')
       done(null)
     } else {
-      console.log('@@@', res);
       // do nothing if bot is already in the channel
       if (res.channel.is_member) return done(null, true)
       // do nothing if owner has already received 2 messages of this type
@@ -34,9 +31,6 @@ function sendMessage(SlackWeb, teamOwner, channelId, done) {
           type: notificationType
         }
       })
-
-      console.log('$$$', teamOwnerNotifications);
-
       if (teamOwnerNotifications.length === 2) return done(null, true)
 
       // generate text
@@ -44,8 +38,6 @@ function sendMessage(SlackWeb, teamOwner, channelId, done) {
       text.push(getRandomElementFromArray(textOptions))
       text.push(`/invite @${botName} #${res.channel.name}`)
       text = text.join(' ')
-
-      console.log('$$$', text);
 
       SlackWeb.chat.postMessage(teamOwner.imId, text, { as_user: true }, async (err, res) => {
         if (err = err || res.error) {
@@ -83,9 +75,7 @@ async function perform(channelId, done) {
         console.log(errorMarker, err, workerName, 'users.list')
         done(null)
       } else {
-        console.log('!!!', 'SlackWeb', 'users.list');
         let primaryOwner = res.members.find(member => member.is_primary_owner)
-        console.log('@@@', primaryOwner);
         // let primaryOwner = res.members.find(member => member.name === 'peresleguine')
 
         SlackWeb.dm.list((err, res) => {
@@ -93,9 +83,7 @@ async function perform(channelId, done) {
             console.log(errorMarker, err, workerName, 'im.list')
             done(null)
           } else {
-            console.log('!!!', 'SlackWeb', 'dm.list');
             let im = res.ims.find(im => im.user === primaryOwner.id)
-            console.log('@@@', im);
 
             // save team owner for further notifications
             TeamOwner.findOrCreate({
