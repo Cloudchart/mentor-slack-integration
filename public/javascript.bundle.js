@@ -22103,11 +22103,6 @@
 	  }
 
 	  _createClass(Footer, [{
-	    key: "handleLinkClick",
-	    value: function handleLinkClick(event) {
-	      event.preventDefault();
-	    }
-	  }, {
 	    key: "render",
 	    value: function render() {
 	      return _react2.default.createElement(
@@ -22121,25 +22116,7 @@
 	            null,
 	            _react2.default.createElement(
 	              "a",
-	              { href: "", onClick: this.handleLinkClick.bind(this) },
-	              "Disclaimer"
-	            )
-	          ),
-	          _react2.default.createElement(
-	            "li",
-	            null,
-	            _react2.default.createElement(
-	              "a",
-	              { href: "", onClick: this.handleLinkClick.bind(this) },
-	              "Legal"
-	            )
-	          ),
-	          _react2.default.createElement(
-	            "li",
-	            null,
-	            _react2.default.createElement(
-	              "a",
-	              { href: "", onClick: this.handleLinkClick.bind(this) },
+	              { href: "mailto:team@insights.vc" },
 	              "Contact"
 	            )
 	          )
