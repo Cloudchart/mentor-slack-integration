@@ -2148,6 +2148,11 @@ header.main {
       height: 67px;
       background-image: url("/images/BorisIcon@2x.png");
       background-size: cover; }
+  header.main > nav {
+    font-size: 22px; }
+    header.main > nav a {
+      text-decoration: none;
+      color: #FFFFFF; }
 
 footer {
   padding: 30px; }

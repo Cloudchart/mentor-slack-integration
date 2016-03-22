@@ -21987,7 +21987,7 @@
 /* 190 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -22017,28 +22017,46 @@
 	  }
 
 	  _createClass(Header, [{
-	    key: "handleLinkClick",
-	    value: function handleLinkClick(event) {
+	    key: 'handleLogout',
+	    value: function handleLogout(event) {
 	      event.preventDefault();
+	      window.location = '/logout';
 	    }
 	  }, {
-	    key: "render",
+	    key: 'render',
 	    value: function render() {
 	      return _react2.default.createElement(
-	        "header",
-	        { className: "main" },
+	        'header',
+	        { className: 'main' },
 	        _react2.default.createElement(
-	          "div",
-	          { className: "logo" },
-	          _react2.default.createElement("span", { className: "main-logo" }),
+	          'div',
+	          { className: 'logo' },
+	          _react2.default.createElement('span', { className: 'main-logo' }),
 	          _react2.default.createElement(
-	            "span",
+	            'span',
 	            null,
-	            "Virtual ",
+	            'Virtual ',
 	            _react2.default.createElement(
-	              "strong",
+	              'strong',
 	              null,
-	              "Mentor"
+	              'Mentor'
+	            )
+	          )
+	        ),
+	        _react2.default.createElement(
+	          'nav',
+	          null,
+	          _react2.default.createElement(
+	            'ul',
+	            null,
+	            _react2.default.createElement(
+	              'li',
+	              null,
+	              _react2.default.createElement(
+	                'a',
+	                { href: '', onClick: this.handleLogout.bind(this) },
+	                'Logout'
+	              )
 	            )
 	          )
 	        )

@@ -47,6 +47,11 @@ router.get('/', (req, res, next) => {
   res.render('landing', { title: 'Add Virtual Mentor to Slack', slackButtonUrl: slackButtonUrl })
 })
 
+router.get('/logout', (req, res, next) => {
+  req.session.teamId = null
+  res.redirect('/')
+})
+
 router.get('/oauth/callback', (req, res, next) => {
   if (req.query.state === process.env.SLACK_CLIENT_OAUTH_STATE) {
     SlackDefaultWeb.oauth.access(

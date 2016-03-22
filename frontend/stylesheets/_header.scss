@@ -27,4 +27,13 @@ header.main {
     }
   }
 
+  > nav {
+    font-size: $regular-font-size;
+
+    a {
+      text-decoration: none;
+      color: #FFFFFF;
+    }
+  }
+
 }

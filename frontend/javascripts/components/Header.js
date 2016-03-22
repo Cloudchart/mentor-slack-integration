@@ -3,8 +3,9 @@ import React, { Component, PropTypes } from 'react'
 
 class Header extends Component {
 
-  handleLinkClick(event) {
+  handleLogout(event) {
     event.preventDefault()
+    window.location = '/logout'
   }
 
   render() {
@@ -14,6 +15,14 @@ class Header extends Component {
           <span className="main-logo"></span>
           <span>Virtual <strong>Mentor</strong></span>
         </div>
+
+        <nav>
+          <ul>
+            <li>
+              <a href="" onClick={ this.handleLogout.bind(this) }>Logout</a>
+            </li>
+          </ul>
+        </nav>
       </header>
     )
   }
