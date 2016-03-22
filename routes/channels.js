@@ -7,6 +7,45 @@ let router = Router()
 let SlackDefaultWeb = new WebClient('')
 
 
+function getChannels(team) {
+  return new Promise(async (resolve, reject) => {
+    const teamChannels = await Channel.findAll({ where: { teamId: team.id } })
+    const selectedChannelIds = teamChannels.map(channel => channel.id)
+    const SlackWeb = new WebClient(team.accessToken)
+
+    SlackWeb.channels.list(true, (err, data) => {
+      if (err = err || data.error) {
+        reject(err)
+      } else {
+        const channels = data.channels.map(channel => {
+          let status = null
+          if (selectedChannelIds.includes(channel.id)) {
+            status = channel.is_member ? 'invited' : 'uninvited'
+          }
+
+          return {
+            id: channel.id,
+            name: channel.name,
+            status: status,
+          }
+        })
+
+        resolve(channels)
+      }
+    })
+  })
+}
+
+router.get('/', checkTeamId, async (req, res, next) => {
+  const team = await Team.findById(req.session.teamId)
+
+  getChannels(team).then(channels => {
+    res.json({ channels: channels })
+  }).catch(error => {
+    res.status(500).json({ error: error })
+  })
+})
+
 router.post('/', checkTeamId, async (req, res, next) => {
   let id = req.body.id
   let team = await Team.findById(req.session.teamId)
@@ -41,3 +80,4 @@ router.delete('/', checkTeamId, async (req, res, next) => {
 
 
 export default router
+export { getChannels }

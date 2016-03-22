@@ -2110,6 +2110,8 @@ button.msi {
   font-size: 18px;
   color: #FFFFFF;
   cursor: pointer; }
+  button.msi:disabled {
+    background-color: #9AA19F; }
 
 header.main {
   display: -webkit-flex;

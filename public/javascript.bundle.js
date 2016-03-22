@@ -20671,6 +20671,10 @@
 
 	var _updateTimeSetting2 = _interopRequireDefault(_updateTimeSetting);
 
+	var _fetchChannels = __webpack_require__(213);
+
+	var _fetchChannels2 = _interopRequireDefault(_fetchChannels);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var configActions = exports.configActions = {
@@ -20678,7 +20682,8 @@
 	  updateThemeStatus: _updateThemeStatus2.default,
 	  createChannel: _createChannel2.default,
 	  destroyChannel: _destroyChannel2.default,
-	  updateTimeSetting: _updateTimeSetting2.default
+	  updateTimeSetting: _updateTimeSetting2.default,
+	  fetchChannels: _fetchChannels2.default
 	};
 
 /***/ },
@@ -22190,7 +22195,7 @@
 	  _createClass(ChannelsList, [{
 	    key: 'handleTestIntegrationClick',
 	    value: function handleTestIntegrationClick(event) {
-	      console.log('to be implemented');
+	      this.props.actions.fetchChannels();
 	    }
 	  }, {
 	    key: 'handleChannelClick',
@@ -22208,6 +22213,15 @@
 	    // renderers
 	    //
 
+	  }, {
+	    key: 'renderTestIntegrationButton',
+	    value: function renderTestIntegrationButton() {
+	      return _react2.default.createElement(
+	        'button',
+	        { className: 'msi', disabled: this.props.channels.isFetching, onClick: this.handleTestIntegrationClick.bind(this) },
+	        'Test Boris integration'
+	      );
+	    }
 	  }, {
 	    key: 'renderNotInvited',
 	    value: function renderNotInvited(channel) {
@@ -22248,7 +22262,7 @@
 	        _react2.default.createElement(
 	          'ul',
 	          { className: 'channels-list' },
-	          this.props.channels.map(this.renderChannel.bind(this))
+	          this.props.channels.items.map(this.renderChannel.bind(this))
 	        ),
 	        _react2.default.createElement(_ThemesList2.default, {
 	          channel: this.state.channel,
@@ -22257,11 +22271,7 @@
 	          shouldRenderThemesList: this.state.shouldRenderThemesList,
 	          onHide: this.handleThemesListHide.bind(this)
 	        }),
-	        _react2.default.createElement(
-	          'button',
-	          { className: 'msi', onClick: this.handleTestIntegrationClick.bind(this) },
-	          'Test Boris integration'
-	        )
+	        this.renderTestIntegrationButton()
 	      );
 	    }
 	  }]);
@@ -22270,7 +22280,7 @@
 	}(_react.Component);
 
 	ChannelsList.propTypes = {
-	  channels: _react.PropTypes.array.isRequired,
+	  channels: _react.PropTypes.object.isRequired,
 	  themes: _react.PropTypes.object.isRequired,
 	  actions: _react.PropTypes.object.isRequired
 	};
@@ -23640,25 +23650,50 @@
 	  value: true
 	});
 	exports.default = channels;
+	var initialState = {
+	  isFetching: false,
+	  items: []
+	};
+
 	function channels() {
-	  var state = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
+	  var state = arguments.length <= 0 || arguments[0] === undefined ? initialState : arguments[0];
 	  var action = arguments[1];
 
 	  switch (action.type) {
 	    case 'CREATE_CHANNEL_REQUEST':
 	    case 'DESTROY_CHANNEL_REQUEST':
-	      return state.map(function (channel) {
-	        return channel.id === action.id ? Object.assign({}, channel, { isFetching: true }) : channel;
+	      return Object.assign({}, state, {
+	        items: state.items.map(function (channel) {
+	          return channel.id === action.id ? Object.assign({}, channel, { isFetching: true }) : channel;
+	        })
 	      });
 	    case 'CREATE_CHANNEL_ERROR':
 	    case 'DESTROY_CHANNEL_ERROR':
-	      return state.map(function (channel) {
-	        return channel.id === action.id ? Object.assign({}, channel, { isFetching: false }) : channel;
+	      return Object.assign({}, state, {
+	        items: state.items.map(function (channel) {
+	          return channel.id === action.id ? Object.assign({}, channel, { isFetching: false }) : channel;
+	        })
 	      });
 	    case 'CREATE_CHANNEL_RECEIVE':
 	    case 'DESTROY_CHANNEL_RECEIVE':
-	      return state.map(function (channel) {
-	        return channel.id === action.id ? Object.assign({}, channel, { isFetching: false, status: action.status }) : channel;
+	      return Object.assign({}, state, {
+	        items: state.items.map(function (channel) {
+	          return channel.id === action.id ? Object.assign({}, channel, { isFetching: false, status: action.status }) : channel;
+	        })
+	      });
+	    case 'CHANNELS_REQUEST':
+	      return Object.assign({}, state, {
+	        isFetching: true
+	      });
+	    case 'CHANNELS_RECEIVE':
+	      return Object.assign({}, state, {
+	        isFetching: false,
+	        items: action.channels,
+	        lastUpdated: action.receivedAt
+	      });
+	    case 'CHANNELS_ERROR':
+	      return Object.assign({}, state, {
+	        isFetching: false
 	      });
 	    default:
 	      return state;
@@ -23758,6 +23793,61 @@
 	      return state;
 	  }
 	}
+
+/***/ },
+/* 213 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _isomorphicFetch = __webpack_require__(180);
+
+	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function requestChannels() {
+	  return { type: 'CHANNELS_REQUEST' };
+	}
+
+	function receiveChannels(json) {
+	  return {
+	    type: 'CHANNELS_RECEIVE',
+	    channels: json.channels,
+	    receivedAt: Date.now()
+	  };
+	}
+
+	function catchChannelsError(error) {
+	  return {
+	    type: 'CHANNELS_ERROR',
+	    error: error,
+	    receivedAt: Date.now()
+	  };
+	}
+
+	function fetchChannels() {
+	  return function (dispatch) {
+	    dispatch(requestChannels());
+
+	    return (0, _isomorphicFetch2.default)('/channels', {
+	      credentials: 'same-origin',
+	      headers: { 'Accept': 'application/json' }
+	    }).then(function (response) {
+	      return response.json();
+	    }).then(function (json) {
+	      return dispatch(receiveChannels(json));
+	    }).catch(function (error) {
+	      return dispatch(catchChannelsError(error));
+	    });
+	  };
+	}
+
+	exports.default = fetchChannels;
 
 /***/ }
 /******/ ]);

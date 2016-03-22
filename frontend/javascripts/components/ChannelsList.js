@@ -19,7 +19,7 @@ class ChannelsList extends Component {
   // handlers
   //
   handleTestIntegrationClick(event) {
-    console.log('to be implemented')
+    this.props.actions.fetchChannels()
   }
 
   handleChannelClick(channel, event) {
@@ -34,6 +34,14 @@ class ChannelsList extends Component {
 
   // renderers
   //
+  renderTestIntegrationButton() {
+    return(
+      <button className='msi' disabled={ this.props.channels.isFetching } onClick={ this.handleTestIntegrationClick.bind(this) }>
+        Test Boris integration
+      </button>
+    )
+  }
+
   renderNotInvited(channel) {
     return channel.status === 'uninvited' ?
       <span>{ ` — /invite @${botName} #${channel.name}` }</span> :
@@ -58,7 +66,7 @@ class ChannelsList extends Component {
         <h2>Channels:</h2>
 
         <ul className="channels-list">
-          { this.props.channels.map(this.renderChannel.bind(this)) }
+          { this.props.channels.items.map(this.renderChannel.bind(this)) }
         </ul>
 
         <ThemesList
@@ -69,9 +77,7 @@ class ChannelsList extends Component {
           onHide={ this.handleThemesListHide.bind(this) }
         />
 
-        <button className="msi" onClick={ this.handleTestIntegrationClick.bind(this) }>
-          Test Boris integration
-        </button>
+        { this.renderTestIntegrationButton() }
       </div>
     )
   }
@@ -79,7 +85,7 @@ class ChannelsList extends Component {
 }
 
 ChannelsList.propTypes = {
-  channels: PropTypes.array.isRequired,
+  channels: PropTypes.object.isRequired,
   themes: PropTypes.object.isRequired,
   actions: PropTypes.object.isRequired,
 }

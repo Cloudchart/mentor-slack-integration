@@ -6,6 +6,7 @@ import { WebClient } from 'slack-client'
 
 import { errorMarker } from '../lib'
 import { checkTeamId } from './checkers'
+import { getChannels } from './channels'
 import { Team, Channel, TimeSetting } from '../models'
 
 let router = Router()
@@ -89,41 +90,22 @@ router.get('/oauth/callback', (req, res, next) => {
 //
 router.get('/configuration', checkTeamId, initTimeSetting, async (req, res, next) => {
   let team = await Team.findById(req.session.teamId)
-  let SlackWeb = new WebClient(team.accessToken)
-
   let timeSetting = await TimeSetting.find({ where: { teamId: team.id } })
-  let teamChannels = await Channel.findAll({ where: { teamId: team.id } })
-  let selectedChannelIds = teamChannels.map(channel => channel.id)
 
-  SlackWeb.channels.list(true, (err, data) => {
-    if (err = err || data.error) {
-      res.status(500).json({ error: err })
-    } else {
-      let channels = data.channels.map(channel => {
-        let status = null
-        if (selectedChannelIds.includes(channel.id)) {
-          status = channel.is_member ? 'invited' : 'uninvited'
-        }
-
-        return {
-          id: channel.id,
-          name: channel.name,
-          status: status,
-        }
-      })
-
-      res.render('configuration', {
-        title: 'Configure Virtual Mentor integration',
-        team: { name: team.name },
-        channels: channels,
-        timeSetting: {
-          tz: timeSetting.tz,
-          startTime: timeSetting.startTime,
-          endTime: timeSetting.endTime,
-          days: timeSetting.days,
-        }
-      })
-    }
+  getChannels(team).then(channels => {
+    res.render('configuration', {
+      title: 'Configure Virtual Mentor integration',
+      team: { name: team.name },
+      channels: channels,
+      timeSetting: {
+        tz: timeSetting.tz,
+        startTime: timeSetting.startTime,
+        endTime: timeSetting.endTime,
+        days: timeSetting.days,
+      }
+    })
+  }).catch(error => {
+    res.status(500).json({ error: error })
   })
 })
 
