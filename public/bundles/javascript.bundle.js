@@ -23415,7 +23415,7 @@
 	            _react2.default.createElement(
 	              'p',
 	              null,
-	              'Get actionable entrepreneurial slackbot from the ',
+	              'Get actionable entrepreneurial advices from the ',
 	              _react2.default.createElement(
 	                'strong',
 	                null,

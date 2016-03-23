@@ -1,4 +1,5 @@
 import URL from 'url'
+import parameterize from 'parameterize'
 // import moment from 'moment-timezone'
 
 import { Router } from 'express'
@@ -76,7 +77,8 @@ router.get('/oauth/callback', (req, res, next) => {
           }).spread(async (team, created) => {
             if (!created) await team.update(attrs)
             req.session.teamId = team.id
-            res.redirect('/configuration')
+            const parameterizedTeamName = parameterize(team.name)
+            res.redirect(`/${parameterizedTeamName}/configuration`)
           })
         }
       }
@@ -88,7 +90,7 @@ router.get('/oauth/callback', (req, res, next) => {
 
 // config
 //
-router.get('/configuration', checkTeamId, initTimeSetting, async (req, res, next) => {
+router.get('/:teamName/configuration', checkTeamId, initTimeSetting, async (req, res, next) => {
   let team = await Team.findById(req.session.teamId)
   let timeSetting = await TimeSetting.find({ where: { teamId: team.id } })
 

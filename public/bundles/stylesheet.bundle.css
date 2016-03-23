@@ -2397,7 +2397,7 @@ footer {
       color: #3BC363;
       position: absolute;
       right: 1em;
-      top: 1em;
+      top: 30.5%;
       cursor: pointer;
       pointer-events: none; }
     #configuration-container > .content .select > select {
