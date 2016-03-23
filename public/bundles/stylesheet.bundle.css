@@ -2130,9 +2130,9 @@ header.main {
   background-image: linear-gradient(to right, #2BAA4C 0%, #3DA44C 100%);
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF2BAA4C', endColorstr='#FF3DA44C', GradientType=1);
-  font-size: 32px;
+  font-size: 24px;
   color: #FFFFFF;
-  padding: 30px; }
+  padding: 20px; }
   header.main > .logo {
     display: -webkit-flex;
     display: -moz-flex;

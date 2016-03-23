@@ -112,17 +112,16 @@ async function sendMessage(channelId, userThemeInsight, done) {
   let insightOrigin = await InsightOrigin.findById(userThemeInsight.insight_id)
 
   // generate text
-  let text = []
-  text.push(insight.content)
-  text.push(insightOrigin.author)
-  if (insightOrigin.title) text.push(`<${insightOrigin.url}|${insightOrigin.title}>`)
-  text.push(`<${insightOrigin.url}|${URL.parse(insightOrigin.url).hostname}>`)
-  text = text.join(' — ')
+  let text = insight.content
+  let attachments = [{
+    text: `${insightOrigin.author}\n<${insightOrigin.url}|${insightOrigin.title}>`
+  }]
 
   let options = {
     as_user: true,
     unfurl_links: false,
     unfurl_media: false,
+    attachments: JSON.stringify(attachments),
   }
 
   // post message
