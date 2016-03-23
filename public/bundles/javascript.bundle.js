@@ -72,7 +72,7 @@
 	if (reactType === 'plain') {
 	  _reactDom2.default.render(_react2.default.createElement(Component, JSON.parse(node.dataset.reactProps)), node);
 	} else {
-	  var reducers = __webpack_require__(207)("./" + reactClass).default;
+	  var reducers = __webpack_require__(208)("./" + reactClass).default;
 	  var store = (0, _redux.createStore)(reducers, window.__INITIAL_STATE__, (0, _redux.applyMiddleware)(_reduxThunk2.default));
 
 	  _reactDom2.default.render(_react2.default.createElement(
@@ -20486,8 +20486,8 @@
 	var map = {
 		"./ConfigApp": 177,
 		"./ConfigApp.js": 177,
-		"./LandingApp": 205,
-		"./LandingApp.js": 205
+		"./LandingApp": 206,
+		"./LandingApp.js": 206
 	};
 	function webpackContext(req) {
 		return __webpack_require__(webpackContextResolve(req));
@@ -20525,21 +20525,21 @@
 
 	var _actions = __webpack_require__(178);
 
-	var _selectors = __webpack_require__(186);
+	var _selectors = __webpack_require__(187);
 
-	var _Header = __webpack_require__(190);
+	var _Header = __webpack_require__(191);
 
 	var _Header2 = _interopRequireDefault(_Header);
 
-	var _Footer = __webpack_require__(191);
+	var _Footer = __webpack_require__(192);
 
 	var _Footer2 = _interopRequireDefault(_Footer);
 
-	var _ChannelsList = __webpack_require__(192);
+	var _ChannelsList = __webpack_require__(193);
 
 	var _ChannelsList2 = _interopRequireDefault(_ChannelsList);
 
-	var _TimeSetting = __webpack_require__(204);
+	var _TimeSetting = __webpack_require__(205);
 
 	var _TimeSetting2 = _interopRequireDefault(_TimeSetting);
 
@@ -20671,7 +20671,7 @@
 
 	var _updateTimeSetting2 = _interopRequireDefault(_updateTimeSetting);
 
-	var _fetchChannels = __webpack_require__(213);
+	var _fetchChannels = __webpack_require__(186);
 
 	var _fetchChannels2 = _interopRequireDefault(_fetchChannels);
 
@@ -21401,11 +21401,66 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+
+	var _isomorphicFetch = __webpack_require__(180);
+
+	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function requestChannels() {
+	  return { type: 'CHANNELS_REQUEST' };
+	}
+
+	function receiveChannels(json) {
+	  return {
+	    type: 'CHANNELS_RECEIVE',
+	    channels: json.channels,
+	    receivedAt: Date.now()
+	  };
+	}
+
+	function catchChannelsError(error) {
+	  return {
+	    type: 'CHANNELS_ERROR',
+	    error: error,
+	    receivedAt: Date.now()
+	  };
+	}
+
+	function fetchChannels() {
+	  return function (dispatch) {
+	    dispatch(requestChannels());
+
+	    return (0, _isomorphicFetch2.default)('/channels', {
+	      credentials: 'same-origin',
+	      headers: { 'Accept': 'application/json' }
+	    }).then(function (response) {
+	      return response.json();
+	    }).then(function (json) {
+	      return dispatch(receiveChannels(json));
+	    }).catch(function (error) {
+	      return dispatch(catchChannelsError(error));
+	    });
+	  };
+	}
+
+	exports.default = fetchChannels;
+
+/***/ },
+/* 187 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
 	exports.getEndTimeRange = exports.getStartTimeRange = undefined;
 
-	var _reselect = __webpack_require__(187);
+	var _reselect = __webpack_require__(188);
 
-	var _data = __webpack_require__(188);
+	var _data = __webpack_require__(189);
 
 	var getEndTime = function getEndTime(state) {
 	  return state.timeSetting.endTime;
@@ -21427,7 +21482,7 @@
 	});
 
 /***/ },
-/* 187 */
+/* 188 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -21546,7 +21601,7 @@
 	}
 
 /***/ },
-/* 188 */
+/* 189 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21556,7 +21611,7 @@
 	});
 	exports.botName = exports.daysOfWeek = exports.dayTimes = exports.timezones = undefined;
 
-	var _timezones = __webpack_require__(189);
+	var _timezones = __webpack_require__(190);
 
 	var _timezones2 = _interopRequireDefault(_timezones);
 
@@ -21574,7 +21629,7 @@
 	exports.botName = botName;
 
 /***/ },
-/* 189 */
+/* 190 */
 /***/ function(module, exports) {
 
 	module.exports = [
@@ -21989,7 +22044,7 @@
 	];
 
 /***/ },
-/* 190 */
+/* 191 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -22075,7 +22130,7 @@
 	exports.default = Header;
 
 /***/ },
-/* 191 */
+/* 192 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -22136,7 +22191,7 @@
 	exports.default = Footer;
 
 /***/ },
-/* 192 */
+/* 193 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -22155,15 +22210,15 @@
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _classnames = __webpack_require__(193);
+	var _classnames = __webpack_require__(194);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
-	var _ThemesList = __webpack_require__(194);
+	var _ThemesList = __webpack_require__(195);
 
 	var _ThemesList2 = _interopRequireDefault(_ThemesList);
 
-	var _data = __webpack_require__(188);
+	var _data = __webpack_require__(189);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -22288,7 +22343,7 @@
 	exports.default = ChannelsList;
 
 /***/ },
-/* 193 */
+/* 194 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -22342,7 +22397,7 @@
 
 
 /***/ },
-/* 194 */
+/* 195 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -22357,11 +22412,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _FadeModal = __webpack_require__(195);
+	var _FadeModal = __webpack_require__(196);
 
 	var _FadeModal2 = _interopRequireDefault(_FadeModal);
 
-	var _classnames = __webpack_require__(193);
+	var _classnames = __webpack_require__(194);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
@@ -22514,12 +22569,12 @@
 	exports.default = ThemesList;
 
 /***/ },
-/* 195 */
+/* 196 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var modalFactory = __webpack_require__(196);
-	var insertKeyframesRule = __webpack_require__(201);
-	var appendVendorPrefix = __webpack_require__(198);
+	var modalFactory = __webpack_require__(197);
+	var insertKeyframesRule = __webpack_require__(202);
+	var appendVendorPrefix = __webpack_require__(199);
 
 	var animation = {
 	    show: {
@@ -22617,12 +22672,12 @@
 
 
 /***/ },
-/* 196 */
+/* 197 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var transitionEvents = __webpack_require__(197);
-	var appendVendorPrefix = __webpack_require__(198);
+	var transitionEvents = __webpack_require__(198);
+	var appendVendorPrefix = __webpack_require__(199);
 
 	module.exports = function(animation){
 
@@ -22801,7 +22856,7 @@
 
 
 /***/ },
-/* 197 */
+/* 198 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -22902,12 +22957,12 @@
 
 
 /***/ },
-/* 198 */
+/* 199 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var getVendorPropertyName = __webpack_require__(199);
+	var getVendorPropertyName = __webpack_require__(200);
 
 	module.exports = function(target, sources) {
 	  var to = Object(target);
@@ -22938,12 +22993,12 @@
 
 
 /***/ },
-/* 199 */
+/* 200 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var builtinStyle = __webpack_require__(200);
+	var builtinStyle = __webpack_require__(201);
 	var prefixes = ['Moz', 'Webkit', 'O', 'ms'];
 	var domVendorPrefix;
 
@@ -22981,7 +23036,7 @@
 
 
 /***/ },
-/* 200 */
+/* 201 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -22990,13 +23045,13 @@
 
 
 /***/ },
-/* 201 */
+/* 202 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var insertRule = __webpack_require__(202);
-	var vendorPrefix = __webpack_require__(203)();
+	var insertRule = __webpack_require__(203);
+	var vendorPrefix = __webpack_require__(204)();
 	var index = 0;
 
 	module.exports = function(keyframes) {
@@ -23026,7 +23081,7 @@
 
 
 /***/ },
-/* 202 */
+/* 203 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -23051,7 +23106,7 @@
 
 
 /***/ },
-/* 203 */
+/* 204 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -23070,7 +23125,7 @@
 
 
 /***/ },
-/* 204 */
+/* 205 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23085,11 +23140,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _classnames = __webpack_require__(193);
+	var _classnames = __webpack_require__(194);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
-	var _data = __webpack_require__(188);
+	var _data = __webpack_require__(189);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -23261,7 +23316,7 @@
 	exports.default = TimeSetting;
 
 /***/ },
-/* 205 */
+/* 206 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23276,11 +23331,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _SlackButton = __webpack_require__(206);
+	var _SlackButton = __webpack_require__(207);
 
 	var _SlackButton2 = _interopRequireDefault(_SlackButton);
 
-	var _Footer = __webpack_require__(191);
+	var _Footer = __webpack_require__(192);
 
 	var _Footer2 = _interopRequireDefault(_Footer);
 
@@ -23488,7 +23543,7 @@
 	exports.default = LandingApp;
 
 /***/ },
-/* 206 */
+/* 207 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -23557,20 +23612,20 @@
 	exports.default = SlackButton;
 
 /***/ },
-/* 207 */
+/* 208 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var map = {
-		"./ConfigApp": 208,
-		"./ConfigApp.js": 208,
-		"./channels": 210,
-		"./channels.js": 210,
-		"./team": 209,
-		"./team.js": 209,
-		"./themes": 211,
-		"./themes.js": 211,
-		"./timeSetting": 212,
-		"./timeSetting.js": 212
+		"./ConfigApp": 209,
+		"./ConfigApp.js": 209,
+		"./channels": 211,
+		"./channels.js": 211,
+		"./team": 210,
+		"./team.js": 210,
+		"./themes": 212,
+		"./themes.js": 212,
+		"./timeSetting": 213,
+		"./timeSetting.js": 213
 	};
 	function webpackContext(req) {
 		return __webpack_require__(webpackContextResolve(req));
@@ -23583,11 +23638,11 @@
 	};
 	webpackContext.resolve = webpackContextResolve;
 	module.exports = webpackContext;
-	webpackContext.id = 207;
+	webpackContext.id = 208;
 
 
 /***/ },
-/* 208 */
+/* 209 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23598,19 +23653,19 @@
 
 	var _redux = __webpack_require__(154);
 
-	var _team = __webpack_require__(209);
+	var _team = __webpack_require__(210);
 
 	var _team2 = _interopRequireDefault(_team);
 
-	var _channels = __webpack_require__(210);
+	var _channels = __webpack_require__(211);
 
 	var _channels2 = _interopRequireDefault(_channels);
 
-	var _themes = __webpack_require__(211);
+	var _themes = __webpack_require__(212);
 
 	var _themes2 = _interopRequireDefault(_themes);
 
-	var _timeSetting = __webpack_require__(212);
+	var _timeSetting = __webpack_require__(213);
 
 	var _timeSetting2 = _interopRequireDefault(_timeSetting);
 
@@ -23624,7 +23679,7 @@
 	});
 
 /***/ },
-/* 209 */
+/* 210 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -23644,7 +23699,7 @@
 	}
 
 /***/ },
-/* 210 */
+/* 211 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -23704,7 +23759,7 @@
 	}
 
 /***/ },
-/* 211 */
+/* 212 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -23761,7 +23816,7 @@
 	}
 
 /***/ },
-/* 212 */
+/* 213 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -23796,61 +23851,6 @@
 	      return state;
 	  }
 	}
-
-/***/ },
-/* 213 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _isomorphicFetch = __webpack_require__(180);
-
-	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function requestChannels() {
-	  return { type: 'CHANNELS_REQUEST' };
-	}
-
-	function receiveChannels(json) {
-	  return {
-	    type: 'CHANNELS_RECEIVE',
-	    channels: json.channels,
-	    receivedAt: Date.now()
-	  };
-	}
-
-	function catchChannelsError(error) {
-	  return {
-	    type: 'CHANNELS_ERROR',
-	    error: error,
-	    receivedAt: Date.now()
-	  };
-	}
-
-	function fetchChannels() {
-	  return function (dispatch) {
-	    dispatch(requestChannels());
-
-	    return (0, _isomorphicFetch2.default)('/channels', {
-	      credentials: 'same-origin',
-	      headers: { 'Accept': 'application/json' }
-	    }).then(function (response) {
-	      return response.json();
-	    }).then(function (json) {
-	      return dispatch(receiveChannels(json));
-	    }).catch(function (error) {
-	      return dispatch(catchChannelsError(error));
-	    });
-	  };
-	}
-
-	exports.default = fetchChannels;
 
 /***/ }
 /******/ ]);
