@@ -1,4 +1,3 @@
-import URL from 'url'
 import moment from 'moment-timezone'
 import { WebClient } from 'slack-client'
 import { queue } from '../initializers/node_resque'

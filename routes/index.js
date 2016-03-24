@@ -1,4 +1,6 @@
 import URL from 'url'
+import Redis from 'ioredis'
+import NR from 'node-resque'
 import parameterize from 'parameterize'
 // import moment from 'moment-timezone'
 
@@ -10,12 +12,20 @@ import { checkTeamId } from './checkers'
 import { getChannels } from './channels'
 import { Team, Channel, TimeSetting } from '../models'
 
-let router = Router()
-let SlackDefaultWeb = new WebClient('')
+const router = Router()
+const SlackWebClient = new WebClient('')
+const RedisClient = new Redis(process.env.REDIS_URL)
+const Queue = new NR.queue({ connection: { redis: RedisClient } })
 
 
 // helpers
 //
+function enqueueTeamOwnerNotification(teamId) {
+  Queue.connect(() => {
+    Queue.enqueue('slack-integration', 'welcomeNotifier', teamId)
+  })
+}
+
 async function initTimeSetting(req, res, next) {
   // TODO: get tz from moment-timezone
   // TODO: update timezones.json to tz database 2016b version
@@ -56,7 +66,7 @@ router.get('/logout', (req, res, next) => {
 
 router.get('/oauth/callback', (req, res, next) => {
   if (req.query.state === process.env.SLACK_CLIENT_OAUTH_STATE) {
-    SlackDefaultWeb.oauth.access(
+    SlackWebClient.oauth.access(
       process.env.SLACK_CLIENT_ID,
       process.env.SLACK_CLIENT_SECRET,
       req.query.code,
@@ -78,6 +88,7 @@ router.get('/oauth/callback', (req, res, next) => {
             if (!created) await team.update(attrs)
             req.session.teamId = team.id
             const parameterizedTeamName = parameterize(team.name)
+            enqueueTeamOwnerNotification(team.id)
             res.redirect(`/${parameterizedTeamName}/configuration`)
           })
         }

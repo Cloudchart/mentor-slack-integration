@@ -23,7 +23,7 @@ function stop() {
   scheduler.end(() => {
     worker.end(() => {
       console.log(eventMarker, 'stopped all workers')
-      return process.exit(0)
+      process.exit(0)
     })
   })
 }

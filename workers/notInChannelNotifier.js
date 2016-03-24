@@ -1,5 +1,6 @@
 import { WebClient } from 'slack-client'
 import { errorMarker, getRandomElementFromArray, botName } from '../lib'
+import { getTeamOwner } from './helpers'
 import { Channel, Team, TeamOwner, TeamOwnerNotification } from '../models'
 
 const workerName = 'notInChannelNotifier'
@@ -23,15 +24,6 @@ function sendMessage(SlackWeb, teamOwner, channelId, done) {
     } else {
       // do nothing if bot is already in the channel
       if (res.channel.is_member) return done(null, true)
-      // do nothing if owner has already received 2 messages of this type
-      let teamOwnerNotifications = await TeamOwnerNotification.findAll({
-        where: {
-          teamOwnerId: teamOwner.id,
-          channelId: channelId,
-          type: notificationType
-        }
-      })
-      if (teamOwnerNotifications.length === 2) return done(null, true)
 
       // generate text
       let text = []
@@ -61,44 +53,20 @@ function sendMessage(SlackWeb, teamOwner, channelId, done) {
 // worker – notifies team owner if bot isn't invited to the channel
 //
 async function perform(channelId, done) {
-  let channel = await Channel.findOne({ include: [Team], where: { id: channelId } })
-  let SlackWeb = new WebClient(channel.Team.accessToken)
-  let teamOwner = await TeamOwner.findOne({ where: { teamId: channel.Team.id } })
-
-  // get data from db if we have sent notifications before
-  if (teamOwner) {
-    sendMessage(SlackWeb, teamOwner, channel.id, done)
-  // otherwise get data from slack api
-  } else {
-    SlackWeb.users.list((err, res) => {
-      if (err = err || res.error) {
-        console.log(errorMarker, err, workerName, 'users.list')
-        done(null)
-      } else {
-        let primaryOwner = res.members.find(member => member.is_primary_owner)
-        // let primaryOwner = res.members.find(member => member.name === 'peresleguine')
-
-        SlackWeb.dm.list((err, res) => {
-          if (err = err || res.error) {
-            console.log(errorMarker, err, workerName, 'im.list')
-            done(null)
-          } else {
-            let im = res.ims.find(im => im.user === primaryOwner.id)
-
-            // save team owner for further notifications
-            TeamOwner.findOrCreate({
-              where: { id: im.user },
-              defaults: { teamId: channel.Team.id, imId: im.id, responseBody: JSON.stringify(im) }
-            }).spread((teamOwner, created) => {
-              sendMessage(SlackWeb, teamOwner, channel.id, done)
-            })
-
-          }
-
-        })
-      }
-    })
-  }
+  const channel = await Channel.findOne({ include: [Team], where: { id: channelId } })
+  const SlackWeb = new WebClient(channel.Team.accessToken)
+  const teamOwner = await getTeamOwner(channel.Team.id, SlackWeb)
+  const teamOwnerNotifications = await TeamOwnerNotification.findAll({
+    where: {
+      teamOwnerId: teamOwner.id,
+      channelId: channelId,
+      type: notificationType
+    }
+  })
+  // do nothing if owner has already received 2 messages of this type
+  if (teamOwnerNotifications.length === 2) return done(null, true)
+  // otherwise try to send message
+  sendMessage(SlackWeb, teamOwner, channel.id, done)
 }
 
 
