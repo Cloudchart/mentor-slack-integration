@@ -9,7 +9,10 @@ class ThemesList extends Component {
   //
   componentWillReceiveProps(nextProps) {
     if (nextProps.shouldRenderThemesList && nextProps.themes.items.length > 0) {
+      // TODO: fork and add to source
       document.getElementById('modal').className = ''
+      document.body.classList.add('opened-modal')
+
       this.refs.modal.show()
     }
   }
@@ -17,7 +20,10 @@ class ThemesList extends Component {
   // helpers
   //
   hideContainer() {
+    // TODO: fork and add to source
     document.getElementById('modal').className = 'hidden'
+    document.body.classList.remove('opened-modal')
+
     this.props.onHide()
   }
 

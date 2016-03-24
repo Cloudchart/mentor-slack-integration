@@ -2080,6 +2080,8 @@ body {
   display: block;
   margin: 0;
   font: 14px Helvetica Neue, Helvetica, Arial, sans-serif; }
+  body.opened-modal {
+    overflow: hidden; }
 
 main {
   min-width: 800px; }
@@ -2179,7 +2181,11 @@ footer {
   display: none; }
 
 #modal > span > div:first-of-type {
-  width: 800px !important; }
+  width: 100% !important;
+  max-width: 800px;
+  min-width: 500px;
+  max-height: 100%;
+  overflow-y: scroll; }
 
 #modal .modal-content {
   padding: 20px; }
@@ -2447,7 +2453,7 @@ footer {
           color: #FFC202; }
   #configuration-container > .content .themes-list > h1 {
     text-align: center;
-    margin-bottom: 30px; }
+    margin-bottom: 20px; }
   #configuration-container > .content .themes-list > ul {
     display: -webkit-flex;
     display: -moz-flex;
@@ -2461,15 +2467,20 @@ footer {
     -webkit-align-items: center;
     -moz-align-items: center;
     align-items: center;
-    margin-bottom: 30px; }
+    margin-bottom: 20px; }
     #configuration-container > .content .themes-list > ul > li {
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
       padding: 15px;
       border: 1px solid #3BC363;
       border-radius: 5px;
       cursor: pointer;
       width: 400px;
       margin-bottom: 15px;
-      font-size: 18px;
+      font-size: 16px;
       position: relative; }
       #configuration-container > .content .themes-list > ul > li > i {
         margin-left: 10px;

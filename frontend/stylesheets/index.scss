@@ -13,6 +13,10 @@ body {
   display: block;
   margin: 0;
   font: 14px Helvetica Neue, Helvetica, Arial, sans-serif;
+
+  &.opened-modal {
+    overflow: hidden;
+  }
 }
 
 main {

@@ -95,7 +95,7 @@
     .themes-list {
       > h1 {
         text-align: center;
-        margin-bottom: 30px;
+        margin-bottom: 20px;
       }
 
       > ul {
@@ -103,16 +103,18 @@
         @include flex-direction(column);
         @include align-items(center);
 
-        margin-bottom: 30px;
+        margin-bottom: 20px;
 
         > li {
+          @include x-user-select;
+
           padding: 15px;
           border: 1px solid $primary-green;
           border-radius: 5px;
           cursor: pointer;
           width: 400px;
           margin-bottom: 15px;
-          font-size: 18px;
+          font-size: 16px;
           position: relative;
 
           > i {
