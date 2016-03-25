@@ -11,7 +11,7 @@ class SlackButton extends Component {
     return (
       <div className="slack-button" onClick={ this.handleSlackButtonClick.bind(this) }>
         <i/>
-        <span>Add <strong>Mentor</strong> to Slack</span>
+        <span>Add <strong>MentorBot</strong> to Slack</span>
       </div>
     )
   }

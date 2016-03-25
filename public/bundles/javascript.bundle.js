@@ -23644,8 +23644,8 @@
 	          'This Slack bot is part of The Virtual Mentor app (currently in beta). Want to have your own mentor to give you proven actionable advice on the go? ',
 	          _react2.default.createElement(
 	            'a',
-	            { href: '', onClick: this.handleSignUpLink.bind(this) },
-	            'Sign up for the private beta!'
+	            { href: 'mailto:team@insights.vc' },
+	            'Sign up for the private beta testing!'
 	          )
 	        ),
 	        _react2.default.createElement(
@@ -23737,7 +23737,7 @@
 	          _react2.default.createElement(
 	            "strong",
 	            null,
-	            "Mentor"
+	            "MentorBot"
 	          ),
 	          " to Slack"
 	        )

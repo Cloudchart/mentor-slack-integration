@@ -90,7 +90,7 @@ class LandingApp extends Component {
         <p>
           This Slack bot is part of The Virtual Mentor app (currently in beta).
           Want to have your own mentor to give you proven actionable advice
-          on the go? <a href="" onClick={ this.handleSignUpLink.bind(this) }>Sign up for the private beta!</a>
+          on the go? <a href="mailto:team@insights.vc">Sign up for the private beta testing!</a>
         </p>
         <p>
           Follow <i className="fa fa-twitter"/> <a href="https://twitter.com/thementorapp" target="_blank">@thementorapp</a>
