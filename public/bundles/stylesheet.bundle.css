@@ -2080,7 +2080,7 @@ body {
   display: block;
   margin: 0;
   font: 14px Helvetica Neue, Helvetica, Arial, sans-serif; }
-  body.opened-modal {
+  body.modal-opened {
     overflow: hidden; }
 
 main {
@@ -2438,9 +2438,10 @@ footer {
     margin-bottom: 20px; }
     #configuration-container > .content .channels-list > li {
       font-size: 16px;
+      font-weight: 500;
       display: table;
       border-radius: 5px;
-      padding: 5px;
+      padding: 5px 10px;
       cursor: pointer; }
       #configuration-container > .content .channels-list > li:hover {
         background-color: #F6F5F2; }
@@ -2451,6 +2452,8 @@ footer {
           color: #3BC363; }
         #configuration-container > .content .channels-list > li > i.uninvited {
           color: #FFC202; }
+      #configuration-container > .content .channels-list > li > span.description {
+        font-weight: normal; }
   #configuration-container > .content .themes-list > h1 {
     text-align: center;
     margin-bottom: 20px; }

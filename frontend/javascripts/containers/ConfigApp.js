@@ -55,7 +55,7 @@ class ConfigApp extends Component {
 ConfigApp.propTypes = {
   team: PropTypes.object.isRequired,
   channels: PropTypes.array.isRequired,
-  themes: PropTypes.object.isRequired,
+  themes: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired,
   timeSetting: PropTypes.object.isRequired,
   startTimeRange: PropTypes.array.isRequired,

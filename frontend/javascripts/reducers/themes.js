@@ -1,48 +1,45 @@
-const initialState = {
-  isFetching: false,
-  items: [],
-}
-
-export default function themes(state = initialState, action) {
+export default function themes(state = [], action) {
   switch (action.type) {
     case 'UPDATE_THEME_STATUS_REQUEST':
-      return Object.assign({}, state, {
-        items: state.items.map(theme =>
-          theme.id === action.id ?
-            Object.assign({}, theme, { isFetching: true }) :
-            theme
-        )
-      })
+      return state.map(item => item.channelId === action.channelId ?
+        Object.assign({}, item, { items: item.items.map(theme => theme.id === action.id ?
+          Object.assign({}, theme, { isFetching: true }) :
+          theme)
+        }) :
+        item
+      )
     case 'UPDATE_THEME_STATUS_RECEIVE':
-      return Object.assign({}, state, {
-        items: state.items.map(theme =>
-          theme.id === action.id ?
-            Object.assign({}, theme, { isFetching: false, isSubscribed: action.isSubscribed }) :
-            theme
-        )
-      })
+      return state.map(item => item.channelId === action.channelId ?
+        Object.assign({}, item, { items: item.items.map(theme => theme.id === action.id ?
+          Object.assign({}, theme, { isFetching: false, isSubscribed: action.isSubscribed }) :
+          theme)
+        }) :
+        item
+      )
     case 'UPDATE_THEME_STATUS_ERROR':
-      return Object.assign({}, state, {
-        items: state.items.map(theme =>
-          theme.id === action.id ?
-            Object.assign({}, theme, { isFetching: false }) :
-            theme
-        )
-      })
+      return state.map(item => item.channelId === action.channelId ?
+        Object.assign({}, item, { items: item.items.map(theme => theme.id === action.id ?
+          Object.assign({}, theme, { isFetching: false }) :
+          theme)
+        }) :
+        item
+      )
     case 'THEMES_REQUEST':
-      return Object.assign({}, state, {
-        isFetching: true,
-      })
+      return state.find(item => item.channelId === action.channelId) ?
+        state.map(item => item.channelId === action.channelId ?
+          Object.assign({}, item, { isFetching: true }) :
+          item) :
+        [...state, { channelId: action.channelId, isFetching: true, items: [] }]
     case 'THEMES_RECEIVE':
-      return Object.assign({}, state, {
-        isFetching: false,
-        items: action.themes,
-        lastUpdated: action.receivedAt,
-      })
+      return state.map(item => item.channelId === action.channelId ?
+        Object.assign({}, item, { isFetching: false, items: action.themes }) :
+        item
+      )
     case 'THEMES_ERROR':
-      return Object.assign({}, state, {
-        isFetching: false,
-      })
+      return state.map(item => item.channelId === action.channelId ?
+        Object.assign({}, item, { isFetching: false }) :
+        item
+      )
     default:
       return state
   }

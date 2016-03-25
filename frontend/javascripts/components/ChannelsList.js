@@ -1,9 +1,8 @@
 import React, { Component, PropTypes } from 'react'
 import ReactDOM from 'react-dom'
-import classNames from 'classnames'
 
+import Channel from './Channel'
 import ThemesList from './ThemesList'
-import { botName } from '../../data'
 
 
 class ChannelsList extends Component {
@@ -11,8 +10,7 @@ class ChannelsList extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      channel: {},
-      shouldRenderThemesList: false,
+      selectedChannel: {},
     }
   }
 
@@ -24,12 +22,11 @@ class ChannelsList extends Component {
 
   handleChannelClick(channel, event) {
     event.preventDefault()
-    this.setState({ channel: channel, shouldRenderThemesList: true })
-    this.props.actions.fetchThemes(channel.id)
+    this.setState({ selectedChannel: channel })
   }
 
   handleThemesListHide() {
-    this.setState({ shouldRenderThemesList: false })
+    this.setState({ selectedChannel: {} })
   }
 
   // renderers
@@ -42,38 +39,28 @@ class ChannelsList extends Component {
     )
   }
 
-  renderNotInvited(channel) {
-    return channel.status === 'uninvited' ?
-      <span>{ ` — /invite @${botName} #${channel.name}` }</span> :
-      null
-  }
-
-  renderChannel(channel) {
-    let iconClassNames = classNames('fa', 'fa-circle', channel.status)
-
-    return (
-      <li onClick={ this.handleChannelClick.bind(this, channel) }>
-        <i className={ iconClassNames } />
-        <span>{ `#${channel.name}` }</span>
-        { this.renderNotInvited(channel) }
-      </li>
-    )
-  }
-
   render() {
+    const { themes, actions } = this.props
+
     return (
       <div>
         <h2>Channels:</h2>
 
         <ul className="channels-list">
-          { this.props.channels.items.map(this.renderChannel.bind(this)) }
+          { this.props.channels.items.map(channel =>
+            <Channel
+              channel={ channel }
+              themes={ themes }
+              actions={ actions }
+              onClick={ this.handleChannelClick.bind(this) }
+            />
+          )}
         </ul>
 
         <ThemesList
-          channel={ this.state.channel }
-          themes={ this.props.themes }
-          actions={ this.props.actions }
-          shouldRenderThemesList={ this.state.shouldRenderThemesList }
+          channel={ this.state.selectedChannel }
+          themes={ themes }
+          actions={ actions }
           onHide={ this.handleThemesListHide.bind(this) }
         />
 
@@ -86,7 +73,7 @@ class ChannelsList extends Component {
 
 ChannelsList.propTypes = {
   channels: PropTypes.object.isRequired,
-  themes: PropTypes.object.isRequired,
+  themes: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired,
 }
 

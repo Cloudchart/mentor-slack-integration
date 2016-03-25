@@ -72,7 +72,7 @@
 	if (reactType === 'plain') {
 	  _reactDom2.default.render(_react2.default.createElement(Component, JSON.parse(node.dataset.reactProps)), node);
 	} else {
-	  var reducers = __webpack_require__(208)("./" + reactClass).default;
+	  var reducers = __webpack_require__(209)("./" + reactClass).default;
 	  var store = (0, _redux.createStore)(reducers, window.__INITIAL_STATE__, (0, _redux.applyMiddleware)(_reduxThunk2.default));
 
 	  _reactDom2.default.render(_react2.default.createElement(
@@ -20486,8 +20486,8 @@
 	var map = {
 		"./ConfigApp": 177,
 		"./ConfigApp.js": 177,
-		"./LandingApp": 206,
-		"./LandingApp.js": 206
+		"./LandingApp": 207,
+		"./LandingApp.js": 207
 	};
 	function webpackContext(req) {
 		return __webpack_require__(webpackContextResolve(req));
@@ -20539,7 +20539,7 @@
 
 	var _ChannelsList2 = _interopRequireDefault(_ChannelsList);
 
-	var _TimeSetting = __webpack_require__(205);
+	var _TimeSetting = __webpack_require__(206);
 
 	var _TimeSetting2 = _interopRequireDefault(_TimeSetting);
 
@@ -20614,7 +20614,7 @@
 	ConfigApp.propTypes = {
 	  team: _react.PropTypes.object.isRequired,
 	  channels: _react.PropTypes.array.isRequired,
-	  themes: _react.PropTypes.object.isRequired,
+	  themes: _react.PropTypes.array.isRequired,
 	  actions: _react.PropTypes.object.isRequired,
 	  timeSetting: _react.PropTypes.object.isRequired,
 	  startTimeRange: _react.PropTypes.array.isRequired,
@@ -21166,23 +21166,29 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	function requestUpdateThemeStatus(id) {
-	  return { type: 'UPDATE_THEME_STATUS_REQUEST', id: id };
+	function requestUpdateThemeStatus(id, channelId) {
+	  return {
+	    type: 'UPDATE_THEME_STATUS_REQUEST',
+	    id: id,
+	    channelId: channelId
+	  };
 	}
 
-	function receiveUpdateThemeStatus(id, json) {
+	function receiveUpdateThemeStatus(id, channelId, json) {
 	  return {
 	    type: 'UPDATE_THEME_STATUS_RECEIVE',
 	    id: id,
+	    channelId: channelId,
 	    isSubscribed: json.isSubscribed,
 	    receivedAt: Date.now()
 	  };
 	}
 
-	function catchUpdateThemeStatusError(id, error) {
+	function catchUpdateThemeStatusError(id, channelId, error) {
 	  return {
 	    type: 'UPDATE_THEME_STATUS_ERROR',
 	    id: id,
+	    channelId: channelId,
 	    error: error,
 	    receivedAt: Date.now()
 	  };
@@ -21190,7 +21196,7 @@
 
 	function updateThemeStatus(id, channelId, action) {
 	  return function (dispatch) {
-	    dispatch(requestUpdateThemeStatus(id));
+	    dispatch(requestUpdateThemeStatus(id, channelId));
 
 	    return (0, _isomorphicFetch2.default)('/themes', {
 	      method: 'PATCH',
@@ -21200,9 +21206,9 @@
 	    }).then(function (response) {
 	      return response.json();
 	    }).then(function (json) {
-	      return dispatch(receiveUpdateThemeStatus(id, json));
+	      return dispatch(receiveUpdateThemeStatus(id, channelId, json));
 	    }).catch(function (error) {
-	      return dispatch(catchUpdateThemeStatusError(id, error));
+	      return dispatch(catchUpdateThemeStatusError(id, channelId, error));
 	    });
 	  };
 	}
@@ -22210,15 +22216,13 @@
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _classnames = __webpack_require__(194);
+	var _Channel = __webpack_require__(194);
 
-	var _classnames2 = _interopRequireDefault(_classnames);
+	var _Channel2 = _interopRequireDefault(_Channel);
 
-	var _ThemesList = __webpack_require__(195);
+	var _ThemesList = __webpack_require__(196);
 
 	var _ThemesList2 = _interopRequireDefault(_ThemesList);
-
-	var _data = __webpack_require__(189);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -22237,8 +22241,7 @@
 	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ChannelsList).call(this, props));
 
 	    _this.state = {
-	      channel: {},
-	      shouldRenderThemesList: false
+	      selectedChannel: {}
 	    };
 	    return _this;
 	  }
@@ -22256,13 +22259,12 @@
 	    key: 'handleChannelClick',
 	    value: function handleChannelClick(channel, event) {
 	      event.preventDefault();
-	      this.setState({ channel: channel, shouldRenderThemesList: true });
-	      this.props.actions.fetchThemes(channel.id);
+	      this.setState({ selectedChannel: channel });
 	    }
 	  }, {
 	    key: 'handleThemesListHide',
 	    value: function handleThemesListHide() {
-	      this.setState({ shouldRenderThemesList: false });
+	      this.setState({ selectedChannel: {} });
 	    }
 
 	    // renderers
@@ -22278,34 +22280,15 @@
 	      );
 	    }
 	  }, {
-	    key: 'renderNotInvited',
-	    value: function renderNotInvited(channel) {
-	      return channel.status === 'uninvited' ? _react2.default.createElement(
-	        'span',
-	        null,
-	        ' — /invite @' + _data.botName + ' #' + channel.name
-	      ) : null;
-	    }
-	  }, {
-	    key: 'renderChannel',
-	    value: function renderChannel(channel) {
-	      var iconClassNames = (0, _classnames2.default)('fa', 'fa-circle', channel.status);
-
-	      return _react2.default.createElement(
-	        'li',
-	        { onClick: this.handleChannelClick.bind(this, channel) },
-	        _react2.default.createElement('i', { className: iconClassNames }),
-	        _react2.default.createElement(
-	          'span',
-	          null,
-	          '#' + channel.name
-	        ),
-	        this.renderNotInvited(channel)
-	      );
-	    }
-	  }, {
 	    key: 'render',
 	    value: function render() {
+	      var _this2 = this;
+
+	      var _props = this.props;
+	      var themes = _props.themes;
+	      var actions = _props.actions;
+
+
 	      return _react2.default.createElement(
 	        'div',
 	        null,
@@ -22317,13 +22300,19 @@
 	        _react2.default.createElement(
 	          'ul',
 	          { className: 'channels-list' },
-	          this.props.channels.items.map(this.renderChannel.bind(this))
+	          this.props.channels.items.map(function (channel) {
+	            return _react2.default.createElement(_Channel2.default, {
+	              channel: channel,
+	              themes: themes,
+	              actions: actions,
+	              onClick: _this2.handleChannelClick.bind(_this2)
+	            });
+	          })
 	        ),
 	        _react2.default.createElement(_ThemesList2.default, {
-	          channel: this.state.channel,
-	          themes: this.props.themes,
-	          actions: this.props.actions,
-	          shouldRenderThemesList: this.state.shouldRenderThemesList,
+	          channel: this.state.selectedChannel,
+	          themes: themes,
+	          actions: actions,
 	          onHide: this.handleThemesListHide.bind(this)
 	        }),
 	        this.renderTestIntegrationButton()
@@ -22336,7 +22325,7 @@
 
 	ChannelsList.propTypes = {
 	  channels: _react.PropTypes.object.isRequired,
-	  themes: _react.PropTypes.object.isRequired,
+	  themes: _react.PropTypes.array.isRequired,
 	  actions: _react.PropTypes.object.isRequired
 	};
 
@@ -22344,6 +22333,135 @@
 
 /***/ },
 /* 194 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _classnames = __webpack_require__(195);
+
+	var _classnames2 = _interopRequireDefault(_classnames);
+
+	var _data = __webpack_require__(189);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Channel = function (_Component) {
+	  _inherits(Channel, _Component);
+
+	  function Channel() {
+	    _classCallCheck(this, Channel);
+
+	    return _possibleConstructorReturn(this, Object.getPrototypeOf(Channel).apply(this, arguments));
+	  }
+
+	  _createClass(Channel, [{
+	    key: 'componentDidMount',
+
+
+	    // lifecycle
+	    //
+	    value: function componentDidMount() {
+	      var _props = this.props;
+	      var channel = _props.channel;
+	      var themes = _props.themes;
+
+	      if (channel.status === 'invited' && !themes.find(function (item) {
+	        return item.channelId === channel.id;
+	      })) {
+	        this.props.actions.fetchThemes(channel.id);
+	      }
+	    }
+
+	    // renderers
+	    //
+
+	  }, {
+	    key: 'renderNotInvited',
+	    value: function renderNotInvited(channel) {
+	      return channel.status === 'uninvited' ? _react2.default.createElement(
+	        'span',
+	        { className: 'description' },
+	        ' — /invite @' + _data.botName + ' #' + channel.name
+	      ) : null;
+	    }
+	  }, {
+	    key: 'renderSubscribedThemes',
+	    value: function renderSubscribedThemes(channel) {
+	      if (channel.status !== 'invited') return null;
+	      var themes = this.props.themes.find(function (item) {
+	        return item.channelId === channel.id;
+	      });
+
+	      if (themes && themes.items) {
+	        var subscribedThemes = themes.items.filter(function (theme) {
+	          return theme.isSubscribed;
+	        });
+	        if (subscribedThemes.length > 0) {
+	          return _react2.default.createElement(
+	            'span',
+	            { className: 'description' },
+	            ' — ' + subscribedThemes.map(function (theme) {
+	              return theme.name;
+	            }).join(', ')
+	          );
+	        } else {
+	          return null;
+	        }
+	      } else {
+	        return null;
+	      }
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var channel = this.props.channel;
+
+	      var iconClassNames = (0, _classnames2.default)('fa', 'fa-circle', channel.status);
+
+	      return _react2.default.createElement(
+	        'li',
+	        { onClick: this.props.onClick.bind(this, channel) },
+	        _react2.default.createElement('i', { className: iconClassNames }),
+	        _react2.default.createElement(
+	          'span',
+	          null,
+	          '#' + channel.name
+	        ),
+	        this.renderNotInvited(channel),
+	        this.renderSubscribedThemes(channel)
+	      );
+	    }
+	  }]);
+
+	  return Channel;
+	}(_react.Component);
+
+	Channel.propTypes = {
+	  channel: _react.PropTypes.object.isRequired,
+	  themes: _react.PropTypes.array.isRequired,
+	  actions: _react.PropTypes.object.isRequired
+	};
+
+	exports.default = Channel;
+
+/***/ },
+/* 195 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -22397,7 +22515,7 @@
 
 
 /***/ },
-/* 195 */
+/* 196 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -22412,11 +22530,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _FadeModal = __webpack_require__(196);
+	var _FadeModal = __webpack_require__(197);
 
 	var _FadeModal2 = _interopRequireDefault(_FadeModal);
 
-	var _classnames = __webpack_require__(194);
+	var _classnames = __webpack_require__(195);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
@@ -22431,25 +22549,44 @@
 	var ThemesList = function (_Component) {
 	  _inherits(ThemesList, _Component);
 
-	  function ThemesList() {
+	  function ThemesList(props) {
 	    _classCallCheck(this, ThemesList);
 
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(ThemesList).apply(this, arguments));
+	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ThemesList).call(this, props));
+
+	    _this.state = {
+	      themes: []
+	    };
+	    return _this;
 	  }
 
+	  // lifecycle
+	  //
+
+
 	  _createClass(ThemesList, [{
+	    key: 'shouldComponentUpdate',
+	    value: function shouldComponentUpdate(nextProps, nextState) {
+	      return Object.keys(nextProps.channel).length > 0;
+	    }
+	  }, {
 	    key: 'componentWillReceiveProps',
-
-
-	    // lifecycle
-	    //
 	    value: function componentWillReceiveProps(nextProps) {
-	      if (nextProps.shouldRenderThemesList && nextProps.themes.items.length > 0) {
-	        // TODO: fork and add to source
-	        document.getElementById('modal').className = '';
-	        document.body.classList.add('opened-modal');
+	      if (Object.keys(nextProps.channel).length > 0) {
+	        var themes = nextProps.themes.find(function (item) {
+	          return item.channelId === nextProps.channel.id;
+	        });
 
-	        this.refs.modal.show();
+	        if (themes) {
+	          this.setState({ themes: themes.items });
+	          // TODO: fork and add to source
+	          document.getElementById('modal').className = '';
+	          document.body.classList.add('modal-opened');
+
+	          this.refs.modal.show();
+	        } else {
+	          nextProps.actions.fetchThemes(nextProps.channel.id);
+	        }
 	      }
 	    }
 
@@ -22461,14 +22598,14 @@
 	    value: function hideContainer() {
 	      // TODO: fork and add to source
 	      document.getElementById('modal').className = 'hidden';
-	      document.body.classList.remove('opened-modal');
+	      document.body.classList.remove('modal-opened');
 
 	      this.props.onHide();
 	    }
 	  }, {
 	    key: 'getSelectedThemesSize',
 	    value: function getSelectedThemesSize() {
-	      return this.props.themes.items.filter(function (theme) {
+	      return this.state.themes.filter(function (theme) {
 	        return theme.isSubscribed;
 	      }).length;
 	    }
@@ -22546,7 +22683,7 @@
 	            _react2.default.createElement(
 	              'ul',
 	              null,
-	              this.props.themes.items.map(this.renderTheme.bind(this))
+	              this.state.themes.map(this.renderTheme.bind(this))
 	            ),
 	            _react2.default.createElement(
 	              'div',
@@ -22568,19 +22705,19 @@
 
 	ThemesList.propTypes = {
 	  channel: _react.PropTypes.object.isRequired,
-	  themes: _react.PropTypes.object.isRequired,
+	  themes: _react.PropTypes.array.isRequired,
 	  actions: _react.PropTypes.object.isRequired
 	};
 
 	exports.default = ThemesList;
 
 /***/ },
-/* 196 */
+/* 197 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var modalFactory = __webpack_require__(197);
-	var insertKeyframesRule = __webpack_require__(202);
-	var appendVendorPrefix = __webpack_require__(199);
+	var modalFactory = __webpack_require__(198);
+	var insertKeyframesRule = __webpack_require__(203);
+	var appendVendorPrefix = __webpack_require__(200);
 
 	var animation = {
 	    show: {
@@ -22678,12 +22815,12 @@
 
 
 /***/ },
-/* 197 */
+/* 198 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var transitionEvents = __webpack_require__(198);
-	var appendVendorPrefix = __webpack_require__(199);
+	var transitionEvents = __webpack_require__(199);
+	var appendVendorPrefix = __webpack_require__(200);
 
 	module.exports = function(animation){
 
@@ -22862,7 +22999,7 @@
 
 
 /***/ },
-/* 198 */
+/* 199 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -22963,12 +23100,12 @@
 
 
 /***/ },
-/* 199 */
+/* 200 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var getVendorPropertyName = __webpack_require__(200);
+	var getVendorPropertyName = __webpack_require__(201);
 
 	module.exports = function(target, sources) {
 	  var to = Object(target);
@@ -22999,12 +23136,12 @@
 
 
 /***/ },
-/* 200 */
+/* 201 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var builtinStyle = __webpack_require__(201);
+	var builtinStyle = __webpack_require__(202);
 	var prefixes = ['Moz', 'Webkit', 'O', 'ms'];
 	var domVendorPrefix;
 
@@ -23042,7 +23179,7 @@
 
 
 /***/ },
-/* 201 */
+/* 202 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -23051,13 +23188,13 @@
 
 
 /***/ },
-/* 202 */
+/* 203 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var insertRule = __webpack_require__(203);
-	var vendorPrefix = __webpack_require__(204)();
+	var insertRule = __webpack_require__(204);
+	var vendorPrefix = __webpack_require__(205)();
 	var index = 0;
 
 	module.exports = function(keyframes) {
@@ -23087,7 +23224,7 @@
 
 
 /***/ },
-/* 203 */
+/* 204 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -23112,7 +23249,7 @@
 
 
 /***/ },
-/* 204 */
+/* 205 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -23131,7 +23268,7 @@
 
 
 /***/ },
-/* 205 */
+/* 206 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23146,7 +23283,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _classnames = __webpack_require__(194);
+	var _classnames = __webpack_require__(195);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
@@ -23322,7 +23459,7 @@
 	exports.default = TimeSetting;
 
 /***/ },
-/* 206 */
+/* 207 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23337,7 +23474,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _SlackButton = __webpack_require__(207);
+	var _SlackButton = __webpack_require__(208);
 
 	var _SlackButton2 = _interopRequireDefault(_SlackButton);
 
@@ -23549,7 +23686,7 @@
 	exports.default = LandingApp;
 
 /***/ },
-/* 207 */
+/* 208 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -23618,20 +23755,20 @@
 	exports.default = SlackButton;
 
 /***/ },
-/* 208 */
+/* 209 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var map = {
-		"./ConfigApp": 209,
-		"./ConfigApp.js": 209,
-		"./channels": 211,
-		"./channels.js": 211,
-		"./team": 210,
-		"./team.js": 210,
-		"./themes": 212,
-		"./themes.js": 212,
-		"./timeSetting": 213,
-		"./timeSetting.js": 213
+		"./ConfigApp": 210,
+		"./ConfigApp.js": 210,
+		"./channels": 212,
+		"./channels.js": 212,
+		"./team": 211,
+		"./team.js": 211,
+		"./themes": 213,
+		"./themes.js": 213,
+		"./timeSetting": 214,
+		"./timeSetting.js": 214
 	};
 	function webpackContext(req) {
 		return __webpack_require__(webpackContextResolve(req));
@@ -23644,11 +23781,11 @@
 	};
 	webpackContext.resolve = webpackContextResolve;
 	module.exports = webpackContext;
-	webpackContext.id = 208;
+	webpackContext.id = 209;
 
 
 /***/ },
-/* 209 */
+/* 210 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23659,19 +23796,19 @@
 
 	var _redux = __webpack_require__(154);
 
-	var _team = __webpack_require__(210);
+	var _team = __webpack_require__(211);
 
 	var _team2 = _interopRequireDefault(_team);
 
-	var _channels = __webpack_require__(211);
+	var _channels = __webpack_require__(212);
 
 	var _channels2 = _interopRequireDefault(_channels);
 
-	var _themes = __webpack_require__(212);
+	var _themes = __webpack_require__(213);
 
 	var _themes2 = _interopRequireDefault(_themes);
 
-	var _timeSetting = __webpack_require__(213);
+	var _timeSetting = __webpack_require__(214);
 
 	var _timeSetting2 = _interopRequireDefault(_timeSetting);
 
@@ -23685,7 +23822,7 @@
 	});
 
 /***/ },
-/* 210 */
+/* 211 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -23705,7 +23842,7 @@
 	}
 
 /***/ },
-/* 211 */
+/* 212 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -23765,7 +23902,7 @@
 	}
 
 /***/ },
-/* 212 */
+/* 213 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -23774,47 +23911,48 @@
 	  value: true
 	});
 	exports.default = themes;
-	var initialState = {
-	  isFetching: false,
-	  items: []
-	};
+
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 	function themes() {
-	  var state = arguments.length <= 0 || arguments[0] === undefined ? initialState : arguments[0];
+	  var state = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
 	  var action = arguments[1];
 
 	  switch (action.type) {
 	    case 'UPDATE_THEME_STATUS_REQUEST':
-	      return Object.assign({}, state, {
-	        items: state.items.map(function (theme) {
-	          return theme.id === action.id ? Object.assign({}, theme, { isFetching: true }) : theme;
-	        })
+	      return state.map(function (item) {
+	        return item.channelId === action.channelId ? Object.assign({}, item, { items: item.items.map(function (theme) {
+	            return theme.id === action.id ? Object.assign({}, theme, { isFetching: true }) : theme;
+	          })
+	        }) : item;
 	      });
 	    case 'UPDATE_THEME_STATUS_RECEIVE':
-	      return Object.assign({}, state, {
-	        items: state.items.map(function (theme) {
-	          return theme.id === action.id ? Object.assign({}, theme, { isFetching: false, isSubscribed: action.isSubscribed }) : theme;
-	        })
+	      return state.map(function (item) {
+	        return item.channelId === action.channelId ? Object.assign({}, item, { items: item.items.map(function (theme) {
+	            return theme.id === action.id ? Object.assign({}, theme, { isFetching: false, isSubscribed: action.isSubscribed }) : theme;
+	          })
+	        }) : item;
 	      });
 	    case 'UPDATE_THEME_STATUS_ERROR':
-	      return Object.assign({}, state, {
-	        items: state.items.map(function (theme) {
-	          return theme.id === action.id ? Object.assign({}, theme, { isFetching: false }) : theme;
-	        })
+	      return state.map(function (item) {
+	        return item.channelId === action.channelId ? Object.assign({}, item, { items: item.items.map(function (theme) {
+	            return theme.id === action.id ? Object.assign({}, theme, { isFetching: false }) : theme;
+	          })
+	        }) : item;
 	      });
 	    case 'THEMES_REQUEST':
-	      return Object.assign({}, state, {
-	        isFetching: true
-	      });
+	      return state.find(function (item) {
+	        return item.channelId === action.channelId;
+	      }) ? state.map(function (item) {
+	        return item.channelId === action.channelId ? Object.assign({}, item, { isFetching: true }) : item;
+	      }) : [].concat(_toConsumableArray(state), [{ channelId: action.channelId, isFetching: true, items: [] }]);
 	    case 'THEMES_RECEIVE':
-	      return Object.assign({}, state, {
-	        isFetching: false,
-	        items: action.themes,
-	        lastUpdated: action.receivedAt
+	      return state.map(function (item) {
+	        return item.channelId === action.channelId ? Object.assign({}, item, { isFetching: false, items: action.themes }) : item;
 	      });
 	    case 'THEMES_ERROR':
-	      return Object.assign({}, state, {
-	        isFetching: false
+	      return state.map(function (item) {
+	        return item.channelId === action.channelId ? Object.assign({}, item, { isFetching: false }) : item;
 	      });
 	    default:
 	      return state;
@@ -23822,7 +23960,7 @@
 	}
 
 /***/ },
-/* 213 */
+/* 214 */
 /***/ function(module, exports) {
 
 	'use strict';

@@ -5,15 +5,33 @@ import classNames from 'classnames'
 
 class ThemesList extends Component {
 
+  constructor(props) {
+    super(props)
+    this.state = {
+      themes: [],
+    }
+  }
+
   // lifecycle
   //
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.shouldRenderThemesList && nextProps.themes.items.length > 0) {
-      // TODO: fork and add to source
-      document.getElementById('modal').className = ''
-      document.body.classList.add('opened-modal')
+  shouldComponentUpdate(nextProps, nextState) {
+    return Object.keys(nextProps.channel).length > 0
+  }
 
-      this.refs.modal.show()
+  componentWillReceiveProps(nextProps) {
+    if (Object.keys(nextProps.channel).length > 0) {
+      const themes = nextProps.themes.find(item => item.channelId === nextProps.channel.id)
+
+      if (themes) {
+        this.setState({ themes: themes.items })
+        // TODO: fork and add to source
+        document.getElementById('modal').className = ''
+        document.body.classList.add('modal-opened')
+
+        this.refs.modal.show()
+      } else {
+        nextProps.actions.fetchThemes(nextProps.channel.id)
+      }
     }
   }
 
@@ -22,13 +40,13 @@ class ThemesList extends Component {
   hideContainer() {
     // TODO: fork and add to source
     document.getElementById('modal').className = 'hidden'
-    document.body.classList.remove('opened-modal')
+    document.body.classList.remove('modal-opened')
 
     this.props.onHide()
   }
 
   getSelectedThemesSize() {
-    return this.props.themes.items.filter(theme => theme.isSubscribed).length
+    return this.state.themes.filter(theme => theme.isSubscribed).length
   }
 
   // handlers
@@ -77,7 +95,7 @@ class ThemesList extends Component {
             </h1>
 
             <ul>
-              { this.props.themes.items.map(this.renderTheme.bind(this)) }
+              { this.state.themes.map(this.renderTheme.bind(this)) }
             </ul>
 
             <div className="actions">
@@ -93,7 +111,7 @@ class ThemesList extends Component {
 
 ThemesList.propTypes = {
   channel: PropTypes.object.isRequired,
-  themes: PropTypes.object.isRequired,
+  themes: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired,
 }
 
