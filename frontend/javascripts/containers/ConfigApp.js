@@ -23,7 +23,7 @@ class ConfigApp extends Component {
       actions } = this.props
 
     return (
-      <div id="configuration-container">
+      <div className="container configuration">
         <Header/>
 
         <div className="content">

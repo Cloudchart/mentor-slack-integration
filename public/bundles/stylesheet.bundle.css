@@ -2103,6 +2103,22 @@ p {
   margin: 0;
   line-height: 1.5em; }
 
+div.container {
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -moz-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  min-height: 100vh; }
+  div.container > .content {
+    -webkit-flex: 1;
+    -moz-flex: 1;
+    -ms-flex: 1;
+    flex: 1; }
+
 button.msi {
   padding: 15px 20px;
   background-color: #3BC363;
@@ -2384,19 +2400,19 @@ footer {
     #landing-container > section.bottom > p:last-of-type {
       font-size: 26px; }
 
-#configuration-container > .content {
+.container.configuration > .content {
   max-width: 800px;
   margin: 0 auto;
   padding: 30px; }
-  #configuration-container > .content > h1 {
+  .container.configuration > .content > h1 {
     margin-bottom: 30px; }
-    #configuration-container > .content > h1 > i {
+    .container.configuration > .content > h1 > i {
       color: #3BC363;
       margin-right: 10px; }
-  #configuration-container > .content .select {
+  .container.configuration > .content .select {
     position: relative;
     display: inline-block; }
-    #configuration-container > .content .select:before {
+    .container.configuration > .content .select:before {
       content: "\F078";
       font-size: 16px;
       font-family: FontAwesome;
@@ -2406,7 +2422,7 @@ footer {
       top: 30.5%;
       cursor: pointer;
       pointer-events: none; }
-    #configuration-container > .content .select > select {
+    .container.configuration > .content .select > select {
       -webkit-appearance: none;
       -moz-appearance: none;
       appearance: none;
@@ -2416,10 +2432,10 @@ footer {
       border: 1px solid #CBD0CD;
       border-radius: 5px;
       font-size: 16px; }
-  #configuration-container > .content .days-list {
+  .container.configuration > .content .days-list {
     display: inline-block;
     margin-left: 30px; }
-    #configuration-container > .content .days-list > li {
+    .container.configuration > .content .days-list > li {
       -webkit-touch-callout: none;
       -webkit-user-select: none;
       -moz-user-select: none;
@@ -2430,38 +2446,38 @@ footer {
       font-weight: bold;
       font-size: 16px;
       cursor: pointer; }
-      #configuration-container > .content .days-list > li:not(:last-child) {
+      .container.configuration > .content .days-list > li:not(:last-child) {
         margin-right: 15px; }
-      #configuration-container > .content .days-list > li.selected {
+      .container.configuration > .content .days-list > li.selected {
         color: #3BC363; }
-  #configuration-container > .content .channels-list {
+  .container.configuration > .content .channels-list {
     margin-bottom: 20px; }
-    #configuration-container > .content .channels-list > li:not(:last-child) {
+    .container.configuration > .content .channels-list > li:not(:last-child) {
       margin-bottom: 10px; }
-    #configuration-container > .content .channels-list > li > a {
+    .container.configuration > .content .channels-list > li > a {
       font-size: 16px;
       font-weight: 500;
       border-radius: 5px;
       padding: 5px 10px;
       color: inherit;
       text-decoration: none; }
-      #configuration-container > .content .channels-list > li > a:hover {
+      .container.configuration > .content .channels-list > li > a:hover {
         background-color: #F6F5F2; }
-      #configuration-container > .content .channels-list > li > a > i {
+      .container.configuration > .content .channels-list > li > a > i {
         margin-right: 10px;
         color: #CBD0CD; }
-        #configuration-container > .content .channels-list > li > a > i.invited {
+        .container.configuration > .content .channels-list > li > a > i.invited {
           color: #3BC363; }
-        #configuration-container > .content .channels-list > li > a > i.uninvited {
+        .container.configuration > .content .channels-list > li > a > i.uninvited {
           color: #FFC202; }
-    #configuration-container > .content .channels-list > li > span.description {
+    .container.configuration > .content .channels-list > li > span.description {
       display: block;
       font-size: 14px;
       padding-left: 35px; }
-  #configuration-container > .content .themes-list > h1 {
+  .container.configuration > .content .themes-list > h1 {
     text-align: center;
     margin-bottom: 20px; }
-  #configuration-container > .content .themes-list > ul {
+  .container.configuration > .content .themes-list > ul {
     display: -webkit-flex;
     display: -moz-flex;
     display: -ms-flexbox;
@@ -2475,7 +2491,7 @@ footer {
     -moz-align-items: center;
     align-items: center;
     margin-bottom: 20px; }
-    #configuration-container > .content .themes-list > ul > li {
+    .container.configuration > .content .themes-list > ul > li {
       -webkit-touch-callout: none;
       -webkit-user-select: none;
       -moz-user-select: none;
@@ -2489,15 +2505,15 @@ footer {
       margin-bottom: 15px;
       font-size: 16px;
       position: relative; }
-      #configuration-container > .content .themes-list > ul > li > i {
+      .container.configuration > .content .themes-list > ul > li > i {
         margin-left: 10px;
         color: #3BC363;
         position: absolute;
         right: 1em;
         top: 1em; }
-        #configuration-container > .content .themes-list > ul > li > i.is-fetching {
+        .container.configuration > .content .themes-list > ul > li > i.is-fetching {
           color: #CBD0CD; }
-  #configuration-container > .content .themes-list > .actions {
+  .container.configuration > .content .themes-list > .actions {
     display: -webkit-flex;
     display: -moz-flex;
     display: -ms-flexbox;
@@ -2507,5 +2523,5 @@ footer {
     -moz-justify-content: flex-end;
     justify-content: flex-end; }
 
-#configuration-container > footer {
+.container.configuration > footer {
   border-top: 1px solid #CBD0CD; }

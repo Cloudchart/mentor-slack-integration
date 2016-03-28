@@ -20575,7 +20575,7 @@
 
 	      return _react2.default.createElement(
 	        'div',
-	        { id: 'configuration-container' },
+	        { className: 'container configuration' },
 	        _react2.default.createElement(_Header2.default, null),
 	        _react2.default.createElement(
 	          'div',

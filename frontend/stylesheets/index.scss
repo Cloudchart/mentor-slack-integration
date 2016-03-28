@@ -44,6 +44,16 @@ p {
   line-height: 1.5em;
 }
 
+div.container {
+  @include flexbox;
+  @include flex-direction(column);
+  min-height: 100vh;
+
+  > .content {
+    @include flex(1);
+  }
+}
+
 @import 'buttons';
 @import 'header';
 @import 'footer';
