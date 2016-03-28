@@ -10,47 +10,47 @@ $primary-font-size: 32px;
 $regular-font-size: 22px;
 
 body {
+  font: 14px Helvetica Neue, Helvetica, Arial, sans-serif;
   display: block;
   margin: 0;
-  font: 14px Helvetica Neue, Helvetica, Arial, sans-serif;
 
   &.modal-opened {
     overflow: hidden;
   }
-}
 
-main {
-  min-width: 800px;
-}
+  main {
+    min-width: 800px;
 
-h1 {
-  margin: 0;
-  font-weight: normal;
-}
+    > div.container {
+      @include flexbox;
+      @include flex-direction(column);
+      min-height: 100vh;
 
-a {
-  color: #00B7FF;
-}
+      > .content {
+        @include flex(1);
+      }
+    }
 
-ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  line-height: 1.5em;
-}
+    h1 {
+      margin: 0;
+      font-weight: normal;
+    }
 
-p {
-  margin: 0;
-  line-height: 1.5em;
-}
+    a {
+      color: #00B7FF;
+    }
 
-div.container {
-  @include flexbox;
-  @include flex-direction(column);
-  min-height: 100vh;
+    ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      line-height: 1.5em;
+    }
 
-  > .content {
-    @include flex(1);
+    p {
+      margin: 0;
+      line-height: 1.5em;
+    }
   }
 }
 
