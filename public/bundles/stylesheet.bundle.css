@@ -2378,7 +2378,7 @@ footer {
   #landing-container > section.bottom > p {
     font-size: 22px;
     text-align: center;
-    max-width: 1000px; }
+    max-width: 740px; }
     #landing-container > section.bottom > p:first-of-type {
       margin: 40px 0; }
     #landing-container > section.bottom > p:last-of-type {
@@ -2436,24 +2436,28 @@ footer {
         color: #3BC363; }
   #configuration-container > .content .channels-list {
     margin-bottom: 20px; }
-    #configuration-container > .content .channels-list > li {
+    #configuration-container > .content .channels-list > li:not(:last-child) {
+      margin-bottom: 10px; }
+    #configuration-container > .content .channels-list > li > a {
       font-size: 16px;
       font-weight: 500;
-      display: table;
       border-radius: 5px;
       padding: 5px 10px;
-      cursor: pointer; }
-      #configuration-container > .content .channels-list > li:hover {
+      color: inherit;
+      text-decoration: none; }
+      #configuration-container > .content .channels-list > li > a:hover {
         background-color: #F6F5F2; }
-      #configuration-container > .content .channels-list > li > i {
+      #configuration-container > .content .channels-list > li > a > i {
         margin-right: 10px;
         color: #CBD0CD; }
-        #configuration-container > .content .channels-list > li > i.invited {
+        #configuration-container > .content .channels-list > li > a > i.invited {
           color: #3BC363; }
-        #configuration-container > .content .channels-list > li > i.uninvited {
+        #configuration-container > .content .channels-list > li > a > i.uninvited {
           color: #FFC202; }
-      #configuration-container > .content .channels-list > li > span.description {
-        font-weight: normal; }
+    #configuration-container > .content .channels-list > li > span.description {
+      display: block;
+      font-size: 14px;
+      padding-left: 35px; }
   #configuration-container > .content .themes-list > h1 {
     text-align: center;
     margin-bottom: 20px; }

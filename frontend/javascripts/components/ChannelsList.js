@@ -1,6 +1,8 @@
 import React, { Component, PropTypes } from 'react'
 import ReactDOM from 'react-dom'
 
+import { botName } from '../../data'
+
 import Channel from './Channel'
 import ThemesList from './ThemesList'
 
@@ -34,7 +36,7 @@ class ChannelsList extends Component {
   renderTestIntegrationButton() {
     return(
       <button className='msi' disabled={ this.props.channels.isFetching } onClick={ this.handleTestIntegrationClick.bind(this) }>
-        Test Boris integration
+        { `Test @${botName} integration` }
       </button>
     )
   }

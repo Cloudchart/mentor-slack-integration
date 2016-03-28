@@ -19,7 +19,7 @@ class Channel extends Component {
   //
   renderNotInvited(channel) {
     return channel.status === 'uninvited' ?
-      <span className="description">{ ` — /invite @${botName} #${channel.name}` }</span> :
+      <span className="description">{ `/invite @${botName} #${channel.name}` }</span> :
       null
   }
 
@@ -32,7 +32,7 @@ class Channel extends Component {
       if (subscribedThemes.length > 0) {
         return (
           <span className="description">
-            { ` — ${subscribedThemes.map(theme => theme.name).join(', ')}` }
+            { subscribedThemes.map(theme => theme.name).join(', ') }
           </span>
         )
       } else {
@@ -48,9 +48,11 @@ class Channel extends Component {
     const iconClassNames = classNames('fa', 'fa-circle', channel.status)
 
     return (
-      <li onClick={ this.props.onClick.bind(this, channel) }>
-        <i className={ iconClassNames } />
-        <span>{ `#${channel.name}` }</span>
+      <li>
+        <a href="" onClick={ this.props.onClick.bind(this, channel) }>
+          <i className={ iconClassNames } />
+          <span>{ `#${channel.name}` }</span>
+        </a>
         { this.renderNotInvited(channel) }
         { this.renderSubscribedThemes(channel) }
       </li>

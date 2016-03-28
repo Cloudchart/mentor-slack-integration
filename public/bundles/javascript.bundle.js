@@ -21627,7 +21627,7 @@
 
 	var daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
-	var botName = 'boris';
+	var botName = 'mentorbot';
 
 	exports.timezones = _timezones2.default;
 	exports.dayTimes = dayTimes;
@@ -22216,6 +22216,8 @@
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
+	var _data = __webpack_require__(189);
+
 	var _Channel = __webpack_require__(194);
 
 	var _Channel2 = _interopRequireDefault(_Channel);
@@ -22276,7 +22278,7 @@
 	      return _react2.default.createElement(
 	        'button',
 	        { className: 'msi', disabled: this.props.channels.isFetching, onClick: this.handleTestIntegrationClick.bind(this) },
-	        'Test Boris integration'
+	        'Test @' + _data.botName + ' integration'
 	      );
 	    }
 	  }, {
@@ -22397,7 +22399,7 @@
 	      return channel.status === 'uninvited' ? _react2.default.createElement(
 	        'span',
 	        { className: 'description' },
-	        ' — /invite @' + _data.botName + ' #' + channel.name
+	        '/invite @' + _data.botName + ' #' + channel.name
 	      ) : null;
 	    }
 	  }, {
@@ -22416,7 +22418,7 @@
 	          return _react2.default.createElement(
 	            'span',
 	            { className: 'description' },
-	            ' — ' + subscribedThemes.map(function (theme) {
+	            subscribedThemes.map(function (theme) {
 	              return theme.name;
 	            }).join(', ')
 	          );
@@ -22436,12 +22438,16 @@
 
 	      return _react2.default.createElement(
 	        'li',
-	        { onClick: this.props.onClick.bind(this, channel) },
-	        _react2.default.createElement('i', { className: iconClassNames }),
+	        null,
 	        _react2.default.createElement(
-	          'span',
-	          null,
-	          '#' + channel.name
+	          'a',
+	          { href: '', onClick: this.props.onClick.bind(this, channel) },
+	          _react2.default.createElement('i', { className: iconClassNames }),
+	          _react2.default.createElement(
+	            'span',
+	            null,
+	            '#' + channel.name
+	          )
 	        ),
 	        this.renderNotInvited(channel),
 	        this.renderSubscribedThemes(channel)
