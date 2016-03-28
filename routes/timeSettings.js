@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { checkTeamId } from './checkers'
+import { checkTeamId } from './helpers'
 import { TimeSetting } from '../models'
 
 let router = Router()

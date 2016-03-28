@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { WebClient } from 'slack-client'
-import { checkTeamId } from './checkers'
+import { Queue, checkTeamId } from './helpers'
 import { Team, Channel } from '../models'
 
 let router = Router()
@@ -76,6 +76,14 @@ router.delete('/', checkTeamId, async (req, res, next) => {
       res.json({ status: null })
     }
   })
+})
+
+router.post('/notify', async (req, res, next) => {
+  Queue.connect(() => {
+    Queue.enqueue('slack-integration', 'channelThemesChangeNotifier', req.body.id)
+  })
+
+  res.json({ message: 'ok' })
 })
 
 

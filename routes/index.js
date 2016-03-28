@@ -1,21 +1,17 @@
 import URL from 'url'
-import Redis from 'ioredis'
-import NR from 'node-resque'
-import parameterize from 'parameterize'
 // import moment from 'moment-timezone'
 
 import { Router } from 'express'
 import { WebClient } from 'slack-client'
+import { slugify } from 'underscore.string'
 
 import { errorMarker } from '../lib'
-import { checkTeamId } from './checkers'
 import { getChannels } from './channels'
+import { Queue, checkTeamId } from './helpers'
 import { Team, Channel, TimeSetting } from '../models'
 
 const router = Router()
 const SlackWebClient = new WebClient('')
-const RedisClient = new Redis(process.env.REDIS_URL)
-const Queue = new NR.queue({ connection: { redis: RedisClient } })
 
 
 // helpers
@@ -87,9 +83,8 @@ router.get('/oauth/callback', (req, res, next) => {
           }).spread(async (team, created) => {
             if (!created) await team.update(attrs)
             req.session.teamId = team.id
-            const parameterizedTeamName = parameterize(team.name)
             enqueueTeamOwnerNotification(team.id)
-            res.redirect(`/${parameterizedTeamName}/configuration`)
+            res.redirect(`/${slugify(team.name)}/configuration`)
           })
         }
       }

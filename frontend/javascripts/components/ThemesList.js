@@ -9,6 +9,7 @@ class ThemesList extends Component {
     super(props)
     this.state = {
       themes: [],
+      isThemesUpdated: false,
     }
   }
 
@@ -23,7 +24,7 @@ class ThemesList extends Component {
       const themes = nextProps.themes.find(item => item.channelId === nextProps.channel.id)
 
       if (themes) {
-        this.setState({ themes: themes.items })
+        this.setState({ themes: themes.items, isThemesUpdated: false })
         // TODO: fork and add to source
         document.getElementById('modal').className = ''
         document.body.classList.add('modal-opened')
@@ -37,20 +38,31 @@ class ThemesList extends Component {
 
   // helpers
   //
-  hideContainer() {
-    // TODO: fork and add to source
-    document.getElementById('modal').className = 'hidden'
-    document.body.classList.remove('modal-opened')
-
-    this.props.onHide()
-  }
-
   getSelectedThemesSize() {
     return this.state.themes.filter(theme => theme.isSubscribed).length
   }
 
+  notifyChannel() {
+    if (
+      this.props.channel.status !== 'invited' ||
+      this.getSelectedThemesSize() === 0 ||
+      !this.state.isThemesUpdated
+    ) return
+
+    this.props.actions.notifyChannel(this.props.channel.id)
+  }
+
   // handlers
   //
+  handleModalHide() {
+    // TODO: fork and add to source
+    document.getElementById('modal').className = 'hidden'
+    document.body.classList.remove('modal-opened')
+
+    this.notifyChannel()
+    this.props.onHide()
+  }
+
   handleModalClose(event) {
     this.refs.modal.hide()
   }
@@ -62,7 +74,9 @@ class ThemesList extends Component {
     if (selectedThemesSize === 3 && !theme.isSubscribed) return
 
     let action = theme.isSubscribed ? 'unsubscribe' : 'subscribe'
-    actions.updateThemeStatus(theme.id, channel.id, action)
+    actions.updateThemeStatus(theme.id, channel.id, action).then(() => {
+      this.setState({ isThemesUpdated: true })
+    })
 
     if (selectedThemesSize === 0 && action === 'subscribe') {
       actions.createChannel(channel.id)
@@ -87,7 +101,7 @@ class ThemesList extends Component {
   render() {
     return (
       <div id="modal" className="hidden">
-        <Modal ref="modal" onHide={ this.hideContainer.bind(this) }>
+        <Modal ref="modal" onHide={ this.handleModalHide.bind(this) }>
           <div className="modal-content themes-list">
             <h1>
               Choose topics you want Virtual Mentor to post

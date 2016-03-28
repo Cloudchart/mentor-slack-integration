@@ -8,9 +8,9 @@ import {
   noticeMarker,
   reactionsCollectorDelay,
   notInChannelNotifierDelay,
-  callWebAppGraphQL,
 } from '../lib'
 
+import { callWebAppGraphQL } from '../routes/helpers'
 import { Channel, Message, Team, TimeSetting } from '../models'
 import { SlackChannel, Insight, InsightOrigin, UserTheme, UserThemeInsight } from '../models/web_app'
 

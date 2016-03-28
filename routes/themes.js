@@ -1,6 +1,5 @@
 import { Router } from 'express'
-import { callWebAppGraphQL } from '../lib'
-import { checkTeamId } from './checkers'
+import { checkTeamId, callWebAppGraphQL } from './helpers'
 
 let router = Router()
 

@@ -36,7 +36,6 @@
     "node-resque": "^2.0.0",
     "node-sass": "^3.4.2",
     "node-schedule": "^1.0.0",
-    "parameterize": "0.0.7",
     "postcss-loader": "^0.8.1",
     "react": "^0.14.7",
     "react-dom": "^0.14.7",
@@ -50,6 +49,7 @@
     "serve-favicon": "~2.3.0",
     "slack-client": "^2.0.2",
     "style-loader": "^0.13.0",
+    "underscore.string": "^3.3.4",
     "url-loader": "^0.5.7",
     "webpack": "^1.12.14"
   },
