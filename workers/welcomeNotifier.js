@@ -10,7 +10,7 @@ const notificationType = 'welcome'
 // helpers
 //
 function sendMessage(SlackWeb, teamOwner, done) {
-  const text = "Hello, meatb… Master. I am fully operational now and ready to give you advice. You can star my advices for quick access, use reactions on them or pin the most imporant ones to the channel.\n\nNow let the mentoring begin!"
+  const text = "Hello, meatb… Master. Thank you for using me as your mentor. To make this battle bot fully operational, please select channels and topics for me to post on."
 
   SlackWeb.chat.postMessage(teamOwner.imId, text, { as_user: true }, async (err, res) => {
     if (err = err || res.error) {
