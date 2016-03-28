@@ -9,7 +9,7 @@ $giant-font-size: $primary-font-size * 1.5;
 
   > section.top {
     position: relative;
-    padding: 30px;
+    padding: 30px 30px 40px 30px;
     color: #FFFFFF;
     z-index: 1;
 
@@ -114,7 +114,7 @@ $giant-font-size: $primary-font-size * 1.5;
     $reduction-ratio: 2.3;
 
     background-color: #FFFFFF;
-    padding: 30px;
+    padding: 40px 30px 30px 30px;
 
     > .slack-window {
       margin: 0 30px 10px 0;
@@ -159,7 +159,7 @@ $giant-font-size: $primary-font-size * 1.5;
     @include flex-direction(column);
     @include align-items(center);
 
-    padding: 50px 30px 30px 30px;
+    padding: 50px 30px 40px 30px;
     color: #FFFFFF;
 
     a {
