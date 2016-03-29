@@ -15,9 +15,10 @@ const SlackWebClient = new WebClient('')
 
 // helpers
 //
-function enqueueTeamOwnerNotification(teamId) {
+function enqueueNotifications(teamId) {
   Queue.connect(() => {
     Queue.enqueue('slack-integration', 'welcomeNotifier', teamId)
+    Queue.enqueue('slack-integration', 'tracker', ['registered', { teamId: teamId }])
   })
 }
 
@@ -78,9 +79,8 @@ router.get('/oauth/callback', (req, res, next) => {
           Team.findOrCreate({
             where: { id: data.team_id }, defaults: attrs
           }).spread(async (team, created) => {
-            if (!created) await team.update(attrs)
+            if (created) { enqueueNotifications(team.id) } else { await team.update(attrs) }
             req.session.teamId = team.id
-            enqueueTeamOwnerNotification(team.id)
             res.redirect(`/${slugify(team.name)}/configuration`)
           })
         }

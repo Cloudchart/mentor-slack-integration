@@ -7,6 +7,16 @@ let router = Router()
 let SlackDefaultWeb = new WebClient('')
 
 
+// helpers
+//
+function enqueueSubscribeNotification(teamId, channel) {
+  Queue.connect(() => {
+    Queue.enqueue('slack-integration', 'tracker',
+      ['subscribed_to_channel', { teamId: teamId, channel: channel }]
+    )
+  })
+}
+
 function getChannels(team) {
   return new Promise(async (resolve, reject) => {
     const teamChannels = await Channel.findAll({ where: { teamId: team.id } })
@@ -58,6 +68,7 @@ router.post('/', checkTeamId, async (req, res, next) => {
     if (error = error || data.error) {
       res.status(500).json({ error: error })
     } else {
+      enqueueSubscribeNotification(team.id, data.channel)
       res.status(201).json({ status: data.channel.is_member ? 'invited' : 'uninvited' })
     }
   })
