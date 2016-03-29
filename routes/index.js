@@ -1,5 +1,5 @@
 import URL from 'url'
-// import moment from 'moment-timezone'
+import moment from 'moment-timezone'
 
 import { Router } from 'express'
 import { WebClient } from 'slack-client'
@@ -13,7 +13,6 @@ import { Team, Channel, TimeSetting } from '../models'
 const router = Router()
 const SlackWebClient = new WebClient('')
 
-
 // helpers
 //
 function enqueueTeamOwnerNotification(teamId) {
@@ -23,12 +22,10 @@ function enqueueTeamOwnerNotification(teamId) {
 }
 
 async function initTimeSetting(req, res, next) {
-  // TODO: get tz from moment-timezone
-  // TODO: update timezones.json to tz database 2016b version
   await TimeSetting.findOrCreate({
     where: { teamId: req.session.teamId },
     defaults: {
-      tz: 'Europe/Moscow',
+      tz: moment.tz.guess() || 'America/Los_Angeles',
       startTime: '10:00',
       endTime: '22:00',
       days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri']
