@@ -8,3 +8,5 @@ html
     block content
     block pagescript
     script(type="text/javascript", src="/bundles/javascript.bundle.js")
+    if process.env.NODE_ENV === 'production'
+      script(type="text/javascript", src="/javascripts/ga.js")
