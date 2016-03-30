@@ -22,6 +22,7 @@ module.exports = function(sequelize, DataTypes) {
       associate: function(models) {
         Channel.belongsTo(models.Team, { foreignKey: 'teamId' })
         Channel.hasMany(models.Message, { foreignKey: 'channelId', onDelete: 'CASCADE' })
+        Channel.hasMany(models.ChannelNotification, { foreignKey: 'channelId', onDelete: 'CASCADE' })
       }
     }
 
