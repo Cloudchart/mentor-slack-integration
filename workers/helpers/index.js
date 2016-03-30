@@ -23,6 +23,7 @@ export async function getTeamOwner(teamId, SlackWeb) {
               reject()
             } else {
               let im = res.ims.find(im => im.user === primaryOwner.id)
+              if (!im) return resolve(null)
 
               TeamOwner.findOrCreate({
                 where: { id: im.user },

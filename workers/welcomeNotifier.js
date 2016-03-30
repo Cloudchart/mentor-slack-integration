@@ -34,6 +34,11 @@ async function perform(teamId, done) {
   const team = await Team.findById(teamId)
   const SlackWeb = new WebClient(team.accessToken)
   const teamOwner = await getTeamOwner(team.id, SlackWeb)
+  if (!teamOwner) {
+    console.log(errorMarker, workerName, 'Did not find team owner for:', team.id)
+    return done(null)
+  }
+
   const teamOwnerNotifications = await TeamOwnerNotification.findOne({
     where: {
       teamOwnerId: teamOwner.id,
