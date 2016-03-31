@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { WebClient } from 'slack-client'
-import { Queue, checkTeamId } from './helpers'
+import { enqueue, checkTeamId } from './helpers'
 import { Team, Channel } from '../models'
 
 let router = Router()
@@ -10,11 +10,7 @@ let SlackDefaultWeb = new WebClient('')
 // helpers
 //
 function enqueueSubscribeNotification(teamId, channel) {
-  Queue.connect(() => {
-    Queue.enqueue('slack-integration', 'tracker',
-      ['subscribed_to_channel', { teamId: teamId, channel: channel }]
-    )
-  })
+  enqueue('tracker', ['subscribed_to_channel', { teamId: teamId, channel: channel }])
 }
 
 function getChannels(team) {
@@ -90,10 +86,7 @@ router.delete('/', checkTeamId, async (req, res, next) => {
 })
 
 router.post('/notify', async (req, res, next) => {
-  Queue.connect(() => {
-    Queue.enqueue('slack-integration', 'channelThemesChangeNotifier', req.body.id)
-  })
-
+  enqueue('channelThemesChangeNotifier', req.body.id)
   res.json({ message: 'ok' })
 })
 

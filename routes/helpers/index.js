@@ -3,9 +3,14 @@ import Redis from 'ioredis'
 import NR from 'node-resque'
 
 const RedisClient = new Redis(process.env.REDIS_URL)
+const Queue = new NR.queue({ connection: { redis: RedisClient } })
 
 
-export const Queue = new NR.queue({ connection: { redis: RedisClient } })
+export function enqueue(name, payload) {
+  Queue.connect(() => {
+    Queue.enqueue('slack-integration', name, payload)
+  })
+}
 
 export function checkTeamId(req, res, next) {
   if (req.session.teamId) {

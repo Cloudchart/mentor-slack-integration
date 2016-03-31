@@ -7,7 +7,7 @@ import { slugify } from 'underscore.string'
 
 import { errorMarker } from '../lib'
 import { getChannels } from './channels'
-import { Queue, checkTeamId } from './helpers'
+import { enqueue, checkTeamId } from './helpers'
 import { Team, Channel, TimeSetting } from '../models'
 
 const router = Router()
@@ -16,10 +16,8 @@ const SlackWebClient = new WebClient('')
 // helpers
 //
 function enqueueNotifications(teamId) {
-  Queue.connect(() => {
-    Queue.enqueue('slack-integration', 'welcomeNotifier', teamId)
-    Queue.enqueue('slack-integration', 'tracker', ['registered', { teamId: teamId }])
-  })
+  enqueue('welcomeNotifier', teamId)
+  enqueue('tracker', ['registered', { teamId: teamId }])
 }
 
 async function initTimeSetting(req, res, next) {
