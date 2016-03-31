@@ -22478,7 +22478,7 @@
 	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ChannelsList).call(this, props));
 
 	    _this.state = {
-	      selectedChannel: {}
+	      selectedChannelId: ''
 	    };
 	    return _this;
 	  }
@@ -22496,12 +22496,12 @@
 	    key: 'handleChannelClick',
 	    value: function handleChannelClick(channel, event) {
 	      event.preventDefault();
-	      this.setState({ selectedChannel: channel });
+	      this.setState({ selectedChannelId: channel.id });
 	    }
 	  }, {
 	    key: 'handleThemesListHide',
 	    value: function handleThemesListHide() {
-	      this.setState({ selectedChannel: {} });
+	      this.setState({ selectedChannelId: '' });
 	    }
 
 	    // renderers
@@ -22524,6 +22524,7 @@
 	      var _props = this.props;
 	      var themes = _props.themes;
 	      var actions = _props.actions;
+	      var channels = _props.channels;
 
 
 	      return _react2.default.createElement(
@@ -22547,7 +22548,8 @@
 	          })
 	        ),
 	        _react2.default.createElement(_ThemesList2.default, {
-	          channel: this.state.selectedChannel,
+	          selectedChannelId: this.state.selectedChannelId,
+	          channels: channels,
 	          themes: themes,
 	          actions: actions,
 	          onHide: this.handleThemesListHide.bind(this)
@@ -22796,6 +22798,7 @@
 	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ThemesList).call(this, props));
 
 	    _this.state = {
+	      channel: {},
 	      themes: [],
 	      isThemesUpdated: false
 	    };
@@ -22809,26 +22812,33 @@
 	  _createClass(ThemesList, [{
 	    key: 'shouldComponentUpdate',
 	    value: function shouldComponentUpdate(nextProps, nextState) {
-	      return Object.keys(nextProps.channel).length > 0;
+	      return !!nextProps.selectedChannelId;
 	    }
 	  }, {
 	    key: 'componentWillReceiveProps',
 	    value: function componentWillReceiveProps(nextProps) {
-	      if (Object.keys(nextProps.channel).length > 0) {
-	        var themes = nextProps.themes.find(function (item) {
-	          return item.channelId === nextProps.channel.id;
+	      var channel = nextProps.channels.items.find(function (channel) {
+	        return channel.id === nextProps.selectedChannelId;
+	      });
+	      if (!channel) return;
+
+	      var themes = nextProps.themes.find(function (item) {
+	        return item.channelId === channel.id;
+	      });
+
+	      if (themes) {
+	        this.setState({
+	          channel: channel,
+	          themes: themes.items,
+	          isThemesUpdated: false
 	        });
+	        // TODO: fork and add to source
+	        document.getElementById('modal').className = '';
+	        document.body.classList.add('modal-opened');
 
-	        if (themes) {
-	          this.setState({ themes: themes.items, isThemesUpdated: false });
-	          // TODO: fork and add to source
-	          document.getElementById('modal').className = '';
-	          document.body.classList.add('modal-opened');
-
-	          this.refs.modal.show();
-	        } else {
-	          nextProps.actions.fetchThemes(nextProps.channel.id);
-	        }
+	        this.refs.modal.show();
+	      } else {
+	        nextProps.actions.fetchThemes(channel.id);
 	      }
 	    }
 
@@ -22845,9 +22855,9 @@
 	  }, {
 	    key: 'notifyChannel',
 	    value: function notifyChannel() {
-	      if (this.props.channel.status !== 'invited' || this.getSelectedThemesSize() === 0 || !this.state.isThemesUpdated) return;
+	      if (this.state.channel.status !== 'invited' || this.getSelectedThemesSize() === 0 || !this.state.isThemesUpdated) return;
 
-	      this.props.actions.notifyChannel(this.props.channel.id);
+	      this.props.actions.notifyChannel(this.state.channel.id);
 	    }
 
 	    // handlers
@@ -22874,9 +22884,9 @@
 	      var _this2 = this;
 
 	      event.preventDefault();
-	      var _props = this.props;
-	      var channel = _props.channel;
-	      var actions = _props.actions;
+
+	      var channel = this.state.channel;
+	      var actions = this.props.actions;
 
 	      var selectedThemesSize = this.getSelectedThemesSize();
 	      if (selectedThemesSize === 3 && !theme.isSubscribed) return;
@@ -22887,7 +22897,9 @@
 	      });
 
 	      if (selectedThemesSize === 0 && action === 'subscribe') {
-	        actions.createChannel(channel.id);
+	        actions.createChannel(channel.id).then(function () {
+	          _this2.setState({ isThemesUpdated: true });
+	        });
 	      } else if (selectedThemesSize === 1 && action === 'unsubscribe') {
 	        actions.destroyChannel(channel.id);
 	      }
@@ -22931,7 +22943,7 @@
 	              _react2.default.createElement(
 	                'strong',
 	                null,
-	                '#' + this.props.channel.name
+	                '#' + this.state.channel.name
 	              )
 	            ),
 	            _react2.default.createElement(
@@ -22958,7 +22970,8 @@
 	}(_react.Component);
 
 	ThemesList.propTypes = {
-	  channel: _react.PropTypes.object.isRequired,
+	  selectedChannelId: _react.PropTypes.string.isRequired,
+	  channels: _react.PropTypes.object.isRequired,
 	  themes: _react.PropTypes.array.isRequired,
 	  actions: _react.PropTypes.object.isRequired
 	};

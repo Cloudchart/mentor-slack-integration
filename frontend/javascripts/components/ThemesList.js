@@ -8,6 +8,7 @@ class ThemesList extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      channel: {},
       themes: [],
       isThemesUpdated: false,
     }
@@ -16,23 +17,28 @@ class ThemesList extends Component {
   // lifecycle
   //
   shouldComponentUpdate(nextProps, nextState) {
-    return Object.keys(nextProps.channel).length > 0
+    return !!nextProps.selectedChannelId
   }
 
   componentWillReceiveProps(nextProps) {
-    if (Object.keys(nextProps.channel).length > 0) {
-      const themes = nextProps.themes.find(item => item.channelId === nextProps.channel.id)
+    const channel = nextProps.channels.items.find(channel => channel.id === nextProps.selectedChannelId)
+    if (!channel) return
 
-      if (themes) {
-        this.setState({ themes: themes.items, isThemesUpdated: false })
-        // TODO: fork and add to source
-        document.getElementById('modal').className = ''
-        document.body.classList.add('modal-opened')
+    const themes = nextProps.themes.find(item => item.channelId === channel.id)
 
-        this.refs.modal.show()
-      } else {
-        nextProps.actions.fetchThemes(nextProps.channel.id)
-      }
+    if (themes) {
+      this.setState({
+        channel: channel,
+        themes: themes.items,
+        isThemesUpdated: false
+      })
+      // TODO: fork and add to source
+      document.getElementById('modal').className = ''
+      document.body.classList.add('modal-opened')
+
+      this.refs.modal.show()
+    } else {
+      nextProps.actions.fetchThemes(channel.id)
     }
   }
 
@@ -44,12 +50,12 @@ class ThemesList extends Component {
 
   notifyChannel() {
     if (
-      this.props.channel.status !== 'invited' ||
+      this.state.channel.status !== 'invited' ||
       this.getSelectedThemesSize() === 0 ||
       !this.state.isThemesUpdated
     ) return
 
-    this.props.actions.notifyChannel(this.props.channel.id)
+    this.props.actions.notifyChannel(this.state.channel.id)
   }
 
   // handlers
@@ -69,7 +75,9 @@ class ThemesList extends Component {
 
   handleThemeClick(theme, event) {
     event.preventDefault()
-    const { channel, actions } = this.props
+
+    const { channel } = this.state
+    const { actions } = this.props
     const selectedThemesSize = this.getSelectedThemesSize()
     if (selectedThemesSize === 3 && !theme.isSubscribed) return
 
@@ -79,7 +87,9 @@ class ThemesList extends Component {
     })
 
     if (selectedThemesSize === 0 && action === 'subscribe') {
-      actions.createChannel(channel.id)
+      actions.createChannel(channel.id).then(() => {
+        this.setState({ isThemesUpdated: true })
+      })
     } else if (selectedThemesSize === 1 && action === 'unsubscribe') {
       actions.destroyChannel(channel.id)
     }
@@ -105,7 +115,7 @@ class ThemesList extends Component {
           <div className="modal-content themes-list">
             <h1>
               Choose topics you want Virtual Mentor to post
-              to <strong>{ `#${this.props.channel.name}` }</strong>
+              to <strong>{ `#${this.state.channel.name}` }</strong>
             </h1>
 
             <ul>
@@ -124,7 +134,8 @@ class ThemesList extends Component {
 }
 
 ThemesList.propTypes = {
-  channel: PropTypes.object.isRequired,
+  selectedChannelId: PropTypes.string.isRequired,
+  channels: PropTypes.object.isRequired,
   themes: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired,
 }

@@ -12,7 +12,7 @@ class ChannelsList extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      selectedChannel: {},
+      selectedChannelId: '',
     }
   }
 
@@ -24,11 +24,11 @@ class ChannelsList extends Component {
 
   handleChannelClick(channel, event) {
     event.preventDefault()
-    this.setState({ selectedChannel: channel })
+    this.setState({ selectedChannelId: channel.id })
   }
 
   handleThemesListHide() {
-    this.setState({ selectedChannel: {} })
+    this.setState({ selectedChannelId: '' })
   }
 
   // renderers
@@ -42,7 +42,7 @@ class ChannelsList extends Component {
   }
 
   render() {
-    const { themes, actions } = this.props
+    const { themes, actions, channels } = this.props
 
     return (
       <div>
@@ -60,7 +60,8 @@ class ChannelsList extends Component {
         </ul>
 
         <ThemesList
-          channel={ this.state.selectedChannel }
+          selectedChannelId={ this.state.selectedChannelId }
+          channels={ channels }
           themes={ themes }
           actions={ actions }
           onHide={ this.handleThemesListHide.bind(this) }
