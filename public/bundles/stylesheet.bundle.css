@@ -2216,6 +2216,13 @@ footer {
   color: #222222;
   font-size: 22px;
   padding: 10px 15px; }
+  .slack-button.small {
+    font-size: 16px;
+    padding: 8px 8px; }
+    .slack-button.small > i {
+      width: 25px;
+      height: 24px;
+      margin-right: 5px; }
   .slack-button > i {
     background-image: url("/images/slack-logo@2x.png");
     background-size: cover;

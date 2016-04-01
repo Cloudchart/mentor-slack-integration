@@ -23804,17 +23804,7 @@
 	              )
 	            )
 	          ),
-	          _react2.default.createElement(
-	            'a',
-	            { href: this.props.slackButtonUrl },
-	            _react2.default.createElement('img', {
-	              alt: 'Add to Slack',
-	              height: '40',
-	              width: '139',
-	              src: 'https://platform.slack-edge.com/img/add_to_slack.png',
-	              srcSet: 'https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x'
-	            })
-	          )
+	          _react2.default.createElement(_SlackButton2.default, { slackButtonUrl: this.props.slackButtonUrl, text: 'login', size: 'small' })
 	        ),
 	        _react2.default.createElement(
 	          'div',
@@ -23956,7 +23946,7 @@
 /* 209 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -23968,13 +23958,43 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _classnames = __webpack_require__(196);
+
+	var _classnames2 = _interopRequireDefault(_classnames);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var buttonText = {
+	  default: _react2.default.createElement(
+	    'span',
+	    null,
+	    'Add ',
+	    _react2.default.createElement(
+	      'strong',
+	      null,
+	      'MentorBot'
+	    ),
+	    ' to Slack'
+	  ),
+	  login: _react2.default.createElement(
+	    'span',
+	    null,
+	    'Login with ',
+	    _react2.default.createElement(
+	      'strong',
+	      null,
+	      'Slack'
+	    )
+	  )
+	};
 
 	var SlackButton = function (_Component) {
 	  _inherits(SlackButton, _Component);
@@ -23986,28 +24006,24 @@
 	  }
 
 	  _createClass(SlackButton, [{
-	    key: "handleSlackButtonClick",
+	    key: 'handleSlackButtonClick',
 	    value: function handleSlackButtonClick(event) {
 	      window.location = this.props.slackButtonUrl;
 	    }
 	  }, {
-	    key: "render",
+	    key: 'render',
 	    value: function render() {
+	      var _props = this.props;
+	      var size = _props.size;
+	      var text = _props.text;
+
+	      var buttonClassNames = (0, _classnames2.default)('slack-button', _defineProperty({}, size, size));
+
 	      return _react2.default.createElement(
-	        "div",
-	        { className: "slack-button", onClick: this.handleSlackButtonClick.bind(this) },
-	        _react2.default.createElement("i", null),
-	        _react2.default.createElement(
-	          "span",
-	          null,
-	          "Add ",
-	          _react2.default.createElement(
-	            "strong",
-	            null,
-	            "MentorBot"
-	          ),
-	          " to Slack"
-	        )
+	        'div',
+	        { className: buttonClassNames, onClick: this.handleSlackButtonClick.bind(this) },
+	        _react2.default.createElement('i', null),
+	        buttonText[text]
 	      );
 	    }
 	  }]);
@@ -24017,6 +24033,11 @@
 
 	SlackButton.propTypes = {
 	  slackButtonUrl: _react.PropTypes.string.isRequired
+	};
+
+	SlackButton.defaultProps = {
+	  text: 'default',
+	  size: ''
 	};
 
 	exports.default = SlackButton;
