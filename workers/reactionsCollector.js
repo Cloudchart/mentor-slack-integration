@@ -48,6 +48,8 @@ export let perform = async (messageId, userThemeInsightId, done) => {
         if (positiveReactionsCounter > negativeReactionsCounter) { rate = 1 } else { rate = -1 }
         await userThemeInsight.update({ rate: rate })
         done(null, true)
+      } else {
+        done(null, true)
       }
     }
   })
