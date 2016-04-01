@@ -46,9 +46,17 @@ router.get('/', checkTeamId, async (req, res, next) => {
   const team = await Team.findById(req.session.teamId)
 
   getChannels(team).then(channels => {
-    res.json({ channels: channels })
+    let status = 'non_selected'
+    const statuses = channels.map(channel => channel.status)
+    const atLeastOneIsInvited = statuses.includes('invited')
+    const atLeastOneIsUninvited = statuses.includes('uninvited')
+
+    if (atLeastOneIsUninvited) status = 'awaiting_invitation'
+    if (atLeastOneIsInvited && !atLeastOneIsUninvited) status = 'ok'
+
+    res.json({ channels: channels, status: status })
   }).catch(error => {
-    res.status(500).json({ error: error })
+    res.status(500).json({ error: error, status: 'error' })
   })
 })
 

@@ -99,9 +99,18 @@
 
         > span.description {
           display: block;
-          font-size: 14px;
           padding-left: 35px;
         }
+      }
+    }
+
+    .intergation-test {
+      @include flexbox;
+      @include align-items(center);
+
+      > .status {
+        margin-left: 30px;
+        width: 300px;
       }
     }
 

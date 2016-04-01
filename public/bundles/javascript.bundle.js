@@ -72,7 +72,7 @@
 	if (reactType === 'plain') {
 	  _reactDom2.default.render(_react2.default.createElement(Component, JSON.parse(node.dataset.reactProps)), node);
 	} else {
-	  var reducers = __webpack_require__(210)("./" + reactClass).default;
+	  var reducers = __webpack_require__(211)("./" + reactClass).default;
 	  var store = (0, _redux.createStore)(reducers, window.__INITIAL_STATE__, (0, _redux.applyMiddleware)(_reduxThunk2.default));
 
 	  _reactDom2.default.render(_react2.default.createElement(
@@ -20486,8 +20486,8 @@
 	var map = {
 		"./ConfigApp": 177,
 		"./ConfigApp.js": 177,
-		"./LandingApp": 208,
-		"./LandingApp.js": 208
+		"./LandingApp": 209,
+		"./LandingApp.js": 209
 	};
 	function webpackContext(req) {
 		return __webpack_require__(webpackContextResolve(req));
@@ -20539,7 +20539,7 @@
 
 	var _ChannelsList2 = _interopRequireDefault(_ChannelsList);
 
-	var _TimeSetting = __webpack_require__(207);
+	var _TimeSetting = __webpack_require__(208);
 
 	var _TimeSetting2 = _interopRequireDefault(_TimeSetting);
 
@@ -21420,13 +21420,16 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function requestChannels() {
-	  return { type: 'CHANNELS_REQUEST' };
+	  return {
+	    type: 'CHANNELS_REQUEST'
+	  };
 	}
 
 	function receiveChannels(json) {
 	  return {
 	    type: 'CHANNELS_RECEIVE',
 	    channels: json.channels,
+	    status: json.status,
 	    receivedAt: Date.now()
 	  };
 	}
@@ -22451,8 +22454,6 @@
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _data = __webpack_require__(190);
-
 	var _Channel = __webpack_require__(195);
 
 	var _Channel2 = _interopRequireDefault(_Channel);
@@ -22460,6 +22461,10 @@
 	var _ThemesList = __webpack_require__(197);
 
 	var _ThemesList2 = _interopRequireDefault(_ThemesList);
+
+	var _IntegrationTest = __webpack_require__(207);
+
+	var _IntegrationTest2 = _interopRequireDefault(_IntegrationTest);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -22488,11 +22493,6 @@
 
 
 	  _createClass(ChannelsList, [{
-	    key: 'handleTestIntegrationClick',
-	    value: function handleTestIntegrationClick(event) {
-	      this.props.actions.fetchChannels();
-	    }
-	  }, {
 	    key: 'handleChannelClick',
 	    value: function handleChannelClick(channel, event) {
 	      event.preventDefault();
@@ -22507,15 +22507,6 @@
 	    // renderers
 	    //
 
-	  }, {
-	    key: 'renderTestIntegrationButton',
-	    value: function renderTestIntegrationButton() {
-	      return _react2.default.createElement(
-	        'button',
-	        { className: 'msi', disabled: this.props.channels.isFetching, onClick: this.handleTestIntegrationClick.bind(this) },
-	        'Test @' + _data.botName + ' integration'
-	      );
-	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
@@ -22554,7 +22545,10 @@
 	          actions: actions,
 	          onHide: this.handleThemesListHide.bind(this)
 	        }),
-	        this.renderTestIntegrationButton()
+	        _react2.default.createElement(_IntegrationTest2.default, {
+	          channels: channels,
+	          actions: actions
+	        })
 	      );
 	    }
 	  }]);
@@ -23550,6 +23544,86 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _data = __webpack_require__(190);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var messages = {
+	  'non_selected': "Please select at least one channel for the Virtual Mentor bot to post to.",
+	  'awaiting_invitation': 'Please type /invite @' + _data.botName + ' in each channel where you want the bot to post advices to.',
+	  'ok': "Success! Your Virtual Mentor bot is ready to serve its new Master.",
+	  'error': "Something went really wrong. Please try again later."
+	};
+
+	var IntegrationTest = function (_Component) {
+	  _inherits(IntegrationTest, _Component);
+
+	  function IntegrationTest() {
+	    _classCallCheck(this, IntegrationTest);
+
+	    return _possibleConstructorReturn(this, Object.getPrototypeOf(IntegrationTest).apply(this, arguments));
+	  }
+
+	  _createClass(IntegrationTest, [{
+	    key: 'handleTestIntegrationClick',
+	    value: function handleTestIntegrationClick(event) {
+	      this.props.actions.fetchChannels();
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var channels = this.props.channels;
+
+
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'intergation-test' },
+	        _react2.default.createElement(
+	          'button',
+	          { className: 'msi', disabled: channels.isFetching, onClick: this.handleTestIntegrationClick.bind(this) },
+	          'Test @' + _data.botName + ' integration'
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'status' },
+	          messages[channels.status]
+	        )
+	      );
+	    }
+	  }]);
+
+	  return IntegrationTest;
+	}(_react.Component);
+
+	IntegrationTest.propTypes = {
+	  channels: _react.PropTypes.object.isRequired,
+	  actions: _react.PropTypes.object.isRequired
+	};
+
+	exports.default = IntegrationTest;
+
+/***/ },
+/* 208 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
 	var _classnames = __webpack_require__(196);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
@@ -23726,7 +23800,7 @@
 	exports.default = TimeSetting;
 
 /***/ },
-/* 208 */
+/* 209 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23741,7 +23815,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _SlackButton = __webpack_require__(209);
+	var _SlackButton = __webpack_require__(210);
 
 	var _SlackButton2 = _interopRequireDefault(_SlackButton);
 
@@ -23943,7 +24017,7 @@
 	exports.default = LandingApp;
 
 /***/ },
-/* 209 */
+/* 210 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -24043,20 +24117,20 @@
 	exports.default = SlackButton;
 
 /***/ },
-/* 210 */
+/* 211 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var map = {
-		"./ConfigApp": 211,
-		"./ConfigApp.js": 211,
-		"./channels": 213,
-		"./channels.js": 213,
-		"./team": 212,
-		"./team.js": 212,
-		"./themes": 214,
-		"./themes.js": 214,
-		"./timeSetting": 215,
-		"./timeSetting.js": 215
+		"./ConfigApp": 212,
+		"./ConfigApp.js": 212,
+		"./channels": 214,
+		"./channels.js": 214,
+		"./team": 213,
+		"./team.js": 213,
+		"./themes": 215,
+		"./themes.js": 215,
+		"./timeSetting": 216,
+		"./timeSetting.js": 216
 	};
 	function webpackContext(req) {
 		return __webpack_require__(webpackContextResolve(req));
@@ -24069,11 +24143,11 @@
 	};
 	webpackContext.resolve = webpackContextResolve;
 	module.exports = webpackContext;
-	webpackContext.id = 210;
+	webpackContext.id = 211;
 
 
 /***/ },
-/* 211 */
+/* 212 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -24084,19 +24158,19 @@
 
 	var _redux = __webpack_require__(154);
 
-	var _team = __webpack_require__(212);
+	var _team = __webpack_require__(213);
 
 	var _team2 = _interopRequireDefault(_team);
 
-	var _channels = __webpack_require__(213);
+	var _channels = __webpack_require__(214);
 
 	var _channels2 = _interopRequireDefault(_channels);
 
-	var _themes = __webpack_require__(214);
+	var _themes = __webpack_require__(215);
 
 	var _themes2 = _interopRequireDefault(_themes);
 
-	var _timeSetting = __webpack_require__(215);
+	var _timeSetting = __webpack_require__(216);
 
 	var _timeSetting2 = _interopRequireDefault(_timeSetting);
 
@@ -24110,7 +24184,7 @@
 	});
 
 /***/ },
-/* 212 */
+/* 213 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -24130,7 +24204,7 @@
 	}
 
 /***/ },
-/* 213 */
+/* 214 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -24141,7 +24215,8 @@
 	exports.default = channels;
 	var initialState = {
 	  isFetching: false,
-	  items: []
+	  items: [],
+	  status: ''
 	};
 
 	function channels() {
@@ -24178,6 +24253,7 @@
 	      return Object.assign({}, state, {
 	        isFetching: false,
 	        items: action.channels,
+	        status: action.status,
 	        lastUpdated: action.receivedAt
 	      });
 	    case 'CHANNELS_ERROR':
@@ -24190,7 +24266,7 @@
 	}
 
 /***/ },
-/* 214 */
+/* 215 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -24248,7 +24324,7 @@
 	}
 
 /***/ },
-/* 215 */
+/* 216 */
 /***/ function(module, exports) {
 
 	'use strict';

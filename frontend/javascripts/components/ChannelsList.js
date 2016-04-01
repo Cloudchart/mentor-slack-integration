@@ -1,10 +1,9 @@
 import React, { Component, PropTypes } from 'react'
 import ReactDOM from 'react-dom'
 
-import { botName } from '../../data'
-
 import Channel from './Channel'
 import ThemesList from './ThemesList'
+import IntegrationTest from './IntegrationTest'
 
 
 class ChannelsList extends Component {
@@ -18,10 +17,6 @@ class ChannelsList extends Component {
 
   // handlers
   //
-  handleTestIntegrationClick(event) {
-    this.props.actions.fetchChannels()
-  }
-
   handleChannelClick(channel, event) {
     event.preventDefault()
     this.setState({ selectedChannelId: channel.id })
@@ -33,14 +28,6 @@ class ChannelsList extends Component {
 
   // renderers
   //
-  renderTestIntegrationButton() {
-    return(
-      <button className='msi' disabled={ this.props.channels.isFetching } onClick={ this.handleTestIntegrationClick.bind(this) }>
-        { `Test @${botName} integration` }
-      </button>
-    )
-  }
-
   render() {
     const { themes, actions, channels } = this.props
 
@@ -67,7 +54,10 @@ class ChannelsList extends Component {
           onHide={ this.handleThemesListHide.bind(this) }
         />
 
-        { this.renderTestIntegrationButton() }
+        <IntegrationTest
+          channels={ channels }
+          actions={ actions }
+        />
       </div>
     )
   }

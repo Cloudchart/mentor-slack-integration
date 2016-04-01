@@ -1,6 +1,7 @@
 const initialState = {
   isFetching: false,
   items: [],
+  status: '',
 }
 
 export default function channels(state = initialState, action) {
@@ -40,6 +41,7 @@ export default function channels(state = initialState, action) {
       return Object.assign({}, state, {
         isFetching: false,
         items: action.channels,
+        status: action.status,
         lastUpdated: action.receivedAt,
       })
     case 'CHANNELS_ERROR':

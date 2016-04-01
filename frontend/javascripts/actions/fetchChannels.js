@@ -2,14 +2,17 @@ import fetch from 'isomorphic-fetch'
 
 
 function requestChannels() {
-  return { type: 'CHANNELS_REQUEST' }
+  return {
+    type: 'CHANNELS_REQUEST',
+  }
 }
 
 function receiveChannels(json) {
   return {
     type: 'CHANNELS_RECEIVE',
     channels: json.channels,
-    receivedAt: Date.now()
+    status: json.status,
+    receivedAt: Date.now(),
   }
 }
 
@@ -17,7 +20,7 @@ function catchChannelsError(error) {
   return {
     type: 'CHANNELS_ERROR',
     error: error,
-    receivedAt: Date.now()
+    receivedAt: Date.now(),
   }
 }
 
