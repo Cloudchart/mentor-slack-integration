@@ -41,6 +41,10 @@ function start() {
     // TODO: move next line to the test suite
     // queue.enqueue('slack-integration', 'sender')
 
+    queue.cleanOldWorkers(5000, (err, data) => {
+      console.log(eventMarker, 'cleaned old workers')
+    })
+
     schedule.scheduleJob(`*/${senderTicInMin} * * * *`, () => {
       if (scheduler.master) {
         queue.enqueue('slack-integration', 'sender')
