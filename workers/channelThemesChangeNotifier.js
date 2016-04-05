@@ -2,7 +2,7 @@ import { WebClient } from 'slack-client'
 import { toSentence } from 'underscore.string'
 
 import { errorMarker } from '../lib'
-import { callWebAppGraphQL } from '../routes/helpers'
+import { getSubscribedThemes } from './helpers'
 import { Channel, ChannelNotification, Team } from '../models'
 
 const workerName = 'channelThemesChangeNotifier'
@@ -11,36 +11,6 @@ const notificationType = 'themes_changed'
 
 // helpers
 //
-function getSubscribedThemes(channelId) {
-  return new Promise(async (resolve, reject) => {
-    const themesRes = await callWebAppGraphQL(channelId, 'GET', `
-      {
-        viewer {
-          themes {
-            edges {
-              node {
-                name
-                isSubscribed
-              }
-            }
-          }
-        }
-      }
-    `)
-
-    const viewer = JSON.parse(themesRes).data.viewer
-    let themes = []
-
-    if (viewer && viewer.themes) {
-      themes = viewer.themes.edges.map(edge => edge.node)
-      themes = themes.filter(theme => theme.isSubscribed)
-      themes = themes.map(theme => theme.name)
-    }
-
-    resolve(themes)
-  })
-}
-
 async function sendMessage(channel, themes, done) {
   const channelNotification = await ChannelNotification.find({ where: { channelId: channel.id } })
   const SlackWeb = new WebClient(channel.Team.accessToken)

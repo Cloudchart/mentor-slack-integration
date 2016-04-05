@@ -20675,10 +20675,6 @@
 
 	var _fetchChannels2 = _interopRequireDefault(_fetchChannels);
 
-	var _notifyChannel = __webpack_require__(187);
-
-	var _notifyChannel2 = _interopRequireDefault(_notifyChannel);
-
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var configActions = exports.configActions = {
@@ -20687,8 +20683,7 @@
 	  createChannel: _createChannel2.default,
 	  destroyChannel: _destroyChannel2.default,
 	  updateTimeSetting: _updateTimeSetting2.default,
-	  fetchChannels: _fetchChannels2.default,
-	  notifyChannel: _notifyChannel2.default
+	  fetchChannels: _fetchChannels2.default
 	};
 
 /***/ },
@@ -21237,7 +21232,10 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function requestCreateChannel(id) {
-	  return { type: 'CREATE_CHANNEL_REQUEST', id: id };
+	  return {
+	    type: 'CREATE_CHANNEL_REQUEST',
+	    id: id
+	  };
 	}
 
 	function receiveCreateChannel(id, json) {
@@ -21462,36 +21460,7 @@
 	exports.default = fetchChannels;
 
 /***/ },
-/* 187 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _isomorphicFetch = __webpack_require__(180);
-
-	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function notifyChannel(id) {
-	  return function (dispatch) {
-
-	    return (0, _isomorphicFetch2.default)('/channels/notify', {
-	      method: 'POST',
-	      body: JSON.stringify({ id: id }),
-	      credentials: 'same-origin',
-	      headers: { 'Content-Type': 'application/json' }
-	    });
-	  };
-	}
-
-	exports.default = notifyChannel;
-
-/***/ },
+/* 187 */,
 /* 188 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -22847,11 +22816,19 @@
 	      }).length;
 	    }
 	  }, {
-	    key: 'notifyChannel',
-	    value: function notifyChannel() {
-	      if (this.state.channel.status !== 'invited' || this.getSelectedThemesSize() === 0 || !this.state.isThemesUpdated) return;
+	    key: 'toggleChannelSubscription',
+	    value: function toggleChannelSubscription() {
+	      if (!this.state.isThemesUpdated) return;
 
-	      this.props.actions.notifyChannel(this.state.channel.id);
+	      var channel = this.state.channel;
+	      var actions = this.props.actions;
+
+
+	      if (this.getSelectedThemesSize() > 0) {
+	        actions.createChannel(channel.id);
+	      } else {
+	        actions.destroyChannel(channel.id);
+	      }
 	    }
 
 	    // handlers
@@ -22864,8 +22841,8 @@
 	      document.getElementById('modal').className = 'hidden';
 	      document.body.classList.remove('modal-opened');
 
-	      this.notifyChannel();
 	      this.props.onHide();
+	      this.toggleChannelSubscription();
 	    }
 	  }, {
 	    key: 'handleModalClose',
@@ -22882,21 +22859,12 @@
 	      var channel = this.state.channel;
 	      var actions = this.props.actions;
 
-	      var selectedThemesSize = this.getSelectedThemesSize();
-	      if (selectedThemesSize === 3 && !theme.isSubscribed) return;
+	      if (this.getSelectedThemesSize() === 3 && !theme.isSubscribed) return;
 
 	      var action = theme.isSubscribed ? 'unsubscribe' : 'subscribe';
 	      actions.updateThemeStatus(theme.id, channel.id, action).then(function () {
 	        _this2.setState({ isThemesUpdated: true });
 	      });
-
-	      if (selectedThemesSize === 0 && action === 'subscribe') {
-	        actions.createChannel(channel.id).then(function () {
-	          _this2.setState({ isThemesUpdated: true });
-	        });
-	      } else if (selectedThemesSize === 1 && action === 'unsubscribe') {
-	        actions.destroyChannel(channel.id);
-	      }
 	    }
 
 	    // renderers

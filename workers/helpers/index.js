@@ -1,4 +1,5 @@
 import { errorMarker } from '../../lib'
+import { callWebAppGraphQL } from '../../routes/helpers'
 import { TeamOwner } from '../../models'
 
 
@@ -38,5 +39,35 @@ export async function getTeamOwner(teamId, SlackWeb) {
       })
     }
 
+  })
+}
+
+export function getSubscribedThemes(channelId) {
+  return new Promise(async (resolve, reject) => {
+    const themesRes = await callWebAppGraphQL(channelId, 'GET', `
+      {
+        viewer {
+          themes {
+            edges {
+              node {
+                name
+                isSubscribed
+              }
+            }
+          }
+        }
+      }
+    `)
+
+    const viewer = JSON.parse(themesRes).data.viewer
+    let themes = []
+
+    if (viewer && viewer.themes) {
+      themes = viewer.themes.edges.map(edge => edge.node)
+      themes = themes.filter(theme => theme.isSubscribed)
+      themes = themes.map(theme => theme.name)
+    }
+
+    resolve(themes)
   })
 }

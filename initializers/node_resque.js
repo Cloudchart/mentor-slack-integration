@@ -22,7 +22,6 @@ const scheduler = new NR.scheduler({ connection: { redis: redisClient } })
 function stop() {
   scheduler.end(() => {
     worker.end(() => {
-      console.log(eventMarker, 'stopped all workers')
       process.exit(0)
     })
   })

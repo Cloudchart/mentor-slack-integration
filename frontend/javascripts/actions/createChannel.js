@@ -2,7 +2,10 @@ import fetch from 'isomorphic-fetch'
 
 
 function requestCreateChannel(id) {
-  return { type: 'CREATE_CHANNEL_REQUEST', id }
+  return {
+    type: 'CREATE_CHANNEL_REQUEST',
+    id
+  }
 }
 
 function receiveCreateChannel(id, json) {

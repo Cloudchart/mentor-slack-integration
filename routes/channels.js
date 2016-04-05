@@ -9,8 +9,9 @@ let SlackDefaultWeb = new WebClient('')
 
 // helpers
 //
-function enqueueSubscribeNotification(teamId, channel) {
-  enqueue('tracker', ['subscribed_to_channel', { teamId: teamId, channel: channel }])
+function enqueueNotifications(channel, teamId) {
+  if (channel.is_member) enqueue('channelThemesChangeNotifier', channel.id)
+  enqueue('tracker', ['subscribed_to_channel', { teamId: teamId, channelId: channel.id }])
 }
 
 function getChannels(team) {
@@ -61,41 +62,30 @@ router.get('/', checkTeamId, async (req, res, next) => {
 })
 
 router.post('/', checkTeamId, async (req, res, next) => {
-  let id = req.body.id
-  let team = await Team.findById(req.session.teamId)
-  let selectedChannel = await Channel.findOrCreate({ where: { id: id }, defaults: { teamId: team.id } })
-  if (!selectedChannel) return res.status(500).json({ message: 'something went wrong' })
-
-  let SlackWeb = new WebClient(team.accessToken)
+  const id = req.body.id
+  const team = await Team.findById(req.session.teamId)
+  await Channel.findOrCreate({ where: { id: id }, defaults: { teamId: team.id } })
+  const SlackWeb = new WebClient(team.accessToken)
 
   SlackWeb.channels.info(id, (error, data) => {
     if (error = error || data.error) {
       res.status(500).json({ error: error })
     } else {
-      enqueueSubscribeNotification(team.id, data.channel)
+      enqueueNotifications(data.channel, team.id)
       res.status(201).json({ status: data.channel.is_member ? 'invited' : 'uninvited' })
     }
   })
 })
 
 router.delete('/', checkTeamId, async (req, res, next) => {
-  let id = req.body.id
-  let team = await Team.findById(req.session.teamId)
+  const id = req.body.id
+  const channel = await Channel.find({ where: { id: id } })
+  const team = await Team.findById(req.session.teamId)
+  if (!channel || !team) return res.status(404).json({ message: 'not found' })
+  if (channel.teamId !== team.id) return res.status(403).json({ message: 'unauthorized' })
+
   await Channel.destroy({ where: { id: id } })
-  let SlackWeb = new WebClient(team.accessToken)
-
-  SlackWeb.channels.info(id, (error, data) => {
-    if (error = error || data.error) {
-      res.status(500).json({ error: error })
-    } else {
-      res.json({ status: null })
-    }
-  })
-})
-
-router.post('/notify', async (req, res, next) => {
-  enqueue('channelThemesChangeNotifier', req.body.id)
-  res.json({ message: 'ok' })
+  res.json({ status: null })
 })
 
 

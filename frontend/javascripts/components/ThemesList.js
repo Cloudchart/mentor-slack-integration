@@ -48,14 +48,17 @@ class ThemesList extends Component {
     return this.state.themes.filter(theme => theme.isSubscribed).length
   }
 
-  notifyChannel() {
-    if (
-      this.state.channel.status !== 'invited' ||
-      this.getSelectedThemesSize() === 0 ||
-      !this.state.isThemesUpdated
-    ) return
+  toggleChannelSubscription() {
+    if (!this.state.isThemesUpdated) return
 
-    this.props.actions.notifyChannel(this.state.channel.id)
+    const { channel } = this.state
+    const { actions } = this.props
+
+    if (this.getSelectedThemesSize() > 0) {
+      actions.createChannel(channel.id)
+    } else {
+      actions.destroyChannel(channel.id)
+    }
   }
 
   // handlers
@@ -65,8 +68,8 @@ class ThemesList extends Component {
     document.getElementById('modal').className = 'hidden'
     document.body.classList.remove('modal-opened')
 
-    this.notifyChannel()
     this.props.onHide()
+    this.toggleChannelSubscription()
   }
 
   handleModalClose(event) {
@@ -78,21 +81,12 @@ class ThemesList extends Component {
 
     const { channel } = this.state
     const { actions } = this.props
-    const selectedThemesSize = this.getSelectedThemesSize()
-    if (selectedThemesSize === 3 && !theme.isSubscribed) return
+    if (this.getSelectedThemesSize() === 3 && !theme.isSubscribed) return
 
     let action = theme.isSubscribed ? 'unsubscribe' : 'subscribe'
     actions.updateThemeStatus(theme.id, channel.id, action).then(() => {
       this.setState({ isThemesUpdated: true })
     })
-
-    if (selectedThemesSize === 0 && action === 'subscribe') {
-      actions.createChannel(channel.id).then(() => {
-        this.setState({ isThemesUpdated: true })
-      })
-    } else if (selectedThemesSize === 1 && action === 'unsubscribe') {
-      actions.destroyChannel(channel.id)
-    }
   }
 
   // renderers

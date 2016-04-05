@@ -1,5 +1,9 @@
 import request from 'request'
-import { errorMarker, botName } from '../lib'
+import { WebClient } from 'slack-client'
+import { toSentence } from 'underscore.string'
+
+import { getSubscribedThemes } from './helpers'
+import { errorMarker } from '../lib'
 import { Team } from '../models'
 
 const workerName = 'tracker'
@@ -8,12 +12,34 @@ const workerName = 'tracker'
 // helpers
 //
 function getPayload(type, team, data) {
-  switch (type) {
-    case 'registered':
-      return { text: `New team ${team.name} has registered, yay! :ghost:` }
-    case 'subscribed_to_channel':
-      return { text: `Team ${team.name} has subscribed @${botName} to #${data.channel.name} channel` }
-  }
+  return new Promise((resolve, reject) => {
+    if (type === 'registered') {
+      resolve({ text: `New team ${team.name} has registered, yay! :ghost:` })
+    } else if (type === 'subscribed_to_channel') {
+      const channelId = data.channelId
+      const SlackWeb = new WebClient(team.accessToken)
+
+      SlackWeb.channels.info(channelId, async (err, res) => {
+        if (err = err || res.error) {
+          console.log(errorMarker, err, workerName, 'channels.info')
+          reject({})
+        } else {
+          let text = []
+          text.push(`Team ${team.name} has subscribed #${res.channel.name} channel`)
+
+          const themes = await getSubscribedThemes(channelId)
+          if (themes.length > 0) {
+            text.push(`to ${toSentence(themes)}`)
+            themes.length === 1 ? text.push('theme') : text.push('themes')
+          }
+
+          resolve({ text: text.join(' ') })
+        }
+      })
+    } else {
+      resolve({})
+    }
+  })
 }
 
 
@@ -23,7 +49,7 @@ async function perform(type, data, done) {
   const team = await Team.findById(data.teamId)
   if (!team) return done(null)
 
-  const payload = getPayload(type, team, data)
+  const payload = await getPayload(type, team, data)
   if (!payload.text) return done(null)
 
   const options = {
