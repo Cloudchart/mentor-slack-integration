@@ -72,7 +72,7 @@
 	if (reactType === 'plain') {
 	  _reactDom2.default.render(_react2.default.createElement(Component, JSON.parse(node.dataset.reactProps)), node);
 	} else {
-	  var reducers = __webpack_require__(211)("./" + reactClass).default;
+	  var reducers = __webpack_require__(210)("./" + reactClass).default;
 	  var store = (0, _redux.createStore)(reducers, window.__INITIAL_STATE__, (0, _redux.applyMiddleware)(_reduxThunk2.default));
 
 	  _reactDom2.default.render(_react2.default.createElement(
@@ -20486,8 +20486,8 @@
 	var map = {
 		"./ConfigApp": 177,
 		"./ConfigApp.js": 177,
-		"./LandingApp": 209,
-		"./LandingApp.js": 209
+		"./LandingApp": 208,
+		"./LandingApp.js": 208
 	};
 	function webpackContext(req) {
 		return __webpack_require__(webpackContextResolve(req));
@@ -20525,21 +20525,21 @@
 
 	var _actions = __webpack_require__(178);
 
-	var _selectors = __webpack_require__(188);
+	var _selectors = __webpack_require__(187);
 
-	var _Header = __webpack_require__(192);
+	var _Header = __webpack_require__(191);
 
 	var _Header2 = _interopRequireDefault(_Header);
 
-	var _Footer = __webpack_require__(193);
+	var _Footer = __webpack_require__(192);
 
 	var _Footer2 = _interopRequireDefault(_Footer);
 
-	var _ChannelsList = __webpack_require__(194);
+	var _ChannelsList = __webpack_require__(193);
 
 	var _ChannelsList2 = _interopRequireDefault(_ChannelsList);
 
-	var _TimeSetting = __webpack_require__(208);
+	var _TimeSetting = __webpack_require__(207);
 
 	var _TimeSetting2 = _interopRequireDefault(_TimeSetting);
 
@@ -21460,8 +21460,7 @@
 	exports.default = fetchChannels;
 
 /***/ },
-/* 187 */,
-/* 188 */
+/* 187 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21471,9 +21470,9 @@
 	});
 	exports.getEndTimeRange = exports.getStartTimeRange = undefined;
 
-	var _reselect = __webpack_require__(189);
+	var _reselect = __webpack_require__(188);
 
-	var _data = __webpack_require__(190);
+	var _data = __webpack_require__(189);
 
 	var getEndTime = function getEndTime(state) {
 	  return state.timeSetting.endTime;
@@ -21495,7 +21494,7 @@
 	});
 
 /***/ },
-/* 189 */
+/* 188 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -21614,7 +21613,7 @@
 	}
 
 /***/ },
-/* 190 */
+/* 189 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21624,7 +21623,7 @@
 	});
 	exports.botName = exports.daysOfWeek = exports.dayTimes = exports.timezones = undefined;
 
-	var _timezones = __webpack_require__(191);
+	var _timezones = __webpack_require__(190);
 
 	var _timezones2 = _interopRequireDefault(_timezones);
 
@@ -21642,7 +21641,7 @@
 	exports.botName = botName;
 
 /***/ },
-/* 191 */
+/* 190 */
 /***/ function(module, exports) {
 
 	module.exports = [
@@ -22257,7 +22256,7 @@
 	];
 
 /***/ },
-/* 192 */
+/* 191 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -22343,7 +22342,7 @@
 	exports.default = Header;
 
 /***/ },
-/* 193 */
+/* 192 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -22404,7 +22403,7 @@
 	exports.default = Footer;
 
 /***/ },
-/* 194 */
+/* 193 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -22423,15 +22422,15 @@
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _Channel = __webpack_require__(195);
+	var _Channel = __webpack_require__(194);
 
 	var _Channel2 = _interopRequireDefault(_Channel);
 
-	var _ThemesList = __webpack_require__(197);
+	var _ThemesList = __webpack_require__(196);
 
 	var _ThemesList2 = _interopRequireDefault(_ThemesList);
 
-	var _IntegrationTest = __webpack_require__(207);
+	var _IntegrationTest = __webpack_require__(206);
 
 	var _IntegrationTest2 = _interopRequireDefault(_IntegrationTest);
 
@@ -22534,7 +22533,7 @@
 	exports.default = ChannelsList;
 
 /***/ },
-/* 195 */
+/* 194 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -22549,11 +22548,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _classnames = __webpack_require__(196);
+	var _classnames = __webpack_require__(195);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
-	var _data = __webpack_require__(190);
+	var _data = __webpack_require__(189);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -22667,7 +22666,7 @@
 	exports.default = Channel;
 
 /***/ },
-/* 196 */
+/* 195 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -22721,7 +22720,7 @@
 
 
 /***/ },
-/* 197 */
+/* 196 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -22736,11 +22735,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _FadeModal = __webpack_require__(198);
+	var _FadeModal = __webpack_require__(197);
 
 	var _FadeModal2 = _interopRequireDefault(_FadeModal);
 
-	var _classnames = __webpack_require__(196);
+	var _classnames = __webpack_require__(195);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
@@ -22941,12 +22940,12 @@
 	exports.default = ThemesList;
 
 /***/ },
-/* 198 */
+/* 197 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var modalFactory = __webpack_require__(199);
-	var insertKeyframesRule = __webpack_require__(204);
-	var appendVendorPrefix = __webpack_require__(201);
+	var modalFactory = __webpack_require__(198);
+	var insertKeyframesRule = __webpack_require__(203);
+	var appendVendorPrefix = __webpack_require__(200);
 
 	var animation = {
 	    show: {
@@ -23044,12 +23043,12 @@
 
 
 /***/ },
-/* 199 */
+/* 198 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var transitionEvents = __webpack_require__(200);
-	var appendVendorPrefix = __webpack_require__(201);
+	var transitionEvents = __webpack_require__(199);
+	var appendVendorPrefix = __webpack_require__(200);
 
 	module.exports = function(animation){
 
@@ -23228,7 +23227,7 @@
 
 
 /***/ },
-/* 200 */
+/* 199 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -23329,12 +23328,12 @@
 
 
 /***/ },
-/* 201 */
+/* 200 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var getVendorPropertyName = __webpack_require__(202);
+	var getVendorPropertyName = __webpack_require__(201);
 
 	module.exports = function(target, sources) {
 	  var to = Object(target);
@@ -23365,12 +23364,12 @@
 
 
 /***/ },
-/* 202 */
+/* 201 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var builtinStyle = __webpack_require__(203);
+	var builtinStyle = __webpack_require__(202);
 	var prefixes = ['Moz', 'Webkit', 'O', 'ms'];
 	var domVendorPrefix;
 
@@ -23408,7 +23407,7 @@
 
 
 /***/ },
-/* 203 */
+/* 202 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -23417,13 +23416,13 @@
 
 
 /***/ },
-/* 204 */
+/* 203 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var insertRule = __webpack_require__(205);
-	var vendorPrefix = __webpack_require__(206)();
+	var insertRule = __webpack_require__(204);
+	var vendorPrefix = __webpack_require__(205)();
 	var index = 0;
 
 	module.exports = function(keyframes) {
@@ -23453,7 +23452,7 @@
 
 
 /***/ },
-/* 205 */
+/* 204 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -23478,7 +23477,7 @@
 
 
 /***/ },
-/* 206 */
+/* 205 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -23497,7 +23496,7 @@
 
 
 /***/ },
-/* 207 */
+/* 206 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23512,7 +23511,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _data = __webpack_require__(190);
+	var _data = __webpack_require__(189);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -23577,7 +23576,7 @@
 	exports.default = IntegrationTest;
 
 /***/ },
-/* 208 */
+/* 207 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23592,11 +23591,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _classnames = __webpack_require__(196);
+	var _classnames = __webpack_require__(195);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
-	var _data = __webpack_require__(190);
+	var _data = __webpack_require__(189);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -23768,7 +23767,7 @@
 	exports.default = TimeSetting;
 
 /***/ },
-/* 209 */
+/* 208 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23783,11 +23782,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _SlackButton = __webpack_require__(210);
+	var _SlackButton = __webpack_require__(209);
 
 	var _SlackButton2 = _interopRequireDefault(_SlackButton);
 
-	var _Footer = __webpack_require__(193);
+	var _Footer = __webpack_require__(192);
 
 	var _Footer2 = _interopRequireDefault(_Footer);
 
@@ -23985,7 +23984,7 @@
 	exports.default = LandingApp;
 
 /***/ },
-/* 210 */
+/* 209 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -24000,7 +23999,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _classnames = __webpack_require__(196);
+	var _classnames = __webpack_require__(195);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
@@ -24085,20 +24084,20 @@
 	exports.default = SlackButton;
 
 /***/ },
-/* 211 */
+/* 210 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var map = {
-		"./ConfigApp": 212,
-		"./ConfigApp.js": 212,
-		"./channels": 214,
-		"./channels.js": 214,
-		"./team": 213,
-		"./team.js": 213,
-		"./themes": 215,
-		"./themes.js": 215,
-		"./timeSetting": 216,
-		"./timeSetting.js": 216
+		"./ConfigApp": 211,
+		"./ConfigApp.js": 211,
+		"./channels": 213,
+		"./channels.js": 213,
+		"./team": 212,
+		"./team.js": 212,
+		"./themes": 214,
+		"./themes.js": 214,
+		"./timeSetting": 215,
+		"./timeSetting.js": 215
 	};
 	function webpackContext(req) {
 		return __webpack_require__(webpackContextResolve(req));
@@ -24111,11 +24110,11 @@
 	};
 	webpackContext.resolve = webpackContextResolve;
 	module.exports = webpackContext;
-	webpackContext.id = 211;
+	webpackContext.id = 210;
 
 
 /***/ },
-/* 212 */
+/* 211 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -24126,19 +24125,19 @@
 
 	var _redux = __webpack_require__(154);
 
-	var _team = __webpack_require__(213);
+	var _team = __webpack_require__(212);
 
 	var _team2 = _interopRequireDefault(_team);
 
-	var _channels = __webpack_require__(214);
+	var _channels = __webpack_require__(213);
 
 	var _channels2 = _interopRequireDefault(_channels);
 
-	var _themes = __webpack_require__(215);
+	var _themes = __webpack_require__(214);
 
 	var _themes2 = _interopRequireDefault(_themes);
 
-	var _timeSetting = __webpack_require__(216);
+	var _timeSetting = __webpack_require__(215);
 
 	var _timeSetting2 = _interopRequireDefault(_timeSetting);
 
@@ -24152,7 +24151,7 @@
 	});
 
 /***/ },
-/* 213 */
+/* 212 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -24172,7 +24171,7 @@
 	}
 
 /***/ },
-/* 214 */
+/* 213 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -24234,7 +24233,7 @@
 	}
 
 /***/ },
-/* 215 */
+/* 214 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -24292,7 +24291,7 @@
 	}
 
 /***/ },
-/* 216 */
+/* 215 */
 /***/ function(module, exports) {
 
 	'use strict';
