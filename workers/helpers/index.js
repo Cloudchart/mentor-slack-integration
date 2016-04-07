@@ -57,7 +57,6 @@ export async function getTeamOwner(teamId, SlackWeb) {
 }
 
 export function markLinkAsRead(channelId, linkId) {
-  console.log('!!!', channelId, linkId);
   return new Promise(async (resolve, reject) => {
     const response = await callWebAppGraphQL(channelId, 'POST', `
       mutation m {

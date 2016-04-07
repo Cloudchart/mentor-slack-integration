@@ -10,7 +10,7 @@ const redisClient = new Redis(process.env.REDIS_URL)
 const queue = new NR.queue({ connection: { redis: redisClient } }, workers)
 
 const worker = new NR.multiWorker({
-  connection: { redis: redisClient },
+  connection: { redis: redisClient.duplicate() },
   queues: 'slack-integration',
   minTaskProcessors: 1,
   maxTaskProcessors: 20,
