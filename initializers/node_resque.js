@@ -4,7 +4,7 @@ import schedule from 'node-schedule'
 import NR from 'node-resque'
 import Redis from 'ioredis'
 import workers from '../workers'
-import { eventMarker, senderTicInMin, maxWorkerAge } from '../lib'
+import { eventMarker, dispatcherTic, maxWorkerAge } from '../lib'
 
 const redisClient = new Redis(process.env.REDIS_URL)
 const queue = new NR.queue({ connection: { redis: redisClient } }, workers)
@@ -37,16 +37,17 @@ function start() {
   })
 
   queue.connect(() => {
-    // TODO: move next line to the test suite
-    // queue.enqueue('slack-integration', 'sender')
+    // TODO: move this to the test suite
+    // queue.enqueue('slack-integration', 'insightsDispatcher')
+    // queue.enqueue('slack-integration', 'linksDispatcher')
 
     queue.cleanOldWorkers(maxWorkerAge, (err, data) => {
       if (Object.keys(data).length > 0) console.log(eventMarker, 'cleaned old workers')
     })
 
-    schedule.scheduleJob(`*/${senderTicInMin} * * * *`, () => {
+    schedule.scheduleJob(dispatcherTic, () => {
       if (scheduler.master) {
-        queue.enqueue('slack-integration', 'sender')
+        queue.enqueue('slack-integration', 'insightsDispatcher')
         console.log(eventMarker, 'enqueued scheduled job')
       }
     })

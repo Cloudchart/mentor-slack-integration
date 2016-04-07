@@ -1,7 +1,21 @@
+import { sample, sampleSize } from 'lodash'
 import { errorMarker } from '../../lib'
 import { callWebAppGraphQL } from '../../routes/helpers'
 import { TeamOwner } from '../../models'
 
+
+export function checkIfBotIsInvited(channelId, SlackWeb) {
+  return new Promise((resolve, reject) => {
+    SlackWeb.channels.info(channelId, (err, res) => {
+      if (err = err || res.error) {
+        console.log(errorMarker, err, workerName, 'channels.info')
+        reject()
+      } else {
+        resolve(res.channel.is_member)
+      }
+    })
+  })
+}
 
 export async function getTeamOwner(teamId, SlackWeb) {
   return new Promise(async (resolve, reject) => {
@@ -39,6 +53,84 @@ export async function getTeamOwner(teamId, SlackWeb) {
       })
     }
 
+  })
+}
+
+export function markLinkAsRead(channelId, linkId) {
+  console.log('!!!', channelId, linkId);
+  return new Promise(async (resolve, reject) => {
+    const response = await callWebAppGraphQL(channelId, 'POST', `
+      mutation m {
+       markTopicLinkAsRead(input: {
+         topicLinkID: "${linkId}"
+         clientMutationId: "1"
+       }) {
+         topicLinkID
+       }
+      }
+    `)
+
+    resolve(response)
+  })
+}
+
+export function getRandomLinkForSubscribedTopics(channelId) {
+  return new Promise(async (resolve, reject) => {
+    const response = await callWebAppGraphQL(channelId, 'GET', `
+      {
+        viewer {
+          topics(filter: SUBSCRIBED) {
+            edges {
+              node {
+                id
+                name
+                links(filter: UNREAD) {
+                  edges {
+                    node {
+                      id
+                      url
+                      title
+                      reaction {
+                        id
+                        mood
+                        content
+                      }
+                      insights {
+                        edges {
+                          node {
+                            id
+                            content
+                            origin {
+                              author
+                              url
+                              title
+                              duration
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    `)
+
+    const topics = JSON.parse(response).data.viewer.topics.edges
+    const links = topics.reduce((memo, topic) => {
+      return memo.concat(topic.node.links.edges)
+    }, [])
+
+    let link = sample(links)
+    if (link) {
+      link = link.node
+      link.insights = sampleSize(link.insights.edges.map(edge => edge.node), 3)
+    }
+
+    resolve(link)
   })
 }
 

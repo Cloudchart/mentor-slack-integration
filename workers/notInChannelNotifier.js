@@ -1,5 +1,6 @@
+import { sample } from 'lodash'
 import { WebClient } from 'slack-client'
-import { errorMarker, getRandomElementFromArray, botName } from '../lib'
+import { errorMarker, botName } from '../lib'
 import { getTeamOwner } from './helpers'
 import { Channel, Team, TeamOwner, TeamOwnerNotification } from '../models'
 
@@ -27,7 +28,7 @@ function sendMessage(SlackWeb, teamOwner, channelId, done) {
 
       // generate text
       let text = []
-      text.push(getRandomElementFromArray(textOptions))
+      text.push(sample(textOptions))
       text.push(`/invite @${botName} #${res.channel.name}`)
       text = text.join(' ')
 

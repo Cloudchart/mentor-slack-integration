@@ -14,7 +14,7 @@ import { callWebAppGraphQL } from '../routes/helpers'
 import { Channel, Message, Team, TimeSetting } from '../models'
 import { SlackChannel, Insight, InsightOrigin, UserTheme, UserThemeInsight } from '../models/web_app'
 
-const workerName = 'sender'
+const workerName = 'insightsDispatcher'
 
 
 // helpers
@@ -41,6 +41,7 @@ function isContraryToTimeSetting(channel) {
 
   return !(
     timeSetting.days.includes(day) &&
+    // TODO: change to condition to >
     time >= timeSetting.startTime &&
     time <= timeSetting.endTime
   )
