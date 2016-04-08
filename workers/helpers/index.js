@@ -56,6 +56,24 @@ export async function getTeamOwner(teamId, SlackWeb) {
   })
 }
 
+export function markInsightAsRead(channelId, topicId, insightId) {
+  return new Promise(async (resolve, reject) => {
+    const response = await callWebAppGraphQL(channelId, 'POST', `
+      mutation m {
+        postponeInsightInTopic(input: {
+          topicID: "${topicId}"
+          insightID: "${insightId}"
+          clientMutationId: "1"
+        }) {
+          insightID
+        }
+      }
+    `)
+
+    resolve(response)
+  })
+}
+
 export function markLinkAsRead(channelId, linkId) {
   return new Promise(async (resolve, reject) => {
     const response = await callWebAppGraphQL(channelId, 'POST', `
@@ -73,7 +91,7 @@ export function markLinkAsRead(channelId, linkId) {
   })
 }
 
-export function getRandomLinkForSubscribedTopics(channelId) {
+export function getRandomSubscribedTopic(channelId) {
   return new Promise(async (resolve, reject) => {
     const response = await callWebAppGraphQL(channelId, 'GET', `
       {
@@ -119,17 +137,16 @@ export function getRandomLinkForSubscribedTopics(channelId) {
     `)
 
     const topics = JSON.parse(response).data.viewer.topics.edges
-    const links = topics.reduce((memo, topic) => {
-      return memo.concat(topic.node.links.edges)
-    }, [])
+    let topic = sample(topics.filter(topic => topic.node.links.edges.length > 0))
 
-    let link = sample(links)
-    if (link) {
-      link = link.node
-      link.insights = sampleSize(link.insights.edges.map(edge => edge.node), 3)
+    if (topic) {
+      topic = topic.node
+      topic.randomLink = sample(topic.links.edges).node
+      topic.randomInsights = sampleSize(topic.randomLink.insights.edges.map(edge => edge.node), 3)
+      resolve(topic)
+    } else {
+      resolve(null)
     }
-
-    resolve(link)
   })
 }
 

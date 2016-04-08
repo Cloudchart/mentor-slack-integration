@@ -41,7 +41,7 @@ export function callWebAppGraphQL(channelId, method, query) {
       if (!error && response.statusCode === 200) {
         resolve(body)
       } else {
-        console.log('Error:', body)
+        console.log('Error:', 'callWebAppGraphQL', error, body)
         reject()
       }
     })

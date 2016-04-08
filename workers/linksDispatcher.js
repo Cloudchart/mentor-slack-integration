@@ -1,16 +1,58 @@
-import moment from 'moment-timezone'
+import moment from 'moment'
+import momentTimezone from 'moment-timezone'
+
 import { WebClient } from 'slack-client'
-import { errorMarker } from '../lib'
-import { checkIfBotIsInvited, getRandomLinkForSubscribedTopics, markLinkAsRead } from './helpers'
+import { errorMarker, reactionsCollectorDelay } from '../lib'
 import { callWebAppGraphQL } from '../routes/helpers'
-import { Channel, Team, TimeSetting } from '../models'
+import { Channel, Team, TimeSetting, Message } from '../models'
+
+import {
+  checkIfBotIsInvited,
+  getRandomSubscribedTopic,
+  markLinkAsRead,
+  markInsightAsRead,
+} from './helpers'
 
 const workerName = 'linksDispatcher'
 
 
 // helpers
 //
-function sendMessage(channelId, link, SlackWeb) {
+function sendInsights(channelId, topic, SlackWeb) {
+  topic.randomInsights.forEach(insight => {
+    const duration = moment.duration(insight.origin.duration, 'seconds').humanize()
+    const attachments = [{
+      text: `${insight.content} _<${insight.origin.url}|${insight.origin.author}, ${insight.origin.title} (${duration} read)>_`,
+      mrkdwn_in: ['text'],
+    }]
+
+    const options = {
+      as_user: true,
+      unfurl_links: false,
+      unfurl_media: false,
+      attachments: JSON.stringify(attachments),
+    }
+
+    SlackWeb.chat.postMessage(channelId, null, options, async (err, res) => {
+      if (err = err || res.error) {
+        console.log(errorMarker, err, workerName, 'chat.postMessage')
+      } else {
+        // const response = await markInsightAsRead(channelId, topic.id, insight.id)
+
+        const message = await Message.create({
+          channelId: res.channel,
+          timestamp: res.ts,
+          responseBody: JSON.stringify(res),
+        })
+
+        // TODO: enqueue reactionsCollector
+      }
+    })
+  })
+}
+
+function sendLink(channelId, topic, SlackWeb) {
+  const link = topic.randomLink
   const text = `${link.reaction.content} <${link.url}|${link.title}>`
 
   const options = {
@@ -23,8 +65,8 @@ function sendMessage(channelId, link, SlackWeb) {
     if (err = err || res.error) {
       console.log(errorMarker, err, workerName, 'chat.postMessage')
     } else {
-      markLinkAsRead(channelId, link.id)
-      // TODO: send insights
+      await markLinkAsRead(channelId, link.id)
+      sendInsights(channelId, topic, SlackWeb)
     }
   })
 }
@@ -42,7 +84,7 @@ async function perform(done) {
   const jobs = channels.reduce(async (promiseChain, channel) => {
     return promiseChain.then(async () => {
       const timeSetting = channel.Team.TimeSetting
-      const now = moment().tz(timeSetting.tz)
+      const now = momentTimezone().tz(timeSetting.tz)
       const time = now.format('HH:mm')
       // TODO: uncomment
       // if (time !== timeSetting.startTime) return
@@ -51,8 +93,8 @@ async function perform(done) {
       const isBotInvited = await checkIfBotIsInvited(channel.id, SlackWeb)
       if (!isBotInvited) return
 
-      const link = await getRandomLinkForSubscribedTopics(channel.id)
-      if (link) sendMessage(channel.id, link, SlackWeb)
+      const topic = await getRandomSubscribedTopic(channel.id)
+      if (topic) sendLink(channel.id, topic, SlackWeb)
     })
   }, Promise.resolve())
 
