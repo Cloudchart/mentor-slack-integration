@@ -16,7 +16,7 @@ const worker = new NR.multiWorker({
   maxTaskProcessors: 20,
 }, workers)
 
-const scheduler = new NR.scheduler({ connection: { redis: redisClient } })
+const scheduler = new NR.scheduler({ connection: { redis: redisClient.duplicate() } })
 
 
 function stop() {
