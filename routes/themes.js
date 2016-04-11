@@ -1,23 +1,23 @@
 import { Router } from 'express'
 import { checkTeamId, callWebAppGraphQL } from './helpers'
 
-let router = Router()
+const router = Router()
 
 
 router.get('/:channelId', checkTeamId, async (req, res, next) => {
-  let channelId = req.params.channelId
+  const channelId = req.params.channelId
 
   // get user themes from web app
   // this will also create user and user themes if they aren't present
-  let themesRes = await callWebAppGraphQL(channelId, 'GET', `
+  const themesRes = await callWebAppGraphQL(channelId, 'GET', `
     {
       viewer {
-        themes {
+        topics {
           edges {
             node {
               id
               name
-              isSubscribed
+              isSubscribedByViewer
             }
           }
         }
@@ -25,10 +25,10 @@ router.get('/:channelId', checkTeamId, async (req, res, next) => {
     }
   `)
 
-  let viewer = JSON.parse(themesRes).data.viewer
-  let themes = []
-  if (viewer && viewer.themes) themes = viewer.themes.edges.map(edge => edge.node)
-
+  const themesEdges = JSON.parse(themesRes).data.viewer.topics.edges
+  const themes = themesEdges.map(theme => {
+    return { id: theme.node.id, name: theme.node.name, isSubscribed: theme.node.isSubscribedByViewer }
+  })
   res.json({ themes: themes })
 })
 
@@ -36,15 +36,15 @@ router.patch('/', checkTeamId, async (req, res, next) => {
   let id = req.body.id
   let channelId = req.body.channelId
   let action = req.body.action
-  let mutationName = action === 'subscribe' ? 'subscribeOnTheme' : 'unsubscribeFromTheme'
+  let mutationName = action === 'subscribe' ? 'subscribeOnTopic' : 'unsubscribeFromTopic'
 
   callWebAppGraphQL(channelId, 'POST', `
     mutation m {
       ${mutationName}(input: {
-        id: "${id}",
+        topicID: "${id}",
         clientMutationId: "1"
       }) {
-        themeID
+        topicID
       }
     }
   `).then(data => {

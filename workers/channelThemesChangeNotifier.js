@@ -40,7 +40,7 @@ async function sendMessage(channel, themes, done) {
   })
 }
 
-// worker – notifies channel if themes were changed
+// notify channel if themes were changed
 //
 async function perform(channelId, done) {
   const channel = await Channel.findOne({ include: [Team], where: { id: channelId } })

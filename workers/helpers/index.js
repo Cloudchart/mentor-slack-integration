@@ -209,14 +209,13 @@ export function getRandomSubscribedTopic(channelId) {
 // TODO: update
 export function getSubscribedThemes(channelId) {
   return new Promise(async (resolve, reject) => {
-    const themesRes = await callWebAppGraphQL(channelId, 'GET', `
+    const response = await callWebAppGraphQL(channelId, 'GET', `
       {
         viewer {
-          themes {
+          topics(filter: SUBSCRIBED) {
             edges {
               node {
                 name
-                isSubscribed
               }
             }
           }
@@ -224,15 +223,7 @@ export function getSubscribedThemes(channelId) {
       }
     `)
 
-    const viewer = JSON.parse(themesRes).data.viewer
-    let themes = []
-
-    if (viewer && viewer.themes) {
-      themes = viewer.themes.edges.map(edge => edge.node)
-      themes = themes.filter(theme => theme.isSubscribed)
-      themes = themes.map(theme => theme.name)
-    }
-
-    resolve(themes)
+    const topics = JSON.parse(response).data.viewer.topics.edges
+    resolve(topics.map(topic => topic.node.name))
   })
 }

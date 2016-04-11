@@ -30,7 +30,7 @@ function getPayload(type, team, data) {
           const themes = await getSubscribedThemes(channelId)
           if (themes.length > 0) {
             text.push(`to ${toSentence(themes)}`)
-            themes.length === 1 ? text.push('theme') : text.push('themes')
+            themes.length === 1 ? text.push('topic') : text.push('topics')
           }
 
           resolve({ text: text.join(' ') })
@@ -43,7 +43,7 @@ function getPayload(type, team, data) {
 }
 
 
-// worker – tracks user activity
+// track user activity
 //
 async function perform(type, data, done) {
   const team = await Team.findById(data.teamId)
