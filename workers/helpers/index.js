@@ -56,6 +56,25 @@ export async function getTeamOwner(teamId, SlackWeb) {
   })
 }
 
+export function reactOnInsight(rate, channelId, topicId, insightId) {
+  return new Promise(async (resolve, reject) => {
+    const mutationName = rate === 1 ? 'likeInsightInTopic' : 'dislikeInsightInTopic'
+    const response = await callWebAppGraphQL(channelId, 'POST', `
+      mutation m {
+        ${mutationName}(input: {
+          topicID: "${topicId}"
+          insightID: "${insightId}"
+          clientMutationId: "1"
+        }) {
+          insightID
+        }
+      }
+    `)
+
+    resolve(response)
+  })
+}
+
 export function markInsightAsRead(channelId, topicId, insightId) {
   return new Promise(async (resolve, reject) => {
     const response = await callWebAppGraphQL(channelId, 'POST', `
@@ -88,6 +107,43 @@ export function markLinkAsRead(channelId, linkId) {
     `)
 
     resolve(response)
+  })
+}
+
+export function getRandomUnratedInsight(channelId) {
+  return new Promise(async (resolve, reject) => {
+    const response = await callWebAppGraphQL(channelId, 'GET', `
+      {
+        viewer {
+          insights {
+            edges {
+              topic {
+                id
+                name
+              }
+              node {
+                id
+                content
+                origin {
+                  author
+                  url
+                  title
+                  duration
+                }
+              }
+            }
+          }
+        }
+      }
+    `)
+
+    const insights = JSON.parse(response).data.viewer.insights.edges
+    if (insights.length > 0) {
+      const randomInsight = sample(insights)
+      resolve({ insight: randomInsight.node, topic: randomInsight.topic })
+    } else {
+      resolve(null)
+    }
   })
 }
 
@@ -150,6 +206,7 @@ export function getRandomSubscribedTopic(channelId) {
   })
 }
 
+// TODO: update
 export function getSubscribedThemes(channelId) {
   return new Promise(async (resolve, reject) => {
     const themesRes = await callWebAppGraphQL(channelId, 'GET', `

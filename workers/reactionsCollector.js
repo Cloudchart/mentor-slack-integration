@@ -1,7 +1,7 @@
 import { WebClient } from 'slack-client'
+import { reactOnInsight } from './helpers'
 import { errorMarker } from '../lib'
 import { Channel, Message, Team } from '../models'
-import { UserThemeInsight } from '../models/web_app'
 
 const positiveReactions = [
   'smile', 'laughing', 'blush', 'smiley', 'relaxed', 'smirk', 'heart_eyes', 'kissing_heart',
@@ -19,13 +19,15 @@ const negativeReactions = [
 ]
 
 
-// worker – collects reactions
-//
-export let perform = async (messageId, userThemeInsightId, done) => {
-  let message = await Message.find({ include: [{ model: Channel, include: [Team] }], where: { id: messageId } })
-  let SlackWeb = new WebClient(message.Channel.Team.accessToken)
+// get reactions
+// determine rate
+// react on insight
+async function perform(messageId, insightId, topicId, done) {
+  const message = await Message.find({ include: [{ model: Channel, include: [Team] }], where: { id: messageId } })
+  const channelId = message.channelId
+  const SlackWeb = new WebClient(message.Channel.Team.accessToken)
 
-  SlackWeb.reactions.get({ channel: message.channelId, timestamp: message.timestamp }, async (err, data) => {
+  SlackWeb.reactions.get({ channel: channelId, timestamp: message.timestamp }, async (err, data) => {
     if (err = err || data.error) {
       console.log(errorMarker, err, 'reactions.get')
       done(null)
@@ -44,9 +46,8 @@ export let perform = async (messageId, userThemeInsightId, done) => {
         })
 
         if (positiveReactionsCounter === negativeReactionsCounter) return done(null, true)
-        const userThemeInsight = await UserThemeInsight.findById(userThemeInsightId)
-        if (positiveReactionsCounter > negativeReactionsCounter) { rate = 1 } else { rate = -1 }
-        await userThemeInsight.update({ rate: rate })
+        if (positiveReactionsCounter > negativeReactionsCounter) { rate += 1 } else { rate -= 1 }
+        await reactOnInsight(rate, channelId, topicId, insightId)
         done(null, true)
       } else {
         done(null, true)
@@ -54,3 +55,6 @@ export let perform = async (messageId, userThemeInsightId, done) => {
     }
   })
 }
+
+
+export { perform }
