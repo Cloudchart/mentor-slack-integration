@@ -37,9 +37,7 @@ function start() {
   })
 
   queue.connect(() => {
-    // TODO: move this to the test suite
-    // queue.enqueue('slack-integration', 'insightsDispatcher')
-    // queue.enqueue('slack-integration', 'linksDispatcher')
+    // queue.enqueue('slack-integration', 'dispatcher')
 
     queue.cleanOldWorkers(maxWorkerAge, (err, data) => {
       if (Object.keys(data).length > 0) console.log(eventMarker, 'cleaned old workers')
@@ -47,7 +45,7 @@ function start() {
 
     schedule.scheduleJob(dispatcherTic, () => {
       if (scheduler.master) {
-        queue.enqueue('slack-integration', 'insightsDispatcher')
+        queue.enqueue('slack-integration', 'dispatcher')
         console.log(eventMarker, 'enqueued scheduled job')
       }
     })

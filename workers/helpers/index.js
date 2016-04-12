@@ -4,19 +4,6 @@ import { callWebAppGraphQL } from '../../routes/helpers'
 import { TeamOwner } from '../../models'
 
 
-export function checkIfBotIsInvited(channelId, SlackWeb) {
-  return new Promise((resolve, reject) => {
-    SlackWeb.channels.info(channelId, (err, res) => {
-      if (err = err || res.error) {
-        console.log(errorMarker, err, workerName, 'channels.info')
-        reject()
-      } else {
-        resolve(res.channel.is_member)
-      }
-    })
-  })
-}
-
 export async function getTeamOwner(teamId, SlackWeb) {
   return new Promise(async (resolve, reject) => {
     let teamOwner = await TeamOwner.findOne({ where: { teamId: teamId } })
@@ -27,7 +14,7 @@ export async function getTeamOwner(teamId, SlackWeb) {
       SlackWeb.users.list((err, res) => {
         if (err = err || res.error) {
           console.log(errorMarker, err, 'getTeamOwner', 'users.list')
-          reject()
+          resolve(null)
         } else {
           let primaryOwner = res.members.find(member => member.is_primary_owner)
           // let primaryOwner = res.members.find(member => member.name === 'peresleguine')
@@ -35,7 +22,7 @@ export async function getTeamOwner(teamId, SlackWeb) {
           SlackWeb.dm.list((err, res) => {
             if (err = err || res.error) {
               console.log(errorMarker, err, 'getTeamOwner', 'im.list')
-              reject()
+              resolve(null)
             } else {
               let im = res.ims.find(im => im.user === primaryOwner.id)
               if (!im) return resolve(null)

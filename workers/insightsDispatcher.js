@@ -1,95 +1,80 @@
-import momentTimezone from 'moment-timezone'
+import moment from 'moment'
 import { WebClient } from 'slack-client'
-import { queue } from '../initializers/node_resque'
 
 import {
   eventMarker,
   errorMarker,
-  noticeMarker,
+  reactionsCollectorDelay,
+  notInChannelNotifierDelay,
 } from '../lib'
 
-import { getRandomUnratedInsight } from './helpers'
-import { Channel, Team, TimeSetting } from '../models'
+import { markInsightAsRead } from './helpers'
+import { Message } from '../models'
+import { queue } from '../initializers/node_resque'
 
 const workerName = 'insightsDispatcher'
 
 
 // helpers
 //
-function itSatisfiesTimeSetting(channel) {
-  const timeSetting = channel.Team.TimeSetting
-  const now = momentTimezone().tz(timeSetting.tz)
-  const day = now.format('ddd')
-  const time = now.format('HH:mm')
-
-  return (
-    timeSetting.days.includes(day) &&
-    time > timeSetting.startTime &&
-    time <= timeSetting.endTime
-  )
-}
-
-function isEveryoneAsleep(channelId, SlackWeb) {
-  return new Promise((resolve, reject) => {
-    SlackWeb.channels.info(channelId, (err, res) => {
-      if (err = err || res.error) {
-        console.log(errorMarker, err, workerName, 'channels.info')
-        resolve(null)
-      } else {
-        let members = res.channel.members
-
-        SlackWeb.users.list(1, (err, res) => {
-          if (err = err || res.error) {
-            console.log(errorMarker, err, workerName, 'users.list')
-            resolve(null)
-          } else {
-            let activeUsers = res.members.filter(member => {
-              return (
-                members.includes(member.id) &&
-                !member.deleted &&
-                !member.is_ultra_restricted &&
-                !member.is_bot &&
-                member.presence === 'active'
-              )
-            })
-
-            resolve(activeUsers.length === 0)
-          }
-        })
-      }
-    })
+function enqueueNotInChannelNotifier(channelId, done) {
+  queue.scheduledAt('slack-integration', 'notInChannelNotifier', channelId, async (err, timestamps) => {
+    // don't enqueue if already enqueued
+    if (timestamps.length > 0) {
+      done(null, true)
+    } else {
+      queue.enqueueIn(notInChannelNotifierDelay, 'slack-integration', 'notInChannelNotifier', channelId, () => {
+        console.log(eventMarker, 'enqueued notInChannelNotifier')
+        done(null, true)
+      })
+    }
   })
 }
 
-// for each selected channel
-// check team time settings
-// check if everyone is away
-// request unrated insight
-// enqueue messagesDispatcher
-async function perform(done) {
-  const channels = await Channel.findAll({ include: [{ model: Team, include: [TimeSetting] }] })
+// get text
+// post message
+// if bot isn't invited, enqueue notInChannelNotifier
+// if message sent, mark as read, save output and enqueue reactionsCollector
+function perform(channel, insight, topic, done) {
+  const SlackWeb = new WebClient(channel.Team.accessToken)
+  const duration = moment.duration(insight.origin.duration, 'seconds').humanize()
+  const attachments = [{
+    text: `${insight.content} _<${insight.origin.url}|${insight.origin.author}, ${insight.origin.title} (${duration} read)>_`,
+    mrkdwn_in: ['text'],
+  }]
 
-  const jobs = channels.reduce(async (promiseChain, channel) => {
-    return promiseChain.then(async () => {
-      if (!itSatisfiesTimeSetting(channel)) return
-      const SlackWeb = new WebClient(channel.Team.accessToken)
-      const everyoneIsAsleep = await isEveryoneAsleep(channel.id, SlackWeb)
-      if (everyoneIsAsleep || everyoneIsAsleep === null) return
+  const options = {
+    as_user: true,
+    unfurl_links: false,
+    unfurl_media: false,
+    attachments: JSON.stringify(attachments),
+  }
 
-      const response = await getRandomUnratedInsight(channel.id)
-      if (response) {
-        queue.enqueue('slack-integration', 'messagesDispatcher', [
-          channel, response.insight, response.topic
-        ], () => {
-          console.log(eventMarker, 'enqueued messagesDispatcher')
-        })
+  SlackWeb.chat.postMessage(channel.id, null, options, async (err, res) => {
+    if (err = err || res.error) {
+      if (err === 'not_in_channel') {
+        enqueueNotInChannelNotifier(channel.id, done)
       } else {
-        console.log(noticeMarker, `couldn't find unrated insight for channel: ${channel.id}`)
+        console.log(errorMarker, err, workerName, 'chat.postMessage')
+        done(null, true)
       }
-    })
-  }, Promise.resolve())
+    } else {
+      await markInsightAsRead(channel.id, topic.id, insight.id)
 
-  jobs.then(() => done(null, true))
+      const message = await Message.create({
+        channelId: res.channel,
+        timestamp: res.ts,
+        responseBody: JSON.stringify(res),
+      })
+
+      queue.enqueueIn(reactionsCollectorDelay, 'slack-integration', 'reactionsCollector', [
+        message.id, insight.id, topic.id
+        ], () => {
+        console.log(eventMarker, 'enqueued reactionsCollector')
+        done(null, true)
+      })
+    }
+  })
 }
 
 
