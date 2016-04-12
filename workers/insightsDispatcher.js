@@ -1,16 +1,9 @@
 import moment from 'moment'
 import { WebClient } from 'slack-client'
 
-import {
-  eventMarker,
-  errorMarker,
-  reactionsCollectorDelay,
-  notInChannelNotifierDelay,
-} from '../lib'
-
-import { markInsightAsRead } from './helpers'
+import { errorMarker, reactionsCollectorDelay, notInChannelNotifierDelay } from '../lib'
+import { queue, enqueueIn, markInsightAsRead } from './helpers'
 import { Message } from '../models'
-import { queue } from '../initializers/node_resque'
 
 const workerName = 'insightsDispatcher'
 
@@ -23,10 +16,8 @@ function enqueueNotInChannelNotifier(channelId, done) {
     if (timestamps.length > 0) {
       done(null, true)
     } else {
-      queue.enqueueIn(notInChannelNotifierDelay, 'slack-integration', 'notInChannelNotifier', channelId, () => {
-        console.log(eventMarker, 'enqueued notInChannelNotifier')
-        done(null, true)
-      })
+      await enqueueIn(notInChannelNotifierDelay, 'notInChannelNotifier', channelId)
+      done(null, true)
     }
   })
 }
@@ -67,12 +58,8 @@ function perform(channel, insight, topic, done) {
         responseBody: JSON.stringify(res),
       })
 
-      queue.enqueueIn(reactionsCollectorDelay, 'slack-integration', 'reactionsCollector', [
-        message.id, insight.id, topic.id
-        ], () => {
-        console.log(eventMarker, 'enqueued reactionsCollector')
-        done(null, true)
-      })
+      await enqueueIn(reactionsCollectorDelay, 'reactionsCollector', [message.id, insight.id, topic.id])
+      done(null, true)
     }
   })
 }

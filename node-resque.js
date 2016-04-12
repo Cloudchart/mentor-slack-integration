@@ -3,17 +3,17 @@ require('dotenv').load()
 import schedule from 'node-schedule'
 import NR from 'node-resque'
 import Redis from 'ioredis'
-import workers from '../workers'
-import { eventMarker, dispatcherTic, maxWorkerAge } from '../lib'
+import workers from './workers'
+import { queue } from './workers/helpers'
+import { eventMarker, dispatcherTic, maxWorkerAge } from './lib'
 
 const redisClient = new Redis(process.env.REDIS_URL)
-const queue = new NR.queue({ connection: { redis: redisClient } }, workers)
 
 const worker = new NR.multiWorker({
-  connection: { redis: redisClient.duplicate() },
+  connection: { redis: redisClient },
   queues: 'slack-integration',
   minTaskProcessors: 1,
-  maxTaskProcessors: 20,
+  maxTaskProcessors: 30,
 }, workers)
 
 const scheduler = new NR.scheduler({ connection: { redis: redisClient.duplicate() } })
@@ -57,4 +57,4 @@ process.on('SIGINT', stop)
 process.on('SIGTERM', stop)
 
 
-export { start, queue }
+export { start }

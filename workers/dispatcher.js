@@ -1,8 +1,7 @@
 import momentTimezone from 'moment-timezone'
 import { WebClient } from 'slack-client'
-import { queue } from '../initializers/node_resque'
-import { eventMarker, errorMarker, noticeMarker } from '../lib'
-import { getRandomUnratedInsight, getRandomSubscribedTopic, markLinkAsRead } from './helpers'
+import { errorMarker, noticeMarker } from '../lib'
+import { enqueue, getRandomUnratedInsight, getRandomSubscribedTopic, markLinkAsRead } from './helpers'
 import { Channel, Team, TimeSetting } from '../models'
 
 const workerName = 'dispatcher'
@@ -49,10 +48,8 @@ function sendInsight(channel) {
     const response = await getRandomUnratedInsight(channel.id)
     if (response) {
       const { insight, topic } = response
-      queue.enqueue('slack-integration', 'insightsDispatcher', [channel, insight, topic], () => {
-        console.log(eventMarker, 'enqueued insightsDispatcher')
-        resolve(true)
-      })
+      await enqueue('insightsDispatcher', [channel, insight, topic])
+      resolve(true)
     } else {
       console.log(noticeMarker, `couldn't find unrated insight for channel: ${channel.id}`)
       resolve(null)
@@ -88,9 +85,7 @@ function sendLink(channel, SlackWeb) {
         await markLinkAsRead(channel.id, link.id)
 
         topic.randomInsights.forEach(insight => {
-          queue.enqueue('slack-integration', 'insightsDispatcher', [channel, insight, topic], () => {
-            console.log(eventMarker, 'enqueued insightsDispatcher')
-          })
+          enqueue('insightsDispatcher', [channel, insight, topic])
         })
 
         resolve(true)

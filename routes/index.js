@@ -7,7 +7,8 @@ import { slugify } from 'underscore.string'
 
 import { errorMarker } from '../lib'
 import { getChannels } from './channels'
-import { enqueue, checkTeamId } from './helpers'
+import { checkTeamId } from './helpers'
+import { enqueue } from '../workers/helpers'
 import { Team, Channel, TimeSetting } from '../models'
 
 const router = Router()

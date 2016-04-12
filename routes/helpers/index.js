@@ -1,16 +1,5 @@
 import request from 'request'
-import Redis from 'ioredis'
-import NR from 'node-resque'
 
-const RedisClient = new Redis(process.env.REDIS_URL)
-const Queue = new NR.queue({ connection: { redis: RedisClient } })
-
-
-export function enqueue(name, payload) {
-  Queue.connect(() => {
-    Queue.enqueue('slack-integration', name, payload)
-  })
-}
 
 export function checkTeamId(req, res, next) {
   if (req.session.teamId) {
@@ -30,7 +19,7 @@ export function checkTeamId(req, res, next) {
 
 export function callWebAppGraphQL(channelId, method, query) {
   return new Promise((resolve, reject) => {
-    let options = {
+    const options = {
       url: process.env.GRAPHQL_SERVER_URL,
       method: method,
       qs: { query: query },
@@ -42,7 +31,7 @@ export function callWebAppGraphQL(channelId, method, query) {
         resolve(body)
       } else {
         console.log('Error:', 'callWebAppGraphQL', error, body)
-        reject()
+        resolve(null)
       }
     })
   })

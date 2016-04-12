@@ -1,8 +1,36 @@
+import Redis from 'ioredis'
+import NR from 'node-resque'
 import { sample, sampleSize } from 'lodash'
-import { errorMarker } from '../../lib'
+import { eventMarker, errorMarker } from '../../lib'
 import { callWebAppGraphQL } from '../../routes/helpers'
 import { TeamOwner } from '../../models'
 
+const redisClient = new Redis(process.env.REDIS_URL)
+
+
+export const queue = new NR.queue({ connection: { redis: redisClient } })
+
+export function enqueue(name, payload) {
+  return new Promise((resolve, reject) => {
+    queue.connect(() => {
+      queue.enqueue('slack-integration', name, payload, () => {
+        console.log(eventMarker, 'enqueued', name)
+        resolve()
+      })
+    })
+  })
+}
+
+export function enqueueIn(delay, name, payload) {
+  return new Promise((resolve, reject) => {
+    queue.connect(() => {
+      queue.enqueueIn(delay, 'slack-integration', name, payload, () => {
+        console.log(eventMarker, 'enqueued', name)
+        resolve()
+      })
+    })
+  })
+}
 
 export async function getTeamOwner(teamId, SlackWeb) {
   return new Promise(async (resolve, reject) => {
@@ -124,6 +152,8 @@ export function getRandomUnratedInsight(channelId) {
       }
     `)
 
+    if (!response) return resolve(null)
+
     const insights = JSON.parse(response).data.viewer.insights.edges
     if (insights.length > 0) {
       const randomInsight = sample(insights)
@@ -179,6 +209,8 @@ export function getRandomSubscribedTopic(channelId) {
       }
     `)
 
+    if (!response) return resolve(null)
+
     const topics = JSON.parse(response).data.viewer.topics.edges
     let topic = sample(topics.filter(topic => topic.node.links.edges.length > 0))
 
@@ -193,7 +225,6 @@ export function getRandomSubscribedTopic(channelId) {
   })
 }
 
-// TODO: update
 export function getSubscribedThemes(channelId) {
   return new Promise(async (resolve, reject) => {
     const response = await callWebAppGraphQL(channelId, 'GET', `
@@ -209,6 +240,8 @@ export function getSubscribedThemes(channelId) {
         }
       }
     `)
+
+    if (!response) return resolve([])
 
     const topics = JSON.parse(response).data.viewer.topics.edges
     resolve(topics.map(topic => topic.node.name))
