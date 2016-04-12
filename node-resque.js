@@ -13,7 +13,7 @@ const worker = new NR.multiWorker({
   connection: { redis: redisClient },
   queues: 'slack-integration',
   minTaskProcessors: 1,
-  maxTaskProcessors: 30,
+  maxTaskProcessors: 50,
 }, workers)
 
 const scheduler = new NR.scheduler({ connection: { redis: redisClient.duplicate() } })
