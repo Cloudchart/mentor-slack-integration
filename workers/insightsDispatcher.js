@@ -34,14 +34,14 @@ function isEveryoneAsleep(channelId, SlackWeb) {
     SlackWeb.channels.info(channelId, (err, res) => {
       if (err = err || res.error) {
         console.log(errorMarker, err, workerName, 'channels.info')
-        reject()
+        resolve(null)
       } else {
         let members = res.channel.members
 
         SlackWeb.users.list(1, (err, res) => {
           if (err = err || res.error) {
             console.log(errorMarker, err, workerName, 'users.list')
-            reject()
+            resolve(null)
           } else {
             let activeUsers = res.members.filter(member => {
               return (
@@ -73,7 +73,8 @@ async function perform(done) {
     return promiseChain.then(async () => {
       if (!itSatisfiesTimeSetting(channel)) return
       const SlackWeb = new WebClient(channel.Team.accessToken)
-      if (await isEveryoneAsleep(channel.id, SlackWeb)) return
+      const everyoneIsAsleep = await isEveryoneAsleep(channel.id, SlackWeb)
+      if (everyoneIsAsleep || everyoneIsAsleep === null) return
 
       const response = await getRandomUnratedInsight(channel.id)
       if (response) {
