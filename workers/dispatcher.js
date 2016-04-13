@@ -69,7 +69,14 @@ function sendLink(channel, SlackWeb) {
     }
 
     const link = topic.randomLink
-    const text = `${link.reaction.content} <${link.url}|${link.title}>`
+    const linkRegex = new RegExp(/#link#/g)
+    let text = ''
+
+    if (linkRegex.test(link.reaction.content)) {
+      text += link.reaction.content.replace(linkRegex, `<${link.url}|${link.title}>`)
+    } else {
+      text += `${link.reaction.content} <${link.url}|${link.title}>`
+    }
 
     const options = {
       as_user: true,
@@ -82,12 +89,11 @@ function sendLink(channel, SlackWeb) {
         console.log(errorMarker, err, workerName, 'chat.postMessage')
         resolve(null)
       } else {
-        await markLinkAsRead(channel.id, link.id)
-
         topic.randomInsights.forEach(insight => {
           enqueue('insightsDispatcher', [channel, insight, topic])
         })
 
+        await markLinkAsRead(channel.id, link.id)
         resolve(true)
       }
     })
