@@ -26,8 +26,8 @@ module.exports = function(sequelize, DataTypes) {
       validate: {
         isIn: [dayTimes],
         ltEndTime: function() {
-          if (this.startTime > this.endTime) {
-            throw new Error("can't be greater than end time")
+          if (this.startTime >= this.endTime) {
+            throw new Error('cannot equal or be greater than end time')
           }
         }
       },
@@ -39,8 +39,8 @@ module.exports = function(sequelize, DataTypes) {
       validate: {
         isIn: [dayTimes],
         gtStartTime: function() {
-          if (this.endTime < this.startTime) {
-            throw new Error("can't be less than start time")
+          if (this.endTime <= this.startTime) {
+            throw new Error('cannot equal or be less than start time')
           }
         }
       },

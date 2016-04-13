@@ -1,29 +1,24 @@
-import Redis from 'ioredis'
-import NR from 'node-resque'
+import { queue } from '../../node-resque'
 import { sample, sampleSize } from 'lodash'
 import { eventMarker, errorMarker } from '../../lib'
 import { callWebAppGraphQL } from '../../routes/helpers'
 import { TeamOwner } from '../../models'
 
-const redisClient = new Redis(process.env.REDIS_URL)
 
-
-export const queue = new NR.queue({ connection: { redis: redisClient } })
-
-export function enqueue(name, payload, delay=0) {
+export function enqueue(name, payload) {
   return new Promise((resolve, reject) => {
-    queue.connect(() => {
-      if (delay > 0) {
-        queue.enqueueIn(delay, 'slack-integration', name, payload, () => {
-          console.log(eventMarker, 'enqueued', name)
-          resolve()
-        })
-      } else {
-        queue.enqueue('slack-integration', name, payload, () => {
-          console.log(eventMarker, 'enqueued', name)
-          resolve()
-        })
-      }
+    queue.enqueue('slack-integration', name, payload, () => {
+      console.log(eventMarker, 'enqueued', name)
+      resolve()
+    })
+  })
+}
+
+export function enqueueIn(delay, name, payload) {
+  return new Promise((resolve, reject) => {
+    queue.enqueueIn(delay, 'slack-integration', name, payload, () => {
+      console.log(eventMarker, 'enqueued', name)
+      resolve()
     })
   })
 }

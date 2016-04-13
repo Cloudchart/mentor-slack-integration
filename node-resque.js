@@ -4,13 +4,14 @@ import schedule from 'node-schedule'
 import NR from 'node-resque'
 import Redis from 'ioredis'
 import workers from './workers'
-import { queue } from './workers/helpers'
 import { eventMarker, dispatcherTic, maxWorkerAge } from './lib'
 
 const redisClient = new Redis(process.env.REDIS_URL)
 
+const queue = new NR.queue({ connection: { redis: redisClient.duplicate() } })
+
 const worker = new NR.multiWorker({
-  connection: { redis: redisClient },
+  connection: { redis: redisClient.duplicate() },
   queues: 'slack-integration',
   minTaskProcessors: 1,
   maxTaskProcessors: 30,
@@ -57,4 +58,4 @@ process.on('SIGINT', stop)
 process.on('SIGTERM', stop)
 
 
-export { start }
+export { start, queue }

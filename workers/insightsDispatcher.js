@@ -2,7 +2,8 @@ import moment from 'moment'
 import { WebClient } from 'slack-client'
 
 import { errorMarker, reactionsCollectorDelay, notInChannelNotifierDelay } from '../lib'
-import { queue, enqueue, markInsightAsRead } from './helpers'
+import { queue } from '../node-resque'
+import { enqueueIn, markInsightAsRead } from './helpers'
 import { Message } from '../models'
 
 const workerName = 'insightsDispatcher'
@@ -16,7 +17,7 @@ function enqueueNotInChannelNotifier(channelId, done) {
     if (timestamps.length > 0) {
       done(null, true)
     } else {
-      await enqueue('notInChannelNotifier', channelId, notInChannelNotifierDelay)
+      await enqueueIn(notInChannelNotifierDelay, 'notInChannelNotifier', channelId)
       done(null, true)
     }
   })
@@ -59,7 +60,7 @@ function perform(channel, insight, topic, done) {
         responseBody: JSON.stringify(res),
       })
 
-      await enqueue('reactionsCollector', [message.id, insight.id, topic.id], reactionsCollectorDelay)
+      await enqueueIn(reactionsCollectorDelay, 'reactionsCollector', [message.id, insight.id, topic.id])
       done(null, true)
     }
   })
