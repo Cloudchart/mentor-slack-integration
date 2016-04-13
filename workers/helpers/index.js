@@ -10,24 +10,20 @@ const redisClient = new Redis(process.env.REDIS_URL)
 
 export const queue = new NR.queue({ connection: { redis: redisClient } })
 
-export function enqueue(name, payload) {
+export function enqueue(name, payload, delay=0) {
   return new Promise((resolve, reject) => {
     queue.connect(() => {
-      queue.enqueue('slack-integration', name, payload, () => {
-        console.log(eventMarker, 'enqueued', name)
-        resolve()
-      })
-    })
-  })
-}
-
-export function enqueueIn(delay, name, payload) {
-  return new Promise((resolve, reject) => {
-    queue.connect(() => {
-      queue.enqueueIn(delay, 'slack-integration', name, payload, () => {
-        console.log(eventMarker, 'enqueued', name)
-        resolve()
-      })
+      if (delay > 0) {
+        queue.enqueueIn(delay, 'slack-integration', name, payload, () => {
+          console.log(eventMarker, 'enqueued', name)
+          resolve()
+        })
+      } else {
+        queue.enqueue('slack-integration', name, payload, () => {
+          console.log(eventMarker, 'enqueued', name)
+          resolve()
+        })
+      }
     })
   })
 }

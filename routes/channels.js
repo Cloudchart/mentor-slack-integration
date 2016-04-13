@@ -1,7 +1,6 @@
 import { Router } from 'express'
 import { WebClient } from 'slack-client'
-import { checkTeamId } from './helpers'
-import { enqueue } from '../workers/helpers'
+import { enqueue, checkTeamId } from './helpers'
 import { Team, Channel } from '../models'
 
 let router = Router()

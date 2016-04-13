@@ -2,7 +2,7 @@ import moment from 'moment'
 import { WebClient } from 'slack-client'
 
 import { errorMarker, reactionsCollectorDelay, notInChannelNotifierDelay } from '../lib'
-import { queue, enqueueIn, markInsightAsRead } from './helpers'
+import { queue, enqueue, markInsightAsRead } from './helpers'
 import { Message } from '../models'
 
 const workerName = 'insightsDispatcher'
@@ -16,7 +16,7 @@ function enqueueNotInChannelNotifier(channelId, done) {
     if (timestamps.length > 0) {
       done(null, true)
     } else {
-      await enqueueIn(notInChannelNotifierDelay, 'notInChannelNotifier', channelId)
+      await enqueue('notInChannelNotifier', channelId, notInChannelNotifierDelay)
       done(null, true)
     }
   })
@@ -30,6 +30,7 @@ function perform(channel, insight, topic, done) {
   const SlackWeb = new WebClient(channel.Team.accessToken)
   const duration = moment.duration(insight.origin.duration, 'seconds').humanize()
   const attachments = [{
+    fallback: insight.content,
     text: `${insight.content} _<${insight.origin.url}|${insight.origin.author}, ${insight.origin.title} (${duration} read)>_`,
     mrkdwn_in: ['text'],
   }]
@@ -58,7 +59,7 @@ function perform(channel, insight, topic, done) {
         responseBody: JSON.stringify(res),
       })
 
-      await enqueueIn(reactionsCollectorDelay, 'reactionsCollector', [message.id, insight.id, topic.id])
+      await enqueue('reactionsCollector', [message.id, insight.id, topic.id], reactionsCollectorDelay)
       done(null, true)
     }
   })
