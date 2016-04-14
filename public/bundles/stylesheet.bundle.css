@@ -2167,9 +2167,16 @@ header.main {
       background-size: cover; }
   header.main > nav {
     font-size: 22px; }
-    header.main > nav a {
-      text-decoration: none;
-      color: #FFFFFF; }
+    header.main > nav > ul {
+      display: -webkit-flex;
+      display: -moz-flex;
+      display: -ms-flexbox;
+      display: flex; }
+      header.main > nav > ul > li:not(:last-child) {
+        margin-right: 20px; }
+      header.main > nav > ul > li > a {
+        text-decoration: none;
+        color: #FFFFFF; }
 
 footer {
   padding: 30px; }

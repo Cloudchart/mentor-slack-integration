@@ -20580,7 +20580,7 @@
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'container configuration' },
-	        _react2.default.createElement(_Header2.default, null),
+	        _react2.default.createElement(_Header2.default, { team: team }),
 	        _react2.default.createElement(
 	          'div',
 	          { className: 'content' },
@@ -22300,10 +22300,18 @@
 
 	  _createClass(Header, [{
 	    key: 'handleLogout',
+
+
+	    // handlers
+	    //
 	    value: function handleLogout(event) {
 	      event.preventDefault();
 	      window.location = '/logout';
 	    }
+
+	    // renderers
+	    //
+
 	  }, {
 	    key: 'renderNav',
 	    value: function renderNav() {
@@ -22315,6 +22323,7 @@
 	        _react2.default.createElement(
 	          'ul',
 	          null,
+	          this.renderTeamsLink(),
 	          _react2.default.createElement(
 	            'li',
 	            null,
@@ -22326,6 +22335,19 @@
 	          )
 	        )
 	      );
+	    }
+	  }, {
+	    key: 'renderTeamsLink',
+	    value: function renderTeamsLink() {
+	      return this.props.team.name === 'Insights.VC' ? _react2.default.createElement(
+	        'li',
+	        null,
+	        _react2.default.createElement(
+	          'a',
+	          { href: '/teams' },
+	          'Teams'
+	        )
+	      ) : null;
 	    }
 	  }, {
 	    key: 'render',
@@ -22355,6 +22377,10 @@
 
 	  return Header;
 	}(_react.Component);
+
+	Header.propTypes = {
+	  team: _react.PropTypes.object.isRequired
+	};
 
 	exports.default = Header;
 

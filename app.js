@@ -13,6 +13,7 @@ var routes = require('./routes/index').default;
 var channels = require('./routes/channels').default;
 var themes = require('./routes/themes').default;
 var timeSettings = require('./routes/timeSettings').default;
+var teams = require('./routes/teams').default;
 
 var app = express();
 
@@ -42,6 +43,7 @@ app.use('/', routes);
 app.use('/channels', channels);
 app.use('/themes', themes);
 app.use('/time_settings', timeSettings);
+app.use('/teams', teams);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
