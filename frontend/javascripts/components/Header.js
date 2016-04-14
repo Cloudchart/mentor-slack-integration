@@ -12,18 +12,11 @@ class Header extends Component {
 
   // renderers
   //
-  renderNav() {
-    if (this.props.type === 'plain') return null
-
+  renderBackLink() {
     return (
-      <nav>
-        <ul>
-          { this.renderTeamsLink() }
-          <li>
-            <a href="" onClick={ this.handleLogout.bind(this) }>Logout</a>
-          </li>
-        </ul>
-      </nav>
+      /\/teams/.test(document.location.pathname) ?
+      <li><a href={ document.referrer }><i className="fa fa-chevron-left" /></a></li> :
+      null
     )
   }
 
@@ -32,6 +25,22 @@ class Header extends Component {
       this.props.team.name === 'Insights.VC' ?
       <li><a href="/teams">Teams</a></li> :
       null
+    )
+  }
+
+  renderNav() {
+    if (this.props.type === 'plain') return null
+
+    return (
+      <nav>
+        <ul>
+          { this.renderBackLink() }
+          { this.renderTeamsLink() }
+          <li>
+            <a href="" onClick={ this.handleLogout.bind(this) }>Logout</a>
+          </li>
+        </ul>
+      </nav>
     )
   }
 

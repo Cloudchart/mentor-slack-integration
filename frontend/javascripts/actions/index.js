@@ -13,3 +13,7 @@ export const configActions = {
   updateTimeSetting,
   fetchChannels,
 }
+
+export const teamsActions = {
+
+}

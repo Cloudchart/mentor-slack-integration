@@ -4,20 +4,16 @@ import { Team } from '../models'
 
 const router = Router()
 
-// helpers
-//
-async function checkIVCTeam(req, res, next) {
-  const team = await Team.findById(req.session.teamId)
-  if (team.name === 'Insights.VC') {
-    next()
-  } else {
-    res.redirect('/')
-  }
-}
 
-router.get('/', checkTeamId, checkIVCTeam, async (req, res, next) => {
-  const teams = await Team.findAll()
-  res.json({ teams: teams })
+router.get('/', checkTeamId, async (req, res, next) => {
+  let team = await Team.findById(req.session.teamId)
+  if (team.name !== 'Insights.VC') return res.redirect('/')
+
+  team = { id: team.id, name: team.name }
+  let teams = await Team.findAll()
+  teams = teams.map(team => { return { id: team.id, name: team.name } })
+
+  res.render('teams', { title: 'Virtual Mentor Slack Teams', team: team, teams: teams })
 })
 
 
