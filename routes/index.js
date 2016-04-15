@@ -98,7 +98,7 @@ router.get('/:teamName/configuration', checkTeamId, initTimeSetting, async (req,
   getChannels(team).then(channels => {
     res.render('configuration', {
       title: `Configure ${appName} integration`,
-      team: { name: team.name },
+      team: { id: team.id, name: team.name },
       channels: channels,
       timeSetting: {
         tz: timeSetting.tz,

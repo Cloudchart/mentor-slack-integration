@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from 'react'
-import ReactDOM from 'react-dom'
 
 import Channel from './Channel'
 import ThemesList from './ThemesList'

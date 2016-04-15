@@ -14,6 +14,8 @@ export const configActions = {
   fetchChannels,
 }
 
-export const teamsActions = {
+import fetchTeamChat from './admin/fetchTeamChat'
 
+export const teamsActions = {
+  fetchTeamChat,
 }

@@ -1,4 +1,6 @@
 import React, { Component, PropTypes } from 'react'
+import { slugify } from 'underscore.string'
+import { ivcTeamId } from '../../data'
 
 
 class Header extends Component {
@@ -12,18 +14,22 @@ class Header extends Component {
 
   // renderers
   //
-  renderBackLink() {
+  renderConfigurationLink() {
     return (
-      /\/teams/.test(document.location.pathname) ?
-      <li><a href={ document.referrer }><i className="fa fa-chevron-left" /></a></li> :
+      /\/admin/.test(document.location.pathname) ?
+      <li>
+        <a href={ `/${slugify(this.props.team.name)}/configuration` }>
+          <i className="fa fa-chevron-left" />
+        </a>
+      </li> :
       null
     )
   }
 
   renderTeamsLink() {
     return (
-      this.props.team.name === 'Insights.VC' ?
-      <li><a href="/teams">Teams</a></li> :
+      this.props.team.id === ivcTeamId ?
+      <li><a href="/admin/teams">Teams</a></li> :
       null
     )
   }
@@ -34,7 +40,7 @@ class Header extends Component {
     return (
       <nav>
         <ul>
-          { this.renderBackLink() }
+          { this.renderConfigurationLink() }
           { this.renderTeamsLink() }
           <li>
             <a href="" onClick={ this.handleLogout.bind(this) }>Logout</a>
