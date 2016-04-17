@@ -1,5 +1,6 @@
 import moment from 'moment'
 import { WebClient } from 'slack-client'
+import { clean } from 'underscore.string'
 
 import { errorMarker, reactionsCollectorDelay, notInChannelNotifierDelay } from '../lib'
 import { queue } from '../node-resque'
@@ -29,10 +30,16 @@ function enqueueNotInChannelNotifier(channelId, done) {
 // if message sent, mark as read, save output and enqueue reactionsCollector
 function perform(channel, insight, topic, done) {
   const SlackWeb = new WebClient(channel.Team.accessToken)
-  const duration = moment.duration(insight.origin.duration, 'seconds').humanize()
+  const { url, author, title, duration } = insight.origin
+  const content = clean(insight.content)
+
+  let urlTitle = author
+  if (title) urlTitle += `, ${title}`
+  if (duration > 0) urlTitle += ` (${moment.duration(duration, 'seconds').humanize()} read)`
+
   const attachments = [{
-    fallback: insight.content,
-    text: `${insight.content} _<${insight.origin.url}|${insight.origin.author}, ${insight.origin.title} (${duration} read)>_`,
+    fallback: content,
+    text: `${content} _<${url}|${urlTitle}>_`,
     mrkdwn_in: ['text'],
   }]
 
