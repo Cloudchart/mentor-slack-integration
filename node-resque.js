@@ -6,18 +6,18 @@ import Redis from 'ioredis'
 import workers from './workers'
 import { eventMarker, dispatcherTic, maxWorkerAge } from './lib'
 
-const redisClient = new Redis(process.env.REDIS_URL)
+const connectionDetails = { redis: new Redis(process.env.REDIS_URL) }
 
-const queue = new NR.queue({ connection: { redis: redisClient.duplicate() } })
+const queue = new NR.queue({ connection: connectionDetails })
 
 const worker = new NR.multiWorker({
-  connection: { redis: redisClient.duplicate() },
+  connection: connectionDetails,
   queues: 'slack-integration',
   minTaskProcessors: 1,
   maxTaskProcessors: 30,
 }, workers)
 
-const scheduler = new NR.scheduler({ connection: { redis: redisClient.duplicate() } })
+const scheduler = new NR.scheduler({ connection: connectionDetails })
 
 
 function stop() {
