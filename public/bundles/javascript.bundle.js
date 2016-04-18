@@ -72,7 +72,7 @@
 	if (reactType === 'plain') {
 	  _reactDom2.default.render(_react2.default.createElement(Component, JSON.parse(node.dataset.reactProps)), node);
 	} else {
-	  var reducers = __webpack_require__(210)("./" + reactClass).default;
+	  var reducers = __webpack_require__(211)("./" + reactClass).default;
 	  var store = (0, _redux.createStore)(reducers, window.__INITIAL_STATE__, (0, _redux.applyMiddleware)(_reduxThunk2.default));
 
 	  _reactDom2.default.render(_react2.default.createElement(
@@ -20487,7 +20487,9 @@
 		"./ConfigApp": 177,
 		"./ConfigApp.js": 177,
 		"./LandingApp": 208,
-		"./LandingApp.js": 208
+		"./LandingApp.js": 208,
+		"./PagesApp": 210,
+		"./PagesApp.js": 210
 	};
 	function webpackContext(req) {
 		return __webpack_require__(webpackContextResolve(req));
@@ -22303,43 +22305,50 @@
 	      window.location = '/logout';
 	    }
 	  }, {
+	    key: 'renderNav',
+	    value: function renderNav() {
+	      if (this.props.type === 'plain') return null;
+
+	      return _react2.default.createElement(
+	        'nav',
+	        null,
+	        _react2.default.createElement(
+	          'ul',
+	          null,
+	          _react2.default.createElement(
+	            'li',
+	            null,
+	            _react2.default.createElement(
+	              'a',
+	              { href: '', onClick: this.handleLogout.bind(this) },
+	              'Logout'
+	            )
+	          )
+	        )
+	      );
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
 	      return _react2.default.createElement(
 	        'header',
 	        { className: 'main' },
 	        _react2.default.createElement(
-	          'div',
-	          { className: 'logo' },
+	          'a',
+	          { href: '/', className: 'logo' },
 	          _react2.default.createElement('span', { className: 'main-logo' }),
 	          _react2.default.createElement(
 	            'span',
 	            null,
-	            'Virtual ',
+	            'Mentor',
 	            _react2.default.createElement(
 	              'strong',
 	              null,
-	              'Mentor'
+	              'Bot'
 	            )
 	          )
 	        ),
-	        _react2.default.createElement(
-	          'nav',
-	          null,
-	          _react2.default.createElement(
-	            'ul',
-	            null,
-	            _react2.default.createElement(
-	              'li',
-	              null,
-	              _react2.default.createElement(
-	                'a',
-	                { href: '', onClick: this.handleLogout.bind(this) },
-	                'Logout'
-	              )
-	            )
-	          )
-	        )
+	        this.renderNav()
 	      );
 	    }
 	  }]);
@@ -22398,6 +22407,15 @@
 	              "a",
 	              { href: "mailto:team@getmentorbot.com" },
 	              "Contact"
+	            )
+	          ),
+	          _react2.default.createElement(
+	            "li",
+	            null,
+	            _react2.default.createElement(
+	              "a",
+	              { href: "/privacy" },
+	              "Privacy"
 	            )
 	          )
 	        )
@@ -24107,17 +24125,98 @@
 /* 210 */
 /***/ function(module, exports, __webpack_require__) {
 
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _Header = __webpack_require__(191);
+
+	var _Header2 = _interopRequireDefault(_Header);
+
+	var _Privacy = __webpack_require__(217);
+
+	var _Privacy2 = _interopRequireDefault(_Privacy);
+
+	var _Footer = __webpack_require__(192);
+
+	var _Footer2 = _interopRequireDefault(_Footer);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var PagesApp = function (_Component) {
+	  _inherits(PagesApp, _Component);
+
+	  function PagesApp() {
+	    _classCallCheck(this, PagesApp);
+
+	    return _possibleConstructorReturn(this, Object.getPrototypeOf(PagesApp).apply(this, arguments));
+	  }
+
+	  _createClass(PagesApp, [{
+	    key: 'renderPage',
+	    value: function renderPage() {
+	      switch (this.props.name) {
+	        case 'privacy':
+	          return _react2.default.createElement(_Privacy2.default, null);
+	        default:
+	          return null;
+	      }
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'container pages' },
+	        _react2.default.createElement(_Header2.default, { type: 'plain' }),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'content' },
+	          this.renderPage()
+	        ),
+	        _react2.default.createElement(_Footer2.default, null)
+	      );
+	    }
+	  }]);
+
+	  return PagesApp;
+	}(_react.Component);
+
+	PagesApp.propTypes = {
+	  name: _react.PropTypes.string.isRequired
+	};
+
+	exports.default = PagesApp;
+
+/***/ },
+/* 211 */
+/***/ function(module, exports, __webpack_require__) {
+
 	var map = {
-		"./ConfigApp": 211,
-		"./ConfigApp.js": 211,
-		"./channels": 213,
-		"./channels.js": 213,
-		"./team": 212,
-		"./team.js": 212,
-		"./themes": 214,
-		"./themes.js": 214,
-		"./timeSetting": 215,
-		"./timeSetting.js": 215
+		"./ConfigApp": 212,
+		"./ConfigApp.js": 212,
+		"./channels": 214,
+		"./channels.js": 214,
+		"./team": 213,
+		"./team.js": 213,
+		"./themes": 215,
+		"./themes.js": 215,
+		"./timeSetting": 216,
+		"./timeSetting.js": 216
 	};
 	function webpackContext(req) {
 		return __webpack_require__(webpackContextResolve(req));
@@ -24130,11 +24229,11 @@
 	};
 	webpackContext.resolve = webpackContextResolve;
 	module.exports = webpackContext;
-	webpackContext.id = 210;
+	webpackContext.id = 211;
 
 
 /***/ },
-/* 211 */
+/* 212 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -24145,19 +24244,19 @@
 
 	var _redux = __webpack_require__(154);
 
-	var _team = __webpack_require__(212);
+	var _team = __webpack_require__(213);
 
 	var _team2 = _interopRequireDefault(_team);
 
-	var _channels = __webpack_require__(213);
+	var _channels = __webpack_require__(214);
 
 	var _channels2 = _interopRequireDefault(_channels);
 
-	var _themes = __webpack_require__(214);
+	var _themes = __webpack_require__(215);
 
 	var _themes2 = _interopRequireDefault(_themes);
 
-	var _timeSetting = __webpack_require__(215);
+	var _timeSetting = __webpack_require__(216);
 
 	var _timeSetting2 = _interopRequireDefault(_timeSetting);
 
@@ -24171,7 +24270,7 @@
 	});
 
 /***/ },
-/* 212 */
+/* 213 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -24191,7 +24290,7 @@
 	}
 
 /***/ },
-/* 213 */
+/* 214 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -24253,7 +24352,7 @@
 	}
 
 /***/ },
-/* 214 */
+/* 215 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -24311,7 +24410,7 @@
 	}
 
 /***/ },
-/* 215 */
+/* 216 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -24346,6 +24445,804 @@
 	      return state;
 	  }
 	}
+
+/***/ },
+/* 217 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Privacy = function (_Component) {
+	  _inherits(Privacy, _Component);
+
+	  function Privacy() {
+	    _classCallCheck(this, Privacy);
+
+	    return _possibleConstructorReturn(this, Object.getPrototypeOf(Privacy).apply(this, arguments));
+	  }
+
+	  _createClass(Privacy, [{
+	    key: "render",
+	    value: function render() {
+	      return _react2.default.createElement(
+	        "div",
+	        null,
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          _react2.default.createElement(
+	            "strong",
+	            null,
+	            "PRIVACY POLICY"
+	          )
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "This Privacy Policy (this “Policy”) is effective as of 1 July 2014."
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "1 Definitions and Interpretation"
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "1.1 Unless otherwise explicitly provided herein, all capitalized terms used in this Policy shall have the meaning as defined in this sub-section 1 below."
+	        ),
+	        _react2.default.createElement(
+	          "table",
+	          null,
+	          _react2.default.createElement(
+	            "tbody",
+	            null,
+	            _react2.default.createElement(
+	              "tr",
+	              null,
+	              _react2.default.createElement(
+	                "td",
+	                null,
+	                _react2.default.createElement(
+	                  "p",
+	                  null,
+	                  _react2.default.createElement(
+	                    "strong",
+	                    null,
+	                    "Account:"
+	                  )
+	                )
+	              ),
+	              _react2.default.createElement(
+	                "td",
+	                null,
+	                _react2.default.createElement(
+	                  "p",
+	                  null,
+	                  "A customer’s record made with the Service website as is at the time being."
+	                )
+	              )
+	            ),
+	            _react2.default.createElement(
+	              "tr",
+	              null,
+	              _react2.default.createElement(
+	                "td",
+	                null,
+	                _react2.default.createElement(
+	                  "p",
+	                  null,
+	                  _react2.default.createElement(
+	                    "strong",
+	                    null,
+	                    "Administrator:"
+	                  )
+	                )
+	              ),
+	              _react2.default.createElement(
+	                "td",
+	                null,
+	                _react2.default.createElement(
+	                  "p",
+	                  null,
+	                  "Any person appointed by the Company to administer on behalf thereof any activity performed by customers on the Service website."
+	                )
+	              )
+	            ),
+	            _react2.default.createElement(
+	              "tr",
+	              null,
+	              _react2.default.createElement(
+	                "td",
+	                null,
+	                _react2.default.createElement(
+	                  "p",
+	                  null,
+	                  _react2.default.createElement(
+	                    "strong",
+	                    null,
+	                    "Company:"
+	                  )
+	                )
+	              ),
+	              _react2.default.createElement(
+	                "td",
+	                null,
+	                _react2.default.createElement(
+	                  "p",
+	                  null,
+	                  "Org Pad Limited, a private limited liability company whose registered office is at 67 Kennedy Avenue, Athienitis Kennedy Park, 4th Floor, Office 401, P.C. 1076, Nicosia, Cyprus"
+	                )
+	              )
+	            ),
+	            _react2.default.createElement(
+	              "tr",
+	              null,
+	              _react2.default.createElement(
+	                "td",
+	                null,
+	                _react2.default.createElement(
+	                  "p",
+	                  null,
+	                  _react2.default.createElement(
+	                    "strong",
+	                    null,
+	                    "Customer or you:"
+	                  )
+	                )
+	              ),
+	              _react2.default.createElement(
+	                "td",
+	                null,
+	                _react2.default.createElement(
+	                  "p",
+	                  null,
+	                  "Any natural person having an account opened with the Service at the time being."
+	                )
+	              )
+	            ),
+	            _react2.default.createElement(
+	              "tr",
+	              null,
+	              _react2.default.createElement(
+	                "td",
+	                null,
+	                _react2.default.createElement(
+	                  "p",
+	                  null,
+	                  _react2.default.createElement(
+	                    "strong",
+	                    null,
+	                    "Verified Customer:"
+	                  )
+	                )
+	              ),
+	              _react2.default.createElement(
+	                "td",
+	                null,
+	                _react2.default.createElement(
+	                  "p",
+	                  null,
+	                  "A customer whose identity is verified by the service subject to his/her consent."
+	                )
+	              )
+	            ),
+	            _react2.default.createElement(
+	              "tr",
+	              null,
+	              _react2.default.createElement(
+	                "td",
+	                null,
+	                _react2.default.createElement(
+	                  "p",
+	                  null,
+	                  _react2.default.createElement(
+	                    "strong",
+	                    null,
+	                    "Personal Data:"
+	                  )
+	                )
+	              ),
+	              _react2.default.createElement(
+	                "td",
+	                null,
+	                _react2.default.createElement(
+	                  "p",
+	                  null,
+	                  "Information relating to an identified or identifiable natural person, that is, information about a person whose identity is either manifestly clear or can at least be established by obtaining additional information."
+	                )
+	              )
+	            ),
+	            _react2.default.createElement(
+	              "tr",
+	              null,
+	              _react2.default.createElement(
+	                "td",
+	                null,
+	                _react2.default.createElement(
+	                  "p",
+	                  null,
+	                  _react2.default.createElement(
+	                    "strong",
+	                    null,
+	                    "Service website:"
+	                  )
+	                )
+	              ),
+	              _react2.default.createElement(
+	                "td",
+	                null,
+	                _react2.default.createElement(
+	                  "p",
+	                  null,
+	                  _react2.default.createElement(
+	                    "a",
+	                    { href: "https://getmentorbot.com/", target: "", rel: "" },
+	                    "getmentorbot.com"
+	                  )
+	                )
+	              )
+	            ),
+	            _react2.default.createElement(
+	              "tr",
+	              null,
+	              _react2.default.createElement(
+	                "td",
+	                null,
+	                _react2.default.createElement(
+	                  "p",
+	                  null,
+	                  _react2.default.createElement(
+	                    "strong",
+	                    null,
+	                    "Third Party/Third Parties:"
+	                  )
+	                )
+	              ),
+	              _react2.default.createElement(
+	                "td",
+	                null,
+	                _react2.default.createElement(
+	                  "p",
+	                  null,
+	                  "Individuals, entities, websites, services, products, and applications that are not controlled, managed, or operated by the Company. For the avoidance of doubt, this includes any Service customers, independent organizations or groups, customer groups as well as volunteers, employees, directors, officers, grant recipients, and contractors of those organizations or groups."
+	                )
+	              )
+	            ),
+	            _react2.default.createElement(
+	              "tr",
+	              null,
+	              _react2.default.createElement(
+	                "td",
+	                null,
+	                _react2.default.createElement(
+	                  "p",
+	                  null,
+	                  _react2.default.createElement(
+	                    "strong",
+	                    null,
+	                    "Third parties’ services:"
+	                  )
+	                )
+	              ),
+	              _react2.default.createElement(
+	                "td",
+	                null,
+	                _react2.default.createElement(
+	                  "p",
+	                  null,
+	                  "Any services provided by third parties which links are posted at the Service website from time to time."
+	                )
+	              )
+	            )
+	          )
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "2 Purpose"
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "2.1 This Policy is a statement of how the Service may collect, use and aggregate personal information about customers on the Service website. "
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "2.2 Our Service respects personal privacy of customers and is committed to protecting it."
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "3 Pursuing a Legitimate Aim"
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "3.1 We believe that our Service presses social needs of a democratic society, serves public interests or the rights and freedoms of others, and brings additional business value to our customers."
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "4 How We Collect, Process, and Keep Personal Information of Our Customers"
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "4.1 Our cooperation with customers is twofold: (1) we provide them with services, and (2) for that purpose collect and process customers’ relevant personal information."
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "4.2 The processing of Personal Data may constitute an interference with the right to respect for private life of our customers. The right to respect for private life is, however, not an absolute right but must be balanced against and reconciled with other legitimate interests be they of other persons (private interests) or of society as a whole (public interests)."
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "5 Key Principles of Personal Information Protection"
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "5.1 The key principles for collecting, processing and keeping personal information upon which our interference is justified are laid out in this section 3 below."
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "5.2 ",
+	          _react2.default.createElement(
+	            "strong",
+	            null,
+	            _react2.default.createElement(
+	              "strong",
+	              null,
+	              "The Principle of Lawful Processing"
+	            )
+	          )
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "(i) We collect, process and keep personal information received from our customers in accordance with the Applicable Law."
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "(ii) We always pursue a legitimate purpose while collecting, processing and keeping personal information."
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "(iii) We collect, process and keep personal information to the extent as reasonably necessary in order to achieve our business goals and render our services to the benefit of customers. Personal Data of our customers shall be not elicited, collected, processed and/or kept without need or reference to a reasonable purpose to do so."
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "5.3 ",
+	          _react2.default.createElement(
+	            "strong",
+	            null,
+	            _react2.default.createElement(
+	              "strong",
+	              null,
+	              "The Principle of Purpose Specification and Limitation"
+	            )
+	          )
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "(i) The purpose of processing Personal Data shall be explicitly defined before processing is started."
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "(ii) No processing for undefined purposes of collected personal information is permissible for our Service."
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "(iii) Further use of Personal Data for another purpose shall always be subject to consent of a customer unless the new purpose of processing is incompatible with the original one."
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "(iv) Transfer of personal information to third parties is always taken as a new purpose and may be effected subject to consent of a customer only."
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "5.4 ",
+	          _react2.default.createElement(
+	            "strong",
+	            null,
+	            _react2.default.createElement(
+	              "strong",
+	              null,
+	              "Data Quality Principles"
+	            )
+	          )
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "The principles of data quality must be implemented by the controller in all processing operations. "
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "(i) ",
+	          _react2.default.createElement(
+	            "strong",
+	            null,
+	            _react2.default.createElement(
+	              "strong",
+	              null,
+	              "The limited retention of data principle."
+	            )
+	          ),
+	          " It makes it necessary to delete data as soon as they are no longer needed for the purposes for which they were collected. Personal Data are kept in a form which permits identification of customers for no longer than is necessary for the purposes for which the data were collected or for which they are further processed. The data must therefore be erased when those purposes have been served. Exemptions from the principle of limited retention must be set out by law and need special safeguards for the protection of customers as data subjects."
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "(ii) ",
+	          _react2.default.createElement(
+	            "strong",
+	            null,
+	            _react2.default.createElement(
+	              "strong",
+	              null,
+	              "The data relevancy principle"
+	            )
+	          ),
+	          ". Only such data shall be processed as are adequate, relevant and not excessive in relation to the purpose for which they are collected and/or further processed. The categories of data chosen for processing must be necessary in order to achieve the declared overall aim of the processing operations, and the Service should strictly limit collection of data to such information as is directly relevant for the specific purpose pursued by the processing."
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "(iii) ",
+	          _react2.default.createElement(
+	            "strong",
+	            null,
+	            _react2.default.createElement(
+	              "strong",
+	              null,
+	              "The data accuracy principle"
+	            )
+	          ),
+	          ". The Service shall not use personal information about its customers without taking steps to ensure with reasonable certainty that the data are accurate and up to date."
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "5.5 ",
+	          _react2.default.createElement(
+	            "strong",
+	            null,
+	            _react2.default.createElement(
+	              "strong",
+	              null,
+	              "Fair Processing Principle"
+	            )
+	          )
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "The principle of fair processing governs primarily the relationship between the Service and customers."
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "(i) ",
+	          _react2.default.createElement(
+	            "strong",
+	            null,
+	            _react2.default.createElement(
+	              "strong",
+	              null,
+	              "Transparency."
+	            )
+	          ),
+	          " This principle establishes an obligation for the Service to keep the customers informed about how their data are being used."
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "(ii) ",
+	          _react2.default.createElement(
+	            "strong",
+	            null,
+	            _react2.default.createElement(
+	              "strong",
+	              null,
+	              "Establishing trust"
+	            )
+	          ),
+	          ". The Service should document, to customers and to the general public, that it will process data in a lawful and transparent manner. Processing operations must not be performed in secret and should not have unforeseeable negative effects. The Service so far as possible shall act in a way which promptly complies with the wishes of the customer, especially where his or her consent forms the legal basis for the data processing."
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "5.6 ",
+	          _react2.default.createElement(
+	            "strong",
+	            null,
+	            _react2.default.createElement(
+	              "strong",
+	              null,
+	              "Principle of Accountability"
+	            )
+	          )
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "This principle applies to the effect that the Service should be accountable for complying with measures which give effect to the principles stated above."
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "6 Service Website Administration and Accounts"
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "6.1 The Service and Service website are administrated by the Company. For that purpose the Company shall appoint an Administrator."
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "6.2 The Administrator is responsible for compliance of the Service website activities with this Policy."
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "6.3 The Service is not allowed to transfer or disseminate any Personal Data kept on its customers’ accounts."
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "6.4 Any contribution made by a customer may be deleted by the Administrator if such a contribution violates or may potentially violate other customer or customers’ civil rights or dignity."
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "6.5 In the event that a customer has decided to leave the Service, his/her account and all information stored on such account shall be immediately and entirely deleted by the Service."
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "6.6 At the discretion of the Administrator some of Personal Data may be made ‘anonymous’ after a certain period of time, some may be deleted entirely after a certain period of time, and some may be maintained in perpetuity."
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "6.7 Accounts which remain unattended for 24 months shall be entirely deleted without notice."
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "6.8 The data posted by customers shall be treated as public information unless such data have been posted by a Verified Customer."
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "6.9 Any customer is entitled to communicate with the Administrator. "
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "6.10 Customers who are dissatisfied by the Service’s compliance to this Policy can submit complaints to the Administrator."
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "6.11 Neither the Company or the Administrator nor the Service are responsible for the use of customers’ personal information collected by Third Parties whose links may be placed on the Service website from time to time."
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "7 Information Automatically or Periodically Collected"
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "7.1 For each visitor to the Service website, the Service servers may automatically collect information about the pages visited by such a visitor and the IP address or domain name of visitors. That information will be used to help diagnose problems with the Service server, and to administer the Service website. Visitor’s IP address is not linked to personally (identifiable) information but will be used to gather broad demographic information. This information helps the Service tailor and improve our business on the Service website."
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "7.2 The Service does not knowingly collect personal information from children under the age of 13."
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "7.3 The Service may conduct periodic online surveys. For example, visitors to the Service website may see a pop-up window asking them to voluntarily participate in a user survey."
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "7.4 The Service automatically collects IP addresses and web site usage information from customers when they visit the Service website. This information helps the Service evaluate how its visitors use and navigate the Service website on an aggregate basis, including the number and frequency of visitors to each web page, the length of their visits, their browser type and their operating systems."
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "7.5 Information that is so collected may be used in the following ways:"
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "(i) To improve existing features or develop new features, products and services by analyzing how site features are being used."
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "(ii) To award prizes in contests or promotions. Participation in some contests or promotions may require visitors to agree to be contacted by the Service."
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "(iii) To provide advertisers or other Third Parties with aggregate information about the Service customer base and usage patterns. Personally identifiable information is kept private and not distributed to Third Parties."
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "7.6 The Service may place a “cookie”; on the browser of a customer’s computer. Cookies are pieces of information that a web site transfers to the customer’s computer’s hard disk for record-keeping purposes. The use of cookies is common in the Internet industry, and many major web sites use them to provide useful features to their customers. The cookie itself does not contain any personally identifying information, but may be used to tell when the customer’s computer has contacted the Service website. The Service uses the information for editorial purposes and for other purposes such as delivery of features and advertisements, so that the Service can customize delivery of information specific to your interests without compromising privacy. The Service also may use cookies to save a customers’ logins and passwords so they don’t have to re-enter it each time they visit portions of the Service website."
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "7.7 The Service also may collect demographic and profile data from customers as part of the registration process (i.e., postal code, sex, income level, interest in certain topics). The Service may use this data to tailor a customer’s experience at the Service website, showing the customer content the Service may think the customer might be interested in, displaying the content according to the customer’s preferences and informing him/her of upcoming events on the Service website. The Service also share certain demographic and profile data with advertisers and business partners on an aggregated basis."
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "8 Verified Customers"
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "8.1 The Service requires voluntary registration in order to utilize specific features. These forms may require a customer to give to the Service some of his/her Personal Data, which may include contact information and unique identifiers. If the customer so signify beforehand, the Service may use his/her contact information from the registration form to send to such customer promotional material from some of the Company’s partners. Unique identifiers are collected only for use as account numbers in our record system. The Service does not disclose any unique identifiers to any Third Parties."
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "8.2 The information collected from these registration forms is used to improve existing features or develop new features, products and services by analyzing how site features are being used. Such information may be shared with Third Parties on an aggregate basis."
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "9 Disclosure"
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "9.1 The Service will disclose account information only in special cases, such as (i) to comply with valid legal requirements, such as a law, regulation, search warrant, subpoena or court order; or (ii) when the Company has reason to believe that disclosing this information is necessary to identify, contact or bring legal action against someone who, intentionally or unintentionally, may be causing injury or harm to the Service customers or other persons or violating the Terms of Service of the Service website."
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "10 Links to other sites"
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "10.1 The Service website may contain links to other sites. The Service is not responsible for the privacy practices or the content of such websites, including any sites that may indicate a special relationship or partnership with the Service (such as co-branded pages and “powered by” relationships) or the sites of the Service’s advertisers that customers go to by clicking on a banner ad on the Service website. The Service does not disclose unique identifiers to those responsible for the linked sites. The linked sites, however, may collect personal information from customers when they link to their site. This collecting of information is not subject to the Service’s control. To ensure protection of customers’ privacy, the customers are recommended to always review the privacy policy of the sites they visit by linking from the Service website."
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "11 Advertisements"
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "11.1 The Service may display advertisements on the Service website. These ads may contain cookies. The Service does not have access to this information, nor does control its use. The Service does not provide any personally identifiable data regarding customers to its advertisers."
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "12 Security"
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "12.1 The Service website has security measures in place to protect against the loss, misuse and alteration of the information under the Service’s control."
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "13 E-mail Notices"
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "13.1 The Service may send notices via e-mail to Verified Customers who post and/or bookmark reviews and comments. These e-mails include but are not limited to confirmations that an item has been posted, notices that the item has received a reply, and notices that the listing has been deleted by the Administrator. These e-mails are a necessary feature for the Service."
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "14 Customer’s role in protecting his/her privacy"
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "14.1 If a customer shares a computer terminal with others, he/she may want to consider establishing an anonymous e-mail account. In this way, e-mails that such a customer receives from the Service, such as password reminders will be seen only by the customer. If the customer accesses the Service through an e-mail account maintained by his/her employer, he/she has to note that it is possible that the employer may monitor the customer’s e-mail communications."
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "15 Notification of changes"
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "15.1 This Policy may be revised over time as new features are added to the Service or as Internet security and privacy standards evolve. The Service will make readily available to customers information about any changes to this Policy and shall be posted at the Service website homepage for a certain period of time after such changes have been implemented."
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "16 Correcting and updating information"
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "16.1 The Service also permits a Verified Customer to correct or update his/her Personal Data previously provided to the Service. Such corrections and updates may be effected via customer’s access to his/her account."
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "17 Customer’s acceptance of these terms"
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "17.1 By using the Service website, a customer signifies his/her acceptance of the terms of this Policy. If the customer does not agree to the terms of this Policy, he/she is kindly requested to abstain from using the Service website and exit the site immediately. The customer’s continued use of the Service website following the posting of changes to these terms will mean that such customer accepts those changes."
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "18 Contacting the Service"
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          " "
+	        ),
+	        _react2.default.createElement(
+	          "p",
+	          null,
+	          "18.1 Any questions, queries and other communications shall be made at any time by sending electronic mail to support@getmentorbot.com"
+	        )
+	      );
+	    }
+	  }]);
+
+	  return Privacy;
+	}(_react.Component);
+
+	exports.default = Privacy;
 
 /***/ }
 /******/ ]);

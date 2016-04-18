@@ -112,5 +112,11 @@ router.get('/:teamName/configuration', checkTeamId, initTimeSetting, async (req,
   })
 })
 
+// static
+//
+router.get('/privacy', (req, res, next) => {
+  res.render('privacy', { title: `${appName} Privacy Policy` })
+})
+
 
 export default router

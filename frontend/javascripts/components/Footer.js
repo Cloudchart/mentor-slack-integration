@@ -10,6 +10,9 @@ class Footer extends Component {
           <li>
             <a href="mailto:team@getmentorbot.com">Contact</a>
           </li>
+          <li>
+            <a href="/privacy">Privacy</a>
+          </li>
         </ul>
       </footer>
     )
