@@ -28,7 +28,7 @@ function fetchTeamUsers(teamId) {
   return function (dispatch) {
     dispatch(requestTeamUsers(teamId))
 
-    return fetch(`/admin/teams/users/${teamId}`, {
+    return fetch(`/admin/teams/${teamId}/users`, {
       credentials: 'same-origin',
       headers: { 'Accept': 'application/json' },
     }).then(response => response.json()).then(json => {

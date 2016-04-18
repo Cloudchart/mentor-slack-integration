@@ -29,10 +29,17 @@ class TeamsList extends Component {
   }
 
   render() {
-    const { teams, users, actions } = this.props
+    const { teams, users, messages, actions } = this.props
 
     if (Object.keys(this.state.selectedTeam).length > 0) {
-      return <TeamChat team={ this.state.selectedTeam } users={ users } actions={ actions } />
+      return (
+        <TeamChat
+          team={ this.state.selectedTeam }
+          users={ users }
+          messages={ messages }
+          actions={ actions }
+        />
+      )
     } else {
       return (
         <div>
@@ -51,6 +58,7 @@ class TeamsList extends Component {
 TeamsList.propTypes = {
   teams: PropTypes.array.isRequired,
   users: PropTypes.array.isRequired,
+  messages: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired,
 }
 

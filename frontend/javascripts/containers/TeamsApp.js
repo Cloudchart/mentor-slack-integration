@@ -12,14 +12,14 @@ import Footer from '../components/Footer'
 class TeamsApp extends Component {
 
   render() {
-    const { team, teams, users, actions } = this.props
+    const { team, teams, users, messages, actions } = this.props
 
     return (
       <div className="container teams">
         <Header team={ team } />
 
         <div className="content">
-          <TeamsList teams={ teams } users={ users } actions={ actions } />
+          <TeamsList teams={ teams } users={ users } messages={ messages } actions={ actions } />
         </div>
 
         <Footer/>
@@ -32,6 +32,7 @@ TeamsApp.propTypes = {
   team: PropTypes.object.isRequired,
   teams: PropTypes.array.isRequired,
   users: PropTypes.array.isRequired,
+  messages: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired,
 }
 
@@ -40,6 +41,7 @@ function mapStateToProps(state) {
     team: state.team,
     teams: state.teams,
     users: state.users,
+    messages: state.messages,
   }
 }
 

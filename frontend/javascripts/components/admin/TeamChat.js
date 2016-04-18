@@ -1,5 +1,6 @@
 import _ from 'lodash'
 import React, { Component, PropTypes } from 'react'
+import TeamMessages from './TeamMessages'
 
 
 class TeamChat extends Component {
@@ -46,7 +47,7 @@ class TeamChat extends Component {
   }
 
   render() {
-    const { team } = this.props
+    const { team, users, messages, actions } = this.props
 
     return (
       <div>
@@ -59,7 +60,7 @@ class TeamChat extends Component {
         { this.renderUsersList() }
 
         <h2>Chat:</h2>
-        <div>history...</div>
+        <TeamMessages team={ team } users={ users } messages={ messages } actions={ actions } />
         <textarea/>
 
         <div>
@@ -74,6 +75,7 @@ class TeamChat extends Component {
 TeamChat.propTypes = {
   team: PropTypes.object.isRequired,
   users: PropTypes.array.isRequired,
+  messages: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired,
 }
 

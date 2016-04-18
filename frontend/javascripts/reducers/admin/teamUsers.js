@@ -1,4 +1,4 @@
-export default function teamsUsers(state = [], action) {
+export default function teamUsers(state = [], action) {
   switch (action.type) {
     case 'TEAM_USERS_REQUEST':
       return state.find(item => item.teamId === action.teamId) ?
