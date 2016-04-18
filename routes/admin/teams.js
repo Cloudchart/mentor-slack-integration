@@ -15,7 +15,7 @@ function checkAuth(req, res, next) {
 
 // actions
 //
-router.get('/teams', checkTeamId, checkAuth, async (req, res, next) => {
+router.get('/', checkTeamId, checkAuth, async (req, res, next) => {
   let team = await Team.findById(req.session.teamId)
   let teams = await Team.findAll()
   team = { id: team.id, name: team.name }
@@ -24,7 +24,7 @@ router.get('/teams', checkTeamId, checkAuth, async (req, res, next) => {
   res.render('teams', { title: 'Virtual Mentor Slack Teams', team: team, teams: teams })
 })
 
-router.get('/teams/chat/:teamId', checkTeamId, checkAuth, async (req, res, next) => {
+router.get('/users/:teamId', checkTeamId, checkAuth, async (req, res, next) => {
   const team = await Team.findById(req.params.teamId)
   const SlackWeb = new WebClient(team.accessToken)
 
@@ -35,13 +35,11 @@ router.get('/teams/chat/:teamId', checkTeamId, checkAuth, async (req, res, next)
       const users = data.members.filter(member => {
         return !member.deleted && !member.is_ultra_restricted && !member.is_bot
       })
-      // const owner = users.find(user => user.is_primary_owner)
 
-      res.json({ users: users, messages: [] })
+      res.json({ users: users })
     }
   })
 })
-
 
 
 export default router

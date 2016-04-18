@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import React, { Component, PropTypes } from 'react'
 
 
@@ -13,7 +14,12 @@ class TeamChat extends Component {
   // lifecycle
   //
   componentDidMount() {
-    this.props.actions.fetchTeamChat(this.props.team.id)
+    this.props.actions.fetchTeamUsers(this.props.team.id)
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const users = nextProps.users.find(item => item.teamId === nextProps.team.id)
+    this.setState({ users: users ? users.items : [] })
   }
 
   // handlers
@@ -24,18 +30,23 @@ class TeamChat extends Component {
 
   // renderers
   //
+  renderUsersList() {
+    const users = _
+      .chain(this.state.users)
+      .filter(user => user.name !== 'slackbot')
+      .sortBy('real_name')
+
+    return <ul>{ users.map(this.renderUser) }</ul>
+  }
+
   renderUser(user) {
-    return (
-      <li>
-        { `${user.real_name}` }
-      </li>
-    )
+    let item = user.real_name
+    if(user.is_primary_owner) item += ' (owner)'
+    return <li>{ item }</li>
   }
 
   render() {
     const { team } = this.props
-    let users = this.props.users.find(item => item.teamId === team.id)
-    users = users ? users.items : []
 
     return (
       <div>
@@ -45,8 +56,7 @@ class TeamChat extends Component {
         </h1>
 
         <h2>Users:</h2>
-        <div>Owner: Owner1</div>
-        <ul>{ users.map(this.renderUser.bind(this)) }</ul>
+        { this.renderUsersList() }
 
         <h2>Chat:</h2>
         <div>history...</div>

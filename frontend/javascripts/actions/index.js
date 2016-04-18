@@ -14,8 +14,8 @@ export const configActions = {
   fetchChannels,
 }
 
-import fetchTeamChat from './admin/fetchTeamChat'
+import fetchTeamUsers from './admin/fetchTeamUsers'
 
 export const teamsActions = {
-  fetchTeamChat,
+  fetchTeamUsers,
 }
