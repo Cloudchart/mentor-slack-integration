@@ -31,7 +31,7 @@ class LandingApp extends Component {
         <div className="content">
           <div className="boris">
             <p>
-              Get actionable entrepreneurial advices from the <strong>{ appName }</strong> right
+              Get actionable entrepreneurial advices from <strong>{ appName }</strong> right
               in your <span className="slack"><i className="fa fa-slack"/>Slack</span>
             </p>
             <div className="main-action">

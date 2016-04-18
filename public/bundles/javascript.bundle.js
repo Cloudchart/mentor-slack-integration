@@ -72,7 +72,7 @@
 	if (reactType === 'plain') {
 	  _reactDom2.default.render(_react2.default.createElement(Component, JSON.parse(node.dataset.reactProps)), node);
 	} else {
-	  var reducers = __webpack_require__(211)("./" + reactClass).default;
+	  var reducers = __webpack_require__(212)("./" + reactClass).default;
 	  var store = (0, _redux.createStore)(reducers, window.__INITIAL_STATE__, (0, _redux.applyMiddleware)(_reduxThunk2.default));
 
 	  _reactDom2.default.render(_react2.default.createElement(
@@ -23890,7 +23890,7 @@
 	            _react2.default.createElement(
 	              'p',
 	              null,
-	              'Get actionable entrepreneurial advices from the ',
+	              'Get actionable entrepreneurial advices from ',
 	              _react2.default.createElement(
 	                'strong',
 	                null,
@@ -24141,7 +24141,7 @@
 
 	var _Header2 = _interopRequireDefault(_Header);
 
-	var _Privacy = __webpack_require__(217);
+	var _Privacy = __webpack_require__(211);
 
 	var _Privacy2 = _interopRequireDefault(_Privacy);
 
@@ -24204,250 +24204,6 @@
 
 /***/ },
 /* 211 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var map = {
-		"./ConfigApp": 212,
-		"./ConfigApp.js": 212,
-		"./channels": 214,
-		"./channels.js": 214,
-		"./team": 213,
-		"./team.js": 213,
-		"./themes": 215,
-		"./themes.js": 215,
-		"./timeSetting": 216,
-		"./timeSetting.js": 216
-	};
-	function webpackContext(req) {
-		return __webpack_require__(webpackContextResolve(req));
-	};
-	function webpackContextResolve(req) {
-		return map[req] || (function() { throw new Error("Cannot find module '" + req + "'.") }());
-	};
-	webpackContext.keys = function webpackContextKeys() {
-		return Object.keys(map);
-	};
-	webpackContext.resolve = webpackContextResolve;
-	module.exports = webpackContext;
-	webpackContext.id = 211;
-
-
-/***/ },
-/* 212 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _redux = __webpack_require__(154);
-
-	var _team = __webpack_require__(213);
-
-	var _team2 = _interopRequireDefault(_team);
-
-	var _channels = __webpack_require__(214);
-
-	var _channels2 = _interopRequireDefault(_channels);
-
-	var _themes = __webpack_require__(215);
-
-	var _themes2 = _interopRequireDefault(_themes);
-
-	var _timeSetting = __webpack_require__(216);
-
-	var _timeSetting2 = _interopRequireDefault(_timeSetting);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	exports.default = (0, _redux.combineReducers)({
-	  team: _team2.default,
-	  channels: _channels2.default,
-	  themes: _themes2.default,
-	  timeSetting: _timeSetting2.default
-	});
-
-/***/ },
-/* 213 */
-/***/ function(module, exports) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.default = team;
-	function team() {
-	  var state = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
-	  var action = arguments[1];
-
-	  switch (action.type) {
-	    default:
-	      return state;
-	  }
-	}
-
-/***/ },
-/* 214 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.default = channels;
-	var initialState = {
-	  isFetching: false,
-	  items: [],
-	  status: ''
-	};
-
-	function channels() {
-	  var state = arguments.length <= 0 || arguments[0] === undefined ? initialState : arguments[0];
-	  var action = arguments[1];
-
-	  switch (action.type) {
-	    case 'CREATE_CHANNEL_REQUEST':
-	    case 'DESTROY_CHANNEL_REQUEST':
-	      return Object.assign({}, state, {
-	        items: state.items.map(function (channel) {
-	          return channel.id === action.id ? Object.assign({}, channel, { isFetching: true }) : channel;
-	        })
-	      });
-	    case 'CREATE_CHANNEL_ERROR':
-	    case 'DESTROY_CHANNEL_ERROR':
-	      return Object.assign({}, state, {
-	        items: state.items.map(function (channel) {
-	          return channel.id === action.id ? Object.assign({}, channel, { isFetching: false }) : channel;
-	        })
-	      });
-	    case 'CREATE_CHANNEL_RECEIVE':
-	    case 'DESTROY_CHANNEL_RECEIVE':
-	      return Object.assign({}, state, {
-	        items: state.items.map(function (channel) {
-	          return channel.id === action.id ? Object.assign({}, channel, { isFetching: false, status: action.status }) : channel;
-	        })
-	      });
-	    case 'CHANNELS_REQUEST':
-	      return Object.assign({}, state, {
-	        isFetching: true
-	      });
-	    case 'CHANNELS_RECEIVE':
-	      return Object.assign({}, state, {
-	        isFetching: false,
-	        items: action.channels,
-	        status: action.status,
-	        lastUpdated: action.receivedAt
-	      });
-	    case 'CHANNELS_ERROR':
-	      return Object.assign({}, state, {
-	        isFetching: false
-	      });
-	    default:
-	      return state;
-	  }
-	}
-
-/***/ },
-/* 215 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.default = themes;
-
-	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
-	function themes() {
-	  var state = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
-	  var action = arguments[1];
-
-	  switch (action.type) {
-	    case 'UPDATE_THEME_STATUS_REQUEST':
-	      return state.map(function (item) {
-	        return item.channelId === action.channelId ? Object.assign({}, item, { items: item.items.map(function (theme) {
-	            return theme.id === action.id ? Object.assign({}, theme, { isFetching: true }) : theme;
-	          })
-	        }) : item;
-	      });
-	    case 'UPDATE_THEME_STATUS_RECEIVE':
-	      return state.map(function (item) {
-	        return item.channelId === action.channelId ? Object.assign({}, item, { items: item.items.map(function (theme) {
-	            return theme.id === action.id ? Object.assign({}, theme, { isFetching: false, isSubscribed: action.isSubscribed }) : theme;
-	          })
-	        }) : item;
-	      });
-	    case 'UPDATE_THEME_STATUS_ERROR':
-	      return state.map(function (item) {
-	        return item.channelId === action.channelId ? Object.assign({}, item, { items: item.items.map(function (theme) {
-	            return theme.id === action.id ? Object.assign({}, theme, { isFetching: false }) : theme;
-	          })
-	        }) : item;
-	      });
-	    case 'THEMES_REQUEST':
-	      return state.find(function (item) {
-	        return item.channelId === action.channelId;
-	      }) ? state.map(function (item) {
-	        return item.channelId === action.channelId ? Object.assign({}, item, { isFetching: true }) : item;
-	      }) : [].concat(_toConsumableArray(state), [{ channelId: action.channelId, isFetching: true, items: [] }]);
-	    case 'THEMES_RECEIVE':
-	      return state.map(function (item) {
-	        return item.channelId === action.channelId ? Object.assign({}, item, { isFetching: false, items: action.themes }) : item;
-	      });
-	    case 'THEMES_ERROR':
-	      return state.map(function (item) {
-	        return item.channelId === action.channelId ? Object.assign({}, item, { isFetching: false }) : item;
-	      });
-	    default:
-	      return state;
-	  }
-	}
-
-/***/ },
-/* 216 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.default = timeSetting;
-
-	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-	function timeSetting() {
-	  var state = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
-	  var action = arguments[1];
-
-	  switch (action.type) {
-	    case 'UPDATE_TIME_SETTING_REQUEST':
-	      return Object.assign({}, state, _defineProperty({
-	        isFetching: true
-	      }, action.attr, action.value));
-	    case 'UPDATE_TIME_SETTING_RECEIVE':
-	      return Object.assign({}, state, _defineProperty({
-	        isFetching: false
-	      }, action.attr, action.value));
-	    case 'UPDATE_TIME_SETTING_ERROR':
-	      // TODO: think about how to restore previous state
-	      return Object.assign({}, state, {
-	        isFetching: false,
-	        error: action.error
-	      });
-	    default:
-	      return state;
-	  }
-	}
-
-/***/ },
-/* 217 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -25243,6 +24999,250 @@
 	}(_react.Component);
 
 	exports.default = Privacy;
+
+/***/ },
+/* 212 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var map = {
+		"./ConfigApp": 213,
+		"./ConfigApp.js": 213,
+		"./channels": 215,
+		"./channels.js": 215,
+		"./team": 214,
+		"./team.js": 214,
+		"./themes": 216,
+		"./themes.js": 216,
+		"./timeSetting": 217,
+		"./timeSetting.js": 217
+	};
+	function webpackContext(req) {
+		return __webpack_require__(webpackContextResolve(req));
+	};
+	function webpackContextResolve(req) {
+		return map[req] || (function() { throw new Error("Cannot find module '" + req + "'.") }());
+	};
+	webpackContext.keys = function webpackContextKeys() {
+		return Object.keys(map);
+	};
+	webpackContext.resolve = webpackContextResolve;
+	module.exports = webpackContext;
+	webpackContext.id = 212;
+
+
+/***/ },
+/* 213 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _redux = __webpack_require__(154);
+
+	var _team = __webpack_require__(214);
+
+	var _team2 = _interopRequireDefault(_team);
+
+	var _channels = __webpack_require__(215);
+
+	var _channels2 = _interopRequireDefault(_channels);
+
+	var _themes = __webpack_require__(216);
+
+	var _themes2 = _interopRequireDefault(_themes);
+
+	var _timeSetting = __webpack_require__(217);
+
+	var _timeSetting2 = _interopRequireDefault(_timeSetting);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.default = (0, _redux.combineReducers)({
+	  team: _team2.default,
+	  channels: _channels2.default,
+	  themes: _themes2.default,
+	  timeSetting: _timeSetting2.default
+	});
+
+/***/ },
+/* 214 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = team;
+	function team() {
+	  var state = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+	  var action = arguments[1];
+
+	  switch (action.type) {
+	    default:
+	      return state;
+	  }
+	}
+
+/***/ },
+/* 215 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = channels;
+	var initialState = {
+	  isFetching: false,
+	  items: [],
+	  status: ''
+	};
+
+	function channels() {
+	  var state = arguments.length <= 0 || arguments[0] === undefined ? initialState : arguments[0];
+	  var action = arguments[1];
+
+	  switch (action.type) {
+	    case 'CREATE_CHANNEL_REQUEST':
+	    case 'DESTROY_CHANNEL_REQUEST':
+	      return Object.assign({}, state, {
+	        items: state.items.map(function (channel) {
+	          return channel.id === action.id ? Object.assign({}, channel, { isFetching: true }) : channel;
+	        })
+	      });
+	    case 'CREATE_CHANNEL_ERROR':
+	    case 'DESTROY_CHANNEL_ERROR':
+	      return Object.assign({}, state, {
+	        items: state.items.map(function (channel) {
+	          return channel.id === action.id ? Object.assign({}, channel, { isFetching: false }) : channel;
+	        })
+	      });
+	    case 'CREATE_CHANNEL_RECEIVE':
+	    case 'DESTROY_CHANNEL_RECEIVE':
+	      return Object.assign({}, state, {
+	        items: state.items.map(function (channel) {
+	          return channel.id === action.id ? Object.assign({}, channel, { isFetching: false, status: action.status }) : channel;
+	        })
+	      });
+	    case 'CHANNELS_REQUEST':
+	      return Object.assign({}, state, {
+	        isFetching: true
+	      });
+	    case 'CHANNELS_RECEIVE':
+	      return Object.assign({}, state, {
+	        isFetching: false,
+	        items: action.channels,
+	        status: action.status,
+	        lastUpdated: action.receivedAt
+	      });
+	    case 'CHANNELS_ERROR':
+	      return Object.assign({}, state, {
+	        isFetching: false
+	      });
+	    default:
+	      return state;
+	  }
+	}
+
+/***/ },
+/* 216 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = themes;
+
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+	function themes() {
+	  var state = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
+	  var action = arguments[1];
+
+	  switch (action.type) {
+	    case 'UPDATE_THEME_STATUS_REQUEST':
+	      return state.map(function (item) {
+	        return item.channelId === action.channelId ? Object.assign({}, item, { items: item.items.map(function (theme) {
+	            return theme.id === action.id ? Object.assign({}, theme, { isFetching: true }) : theme;
+	          })
+	        }) : item;
+	      });
+	    case 'UPDATE_THEME_STATUS_RECEIVE':
+	      return state.map(function (item) {
+	        return item.channelId === action.channelId ? Object.assign({}, item, { items: item.items.map(function (theme) {
+	            return theme.id === action.id ? Object.assign({}, theme, { isFetching: false, isSubscribed: action.isSubscribed }) : theme;
+	          })
+	        }) : item;
+	      });
+	    case 'UPDATE_THEME_STATUS_ERROR':
+	      return state.map(function (item) {
+	        return item.channelId === action.channelId ? Object.assign({}, item, { items: item.items.map(function (theme) {
+	            return theme.id === action.id ? Object.assign({}, theme, { isFetching: false }) : theme;
+	          })
+	        }) : item;
+	      });
+	    case 'THEMES_REQUEST':
+	      return state.find(function (item) {
+	        return item.channelId === action.channelId;
+	      }) ? state.map(function (item) {
+	        return item.channelId === action.channelId ? Object.assign({}, item, { isFetching: true }) : item;
+	      }) : [].concat(_toConsumableArray(state), [{ channelId: action.channelId, isFetching: true, items: [] }]);
+	    case 'THEMES_RECEIVE':
+	      return state.map(function (item) {
+	        return item.channelId === action.channelId ? Object.assign({}, item, { isFetching: false, items: action.themes }) : item;
+	      });
+	    case 'THEMES_ERROR':
+	      return state.map(function (item) {
+	        return item.channelId === action.channelId ? Object.assign({}, item, { isFetching: false }) : item;
+	      });
+	    default:
+	      return state;
+	  }
+	}
+
+/***/ },
+/* 217 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = timeSetting;
+
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+	function timeSetting() {
+	  var state = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+	  var action = arguments[1];
+
+	  switch (action.type) {
+	    case 'UPDATE_TIME_SETTING_REQUEST':
+	      return Object.assign({}, state, _defineProperty({
+	        isFetching: true
+	      }, action.attr, action.value));
+	    case 'UPDATE_TIME_SETTING_RECEIVE':
+	      return Object.assign({}, state, _defineProperty({
+	        isFetching: false
+	      }, action.attr, action.value));
+	    case 'UPDATE_TIME_SETTING_ERROR':
+	      // TODO: think about how to restore previous state
+	      return Object.assign({}, state, {
+	        isFetching: false,
+	        error: action.error
+	      });
+	    default:
+	      return state;
+	  }
+	}
 
 /***/ }
 /******/ ]);
