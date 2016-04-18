@@ -20527,6 +20527,8 @@
 
 	var _selectors = __webpack_require__(187);
 
+	var _data = __webpack_require__(189);
+
 	var _Header = __webpack_require__(191);
 
 	var _Header2 = _interopRequireDefault(_Header);
@@ -20584,7 +20586,11 @@
 	            'h1',
 	            null,
 	            _react2.default.createElement('i', { className: 'fa fa-cogs' }),
-	            'Configure Virtual Mentor integration for ',
+	            _react2.default.createElement(
+	              'span',
+	              null,
+	              'Configure ' + _data.appName + ' integration for '
+	            ),
 	            _react2.default.createElement(
 	              'strong',
 	              null,
@@ -21621,7 +21627,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.botName = exports.daysOfWeek = exports.dayTimes = exports.timezones = undefined;
+	exports.botName = exports.appName = exports.daysOfWeek = exports.dayTimes = exports.timezones = undefined;
 
 	var _timezones = __webpack_require__(190);
 
@@ -21633,11 +21639,13 @@
 
 	var daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
+	var appName = 'MentorBot';
 	var botName = 'mentorbot';
 
 	exports.timezones = _timezones2.default;
 	exports.dayTimes = dayTimes;
 	exports.daysOfWeek = daysOfWeek;
+	exports.appName = appName;
 	exports.botName = botName;
 
 /***/ },
@@ -22388,7 +22396,7 @@
 	            null,
 	            _react2.default.createElement(
 	              "a",
-	              { href: "mailto:team@insights.vc" },
+	              { href: "mailto:team@getmentorbot.com" },
 	              "Contact"
 	            )
 	          )
@@ -22743,6 +22751,8 @@
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
+	var _data = __webpack_require__(189);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -22900,7 +22910,11 @@
 	            _react2.default.createElement(
 	              'h1',
 	              null,
-	              'Choose topics you want Virtual Mentor to post to ',
+	              _react2.default.createElement(
+	                'span',
+	                null,
+	                'Choose topics you want ' + _data.appName + ' to post to '
+	              ),
 	              _react2.default.createElement(
 	                'strong',
 	                null,
@@ -23522,9 +23536,9 @@
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 	var messages = {
-	  'non_selected': "Please select at least one channel for the Virtual Mentor bot to post to.",
+	  'non_selected': 'Please select at least one channel for ' + _data.appName + ' to post to.',
 	  'awaiting_invitation': 'Please type /invite @' + _data.botName + ' in each channel where you want the bot to post advices to.',
-	  'ok': "Success! Your Virtual Mentor bot is ready to serve its new Master.",
+	  'ok': 'Success! Your ' + _data.appName + ' is ready to serve its new Master.',
 	  'error': "Something went really wrong. Please try again later."
 	};
 
@@ -23782,6 +23796,8 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _data = __webpack_require__(189);
+
 	var _SlackButton = __webpack_require__(209);
 
 	var _SlackButton2 = _interopRequireDefault(_SlackButton);
@@ -23837,11 +23853,11 @@
 	            _react2.default.createElement(
 	              'span',
 	              null,
-	              'Virtual ',
+	              'Mentor',
 	              _react2.default.createElement(
 	                'strong',
 	                null,
-	                'Mentor'
+	                'Bot'
 	              )
 	            )
 	          ),
@@ -23860,7 +23876,7 @@
 	              _react2.default.createElement(
 	                'strong',
 	                null,
-	                'Virtual Mentor'
+	                _data.appName
 	              ),
 	              ' right in your ',
 	              _react2.default.createElement(
@@ -23903,7 +23919,7 @@
 	            _react2.default.createElement(
 	              'strong',
 	              null,
-	              'Virtual Mentor'
+	              _data.appName
 	            ),
 	            ' can do for you'
 	          ),
@@ -23939,10 +23955,14 @@
 	        _react2.default.createElement(
 	          'p',
 	          null,
-	          'This Slack bot is part of The Virtual Mentor app (currently in beta). Want to have your own mentor to give you proven actionable advice on the go? ',
+	          _react2.default.createElement(
+	            'span',
+	            null,
+	            'This Slack bot is part of ' + _data.appName + ' app (currently in beta). Want to have your own mentor to give you proven actionable advice on the go? '
+	          ),
 	          _react2.default.createElement(
 	            'a',
-	            { href: 'mailto:team@insights.vc' },
+	            { href: 'mailto:team@getmentorbot.com' },
 	            'Sign up for the private beta testing!'
 	          )
 	        ),

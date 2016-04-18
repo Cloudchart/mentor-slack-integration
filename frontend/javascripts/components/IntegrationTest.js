@@ -1,10 +1,10 @@
 import React, { Component, PropTypes } from 'react'
-import { botName } from '../../data'
+import { appName, botName } from '../../data'
 
 const messages = {
-  'non_selected': "Please select at least one channel for the Virtual Mentor bot to post to.",
+  'non_selected': `Please select at least one channel for ${appName} to post to.`,
   'awaiting_invitation': `Please type /invite @${botName} in each channel where you want the bot to post advices to.`,
-  'ok': "Success! Your Virtual Mentor bot is ready to serve its new Master.",
+  'ok': `Success! Your ${appName} is ready to serve its new Master.`,
   'error': "Something went really wrong. Please try again later.",
 }
 

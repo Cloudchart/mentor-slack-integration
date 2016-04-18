@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react'
+import { appName } from '../../data'
 
 import SlackButton from '../components/SlackButton'
 import Footer from '../components/Footer'
@@ -21,7 +22,7 @@ class LandingApp extends Component {
         <header>
           <div className="logo">
             <span className="main-logo"></span>
-            <span>Virtual <strong>Mentor</strong></span>
+            <span>Mentor<strong>Bot</strong></span>
           </div>
 
           <SlackButton slackButtonUrl={ this.props.slackButtonUrl } text="login" size="small" />
@@ -30,7 +31,7 @@ class LandingApp extends Component {
         <div className="content">
           <div className="boris">
             <p>
-              Get actionable entrepreneurial advices from the <strong>Virtual Mentor</strong> right
+              Get actionable entrepreneurial advices from the <strong>{ appName }</strong> right
               in your <span className="slack"><i className="fa fa-slack"/>Slack</span>
             </p>
             <div className="main-action">
@@ -55,7 +56,7 @@ class LandingApp extends Component {
         <div className="slack-window"></div>
         <div className="description">
           <h1>
-            What <strong>Virtual Mentor</strong> can do for you
+            What <strong>{ appName }</strong> can do for you
           </h1>
           <ul>
             <li>
@@ -80,9 +81,10 @@ class LandingApp extends Component {
       <section className="bottom">
         <SlackButton slackButtonUrl={ this.props.slackButtonUrl } />
         <p>
-          This Slack bot is part of The Virtual Mentor app (currently in beta).
-          Want to have your own mentor to give you proven actionable advice
-          on the go? <a href="mailto:team@insights.vc">Sign up for the private beta testing!</a>
+          <span>
+            { `This Slack bot is part of ${appName} app (currently in beta). Want to have your own mentor to give you proven actionable advice on the go? ` }
+          </span>
+          <a href="mailto:team@getmentorbot.com">Sign up for the private beta testing!</a>
         </p>
         <p>
           Follow <i className="fa fa-twitter"/> <a href="https://twitter.com/thementorapp" target="_blank">@thementorapp</a>

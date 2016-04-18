@@ -3,6 +3,7 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { configActions } from '../actions'
 import { getStartTimeRange, getEndTimeRange } from '../selectors'
+import { appName } from '../../data'
 
 import Header from '../components/Header'
 import Footer from '../components/Footer'
@@ -29,7 +30,8 @@ class ConfigApp extends Component {
         <div className="content">
           <h1>
             <i className="fa fa-cogs" />
-            Configure Virtual Mentor integration for <strong>{ team.name }</strong>
+            <span>{ `Configure ${appName} integration for ` }</span>
+            <strong>{ team.name }</strong>
           </h1>
 
           <TimeSetting

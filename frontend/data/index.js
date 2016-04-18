@@ -10,6 +10,7 @@ const dayTimes = [
 
 const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 
+const appName = 'MentorBot'
 const botName = 'mentorbot'
 
-export { timezones, dayTimes, daysOfWeek, botName }
+export { timezones, dayTimes, daysOfWeek, appName, botName }

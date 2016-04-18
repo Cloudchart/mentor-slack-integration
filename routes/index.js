@@ -5,7 +5,7 @@ import { Router } from 'express'
 import { WebClient } from 'slack-client'
 import { slugify } from 'underscore.string'
 
-import { errorMarker } from '../lib'
+import { appName, errorMarker } from '../lib'
 import { getChannels } from './channels'
 import { enqueue, checkTeamId } from './helpers'
 import { Team, Channel, TimeSetting } from '../models'
@@ -48,7 +48,7 @@ router.get('/', (req, res, next) => {
     }
   })
 
-  res.render('landing', { title: 'Add Virtual Mentor to Slack', slackButtonUrl: slackButtonUrl })
+  res.render('landing', { title: `Add ${appName} to Slack`, slackButtonUrl: slackButtonUrl })
 })
 
 router.get('/logout', (req, res, next) => {
@@ -97,7 +97,7 @@ router.get('/:teamName/configuration', checkTeamId, initTimeSetting, async (req,
 
   getChannels(team).then(channels => {
     res.render('configuration', {
-      title: 'Configure Virtual Mentor integration',
+      title: `Configure ${appName} integration`,
       team: { name: team.name },
       channels: channels,
       timeSetting: {

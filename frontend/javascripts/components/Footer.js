@@ -8,7 +8,7 @@ class Footer extends Component {
       <footer>
         <ul>
           <li>
-            <a href="mailto:team@insights.vc">Contact</a>
+            <a href="mailto:team@getmentorbot.com">Contact</a>
           </li>
         </ul>
       </footer>

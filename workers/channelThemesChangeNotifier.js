@@ -1,7 +1,7 @@
 import { WebClient } from 'slack-client'
 import { toSentence } from 'underscore.string'
 
-import { errorMarker } from '../lib'
+import { appName, errorMarker } from '../lib'
 import { getSubscribedThemes } from './helpers'
 import { Channel, ChannelNotification, Team } from '../models'
 
@@ -19,7 +19,7 @@ async function sendMessage(channel, themes, done) {
   if (channelNotification) {
     text = `New settings accepted. I will now give you advice on ${toSentence(themes)} in this channel.`
   } else {
-    const pt1 = `Greetings, humans. I am your Virtual Mentor, here to give you advice on ${toSentence(themes)} in this channel. You can always change that in my settings.`
+    const pt1 = `Greetings, humans. I am ${appName}, here to give you advice on ${toSentence(themes)} in this channel. You can always change that in my settings.`
     const pt2 = "Please use reactions on my advices so I can adjust my setup and serve you better. Now let the mentoring begin!"
     text = [pt1, pt2].join('\n')
   }

@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import Modal from 'boron/FadeModal'
 import classNames from 'classnames'
+import { appName } from '../../data'
 
 
 class ThemesList extends Component {
@@ -108,8 +109,8 @@ class ThemesList extends Component {
         <Modal ref="modal" onHide={ this.handleModalHide.bind(this) }>
           <div className="modal-content themes-list">
             <h1>
-              Choose topics you want Virtual Mentor to post
-              to <strong>{ `#${this.state.channel.name}` }</strong>
+              <span>{ `Choose topics you want ${appName} to post to ` }</span>
+              <strong>{ `#${this.state.channel.name}` }</strong>
             </h1>
 
             <ul>
