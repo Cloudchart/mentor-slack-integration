@@ -23555,7 +23555,7 @@
 
 	var messages = {
 	  'non_selected': 'Please select at least one channel for ' + _data.appName + ' to post to.',
-	  'awaiting_invitation': 'Please type /invite @' + _data.botName + ' in each channel where you want the bot to post advices to.',
+	  'awaiting_invitation': 'Please type /invite @' + _data.botName + ' in each channel where you want the bot to post advice to.',
 	  'ok': 'Success! Your ' + _data.appName + ' is ready to serve its new Master.',
 	  'error': "Something went really wrong. Please try again later."
 	};
@@ -23890,7 +23890,7 @@
 	            _react2.default.createElement(
 	              'p',
 	              null,
-	              'Get actionable entrepreneurial advices from ',
+	              'Get actionable entrepreneurial advice from ',
 	              _react2.default.createElement(
 	                'strong',
 	                null,
@@ -23915,7 +23915,7 @@
 	          _react2.default.createElement(
 	            'p',
 	            null,
-	            'Put the advices to work instantly, share with your team, and get smarter without distracting from your work'
+	            'Put the advice to work instantly, share with your team, and get smarter without distracting from your work'
 	          )
 	        )
 	      );

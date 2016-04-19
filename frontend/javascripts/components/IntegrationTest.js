@@ -3,7 +3,7 @@ import { appName, botName } from '../../data'
 
 const messages = {
   'non_selected': `Please select at least one channel for ${appName} to post to.`,
-  'awaiting_invitation': `Please type /invite @${botName} in each channel where you want the bot to post advices to.`,
+  'awaiting_invitation': `Please type /invite @${botName} in each channel where you want the bot to post advice to.`,
   'ok': `Success! Your ${appName} is ready to serve its new Master.`,
   'error': "Something went really wrong. Please try again later.",
 }
