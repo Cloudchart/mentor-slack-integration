@@ -1,64 +1,32 @@
 import React, { Component, PropTypes } from 'react'
-import TeamChat from './TeamChat'
 
 
 class TeamsList extends Component {
 
-  constructor(props) {
-    super(props)
-    this.state = {
-      selectedTeam: {},
-    }
-  }
-
-  // handlers
-  //
-  handleTeamClick(team, event) {
-    event.preventDefault()
-    this.setState({ selectedTeam: team })
-  }
-
-  // renderers
-  //
   renderTeam(team) {
     return (
       <li>
-        <a href="" onClick={ this.handleTeamClick.bind(this, team) } >{ team.name }</a>
+        <a href={ `/admin/teams/${team.id}/users` }>{ team.name }</a>
       </li>
     )
   }
 
   render() {
-    const { teams, users, messages, actions } = this.props
+    return (
+      <div>
+        <h2>Teams:</h2>
 
-    if (Object.keys(this.state.selectedTeam).length > 0) {
-      return (
-        <TeamChat
-          team={ this.state.selectedTeam }
-          users={ users }
-          messages={ messages }
-          actions={ actions }
-        />
-      )
-    } else {
-      return (
-        <div>
-          <h2>Teams:</h2>
-
-          <ul className="teams-list">
-            { this.props.teams.map(this.renderTeam.bind(this)) }
-          </ul>
-        </div>
-      )
-    }
+        <ul className="teams-list">
+          { this.props.teams.map(this.renderTeam.bind(this)) }
+        </ul>
+      </div>
+    )
   }
 
 }
 
 TeamsList.propTypes = {
   teams: PropTypes.array.isRequired,
-  users: PropTypes.array.isRequired,
-  messages: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired,
 }
 

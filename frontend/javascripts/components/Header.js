@@ -5,22 +5,11 @@ import { ivcTeamId } from '../../data'
 
 class Header extends Component {
 
-  // handlers
-  //
-  handleLogout(event) {
-    event.preventDefault()
-    window.location = '/logout'
-  }
-
-  // renderers
-  //
   renderConfigurationLink() {
     return (
       /\/admin/.test(document.location.pathname) ?
       <li>
-        <a href={ `/${slugify(this.props.team.name)}/configuration` }>
-          <i className="fa fa-chevron-left" />
-        </a>
+        <a href={ `/${slugify(this.props.team.name)}/configuration` }>Configuration</a>
       </li> :
       null
     )
@@ -43,7 +32,7 @@ class Header extends Component {
           { this.renderConfigurationLink() }
           { this.renderTeamsLink() }
           <li>
-            <a href="" onClick={ this.handleLogout.bind(this) }>Logout</a>
+            <a href="/logout">Logout</a>
           </li>
         </ul>
       </nav>

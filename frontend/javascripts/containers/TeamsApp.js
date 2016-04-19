@@ -19,7 +19,7 @@ class TeamsApp extends Component {
         <Header team={ team } />
 
         <div className="content">
-          <TeamsList teams={ teams } users={ users } messages={ messages } actions={ actions } />
+          <TeamsList teams={ teams } actions={ actions } />
         </div>
 
         <Footer/>
@@ -31,8 +31,6 @@ class TeamsApp extends Component {
 TeamsApp.propTypes = {
   team: PropTypes.object.isRequired,
   teams: PropTypes.array.isRequired,
-  users: PropTypes.array.isRequired,
-  messages: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired,
 }
 
@@ -40,8 +38,6 @@ function mapStateToProps(state) {
   return {
     team: state.team,
     teams: state.teams,
-    users: state.users,
-    messages: state.messages,
   }
 }
 
