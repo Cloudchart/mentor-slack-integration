@@ -24345,7 +24345,7 @@
 	                _react2.default.createElement(
 	                  "p",
 	                  null,
-	                  "Org Pad Limited, a private limited liability company whose registered office is at 67 Kennedy Avenue, Athienitis Kennedy Park, 4th Floor, Office 401, P.C. 1076, Nicosia, Cyprus"
+	                  "Virtual Mentor, Inc. Legal Form: C Corporation. Registered Office (aka. Registered Agent's) Address: 2711 Centerville Road, Suite 400, City of Wilmington, County of New Castle, zipcode 19808, Delaware"
 	                )
 	              )
 	            ),

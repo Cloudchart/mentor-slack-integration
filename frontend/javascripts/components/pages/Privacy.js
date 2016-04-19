@@ -33,7 +33,7 @@ class Privacy extends Component {
                 <p><strong>Company:</strong></p>
               </td>
               <td>
-                <p>Org Pad Limited, a&nbsp;private limited liability company whose registered office is&nbsp;at&nbsp;67&nbsp;Kennedy Avenue, Athienitis Kennedy Park, 4th Floor, Office 401, P.C. 1076, Nicosia, Cyprus</p>
+                <p>Virtual Mentor, Inc. Legal Form: C Corporation. Registered Office (aka. Registered Agent's) Address: 2711 Centerville Road, Suite 400, City of Wilmington, County of New Castle, zipcode 19808, Delaware</p>
               </td>
             </tr>
             <tr>
