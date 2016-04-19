@@ -93,6 +93,7 @@ class ThemesList extends Component {
   // renderers
   //
   renderTheme(theme) {
+    if (!theme.isDefault && !theme.isSubscribed) return null
     let iconClassNames = classNames('fa', 'fa-check', { 'is-fetching': theme.isFetching })
 
     return(

@@ -22900,6 +22900,7 @@
 	  }, {
 	    key: 'renderTheme',
 	    value: function renderTheme(theme) {
+	      if (!theme.isDefault && !theme.isSubscribed) return null;
 	      var iconClassNames = (0, _classnames2.default)('fa', 'fa-check', { 'is-fetching': theme.isFetching });
 
 	      return _react2.default.createElement(

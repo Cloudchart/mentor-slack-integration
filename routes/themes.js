@@ -18,6 +18,7 @@ router.get('/:channelId', checkTeamId, async (req, res, next) => {
               id
               name
               isSubscribedByViewer
+              isDefault
             }
           }
         }
@@ -27,7 +28,12 @@ router.get('/:channelId', checkTeamId, async (req, res, next) => {
 
   const themesEdges = JSON.parse(themesRes).data.viewer.topics.edges
   const themes = themesEdges.map(theme => {
-    return { id: theme.node.id, name: theme.node.name, isSubscribed: theme.node.isSubscribedByViewer }
+    return {
+      id: theme.node.id,
+      name: theme.node.name,
+      isSubscribed: theme.node.isSubscribedByViewer,
+      isDefault: theme.node.isDefault,
+    }
   })
   res.json({ themes: themes })
 })
