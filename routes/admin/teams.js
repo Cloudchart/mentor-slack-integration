@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { WebClient } from 'slack-client'
 import { checkTeamId } from '../helpers'
-import { ivcTeamId } from '../../lib'
+import { botTeamId } from '../../lib'
 import { Team, TeamOwner } from '../../models'
 
 const router = Router()
@@ -10,7 +10,7 @@ const router = Router()
 // helpers
 //
 function checkAuth(req, res, next) {
-  req.session.teamId === ivcTeamId ? next() : res.redirect('/')
+  req.session.teamId === botTeamId ? next() : res.redirect('/')
 }
 
 // actions

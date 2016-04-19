@@ -28,7 +28,7 @@ class Header extends Component {
 
   renderTeamsLink() {
     return (
-      this.props.team.id === ivcTeamId ?
+      this.props.team.isAdmin ?
       <li><a href="/admin/teams">Teams</a></li> :
       null
     )
