@@ -72,7 +72,7 @@
 	if (reactType === 'plain') {
 	  _reactDom2.default.render(_react2.default.createElement(Component, JSON.parse(node.dataset.reactProps)), node);
 	} else {
-	  var reducers = __webpack_require__(391)("./" + reactClass).default;
+	  var reducers = __webpack_require__(288)("./" + reactClass).default;
 	  var store = (0, _redux.createStore)(reducers, window.__INITIAL_STATE__, (0, _redux.applyMiddleware)(_reduxThunk2.default));
 
 	  _reactDom2.default.render(_react2.default.createElement(
@@ -26977,131 +26977,28 @@
 	exports.default = TeamsList;
 
 /***/ },
-/* 288 */,
-/* 289 */,
-/* 290 */,
-/* 291 */,
-/* 292 */,
-/* 293 */,
-/* 294 */,
-/* 295 */,
-/* 296 */,
-/* 297 */,
-/* 298 */,
-/* 299 */,
-/* 300 */,
-/* 301 */,
-/* 302 */,
-/* 303 */,
-/* 304 */,
-/* 305 */,
-/* 306 */,
-/* 307 */,
-/* 308 */,
-/* 309 */,
-/* 310 */,
-/* 311 */,
-/* 312 */,
-/* 313 */,
-/* 314 */,
-/* 315 */,
-/* 316 */,
-/* 317 */,
-/* 318 */,
-/* 319 */,
-/* 320 */,
-/* 321 */,
-/* 322 */,
-/* 323 */,
-/* 324 */,
-/* 325 */,
-/* 326 */,
-/* 327 */,
-/* 328 */,
-/* 329 */,
-/* 330 */,
-/* 331 */,
-/* 332 */,
-/* 333 */,
-/* 334 */,
-/* 335 */,
-/* 336 */,
-/* 337 */,
-/* 338 */,
-/* 339 */,
-/* 340 */,
-/* 341 */,
-/* 342 */,
-/* 343 */,
-/* 344 */,
-/* 345 */,
-/* 346 */,
-/* 347 */,
-/* 348 */,
-/* 349 */,
-/* 350 */,
-/* 351 */,
-/* 352 */,
-/* 353 */,
-/* 354 */,
-/* 355 */,
-/* 356 */,
-/* 357 */,
-/* 358 */,
-/* 359 */,
-/* 360 */,
-/* 361 */,
-/* 362 */,
-/* 363 */,
-/* 364 */,
-/* 365 */,
-/* 366 */,
-/* 367 */,
-/* 368 */,
-/* 369 */,
-/* 370 */,
-/* 371 */,
-/* 372 */,
-/* 373 */,
-/* 374 */,
-/* 375 */,
-/* 376 */,
-/* 377 */,
-/* 378 */,
-/* 379 */,
-/* 380 */,
-/* 381 */,
-/* 382 */,
-/* 383 */,
-/* 384 */,
-/* 385 */,
-/* 386 */,
-/* 387 */,
-/* 388 */,
-/* 389 */,
-/* 390 */,
-/* 391 */
+/* 288 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var map = {
-		"./ConfigApp": 392,
-		"./ConfigApp.js": 392,
-		"./TeamsApp": 397,
-		"./TeamsApp.js": 397,
-		"./admin/teamMessages": 400,
-		"./admin/teamMessages.js": 400,
-		"./admin/teamUsers": 399,
-		"./admin/teamUsers.js": 399,
-		"./admin/teams": 398,
-		"./admin/teams.js": 398,
-		"./channels": 394,
-		"./channels.js": 394,
-		"./team": 393,
-		"./team.js": 393,
-		"./themes": 395,
-		"./themes.js": 395,
-		"./timeSetting": 396,
-		"./timeSetting.js": 396
+		"./ConfigApp": 289,
+		"./ConfigApp.js": 289,
+		"./TeamsApp": 294,
+		"./TeamsApp.js": 294,
+		"./admin/teamMessages": 297,
+		"./admin/teamMessages.js": 297,
+		"./admin/teamUsers": 296,
+		"./admin/teamUsers.js": 296,
+		"./admin/teams": 295,
+		"./admin/teams.js": 295,
+		"./channels": 291,
+		"./channels.js": 291,
+		"./team": 290,
+		"./team.js": 290,
+		"./themes": 292,
+		"./themes.js": 292,
+		"./timeSetting": 293,
+		"./timeSetting.js": 293
 	};
 	function webpackContext(req) {
 		return __webpack_require__(webpackContextResolve(req));
@@ -27114,11 +27011,11 @@
 	};
 	webpackContext.resolve = webpackContextResolve;
 	module.exports = webpackContext;
-	webpackContext.id = 391;
+	webpackContext.id = 288;
 
 
 /***/ },
-/* 392 */
+/* 289 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -27129,19 +27026,19 @@
 
 	var _redux = __webpack_require__(154);
 
-	var _team = __webpack_require__(393);
+	var _team = __webpack_require__(290);
 
 	var _team2 = _interopRequireDefault(_team);
 
-	var _channels = __webpack_require__(394);
+	var _channels = __webpack_require__(291);
 
 	var _channels2 = _interopRequireDefault(_channels);
 
-	var _themes = __webpack_require__(395);
+	var _themes = __webpack_require__(292);
 
 	var _themes2 = _interopRequireDefault(_themes);
 
-	var _timeSetting = __webpack_require__(396);
+	var _timeSetting = __webpack_require__(293);
 
 	var _timeSetting2 = _interopRequireDefault(_timeSetting);
 
@@ -27155,7 +27052,7 @@
 	});
 
 /***/ },
-/* 393 */
+/* 290 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -27175,7 +27072,7 @@
 	}
 
 /***/ },
-/* 394 */
+/* 291 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -27237,7 +27134,7 @@
 	}
 
 /***/ },
-/* 395 */
+/* 292 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -27295,7 +27192,7 @@
 	}
 
 /***/ },
-/* 396 */
+/* 293 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -27332,7 +27229,7 @@
 	}
 
 /***/ },
-/* 397 */
+/* 294 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -27343,19 +27240,19 @@
 
 	var _redux = __webpack_require__(154);
 
-	var _team = __webpack_require__(393);
+	var _team = __webpack_require__(290);
 
 	var _team2 = _interopRequireDefault(_team);
 
-	var _teams = __webpack_require__(398);
+	var _teams = __webpack_require__(295);
 
 	var _teams2 = _interopRequireDefault(_teams);
 
-	var _teamUsers = __webpack_require__(399);
+	var _teamUsers = __webpack_require__(296);
 
 	var _teamUsers2 = _interopRequireDefault(_teamUsers);
 
-	var _teamMessages = __webpack_require__(400);
+	var _teamMessages = __webpack_require__(297);
 
 	var _teamMessages2 = _interopRequireDefault(_teamMessages);
 
@@ -27369,7 +27266,7 @@
 	});
 
 /***/ },
-/* 398 */
+/* 295 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -27389,7 +27286,7 @@
 	}
 
 /***/ },
-/* 399 */
+/* 296 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -27426,7 +27323,7 @@
 	}
 
 /***/ },
-/* 400 */
+/* 297 */
 /***/ function(module, exports) {
 
 	'use strict';
