@@ -3,7 +3,8 @@ html
   head
     title= title
     link(rel="stylesheet", href="/bundles/stylesheet.bundle.css")
-    include ./includes/favicon.jade
+    include ./includes/favicon
+    block meta
   body
     block content
     block pagescript
