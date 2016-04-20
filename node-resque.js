@@ -14,7 +14,7 @@ const worker = new NR.multiWorker({
   connection: connectionDetails,
   queues: 'slack-integration',
   minTaskProcessors: 1,
-  maxTaskProcessors: 30,
+  maxTaskProcessors: 50,
 }, workers)
 
 const scheduler = new NR.scheduler({ connection: connectionDetails })
