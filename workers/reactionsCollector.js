@@ -54,6 +54,8 @@ function updateChatMessage(message, rate, SlackWeb) {
 // react on insight
 async function perform(messageId, insightId, topicId, done) {
   const message = await Message.find({ include: [{ model: Channel, include: [Team] }], where: { id: messageId } })
+  if (!message) return done(null, true)
+
   const channelId = message.channelId
   const SlackWeb = new WebClient(message.Channel.Team.accessToken)
 

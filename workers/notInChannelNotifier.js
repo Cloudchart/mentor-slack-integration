@@ -55,6 +55,8 @@ function sendMessage(SlackWeb, teamOwner, channelId, done) {
 //
 async function perform(channelId, done) {
   const channel = await Channel.findOne({ include: [Team], where: { id: channelId } })
+  if (!channel) return done(null, true)
+
   const SlackWeb = new WebClient(channel.Team.accessToken)
   const teamOwner = await getTeamOwner(channel.Team.id, SlackWeb)
   if (!teamOwner) {
