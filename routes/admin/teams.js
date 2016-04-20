@@ -2,7 +2,7 @@ import { Router } from 'express'
 import { WebClient } from 'slack-client'
 import { checkTeamId } from '../helpers'
 import { appName, botTeamId, errorMarker } from '../../lib'
-import { Team, TeamOwner } from '../../models'
+import { Team, TeamOwner, User } from '../../models'
 
 const router = Router()
 
@@ -41,14 +41,33 @@ router.get('/:id/users', checkTeamId, checkAuth, async (req, res, next) => {
       res.redirect('/admin/teams')
     } else {
       const users = data.members.filter(member => {
-        return !member.deleted && !member.is_ultra_restricted && !member.is_bot && member.name !== 'slackbot'
+        return (
+          !member.deleted && !member.is_restricted && !member.is_ultra_restricted &&
+          !member.is_bot && member.name !== 'slackbot'
+        )
       })
 
       console.log('@@@', users);
 
-      // TODO: save users
+      SlackWeb.dm.list(async (error, data) => {
+        if (error = error || data.error) {
+          console.log(errorMarker, err)
+          res.redirect('/admin/teams')
+        } else {
+          console.log('###', data.ims);
 
-      res.render('admin/team_users', { team: team, users: users })
+          users.forEach(user => {
+            User.findOrCreate({ where: { id: user.id }, defaults: {
+              teamId: viewedTeam.id,
+              imId: data.ims.find(im => im.user === user.id).id,
+              isPrimaryOwner: user.is_primary_owner,
+              responseBody: JSON.stringify(user),
+            } })
+          })
+
+          res.render('admin/team_users', { team: team, users: users })
+        }
+      })
     }
   })
 })

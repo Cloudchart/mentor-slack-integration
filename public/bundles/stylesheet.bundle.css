@@ -2384,8 +2384,7 @@ div.container footer {
           font-family: FontAwesome;
           color: #3BC363;
           position: absolute;
-          left: -2em;
-          top: 2px; }
+          left: -2em; }
 
 #landing-container > section.bottom {
   display: -webkit-flex;
