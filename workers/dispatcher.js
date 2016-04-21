@@ -9,13 +9,15 @@ const workerName = 'dispatcher'
 
 // helpers
 //
-function isEveryoneAsleep(channelId, SlackWeb) {
+function isEveryoneAsleep(channel, SlackWeb) {
   return new Promise((resolve, reject) => {
-    SlackWeb.channels.info(channelId, (err, res) => {
+    SlackWeb.channels.info(channel.id, (err, res) => {
       if (err = err || res.error) {
+        if (err === 'account_inactive') channel.Team.update({ isActive: false })
         console.log(errorMarker, err, workerName, 'channels.info')
         resolve(null)
       } else {
+        if (!channel.Team.isActive) channel.Team.update({ isActive: true })
         let members = res.channel.members
 
         SlackWeb.users.list(1, (err, res) => {
@@ -118,9 +120,10 @@ async function perform(done) {
 
       const SlackWeb = new WebClient(channel.Team.accessToken)
 
-      const everyoneIsAsleep = await isEveryoneAsleep(channel.id, SlackWeb)
+      const everyoneIsAsleep = await isEveryoneAsleep(channel, SlackWeb)
       if (everyoneIsAsleep || everyoneIsAsleep === null) return
 
+      // TODO: modify send link check by hour
       if (time > timeSetting.startTime && time <= timeSetting.endTime) {
         await sendInsight(channel)
       } else if (time === timeSetting.startTime) {

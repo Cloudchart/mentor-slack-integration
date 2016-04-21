@@ -17,6 +17,11 @@ module.exports = function(sequelize, DataTypes) {
     responseBody: {
       type: DataTypes.TEXT,
       allowNull: false
+    },
+
+    isActive: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true
     }
 
   }, {
