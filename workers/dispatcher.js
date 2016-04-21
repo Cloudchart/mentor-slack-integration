@@ -116,6 +116,7 @@ async function perform(done) {
       const now = momentTimezone().tz(timeSetting.tz)
       const day = now.format('ddd')
       const time = now.format('HH:mm')
+      const hour = now.format('HH')
       if (!timeSetting.days.includes(day)) return
 
       const SlackWeb = new WebClient(channel.Team.accessToken)
@@ -123,11 +124,10 @@ async function perform(done) {
       const everyoneIsAsleep = await isEveryoneAsleep(channel, SlackWeb)
       if (everyoneIsAsleep || everyoneIsAsleep === null) return
 
-      // TODO: modify send link check by hour
-      if (time > timeSetting.startTime && time <= timeSetting.endTime) {
-        await sendInsight(channel)
-      } else if (time === timeSetting.startTime) {
+      if (hour === timeSetting.startTime.split(':')[0]) {
         await sendLink(channel, SlackWeb)
+      } else if (time > timeSetting.startTime && time <= timeSetting.endTime) {
+        await sendInsight(channel)
       }
     })
   }, Promise.resolve())
