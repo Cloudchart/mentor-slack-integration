@@ -4,7 +4,7 @@ import schedule from 'node-schedule'
 import NR from 'node-resque'
 import Redis from 'ioredis'
 import workers from './workers'
-import { eventMarker, dispatcherTic, maxWorkerAge } from './lib'
+import { eventMarker, dispatcherTic, statsDispatcherTic, maxWorkerAge } from './lib'
 
 const connectionDetails = { redis: new Redis(process.env.REDIS_URL) }
 
@@ -46,8 +46,17 @@ function start() {
 
     schedule.scheduleJob(dispatcherTic, () => {
       if (scheduler.master) {
-        queue.enqueue('slack-integration', 'dispatcher')
-        console.log(eventMarker, 'enqueued scheduled job')
+        queue.enqueue('slack-integration', 'dispatcher', () => {
+          console.log(eventMarker, 'enqueued scheduled', 'dispatcher')
+        })
+      }
+    })
+
+    schedule.scheduleJob(statsDispatcherTic, () => {
+      if (scheduler.master) {
+        queue.enqueue('slack-integration', 'statsDispatcher', () => {
+          console.log(eventMarker, 'enqueued scheduled', 'statsDispatcher')
+        })
       }
     })
   })
