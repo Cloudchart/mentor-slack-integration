@@ -14,8 +14,9 @@ export const configActions = {
   fetchChannels,
 }
 
+// TODO: update actions
 import fetchTeamUsers from './admin/fetchTeamUsers'
 import fetchTeamMessages from './admin/fetchTeamMessages'
 
 export const teamsActions = {}
-export const teamUsersActions = {}
+export const usersActions = {}

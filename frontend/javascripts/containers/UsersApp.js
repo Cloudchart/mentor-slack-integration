@@ -2,24 +2,24 @@ import React, { Component, PropTypes } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
-import { teamUsersActions } from '../actions'
+import { usersActions } from '../actions'
 
 import Header from '../components/Header'
-// import UsersList from '../components/admin/UsersList'
+import UsersList from '../components/admin/UsersList'
 import Footer from '../components/Footer'
 
 
-class TeamUsersApp extends Component {
+class UsersApp extends Component {
 
   render() {
-    const { team } = this.props
+    const { team, viewedTeam, users, actions } = this.props
 
     return (
       <div className="container team-users">
         <Header team={ team } />
 
         <div className="content">
-          Hello World
+          <UsersList viewedTeam={ viewedTeam } users={ users } actions={ actions } />
         </div>
 
         <Footer/>
@@ -28,7 +28,7 @@ class TeamUsersApp extends Component {
   }
 }
 
-TeamUsersApp.propTypes = {
+UsersApp.propTypes = {
   team: PropTypes.object.isRequired,
   viewedTeam: PropTypes.object.isRequired,
   users: PropTypes.array.isRequired,
@@ -45,7 +45,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators(teamUsersActions, dispatch),
+    actions: bindActionCreators(usersActions, dispatch),
   }
 }
 
@@ -53,4 +53,4 @@ function mapDispatchToProps(dispatch) {
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(TeamUsersApp)
+)(UsersApp)
