@@ -1,7 +1,7 @@
 import momentTimezone from 'moment-timezone'
 import { WebClient } from 'slack-client'
 import { errorMarker, noticeMarker } from '../lib'
-import { enqueue, getRandomUnratedInsight, getRandomSubscribedTopic, markLinkAsRead } from './helpers'
+import { enqueue, getRandomUnratedInsight, getRandomSubscribedTopic } from './helpers'
 import { Channel, Team, TimeSetting } from '../models'
 
 const workerName = 'dispatcher'
@@ -9,8 +9,9 @@ const workerName = 'dispatcher'
 
 // helpers
 //
-function isEveryoneAsleep(channel, SlackWeb) {
+function isEveryoneAsleep(channel) {
   return new Promise((resolve, reject) => {
+    const SlackWeb = new WebClient(channel.Team.accessToken)
     SlackWeb.channels.info(channel.id, (err, res) => {
       if (err = err || res.error) {
         if (err === 'account_inactive') channel.Team.update({ isActive: false })
@@ -53,54 +54,26 @@ function sendInsight(channel) {
       await enqueue('insightsDispatcher', [channel, insight, topic])
       resolve(true)
     } else {
-      console.log(noticeMarker, `couldn't find unrated insight for channel: ${channel.id}`)
+      console.log(noticeMarker, workerName, "couldn't find unrated insight for channel:", channel.id)
       resolve(null)
     }
   })
 }
 
 // request random link and insights for selected topics
-// post link and mark it as read
-// send insights
-function sendLink(channel, SlackWeb) {
+// enqueue linksDispatcher
+function sendLink(channel) {
   return new Promise(async (resolve, reject) => {
     const topic = await getRandomSubscribedTopic(channel.id)
-    if (!topic) {
-      await sendInsight(channel)
-      return resolve(null)
-    }
-
-    const link = topic.randomLink
-    const linkRegex = new RegExp(/#link#/g)
-    let text = ''
-
-    if (linkRegex.test(link.reaction.content)) {
-      text += link.reaction.content.replace(linkRegex, `<${link.url}|${link.title}>`)
+    if (topic) {
+      await enqueue('linksDispatcher', [channel, topic])
+      resolve(true)
     } else {
-      text += `${link.reaction.content} <${link.url}|${link.title}>`
+      await sendInsight(channel)
+      console.log(noticeMarker, workerName, "couldn't find random random link for channel:", channel.id)
+      resolve(null)
     }
-
-    const options = {
-      as_user: true,
-      unfurl_links: false,
-      unfurl_media: false,
-    }
-
-    SlackWeb.chat.postMessage(channel.id, text, options, async (err, res) => {
-      if (err = err || res.error) {
-        console.log(errorMarker, err, workerName, 'chat.postMessage')
-        resolve(null)
-      } else {
-        topic.randomInsights.forEach(insight => {
-          enqueue('insightsDispatcher', [channel, insight, topic])
-        })
-
-        await markLinkAsRead(channel.id, link.id)
-        resolve(true)
-      }
-    })
   })
-
 }
 
 // for each selected channel
@@ -119,13 +92,11 @@ async function perform(done) {
       const hour = now.format('HH')
       if (!timeSetting.days.includes(day)) return
 
-      const SlackWeb = new WebClient(channel.Team.accessToken)
-
-      const everyoneIsAsleep = await isEveryoneAsleep(channel, SlackWeb)
+      const everyoneIsAsleep = await isEveryoneAsleep(channel)
       if (everyoneIsAsleep || everyoneIsAsleep === null) return
 
       if (hour === timeSetting.startTime.split(':')[0]) {
-        await sendLink(channel, SlackWeb)
+        await sendLink(channel)
       } else if (time > timeSetting.startTime && time <= timeSetting.endTime) {
         await sendInsight(channel)
       }
