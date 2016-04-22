@@ -11,14 +11,6 @@ class UsersList extends Component {
     }
   }
 
-  // lifecycle
-  //
-  // conponentDidMount() {
-  // }
-
-  // componentWillReceiveProps(nextProps) {
-  // }
-
   // handlers
   //
   handleUserClick(user, event) {
@@ -41,7 +33,7 @@ class UsersList extends Component {
   }
 
   render() {
-    const { viewedTeam, users, actions } = this.props
+    const { viewedTeam, users, messages, actions } = this.props
 
     return (
       <div>
@@ -54,6 +46,7 @@ class UsersList extends Component {
         <Chat
           selectedUserId={ this.state.selectedUserId }
           users={ users }
+          messages={ messages }
           actions={ actions }
           onHide={ this.handleChatHide.bind(this) }
         />
@@ -66,6 +59,7 @@ class UsersList extends Component {
 UsersList.propTypes = {
   viewedTeam: PropTypes.object.isRequired,
   users: PropTypes.object.isRequired,
+  messages: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired,
 }
 

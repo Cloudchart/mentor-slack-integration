@@ -1,0 +1,17 @@
+.container.users {
+  > .content {
+
+    .chat-window {
+      max-height: 300px;
+      overflow: scroll;
+      margin: 30px 0;
+
+      > li {
+        > .username {
+          margin-right: 10px;
+        }
+      }
+    }
+
+  }
+}

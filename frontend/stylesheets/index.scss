@@ -28,6 +28,10 @@ body {
 
       > .content {
         @include flex(1);
+
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 30px;
       }
     }
 
@@ -60,4 +64,4 @@ body {
 @import 'modal';
 @import 'landing';
 @import 'configuration';
-@import 'pages';
+@import 'users';

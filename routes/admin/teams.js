@@ -79,22 +79,20 @@ router.get('/:id/users', checkTeamId, checkAuth, async (req, res, next) => {
   })
 })
 
-// router.get('/:teamId/messages', checkTeamId, checkAuth, async (req, res, next) => {
-//   const team = await Team.find({ include: [TeamOwner], where: { id: req.params.teamId } })
-//   if (!team.TeamOwner) return res.status(404).json({ message: 'could not find team owner' })
+router.get('/chat/:id', checkTeamId, checkAuth, async (req, res, next) => {
+  const user = await User.find({ include: [Team], where: { id: req.params.id } })
+  if (!user) return res.status(404).json({ message: 'could not find user' })
 
-//   const SlackWeb = new WebClient(team.accessToken)
+  const SlackWeb = new WebClient(user.Team.accessToken)
 
-//   SlackWeb.dm.history(team.TeamOwner.imId, {}, (error, data) => {
-//     if (error = error || data.error) {
-//       res.status(500).json({ error: error })
-//     } else {
-//       console.log('@@@', data);
-
-//       res.json({ messages: data.messages })
-//     }
-//   })
-// })
+  SlackWeb.dm.history(user.imId, {}, (error, data) => {
+    if (error = error || data.error) {
+      res.status(500).json({ error: error })
+    } else {
+      res.json({ messages: data.messages })
+    }
+  })
+})
 
 
 export default router

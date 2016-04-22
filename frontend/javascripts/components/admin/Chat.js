@@ -1,5 +1,7 @@
-import React, { Component, PropTypes } from 'react'
+import moment from 'moment'
 import Modal from 'boron/FadeModal'
+import React, { Component, PropTypes } from 'react'
+import { botName } from '../../../data'
 
 
 class Chat extends Component {
@@ -22,13 +24,23 @@ class Chat extends Component {
     const user = nextProps.users.find(user => user.id === nextProps.selectedUserId)
     if (!user) return
 
-    this.setState({ user: user })
+    console.log(nextProps);
+    const messages = nextProps.messages.find(item => item.userId === user.id)
 
-    // TODO: fork and add to source
-    document.getElementById('modal').className = ''
-    document.body.classList.add('modal-opened')
+    if (messages) {
+      this.setState({
+        user: user,
+        messages: messages.items
+      })
 
-    this.refs.modal.show()
+      // TODO: fork and add to source
+      document.getElementById('modal').className = ''
+      document.body.classList.add('modal-opened')
+
+      this.refs.modal.show()
+    } else {
+      nextProps.actions.fetchMessages(user.id)
+    }
   }
 
   // handlers
@@ -48,7 +60,17 @@ class Chat extends Component {
   // renderers
   //
   renderMessage(message) {
-    return null
+    const user = message.user === this.state.user.id ? this.state.user.name : botName
+    const text = message.text
+    const time = moment(parseInt(message.ts.split('.')[0] + '000')).fromNow()
+
+    return (
+      <li>
+        <strong className="username">{ user }</strong>
+        <span>{ time }</span>
+        <div>{ text }</div>
+      </li>
+    )
   }
 
   render() {
@@ -61,7 +83,7 @@ class Chat extends Component {
               <strong>{ this.state.user.real_name }</strong>
             </h1>
 
-            <ul>
+            <ul className="chat-window">
               { this.state.messages.map(this.renderMessage.bind(this)) }
             </ul>
 
@@ -79,6 +101,7 @@ class Chat extends Component {
 Chat.propTypes = {
   selectedUserId: PropTypes.string.isRequired,
   users: PropTypes.object.isRequired,
+  messages: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired,
 }
 
