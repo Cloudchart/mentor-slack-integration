@@ -28,8 +28,9 @@ module.exports = function(shipit) {
   shipit.on('published', function() {
     return shipit.remote(`
       cd ${shipit.currentPath} &&
-      forever restart mentor-slack-integration-web &&
       forever stop mentor-slack-integration-worker &&
+      forever stop mentor-slack-integration-web &&
+      forever start --append --uid "mentor-slack-integration-web" bin/www &&
       forever start --append --uid "mentor-slack-integration-worker" bin/worker
     `)
   })
