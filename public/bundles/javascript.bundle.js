@@ -24326,7 +24326,7 @@
 	        _react2.default.createElement(
 	          'ul',
 	          { className: 'channels-list' },
-	          this.props.channels.items.map(function (channel) {
+	          channels.items.map(function (channel) {
 	            return _react2.default.createElement(_Channel2.default, {
 	              channel: channel,
 	              themes: themes,
@@ -27085,7 +27085,7 @@
 /* 289 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -27096,6 +27096,10 @@
 	var _react = __webpack_require__(1);
 
 	var _react2 = _interopRequireDefault(_react);
+
+	var _Chat = __webpack_require__(304);
+
+	var _Chat2 = _interopRequireDefault(_Chat);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -27108,63 +27112,85 @@
 	var UsersList = function (_Component) {
 	  _inherits(UsersList, _Component);
 
-	  function UsersList() {
+	  function UsersList(props) {
 	    _classCallCheck(this, UsersList);
 
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(UsersList).apply(this, arguments));
+	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(UsersList).call(this, props));
+
+	    _this.state = {
+	      selectedUserId: ''
+	    };
+	    return _this;
 	  }
 
+	  // lifecycle
+	  //
+	  // conponentDidMount() {
+	  // }
+
+	  // componentWillReceiveProps(nextProps) {
+	  // }
+
+	  // handlers
+	  //
+
+
 	  _createClass(UsersList, [{
-	    key: "renderUser",
-
-
-	    // constructor(props) {
-	    //   super(props)
-	    //   this.state = {
-	    //   }
-	    // }
-
-	    // lifecycle
-	    //
-	    // conponentDidMount() {
-	    // }
-
-	    // componentWillReceiveProps(nextProps) {
-	    // }
-
-	    // handlers
-	    //
+	    key: 'handleUserClick',
+	    value: function handleUserClick(user, event) {
+	      event.preventDefault();
+	      this.setState({ selectedUserId: user.id });
+	    }
+	  }, {
+	    key: 'handleChatHide',
+	    value: function handleChatHide() {
+	      this.setState({ selectedUserId: '' });
+	    }
 
 	    // renderers
 	    //
+
+	  }, {
+	    key: 'renderUser',
 	    value: function renderUser(user) {
 	      return _react2.default.createElement(
-	        "li",
+	        'li',
 	        null,
-	        user.real_name
+	        _react2.default.createElement(
+	          'a',
+	          { href: '', onClick: this.handleUserClick.bind(this, user) },
+	          user.real_name
+	        )
 	      );
 	    }
 	  }, {
-	    key: "render",
+	    key: 'render',
 	    value: function render() {
 	      var _props = this.props;
 	      var viewedTeam = _props.viewedTeam;
 	      var users = _props.users;
+	      var actions = _props.actions;
 
 
 	      return _react2.default.createElement(
-	        "div",
+	        'div',
 	        null,
 	        _react2.default.createElement(
-	          "h2",
+	          'h2',
 	          null,
-	          viewedTeam.name + " users:"
+	          viewedTeam.name + ' users:'
 	        ),
 	        _react2.default.createElement(
-	          "ul",
-	          { className: "users-list" },
-	          this.props.users.map(this.renderUser.bind(this))
-	        )
+	          'ul',
+	          { className: 'users-list' },
+	          users.map(this.renderUser.bind(this))
+	        ),
+	        _react2.default.createElement(_Chat2.default, {
+	          selectedUserId: this.state.selectedUserId,
+	          users: users,
+	          actions: actions,
+	          onHide: this.handleChatHide.bind(this)
+	        })
 	      );
 	    }
 	  }]);
@@ -27550,22 +27576,6 @@
 	  var action = arguments[1];
 
 	  switch (action.type) {
-	    // case 'TEAM_USERS_REQUEST':
-	    //   return state.find(item => item.teamId === action.teamId) ?
-	    //     state.map(item => item.teamId === action.teamId ?
-	    //       Object.assign({}, item, { isFetching: true }) :
-	    //       item) :
-	    //     [...state, { teamId: action.teamId, isFetching: true, items: [] }]
-	    // case 'TEAM_USERS_RECEIVE':
-	    //   return state.map(item => item.teamId === action.teamId ?
-	    //     Object.assign({}, item, { isFetching: false, items: action.users }) :
-	    //     item
-	    //   )
-	    // case 'TEAM_USERS_ERROR':
-	    //   return state.map(item => item.teamId === action.teamId ?
-	    //     Object.assign({}, item, { isFetching: false }) :
-	    //     item
-	    //   )
 	    default:
 	      return state;
 	  }
@@ -27607,6 +27617,160 @@
 	      return state;
 	  }
 	}
+
+/***/ },
+/* 302 */,
+/* 303 */,
+/* 304 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _FadeModal = __webpack_require__(271);
+
+	var _FadeModal2 = _interopRequireDefault(_FadeModal);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Chat = function (_Component) {
+	  _inherits(Chat, _Component);
+
+	  function Chat(props) {
+	    _classCallCheck(this, Chat);
+
+	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Chat).call(this, props));
+
+	    _this.state = {
+	      user: {},
+	      messages: []
+	    };
+	    return _this;
+	  }
+
+	  // lifecycle
+	  //
+
+
+	  _createClass(Chat, [{
+	    key: 'shouldComponentUpdate',
+	    value: function shouldComponentUpdate(nextProps, nextState) {
+	      return !!nextProps.selectedUserId;
+	    }
+	  }, {
+	    key: 'componentWillReceiveProps',
+	    value: function componentWillReceiveProps(nextProps) {
+	      var user = nextProps.users.find(function (user) {
+	        return user.id === nextProps.selectedUserId;
+	      });
+	      if (!user) return;
+
+	      this.setState({ user: user });
+
+	      // TODO: fork and add to source
+	      document.getElementById('modal').className = '';
+	      document.body.classList.add('modal-opened');
+
+	      this.refs.modal.show();
+	    }
+
+	    // handlers
+	    //
+
+	  }, {
+	    key: 'handleModalHide',
+	    value: function handleModalHide() {
+	      // TODO: fork and add to source
+	      document.getElementById('modal').className = 'hidden';
+	      document.body.classList.remove('modal-opened');
+
+	      this.props.onHide();
+	    }
+	  }, {
+	    key: 'handleModalClose',
+	    value: function handleModalClose(event) {
+	      this.refs.modal.hide();
+	    }
+
+	    // renderers
+	    //
+
+	  }, {
+	    key: 'renderMessage',
+	    value: function renderMessage(message) {
+	      return null;
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        { id: 'modal', className: 'hidden' },
+	        _react2.default.createElement(
+	          _FadeModal2.default,
+	          { ref: 'modal', onHide: this.handleModalHide.bind(this) },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'modal-content chat' },
+	            _react2.default.createElement(
+	              'h1',
+	              null,
+	              _react2.default.createElement(
+	                'span',
+	                null,
+	                'Chat with '
+	              ),
+	              _react2.default.createElement(
+	                'strong',
+	                null,
+	                this.state.user.real_name
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'ul',
+	              null,
+	              this.state.messages.map(this.renderMessage.bind(this))
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'actions' },
+	              _react2.default.createElement(
+	                'button',
+	                { className: 'msi', onClick: this.handleModalClose.bind(this) },
+	                'Done'
+	              )
+	            )
+	          )
+	        )
+	      );
+	    }
+	  }]);
+
+	  return Chat;
+	}(_react.Component);
+
+	Chat.propTypes = {
+	  selectedUserId: _react.PropTypes.string.isRequired,
+	  users: _react.PropTypes.object.isRequired,
+	  actions: _react.PropTypes.object.isRequired
+	};
+
+	exports.default = Chat;
 
 /***/ }
 /******/ ]);

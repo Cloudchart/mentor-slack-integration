@@ -20,6 +20,15 @@ module.exports = function(sequelize, DataTypes) {
     responseBody: {
       type: DataTypes.TEXT,
       allowNull: false
+    },
+
+    lastTimestamp: {
+      type: DataTypes.STRING
+    },
+
+    hasNewMessage: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
     }
 
   }, {

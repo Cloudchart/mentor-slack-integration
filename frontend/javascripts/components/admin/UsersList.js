@@ -1,13 +1,15 @@
 import React, { Component, PropTypes } from 'react'
+import Chat from './Chat'
 
 
 class UsersList extends Component {
 
-  // constructor(props) {
-  //   super(props)
-  //   this.state = {
-  //   }
-  // }
+  constructor(props) {
+    super(props)
+    this.state = {
+      selectedUserId: ''
+    }
+  }
 
   // lifecycle
   //
@@ -19,25 +21,42 @@ class UsersList extends Component {
 
   // handlers
   //
+  handleUserClick(user, event) {
+    event.preventDefault()
+    this.setState({ selectedUserId: user.id })
+  }
+
+  handleChatHide() {
+    this.setState({ selectedUserId: '' })
+  }
 
   // renderers
   //
   renderUser(user) {
     return (
-      <li>{ user.real_name }</li>
+      <li>
+        <a href="" onClick={ this.handleUserClick.bind(this, user) }>{ user.real_name }</a>
+      </li>
     )
   }
 
   render() {
-    const { viewedTeam, users } = this.props
+    const { viewedTeam, users, actions } = this.props
 
     return (
       <div>
         <h2>{ `${viewedTeam.name} users:` }</h2>
 
         <ul className="users-list">
-          { this.props.users.map(this.renderUser.bind(this)) }
+          { users.map(this.renderUser.bind(this)) }
         </ul>
+
+        <Chat
+          selectedUserId={ this.state.selectedUserId }
+          users={ users }
+          actions={ actions }
+          onHide={ this.handleChatHide.bind(this) }
+        />
       </div>
     )
   }

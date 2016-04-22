@@ -35,7 +35,7 @@ class ChannelsList extends Component {
         <h2>Channels:</h2>
 
         <ul className="channels-list">
-          { this.props.channels.items.map(channel =>
+          { channels.items.map(channel =>
             <Channel
               channel={ channel }
               themes={ themes }
