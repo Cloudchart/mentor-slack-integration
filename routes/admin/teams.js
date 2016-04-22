@@ -26,7 +26,6 @@ router.get('/', checkTeamId, checkAuth, async (req, res, next) => {
   const team = await getTeam(req.session.teamId)
   let teams = await Team.findAll()
   teams = teams.map(team => { return { id: team.id, name: team.name } })
-
   res.render('admin/teams', { title: `${appName} Slack Teams`, team: team, teams: teams })
 })
 
@@ -47,48 +46,38 @@ router.get('/:id/users', checkTeamId, checkAuth, async (req, res, next) => {
         )
       })
 
-      console.log('@@@', users);
-
       SlackWeb.dm.list(async (error, data) => {
         if (error = error || data.error) {
           console.log(errorMarker, err)
           res.redirect('/admin/teams')
         } else {
-          console.log('###', data.ims);
-
           users.forEach(user => {
-            User.findOrCreate({ where: { id: user.id }, defaults: {
+            const im = data.ims.find(im => im.user === user.id)
+            if (!im) return
+
+            const attrs = {
               teamId: viewedTeam.id,
-              imId: data.ims.find(im => im.user === user.id).id,
-              isPrimaryOwner: user.is_primary_owner,
+              imId: im.id,
               responseBody: JSON.stringify(user),
-            } })
+            }
+
+            User.findOrCreate({
+              where: { id: user.id }, defaults: attrs
+            }).spread((user, created) => {
+              if (!created) user.update(attrs)
+            })
           })
 
-          res.render('admin/team_users', { team: team, users: users })
+          res.render('admin/team_users', {
+            team: team,
+            viewedTeam: { id: viewedTeam.id, name: viewedTeam.name },
+            users: users,
+          })
         }
       })
     }
   })
 })
-
-
-// router.get('/:teamId/users', checkTeamId, checkAuth, async (req, res, next) => {
-//   const team = await Team.findById(req.params.teamId)
-//   const SlackWeb = new WebClient(team.accessToken)
-
-//   SlackWeb.users.list((error, data) => {
-//     if (error = error || data.error) {
-//       res.status(500).json({ error: error })
-//     } else {
-//       const users = data.members.filter(member => {
-//         return !member.deleted && !member.is_ultra_restricted && !member.is_bot
-//       })
-
-//       res.json({ users: users })
-//     }
-//   })
-// })
 
 // router.get('/:teamId/messages', checkTeamId, checkAuth, async (req, res, next) => {
 //   const team = await Team.find({ include: [TeamOwner], where: { id: req.params.teamId } })

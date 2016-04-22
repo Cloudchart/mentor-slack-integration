@@ -72,7 +72,7 @@
 	if (reactType === 'plain') {
 	  _reactDom2.default.render(_react2.default.createElement(Component, JSON.parse(node.dataset.reactProps)), node);
 	} else {
-	  var reducers = __webpack_require__(288)("./" + reactClass).default;
+	  var reducers = __webpack_require__(289)("./" + reactClass).default;
 	  var store = (0, _redux.createStore)(reducers, window.__INITIAL_STATE__, (0, _redux.applyMiddleware)(_reduxThunk2.default));
 
 	  _reactDom2.default.render(_react2.default.createElement(
@@ -20490,8 +20490,10 @@
 		"./LandingApp.js": 282,
 		"./PagesApp": 284,
 		"./PagesApp.js": 284,
-		"./TeamsApp": 286,
-		"./TeamsApp.js": 286
+		"./TeamUsersApp": 286,
+		"./TeamUsersApp.js": 286,
+		"./TeamsApp": 287,
+		"./TeamsApp.js": 287
 	};
 	function webpackContext(req) {
 		return __webpack_require__(webpackContextResolve(req));
@@ -20659,7 +20661,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.teamsActions = exports.configActions = undefined;
+	exports.teamUsersActions = exports.teamsActions = exports.configActions = undefined;
 
 	var _fetchThemes = __webpack_require__(179);
 
@@ -20705,6 +20707,7 @@
 	};
 
 	var teamsActions = exports.teamsActions = {};
+	var teamUsersActions = exports.teamUsersActions = {};
 
 /***/ },
 /* 179 */
@@ -26826,7 +26829,102 @@
 
 	var _Header2 = _interopRequireDefault(_Header);
 
-	var _TeamsList = __webpack_require__(287);
+	var _Footer = __webpack_require__(266);
+
+	var _Footer2 = _interopRequireDefault(_Footer);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	// import UsersList from '../components/admin/UsersList'
+
+
+	var TeamUsersApp = function (_Component) {
+	  _inherits(TeamUsersApp, _Component);
+
+	  function TeamUsersApp() {
+	    _classCallCheck(this, TeamUsersApp);
+
+	    return _possibleConstructorReturn(this, Object.getPrototypeOf(TeamUsersApp).apply(this, arguments));
+	  }
+
+	  _createClass(TeamUsersApp, [{
+	    key: 'render',
+	    value: function render() {
+	      var team = this.props.team;
+
+
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'container team-users' },
+	        _react2.default.createElement(_Header2.default, { team: team }),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'content' },
+	          'Hello World'
+	        ),
+	        _react2.default.createElement(_Footer2.default, null)
+	      );
+	    }
+	  }]);
+
+	  return TeamUsersApp;
+	}(_react.Component);
+
+	TeamUsersApp.propTypes = {
+	  team: _react.PropTypes.object.isRequired,
+	  viewedTeam: _react.PropTypes.object.isRequired,
+	  users: _react.PropTypes.array.isRequired,
+	  actions: _react.PropTypes.object.isRequired
+	};
+
+	function mapStateToProps(state) {
+	  return {
+	    viewedTeam: state.viewedTeam,
+	    team: state.team,
+	    users: state.users
+	  };
+	}
+
+	function mapDispatchToProps(dispatch) {
+	  return {
+	    actions: (0, _redux.bindActionCreators)(_actions.teamUsersActions, dispatch)
+	  };
+	}
+
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(TeamUsersApp);
+
+/***/ },
+/* 287 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _redux = __webpack_require__(154);
+
+	var _reactRedux = __webpack_require__(164);
+
+	var _actions = __webpack_require__(178);
+
+	var _Header = __webpack_require__(193);
+
+	var _Header2 = _interopRequireDefault(_Header);
+
+	var _TeamsList = __webpack_require__(288);
 
 	var _TeamsList2 = _interopRequireDefault(_TeamsList);
 
@@ -26901,7 +26999,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(TeamsApp);
 
 /***/ },
-/* 287 */
+/* 288 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -26977,28 +27075,32 @@
 	exports.default = TeamsList;
 
 /***/ },
-/* 288 */
+/* 289 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var map = {
-		"./ConfigApp": 289,
-		"./ConfigApp.js": 289,
-		"./TeamsApp": 294,
-		"./TeamsApp.js": 294,
-		"./admin/teamMessages": 297,
-		"./admin/teamMessages.js": 297,
-		"./admin/teamUsers": 296,
-		"./admin/teamUsers.js": 296,
-		"./admin/teams": 295,
-		"./admin/teams.js": 295,
-		"./channels": 291,
-		"./channels.js": 291,
-		"./team": 290,
-		"./team.js": 290,
-		"./themes": 292,
-		"./themes.js": 292,
-		"./timeSetting": 293,
-		"./timeSetting.js": 293
+		"./ConfigApp": 290,
+		"./ConfigApp.js": 290,
+		"./TeamUsersApp": 295,
+		"./TeamUsersApp.js": 295,
+		"./TeamsApp": 298,
+		"./TeamsApp.js": 298,
+		"./admin/teamMessages": 300,
+		"./admin/teamMessages.js": 300,
+		"./admin/teamUsers": 297,
+		"./admin/teamUsers.js": 297,
+		"./admin/teams": 299,
+		"./admin/teams.js": 299,
+		"./admin/viewedTeam": 296,
+		"./admin/viewedTeam.js": 296,
+		"./channels": 292,
+		"./channels.js": 292,
+		"./team": 291,
+		"./team.js": 291,
+		"./themes": 293,
+		"./themes.js": 293,
+		"./timeSetting": 294,
+		"./timeSetting.js": 294
 	};
 	function webpackContext(req) {
 		return __webpack_require__(webpackContextResolve(req));
@@ -27011,11 +27113,11 @@
 	};
 	webpackContext.resolve = webpackContextResolve;
 	module.exports = webpackContext;
-	webpackContext.id = 288;
+	webpackContext.id = 289;
 
 
 /***/ },
-/* 289 */
+/* 290 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -27026,19 +27128,19 @@
 
 	var _redux = __webpack_require__(154);
 
-	var _team = __webpack_require__(290);
+	var _team = __webpack_require__(291);
 
 	var _team2 = _interopRequireDefault(_team);
 
-	var _channels = __webpack_require__(291);
+	var _channels = __webpack_require__(292);
 
 	var _channels2 = _interopRequireDefault(_channels);
 
-	var _themes = __webpack_require__(292);
+	var _themes = __webpack_require__(293);
 
 	var _themes2 = _interopRequireDefault(_themes);
 
-	var _timeSetting = __webpack_require__(293);
+	var _timeSetting = __webpack_require__(294);
 
 	var _timeSetting2 = _interopRequireDefault(_timeSetting);
 
@@ -27052,7 +27154,7 @@
 	});
 
 /***/ },
-/* 290 */
+/* 291 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -27072,7 +27174,7 @@
 	}
 
 /***/ },
-/* 291 */
+/* 292 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -27134,7 +27236,7 @@
 	}
 
 /***/ },
-/* 292 */
+/* 293 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -27192,7 +27294,7 @@
 	}
 
 /***/ },
-/* 293 */
+/* 294 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -27229,7 +27331,7 @@
 	}
 
 /***/ },
-/* 294 */
+/* 295 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -27240,33 +27342,28 @@
 
 	var _redux = __webpack_require__(154);
 
-	var _team = __webpack_require__(290);
+	var _team = __webpack_require__(291);
 
 	var _team2 = _interopRequireDefault(_team);
 
-	var _teams = __webpack_require__(295);
+	var _viewedTeam = __webpack_require__(296);
 
-	var _teams2 = _interopRequireDefault(_teams);
+	var _viewedTeam2 = _interopRequireDefault(_viewedTeam);
 
-	var _teamUsers = __webpack_require__(296);
+	var _teamUsers = __webpack_require__(297);
 
 	var _teamUsers2 = _interopRequireDefault(_teamUsers);
-
-	var _teamMessages = __webpack_require__(297);
-
-	var _teamMessages2 = _interopRequireDefault(_teamMessages);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	exports.default = (0, _redux.combineReducers)({
 	  team: _team2.default,
-	  teams: _teams2.default,
-	  users: _teamUsers2.default,
-	  messages: _teamMessages2.default
+	  viewedTeam: _viewedTeam2.default,
+	  users: _teamUsers2.default
 	});
 
 /***/ },
-/* 295 */
+/* 296 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -27274,9 +27371,9 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.default = teams;
-	function teams() {
-	  var state = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
+	exports.default = viewedTeam;
+	function viewedTeam() {
+	  var state = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 	  var action = arguments[1];
 
 	  switch (action.type) {
@@ -27286,7 +27383,7 @@
 	}
 
 /***/ },
-/* 296 */
+/* 297 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -27323,7 +27420,54 @@
 	}
 
 /***/ },
-/* 297 */
+/* 298 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _redux = __webpack_require__(154);
+
+	var _team = __webpack_require__(291);
+
+	var _team2 = _interopRequireDefault(_team);
+
+	var _teams = __webpack_require__(299);
+
+	var _teams2 = _interopRequireDefault(_teams);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.default = (0, _redux.combineReducers)({
+	  team: _team2.default,
+	  teams: _teams2.default
+	});
+
+/***/ },
+/* 299 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = teams;
+	function teams() {
+	  var state = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
+	  var action = arguments[1];
+
+	  switch (action.type) {
+	    default:
+	      return state;
+	  }
+	}
+
+/***/ },
+/* 300 */
 /***/ function(module, exports) {
 
 	'use strict';

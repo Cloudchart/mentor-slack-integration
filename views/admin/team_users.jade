@@ -1,15 +1,14 @@
-div Hello World
+extends ../layout
 
-//- extends ../layout
+block content
+  main(
+    data-react-class="TeamUsersApp"
+  )
 
-//- block content
-//-   main(
-//-     data-react-class="TeamUsersApp"
-//-   )
-
-//- block pagescript
-//-   script(type="text/javascript").
-//-     window.__INITIAL_STATE__ = {
-//-       team: !{JSON.stringify(team)},
-//-       users: !{JSON.stringify(users)}
-//-     }
+block pagescript
+  script(type="text/javascript").
+    window.__INITIAL_STATE__ = {
+      viewedTeam: !{JSON.stringify(viewedTeam)},
+      team: !{JSON.stringify(team)},
+      users: !{JSON.stringify(users)}
+    }

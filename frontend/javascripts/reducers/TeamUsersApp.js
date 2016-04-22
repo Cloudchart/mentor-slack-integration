@@ -1,9 +1,11 @@
 import { combineReducers } from 'redux'
 
 import team from './team'
-import teams from './admin/teams'
+import viewedTeam from './admin/viewedTeam'
+import users from './admin/teamUsers'
 
 export default combineReducers({
   team,
-  teams,
+  viewedTeam,
+  users,
 })

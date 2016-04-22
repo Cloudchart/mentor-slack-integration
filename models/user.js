@@ -17,11 +17,6 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false
     },
 
-    isPrimaryOwner: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false
-    },
-
     responseBody: {
       type: DataTypes.TEXT,
       allowNull: false
