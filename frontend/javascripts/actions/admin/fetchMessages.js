@@ -1,7 +1,7 @@
 import fetch from 'isomorphic-fetch'
 
 
-function requestTeamMessages(userId) {
+function requestMessages(userId) {
   return {
     type: 'MESSAGES_REQUEST',
     userId: userId,
@@ -26,7 +26,7 @@ function catchMessagesError(userId, error) {
 
 function fetchMessages(userId) {
   return function (dispatch) {
-    dispatch(requestTeamMessages(userId))
+    dispatch(requestMessages(userId))
 
     return fetch(`/admin/teams/chat/${userId}`, {
       credentials: 'same-origin',

@@ -11,6 +11,7 @@ class Chat extends Component {
     this.state = {
       user: {},
       messages: [],
+      text: '',
     }
   }
 
@@ -24,7 +25,6 @@ class Chat extends Component {
     const user = nextProps.users.find(user => user.id === nextProps.selectedUserId)
     if (!user) return
 
-    console.log(nextProps);
     const messages = nextProps.messages.find(item => item.userId === user.id)
 
     if (messages) {
@@ -55,6 +55,23 @@ class Chat extends Component {
 
   handleModalClose(event) {
     this.refs.modal.hide()
+  }
+
+  handleInputChange(event) {
+    this.setState({ text: event.target.value })
+  }
+
+  handleFormSubmit(event) {
+    event.preventDefault()
+    if (!this.state.text) return
+    this.props.actions.postMessage(this.state.user.id, this.state.text).then(() => {
+      this.setState({ text: '' })
+      this.props.actions.fetchMessages(this.state.user.id)
+    })
+  }
+
+  handleRefreshClick(event) {
+    this.props.actions.fetchMessages(this.state.user.id)
   }
 
   // renderers
@@ -88,7 +105,11 @@ class Chat extends Component {
             </ul>
 
             <div className="actions">
-              <button className="msi" onClick={ this.handleModalClose.bind(this) }>Done</button>
+              <form onSubmit={ this.handleFormSubmit.bind(this) }>
+                <input type="text" value={ this.state.text } onChange={ this.handleInputChange.bind(this) } />
+                <input type="submit" value="Send" />
+              </form>
+              <button onClick={ this.handleRefreshClick.bind(this) }>Refresh</button>
             </div>
           </div>
         </Modal>

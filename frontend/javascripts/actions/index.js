@@ -15,6 +15,7 @@ export const configActions = {
 }
 
 import fetchMessages from './admin/fetchMessages'
+import postMessage from './admin/postMessage'
 
 export const teamsActions = {}
-export const usersActions = { fetchMessages }
+export const usersActions = { fetchMessages, postMessage }

@@ -94,5 +94,20 @@ router.get('/chat/:id', checkTeamId, checkAuth, async (req, res, next) => {
   })
 })
 
+router.post('/chat/:id', checkTeamId, checkAuth, async (req, res, next) => {
+  const user = await User.find({ include: [Team], where: { id: req.params.id } })
+  if (!user) return res.status(404).json({ message: 'could not find user' })
+
+  const SlackWeb = new WebClient(user.Team.accessToken)
+
+  SlackWeb.chat.postMessage(user.imId, req.body.text, { as_user: true }, (error, data) => {
+    if (error = error || data.error) {
+      res.status(500).json({ error: error })
+    } else {
+      res.json({ message: data.message })
+    }
+  })
+})
+
 
 export default router
