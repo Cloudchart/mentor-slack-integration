@@ -68,7 +68,8 @@ router.get('/:id/users', checkTeamId, checkAuth, async (req, res, next) => {
             })
           })
 
-          res.render('admin/team_users', {
+          res.render('admin/users', {
+            title: `${appName} Slack Users`,
             team: team,
             viewedTeam: { id: viewedTeam.id, name: viewedTeam.name },
             users: users,
