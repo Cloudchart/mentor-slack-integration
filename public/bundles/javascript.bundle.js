@@ -43205,7 +43205,9 @@
 	    _this.state = {
 	      user: {},
 	      messages: [],
-	      text: ''
+	      text: '',
+	      syncInterval: null,
+	      isFetching: false
 	    };
 	    return _this;
 	  }
@@ -43234,7 +43236,8 @@
 	      if (messages) {
 	        this.setState({
 	          user: user,
-	          messages: messages.items
+	          messages: messages.items,
+	          isFetching: messages.isFetching
 	        });
 
 	        // TODO: fork and add to source
@@ -43251,11 +43254,24 @@
 	    //
 
 	  }, {
+	    key: 'handleModalShow',
+	    value: function handleModalShow() {
+	      var _this2 = this;
+
+	      this.setState({
+	        syncInterval: setInterval(function () {
+	          _this2.props.actions.fetchMessages(_this2.state.user.id);
+	        }, 15000)
+	      });
+	    }
+	  }, {
 	    key: 'handleModalHide',
 	    value: function handleModalHide() {
 	      // TODO: fork and add to source
 	      document.getElementById('modal').className = 'hidden';
 	      document.body.classList.remove('modal-opened');
+
+	      clearInterval(this.state.syncInterval);
 
 	      this.props.onHide();
 	    }
@@ -43272,19 +43288,14 @@
 	  }, {
 	    key: 'handleFormSubmit',
 	    value: function handleFormSubmit(event) {
-	      var _this2 = this;
+	      var _this3 = this;
 
 	      event.preventDefault();
 	      if (!this.state.text) return;
+	      this.setState({ text: '' });
 	      this.props.actions.postMessage(this.state.user.id, this.state.text).then(function () {
-	        _this2.setState({ text: '' });
-	        _this2.props.actions.fetchMessages(_this2.state.user.id);
+	        _this3.props.actions.fetchMessages(_this3.state.user.id);
 	      });
-	    }
-	  }, {
-	    key: 'handleRefreshClick',
-	    value: function handleRefreshClick(event) {
-	      this.props.actions.fetchMessages(this.state.user.id);
 	    }
 
 	    // renderers
@@ -43325,7 +43336,7 @@
 	        { id: 'modal', className: 'hidden' },
 	        _react2.default.createElement(
 	          _FadeModal2.default,
-	          { ref: 'modal', onHide: this.handleModalHide.bind(this) },
+	          { ref: 'modal', onShow: this.handleModalShow.bind(this), onHide: this.handleModalHide.bind(this) },
 	          _react2.default.createElement(
 	            'div',
 	            { className: 'modal-content chat' },
@@ -43355,12 +43366,7 @@
 	                'form',
 	                { onSubmit: this.handleFormSubmit.bind(this) },
 	                _react2.default.createElement('input', { type: 'text', value: this.state.text, onChange: this.handleInputChange.bind(this) }),
-	                _react2.default.createElement('input', { type: 'submit', value: 'Send' })
-	              ),
-	              _react2.default.createElement(
-	                'button',
-	                { onClick: this.handleRefreshClick.bind(this) },
-	                'Refresh'
+	                _react2.default.createElement('input', { type: 'submit', value: 'Send', disabled: this.state.isFetching })
 	              )
 	            )
 	          )

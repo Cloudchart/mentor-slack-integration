@@ -12,6 +12,8 @@ class Chat extends Component {
       user: {},
       messages: [],
       text: '',
+      syncInterval: null,
+      isFetching: false,
     }
   }
 
@@ -30,7 +32,8 @@ class Chat extends Component {
     if (messages) {
       this.setState({
         user: user,
-        messages: messages.items
+        messages: messages.items,
+        isFetching: messages.isFetching,
       })
 
       // TODO: fork and add to source
@@ -45,10 +48,20 @@ class Chat extends Component {
 
   // handlers
   //
+  handleModalShow() {
+    this.setState({
+      syncInterval: setInterval(() => {
+        this.props.actions.fetchMessages(this.state.user.id)
+      }, 15000)
+    })
+  }
+
   handleModalHide() {
     // TODO: fork and add to source
     document.getElementById('modal').className = 'hidden'
     document.body.classList.remove('modal-opened')
+
+    clearInterval(this.state.syncInterval)
 
     this.props.onHide()
   }
@@ -64,14 +77,10 @@ class Chat extends Component {
   handleFormSubmit(event) {
     event.preventDefault()
     if (!this.state.text) return
+    this.setState({ text: '' })
     this.props.actions.postMessage(this.state.user.id, this.state.text).then(() => {
-      this.setState({ text: '' })
       this.props.actions.fetchMessages(this.state.user.id)
     })
-  }
-
-  handleRefreshClick(event) {
-    this.props.actions.fetchMessages(this.state.user.id)
   }
 
   // renderers
@@ -93,7 +102,7 @@ class Chat extends Component {
   render() {
     return (
       <div id="modal" className="hidden">
-        <Modal ref="modal" onHide={ this.handleModalHide.bind(this) }>
+        <Modal ref="modal" onShow={ this.handleModalShow.bind(this) } onHide={ this.handleModalHide.bind(this) }>
           <div className="modal-content chat">
             <h1>
               <span>Chat with </span>
@@ -107,9 +116,8 @@ class Chat extends Component {
             <div className="actions">
               <form onSubmit={ this.handleFormSubmit.bind(this) }>
                 <input type="text" value={ this.state.text } onChange={ this.handleInputChange.bind(this) } />
-                <input type="submit" value="Send" />
+                <input type="submit" value="Send" disabled={ this.state.isFetching } />
               </form>
-              <button onClick={ this.handleRefreshClick.bind(this) }>Refresh</button>
             </div>
           </div>
         </Modal>
