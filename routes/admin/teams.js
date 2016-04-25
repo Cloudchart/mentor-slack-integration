@@ -25,15 +25,24 @@ function getTeam(id) {
 //
 router.get('/', checkTeamId, checkAuth, async (req, res, next) => {
   const team = await getTeam(req.session.teamId)
-  let teams = await Team.findAll()
-  teams = teams.map(team => { return { id: team.id, name: team.name } })
+  let teams = await Team.findAll({ include: [User] })
+  teams = teams.map(team => {
+    const hasNewMessage = team.Users.map(user => user.hasNewMessage).includes(true)
+    return { id: team.id, name: team.name, hasNewMessage: hasNewMessage }
+  })
   res.render('admin/teams', { title: `${appName} Slack Teams`, team: team, teams: teams })
 })
 
 router.get('/:id/users', checkTeamId, checkAuth, async (req, res, next) => {
   const team = await getTeam(req.session.teamId)
-  const viewedTeam = await Team.findById(req.params.id)
-  const users = await getAndSyncUsers(viewedTeam)
+  const viewedTeam = await Team.find({ include: [User], where: { id: req.params.id } })
+
+  let users = await getAndSyncUsers(viewedTeam)
+  users = users.map(user => {
+    const savedUser = viewedTeam.Users.find(item => item.id === user.id)
+    const hasNewMessage = savedUser && savedUser.hasNewMessage
+    return Object.assign(user, { hasNewMessage: hasNewMessage })
+  })
 
   res.render('admin/users', {
     title: `${appName} Slack Users`,

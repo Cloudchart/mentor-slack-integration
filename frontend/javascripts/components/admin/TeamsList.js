@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react'
+import { chain } from 'lodash'
 
 
 class TeamsList extends Component {
@@ -7,6 +8,7 @@ class TeamsList extends Component {
     return (
       <li>
         <a href={ `/admin/teams/${team.id}/users` }>{ team.name }</a>
+        { team.hasNewMessage ? <i className="fa fa-comment-o" /> : null }
       </li>
     )
   }
@@ -17,7 +19,7 @@ class TeamsList extends Component {
         <h2>Teams:</h2>
 
         <ul className="teams-list">
-          { this.props.teams.map(this.renderTeam.bind(this)) }
+          { chain(this.props.teams).sortBy(['name', 'hasNewMessage']).map(this.renderTeam.bind(this)) }
         </ul>
       </div>
     )

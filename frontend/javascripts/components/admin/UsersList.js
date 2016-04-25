@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react'
+import { chain } from 'lodash'
 import Chat from './Chat'
 
 
@@ -28,6 +29,7 @@ class UsersList extends Component {
     return (
       <li>
         <a href="" onClick={ this.handleUserClick.bind(this, user) }>{ user.real_name }</a>
+        { user.hasNewMessage ? <i className="fa fa-comment-o" /> : null }
       </li>
     )
   }
@@ -40,7 +42,7 @@ class UsersList extends Component {
         <h2>{ `${viewedTeam.name} users:` }</h2>
 
         <ul className="users-list">
-          { users.map(this.renderUser.bind(this)) }
+          { chain(users).sortBy(['real_name', 'hasNewMessage']).map(this.renderUser.bind(this)) }
         </ul>
 
         <Chat
