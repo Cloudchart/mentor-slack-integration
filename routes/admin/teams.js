@@ -90,7 +90,19 @@ router.get('/chat/:id', checkTeamId, checkAuth, async (req, res, next) => {
     if (error = error || data.error) {
       res.status(500).json({ error: error })
     } else {
-      res.json({ messages: data.messages })
+      const messages = data.messages
+
+      if (messages.length > 0) {
+        user.update({
+          lastTimestamp: messages[0].ts, hasNewMessage: false
+        }).then(() => {
+          res.json({ messages: messages })
+        }).catch((error) => {
+          res.status(500).json({ error: error })
+        })
+      } else {
+        res.json({ messages: messages })
+      }
     }
   })
 })
@@ -105,7 +117,15 @@ router.post('/chat/:id', checkTeamId, checkAuth, async (req, res, next) => {
     if (error = error || data.error) {
       res.status(500).json({ error: error })
     } else {
-      res.json({ message: data.message })
+      const message = data.message
+
+      user.update({
+        lastTimestamp: message.ts, hasNewMessage: false
+      }).then(() => {
+        res.json({ message: message })
+      }).catch((error) => {
+        res.status(500).json({ error: error })
+      })
     }
   })
 })
