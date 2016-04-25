@@ -26,9 +26,16 @@ class UsersList extends Component {
   // renderers
   //
   renderUser(user) {
+    let userName = user.real_name
+    if (user.is_primary_owner) {
+      userName += ' (primary owner)'
+    } else if (user.is_owner) {
+      userName += ' (owner)'
+    }
+
     return (
       <li>
-        <a href="" onClick={ this.handleUserClick.bind(this, user) }>{ user.real_name }</a>
+        <a href="" onClick={ this.handleUserClick.bind(this, user) }>{ userName }</a>
         { user.hasNewMessage ? <i className="fa fa-comment-o" /> : null }
       </li>
     )

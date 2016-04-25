@@ -43096,13 +43096,20 @@
 	  }, {
 	    key: 'renderUser',
 	    value: function renderUser(user) {
+	      var userName = user.real_name;
+	      if (user.is_primary_owner) {
+	        userName += ' (primary owner)';
+	      } else if (user.is_owner) {
+	        userName += ' (owner)';
+	      }
+
 	      return _react2.default.createElement(
 	        'li',
 	        null,
 	        _react2.default.createElement(
 	          'a',
 	          { href: '', onClick: this.handleUserClick.bind(this, user) },
-	          user.real_name
+	          userName
 	        ),
 	        user.hasNewMessage ? _react2.default.createElement('i', { className: 'fa fa-comment-o' }) : null
 	      );
