@@ -3,6 +3,7 @@ import { WebClient } from 'slack-client'
 import { checkTeamId } from '../helpers'
 import { appName, botTeamId, errorMarker } from '../../lib'
 import { Team, TeamOwner, User } from '../../models'
+import { getAndSyncUsers } from '../../workers/helpers'
 
 const router = Router()
 
@@ -32,51 +33,13 @@ router.get('/', checkTeamId, checkAuth, async (req, res, next) => {
 router.get('/:id/users', checkTeamId, checkAuth, async (req, res, next) => {
   const team = await getTeam(req.session.teamId)
   const viewedTeam = await Team.findById(req.params.id)
-  const SlackWeb = new WebClient(viewedTeam.accessToken)
+  const users = await getAndSyncUsers(viewedTeam)
 
-  SlackWeb.users.list((error, data) => {
-    if (error = error || data.error) {
-      console.log(errorMarker, err)
-      res.redirect('/admin/teams')
-    } else {
-      const users = data.members.filter(member => {
-        return (
-          !member.deleted && !member.is_restricted && !member.is_ultra_restricted &&
-          !member.is_bot && member.name !== 'slackbot'
-        )
-      })
-
-      SlackWeb.dm.list(async (error, data) => {
-        if (error = error || data.error) {
-          console.log(errorMarker, err)
-          res.redirect('/admin/teams')
-        } else {
-          users.forEach(user => {
-            const im = data.ims.find(im => im.user === user.id)
-            if (!im) return
-
-            const attrs = {
-              teamId: viewedTeam.id,
-              imId: im.id,
-              responseBody: JSON.stringify(user),
-            }
-
-            User.findOrCreate({
-              where: { id: user.id }, defaults: attrs
-            }).spread((user, created) => {
-              if (!created) user.update(attrs)
-            })
-          })
-
-          res.render('admin/users', {
-            title: `${appName} Slack Users`,
-            team: team,
-            viewedTeam: { id: viewedTeam.id, name: viewedTeam.name },
-            users: users,
-          })
-        }
-      })
-    }
+  res.render('admin/users', {
+    title: `${appName} Slack Users`,
+    team: team,
+    viewedTeam: { id: viewedTeam.id, name: viewedTeam.name },
+    users: users,
   })
 })
 
