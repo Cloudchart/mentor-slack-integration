@@ -1,0 +1,13 @@
+extends ../layout
+
+block content
+  main(
+    data-react-class="TeamsApp"
+  )
+
+block pagescript
+  script(type="text/javascript").
+    window.__INITIAL_STATE__ = {
+      team: !{JSON.stringify(team)},
+      teams: !{JSON.stringify(teams)}
+    }

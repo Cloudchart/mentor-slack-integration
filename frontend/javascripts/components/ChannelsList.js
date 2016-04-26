@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from 'react'
-import ReactDOM from 'react-dom'
 
 import Channel from './Channel'
 import ThemesList from './ThemesList'
@@ -36,7 +35,7 @@ class ChannelsList extends Component {
         <h2>Channels:</h2>
 
         <ul className="channels-list">
-          { this.props.channels.items.map(channel =>
+          { channels.items.map(channel =>
             <Channel
               channel={ channel }
               themes={ themes }

@@ -1,5 +1,9 @@
 import timezones from './timezones'
 
+
+const appName = 'MentorBot'
+const botName = 'mentorbot'
+
 const dayTimes = [
  '00:00','01:00','02:00','03:00','04:00',
  '05:00','06:00','07:00','08:00','09:00',
@@ -10,7 +14,5 @@ const dayTimes = [
 
 const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 
-const appName = 'MentorBot'
-const botName = 'mentorbot'
 
 export { timezones, dayTimes, daysOfWeek, appName, botName }

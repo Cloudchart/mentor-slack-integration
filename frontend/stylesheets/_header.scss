@@ -32,10 +32,19 @@ header.main {
   > nav {
     font-size: $regular-font-size;
 
-    a {
-      text-decoration: none;
-      color: #FFFFFF;
+    > ul {
+      @include flexbox;
+
+      > li {
+        &:not(:last-child) {
+          margin-right: 20px
+        }
+
+        > a {
+          text-decoration: none;
+          color: #FFFFFF;
+        }
+      }
     }
   }
-
 }

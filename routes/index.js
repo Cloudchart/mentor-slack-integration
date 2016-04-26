@@ -5,7 +5,7 @@ import { Router } from 'express'
 import { WebClient } from 'slack-client'
 import { slugify } from 'underscore.string'
 
-import { appName, errorMarker } from '../lib'
+import { appName, botTeamId, errorMarker } from '../lib'
 import { getChannels } from './channels'
 import { enqueue, checkTeamId } from './helpers'
 import { Team, Channel, TimeSetting } from '../models'
@@ -98,7 +98,7 @@ router.get('/:teamName/configuration', checkTeamId, initTimeSetting, async (req,
   getChannels(team).then(channels => {
     res.render('configuration', {
       title: `Configure ${appName} integration`,
-      team: { name: team.name },
+      team: { id: team.id, name: team.name, isAdmin: team.id === botTeamId },
       channels: channels,
       timeSetting: {
         tz: timeSetting.tz,

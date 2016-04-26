@@ -13,3 +13,9 @@ export const configActions = {
   updateTimeSetting,
   fetchChannels,
 }
+
+import fetchMessages from './admin/fetchMessages'
+import postMessage from './admin/postMessage'
+
+export const teamsActions = {}
+export const usersActions = { fetchMessages, postMessage }

@@ -1,11 +1,26 @@
 import React, { Component, PropTypes } from 'react'
+import { slugify } from 'underscore.string'
+import { ivcTeamId } from '../../data'
 
 
 class Header extends Component {
 
-  handleLogout(event) {
-    event.preventDefault()
-    window.location = '/logout'
+  renderConfigurationLink() {
+    return (
+      /\/admin/.test(document.location.pathname) ?
+      <li>
+        <a href={ `/${slugify(this.props.team.name)}/configuration` }>Configuration</a>
+      </li> :
+      null
+    )
+  }
+
+  renderTeamsLink() {
+    return (
+      this.props.team.isAdmin ?
+      <li><a href="/admin/teams">Teams</a></li> :
+      null
+    )
   }
 
   renderNav() {
@@ -14,8 +29,10 @@ class Header extends Component {
     return (
       <nav>
         <ul>
+          { this.renderConfigurationLink() }
+          { this.renderTeamsLink() }
           <li>
-            <a href="" onClick={ this.handleLogout.bind(this) }>Logout</a>
+            <a href="/logout">Logout</a>
           </li>
         </ul>
       </nav>
@@ -35,6 +52,10 @@ class Header extends Component {
     )
   }
 
+}
+
+Header.propTypes = {
+  team: PropTypes.object.isRequired,
 }
 
 

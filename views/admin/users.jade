@@ -1,0 +1,14 @@
+extends ../layout
+
+block content
+  main(
+    data-react-class="UsersApp"
+  )
+
+block pagescript
+  script(type="text/javascript").
+    window.__INITIAL_STATE__ = {
+      viewedTeam: !{JSON.stringify(viewedTeam)},
+      team: !{JSON.stringify(team)},
+      users: !{JSON.stringify(users)}
+    }

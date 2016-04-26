@@ -25,7 +25,7 @@ class ConfigApp extends Component {
 
     return (
       <div className="container configuration">
-        <Header/>
+        <Header team={ team } />
 
         <div className="content">
           <h1>

@@ -1,8 +1,9 @@
 import { queue } from '../../node-resque'
 import { sample, sampleSize } from 'lodash'
+import { WebClient } from 'slack-client'
 import { eventMarker, errorMarker } from '../../lib'
 import { callWebAppGraphQL } from '../../routes/helpers'
-import { TeamOwner } from '../../models'
+import { TeamOwner, User } from '../../models'
 
 
 export function enqueue(name, payload) {
@@ -59,6 +60,51 @@ export async function getTeamOwner(teamId, SlackWeb) {
       })
     }
 
+  })
+}
+
+export function getAndSyncUsers(team) {
+  return new Promise((resolve, reject) => {
+    const SlackWeb = new WebClient(team.accessToken)
+
+    SlackWeb.users.list((err, res) => {
+      if (err = err || res.error) {
+        console.log(errorMarker, 'getAndSyncUsers', 'users.list', err)
+        resolve([])
+      } else {
+        const users = res.members.filter(member => {
+          return (
+            !member.deleted && !member.is_restricted && !member.is_ultra_restricted &&
+            !member.is_bot && member.name !== 'slackbot'
+          )
+        })
+
+        resolve(users)
+
+        SlackWeb.dm.list((err, res) => {
+          if (err = err || res.error) {
+            console.log(errorMarker, 'getAndSyncUsers', 'dm.list', err)
+          } else {
+            users.forEach(user => {
+              const im = res.ims.find(im => im.user === user.id)
+              if (!im) return
+
+              const attrs = {
+                teamId: team.id,
+                imId: im.id,
+                responseBody: JSON.stringify(user),
+              }
+
+              User.findOrCreate({
+                where: { id: user.id }, defaults: attrs
+              }).spread((user, created) => {
+                if (!created) user.update(attrs)
+              })
+            })
+          }
+        })
+      }
+    })
   })
 }
 
