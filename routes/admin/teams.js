@@ -54,7 +54,8 @@ router.get('/:id/users', checkTeamId, checkAuth, async (req, res, next) => {
   users = users.map(user => {
     const savedUser = viewedTeam.Users.find(item => item.id === user.id)
     const hasNewMessage = savedUser && savedUser.hasNewMessage
-    return Object.assign(user, { hasNewMessage: hasNewMessage })
+    const hasLastTimestamp = savedUser && savedUser.lastTimestamp
+    return Object.assign(user, { hasNewMessage: hasNewMessage, hasLastTimestamp: hasLastTimestamp })
   })
 
   res.render('admin/users', {

@@ -25,6 +25,12 @@ class UsersList extends Component {
 
   // renderers
   //
+  renderStatus(user) {
+    if (user.hasNewMessage) return <i className="fa fa-comment" />
+    if (user.hasLastTimestamp) return <i className="fa fa-comment-o" />
+    return null
+  }
+
   renderUser(user) {
     let userName = user.real_name
     if (user.is_primary_owner) {
@@ -36,7 +42,7 @@ class UsersList extends Component {
     return (
       <li>
         <a href="" onClick={ this.handleUserClick.bind(this, user) }>{ userName }</a>
-        { user.hasNewMessage ? <i className="fa fa-comment-o" /> : null }
+        { this.renderStatus(user) }
       </li>
     )
   }
@@ -49,7 +55,14 @@ class UsersList extends Component {
         <h2>{ `${viewedTeam.name} users:` }</h2>
 
         <ul className="users-list">
-          { chain(users).sortBy(['real_name', 'hasNewMessage']).map(this.renderUser.bind(this)) }
+          {
+            chain(users)
+              .sortBy('hasLastTimestamp')
+              .reverse()
+              .sortBy('hasNewMessage')
+              .reverse()
+              .map(this.renderUser.bind(this))
+          }
         </ul>
 
         <Chat

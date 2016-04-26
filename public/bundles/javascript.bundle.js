@@ -26947,11 +26947,11 @@
 	      return _react2.default.createElement(
 	        'li',
 	        null,
-	        team.isAvailableForChat ? _react2.default.createElement(
+	        _react2.default.createElement(
 	          'a',
 	          { href: '/admin/teams/' + team.id + '/users' },
 	          team.name
-	        ) : team.name,
+	        ),
 	        team.hasNewMessage ? _react2.default.createElement('i', { className: 'fa fa-comment-o' }) : null
 	      );
 	    }
@@ -26969,7 +26969,7 @@
 	        _react2.default.createElement(
 	          'ul',
 	          { className: 'teams-list' },
-	          (0, _lodash.chain)(this.props.teams).sortBy(['name', 'hasNewMessage']).map(this.renderTeam.bind(this))
+	          (0, _lodash.chain)(this.props.teams).sortBy('hasNewMessage').reverse().map(this.renderTeam.bind(this))
 	        )
 	      );
 	    }
@@ -43094,6 +43094,13 @@
 	    //
 
 	  }, {
+	    key: 'renderStatus',
+	    value: function renderStatus(user) {
+	      if (user.hasNewMessage) return _react2.default.createElement('i', { className: 'fa fa-comment' });
+	      if (user.hasLastTimestamp) return _react2.default.createElement('i', { className: 'fa fa-comment-o' });
+	      return null;
+	    }
+	  }, {
 	    key: 'renderUser',
 	    value: function renderUser(user) {
 	      var userName = user.real_name;
@@ -43111,7 +43118,7 @@
 	          { href: '', onClick: this.handleUserClick.bind(this, user) },
 	          userName
 	        ),
-	        user.hasNewMessage ? _react2.default.createElement('i', { className: 'fa fa-comment-o' }) : null
+	        this.renderStatus(user)
 	      );
 	    }
 	  }, {
@@ -43135,7 +43142,7 @@
 	        _react2.default.createElement(
 	          'ul',
 	          { className: 'users-list' },
-	          (0, _lodash.chain)(users).sortBy(['real_name', 'hasNewMessage']).map(this.renderUser.bind(this))
+	          (0, _lodash.chain)(users).sortBy('hasLastTimestamp').reverse().sortBy('hasNewMessage').reverse().map(this.renderUser.bind(this))
 	        ),
 	        _react2.default.createElement(_Chat2.default, {
 	          selectedUserId: this.state.selectedUserId,

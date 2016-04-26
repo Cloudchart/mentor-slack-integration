@@ -7,7 +7,7 @@ class TeamsList extends Component {
   renderTeam(team) {
     return (
       <li>
-        { team.isAvailableForChat ? <a href={ `/admin/teams/${team.id}/users` }>{ team.name }</a> : team.name }
+        <a href={ `/admin/teams/${team.id}/users` }>{ team.name }</a>
         { team.hasNewMessage ? <i className="fa fa-comment-o" /> : null }
       </li>
     )
@@ -19,7 +19,7 @@ class TeamsList extends Component {
         <h2>Teams:</h2>
 
         <ul className="teams-list">
-          { chain(this.props.teams).sortBy(['name', 'hasNewMessage']).map(this.renderTeam.bind(this)) }
+          { chain(this.props.teams).sortBy('hasNewMessage').reverse().map(this.renderTeam.bind(this)) }
         </ul>
       </div>
     )
