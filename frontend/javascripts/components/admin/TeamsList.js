@@ -7,7 +7,7 @@ class TeamsList extends Component {
   renderTeam(team) {
     return (
       <li>
-        <a href={ `/admin/teams/${team.id}/users` }>{ team.name }</a>
+        { team.isAvailableForChat ? <a href={ `/admin/teams/${team.id}/users` }>{ team.name }</a> : team.name }
         { team.hasNewMessage ? <i className="fa fa-comment-o" /> : null }
       </li>
     )

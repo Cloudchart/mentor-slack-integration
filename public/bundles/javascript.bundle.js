@@ -26947,11 +26947,11 @@
 	      return _react2.default.createElement(
 	        'li',
 	        null,
-	        _react2.default.createElement(
+	        team.isAvailableForChat ? _react2.default.createElement(
 	          'a',
 	          { href: '/admin/teams/' + team.id + '/users' },
 	          team.name
-	        ),
+	        ) : team.name,
 	        team.hasNewMessage ? _react2.default.createElement('i', { className: 'fa fa-comment-o' }) : null
 	      );
 	    }

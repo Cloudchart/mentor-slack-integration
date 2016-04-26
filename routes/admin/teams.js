@@ -1,8 +1,9 @@
+import momentTimezone from 'moment-timezone'
 import { Router } from 'express'
 import { WebClient } from 'slack-client'
 import { checkTeamId } from '../helpers'
 import { appName, botTeamId, errorMarker } from '../../lib'
-import { Team, TeamOwner, User } from '../../models'
+import { Team, TimeSetting, TeamOwner, User } from '../../models'
 import { getAndSyncUsers } from '../../workers/helpers'
 
 const router = Router()
@@ -21,14 +22,26 @@ function getTeam(id) {
   })
 }
 
+function isAvailableForChat(timeSetting) {
+  const now = momentTimezone().tz(timeSetting.tz)
+  const day = now.format('ddd')
+  const time = now.format('HH:mm')
+  return timeSetting.days.includes(day) && time >= timeSetting.startTime && time <= timeSetting.endTime
+}
+
 // actions
 //
 router.get('/', checkTeamId, checkAuth, async (req, res, next) => {
   const team = await getTeam(req.session.teamId)
-  let teams = await Team.findAll({ include: [User] })
+  let teams = await Team.findAll({ include: [User, TimeSetting] })
   teams = teams.map(team => {
     const hasNewMessage = team.Users.map(user => user.hasNewMessage).includes(true)
-    return { id: team.id, name: team.name, hasNewMessage: hasNewMessage }
+    return {
+      id: team.id,
+      name: team.name,
+      hasNewMessage: hasNewMessage,
+      isAvailableForChat: isAvailableForChat(team.TimeSetting),
+    }
   })
   res.render('admin/teams', { title: `${appName} Slack Teams`, team: team, teams: teams })
 })
@@ -80,8 +93,9 @@ router.get('/chat/:id', checkTeamId, checkAuth, async (req, res, next) => {
 })
 
 router.post('/chat/:id', checkTeamId, checkAuth, async (req, res, next) => {
-  const user = await User.find({ include: [Team], where: { id: req.params.id } })
+  const user = await User.find({ include: [{ model: Team, include: [TimeSetting] }], where: { id: req.params.id } })
   if (!user) return res.status(404).json({ message: 'could not find user' })
+  if (!isAvailableForChat(user.Team.TimeSetting)) return res.status(412).json({ message: 'team is not available for chat' })
 
   const SlackWeb = new WebClient(user.Team.accessToken)
 
