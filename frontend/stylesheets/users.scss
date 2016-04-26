@@ -1,13 +1,27 @@
 .container.users {
   > .content {
 
-    .chat-window {
-      max-height: 300px;
-      overflow: scroll;
-      margin: 30px 0;
+    .modal-content.chat {
+      > .chat-window {
+        max-height: 300px;
+        overflow: scroll;
+        margin: 30px 0;
 
-      > li {
-        > .username {
+        > li {
+          > .username {
+            margin-right: 10px;
+          }
+        }
+      }
+
+      > .actions {
+        input[type="text"] {
+          padding: 15px 42px 15px 15px;
+          background-color: #FFFFFF;
+          border: 1px solid $primary-gray;
+          border-radius: 5px;
+          font-size: 16px;
+          width: 70%;
           margin-right: 10px;
         }
       }

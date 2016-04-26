@@ -43365,8 +43365,17 @@
 	              _react2.default.createElement(
 	                'form',
 	                { onSubmit: this.handleFormSubmit.bind(this) },
-	                _react2.default.createElement('input', { type: 'text', value: this.state.text, onChange: this.handleInputChange.bind(this) }),
-	                _react2.default.createElement('input', { type: 'submit', value: 'Send', disabled: this.state.isFetching })
+	                _react2.default.createElement('input', {
+	                  type: 'text',
+	                  autoFocus: true,
+	                  value: this.state.text,
+	                  onChange: this.handleInputChange.bind(this)
+	                }),
+	                _react2.default.createElement(
+	                  'button',
+	                  { type: 'submit', className: 'msi', disabled: this.state.isFetching },
+	                  'Send'
+	                )
 	              )
 	            )
 	          )

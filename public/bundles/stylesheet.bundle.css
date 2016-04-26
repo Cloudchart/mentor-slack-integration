@@ -2552,9 +2552,18 @@ div.container footer {
   -moz-justify-content: flex-end;
   justify-content: flex-end; }
 
-.container.users > .content .chat-window {
+.container.users > .content .modal-content.chat > .chat-window {
   max-height: 300px;
   overflow: scroll;
   margin: 30px 0; }
-  .container.users > .content .chat-window > li > .username {
+  .container.users > .content .modal-content.chat > .chat-window > li > .username {
     margin-right: 10px; }
+
+.container.users > .content .modal-content.chat > .actions input[type="text"] {
+  padding: 15px 42px 15px 15px;
+  background-color: #FFFFFF;
+  border: 1px solid #CBD0CD;
+  border-radius: 5px;
+  font-size: 16px;
+  width: 70%;
+  margin-right: 10px; }
