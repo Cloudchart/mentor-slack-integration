@@ -2552,6 +2552,12 @@ div.container footer {
   -moz-justify-content: flex-end;
   justify-content: flex-end; }
 
+.container.teams > .content .teams-list > li > i {
+  margin-left: 10px; }
+
+.container.users > .content .users-list > li > i {
+  margin-left: 10px; }
+
 .container.users > .content .modal-content.chat > .chat-window {
   max-height: 300px;
   overflow: scroll;

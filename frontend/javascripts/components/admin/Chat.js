@@ -46,6 +46,12 @@ class Chat extends Component {
     }
   }
 
+  // helpers
+  //
+  isChatDisabled() {
+    return  !this.props.viewedTeam.isAvailableForChat || this.state.isFetching
+  }
+
   // handlers
   //
   handleModalShow() {
@@ -85,6 +91,19 @@ class Chat extends Component {
 
   // renderers
   //
+  renderMessagesStatus() {
+    if (this.state.messages.length === 0) return <span>There are no messages here</span>
+    return null
+  }
+
+  renderAvailabilityStatus() {
+    return(
+      !this.props.viewedTeam.isAvailableForChat ?
+      <span>Team is not available for chat right now</span> :
+      null
+    )
+  }
+
   renderMessage(message) {
     const user = message.user === this.state.user.id ? this.state.user.name : botName
     const text = message.text
@@ -110,6 +129,7 @@ class Chat extends Component {
             </h1>
 
             <ul className="chat-window">
+              { this.renderMessagesStatus() }
               { this.state.messages.map(this.renderMessage.bind(this)) }
             </ul>
 
@@ -122,10 +142,11 @@ class Chat extends Component {
                   onChange={ this.handleInputChange.bind(this) }
                 />
 
-                <button type="submit" className="msi" disabled={ this.state.isFetching }>
+                <button type="submit" className="msi" disabled={ this.isChatDisabled() }>
                   Send
                 </button>
               </form>
+              { this.renderAvailabilityStatus() }
             </div>
           </div>
         </Modal>
@@ -137,6 +158,7 @@ class Chat extends Component {
 
 Chat.propTypes = {
   selectedUserId: PropTypes.string.isRequired,
+  viewedTeam: PropTypes.object.isRequired,
   users: PropTypes.object.isRequired,
   messages: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired,

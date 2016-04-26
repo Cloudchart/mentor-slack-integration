@@ -33,14 +33,13 @@ function isAvailableForChat(timeSetting) {
 //
 router.get('/', checkTeamId, checkAuth, async (req, res, next) => {
   const team = await getTeam(req.session.teamId)
-  let teams = await Team.findAll({ include: [User, TimeSetting] })
+  let teams = await Team.findAll({ include: [User], where: { isActive: true } })
   teams = teams.map(team => {
     const hasNewMessage = team.Users.map(user => user.hasNewMessage).includes(true)
     return {
       id: team.id,
       name: team.name,
       hasNewMessage: hasNewMessage,
-      isAvailableForChat: isAvailableForChat(team.TimeSetting),
     }
   })
   res.render('admin/teams', { title: `${appName} Slack Teams`, team: team, teams: teams })
@@ -48,7 +47,7 @@ router.get('/', checkTeamId, checkAuth, async (req, res, next) => {
 
 router.get('/:id/users', checkTeamId, checkAuth, async (req, res, next) => {
   const team = await getTeam(req.session.teamId)
-  const viewedTeam = await Team.find({ include: [User], where: { id: req.params.id } })
+  const viewedTeam = await Team.find({ include: [User, TimeSetting], where: { id: req.params.id } })
 
   let users = await getAndSyncUsers(viewedTeam)
   users = users.map(user => {
@@ -61,8 +60,12 @@ router.get('/:id/users', checkTeamId, checkAuth, async (req, res, next) => {
   res.render('admin/users', {
     title: `${appName} Slack Users`,
     team: team,
-    viewedTeam: { id: viewedTeam.id, name: viewedTeam.name },
     users: users,
+    viewedTeam: {
+      id: viewedTeam.id,
+      name: viewedTeam.name,
+      isAvailableForChat: isAvailableForChat(viewedTeam.TimeSetting),
+    },
   })
 })
 

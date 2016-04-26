@@ -1,6 +1,14 @@
 .container.users {
   > .content {
 
+    .users-list {
+      > li {
+        > i {
+          margin-left: 10px;
+        }
+      }
+    }
+
     .modal-content.chat {
       > .chat-window {
         max-height: 300px;

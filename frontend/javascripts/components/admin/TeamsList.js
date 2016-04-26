@@ -8,7 +8,7 @@ class TeamsList extends Component {
     return (
       <li>
         <a href={ `/admin/teams/${team.id}/users` }>{ team.name }</a>
-        { team.hasNewMessage ? <i className="fa fa-comment-o" /> : null }
+        { team.hasNewMessage ? <i className="fa fa-comment" /> : null }
       </li>
     )
   }

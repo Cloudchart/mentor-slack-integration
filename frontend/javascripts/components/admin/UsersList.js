@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import { chain } from 'lodash'
+import { clean } from 'underscore.string'
 import Chat from './Chat'
 
 
@@ -32,12 +33,16 @@ class UsersList extends Component {
   }
 
   renderUser(user) {
-    let userName = user.real_name
+    let userName = [user.name]
+    userName.push(user.real_name)
+
     if (user.is_primary_owner) {
-      userName += ' (primary owner)'
+      userName.push('(primary owner)')
     } else if (user.is_owner) {
-      userName += ' (owner)'
+      userName.push('(owner)')
     }
+
+    userName = clean(userName.join(' '))
 
     return (
       <li>
@@ -67,6 +72,7 @@ class UsersList extends Component {
 
         <Chat
           selectedUserId={ this.state.selectedUserId }
+          viewedTeam={ viewedTeam }
           users={ users }
           messages={ messages }
           actions={ actions }

@@ -26952,7 +26952,7 @@
 	          { href: '/admin/teams/' + team.id + '/users' },
 	          team.name
 	        ),
-	        team.hasNewMessage ? _react2.default.createElement('i', { className: 'fa fa-comment-o' }) : null
+	        team.hasNewMessage ? _react2.default.createElement('i', { className: 'fa fa-comment' }) : null
 	      );
 	    }
 	  }, {
@@ -43048,6 +43048,8 @@
 
 	var _lodash = __webpack_require__(288);
 
+	var _underscore = __webpack_require__(194);
+
 	var _Chat = __webpack_require__(292);
 
 	var _Chat2 = _interopRequireDefault(_Chat);
@@ -43103,12 +43105,16 @@
 	  }, {
 	    key: 'renderUser',
 	    value: function renderUser(user) {
-	      var userName = user.real_name;
+	      var userName = [user.name];
+	      userName.push(user.real_name);
+
 	      if (user.is_primary_owner) {
-	        userName += ' (primary owner)';
+	        userName.push('(primary owner)');
 	      } else if (user.is_owner) {
-	        userName += ' (owner)';
+	        userName.push('(owner)');
 	      }
+
+	      userName = (0, _underscore.clean)(userName.join(' '));
 
 	      return _react2.default.createElement(
 	        'li',
@@ -43146,6 +43152,7 @@
 	        ),
 	        _react2.default.createElement(_Chat2.default, {
 	          selectedUserId: this.state.selectedUserId,
+	          viewedTeam: viewedTeam,
 	          users: users,
 	          messages: messages,
 	          actions: actions,
@@ -43257,6 +43264,15 @@
 	      }
 	    }
 
+	    // helpers
+	    //
+
+	  }, {
+	    key: 'isChatDisabled',
+	    value: function isChatDisabled() {
+	      return !this.props.viewedTeam.isAvailableForChat || this.state.isFetching;
+	    }
+
 	    // handlers
 	    //
 
@@ -43308,6 +43324,25 @@
 	    // renderers
 	    //
 
+	  }, {
+	    key: 'renderMessagesStatus',
+	    value: function renderMessagesStatus() {
+	      if (this.state.messages.length === 0) return _react2.default.createElement(
+	        'span',
+	        null,
+	        'There are no messages here'
+	      );
+	      return null;
+	    }
+	  }, {
+	    key: 'renderAvailabilityStatus',
+	    value: function renderAvailabilityStatus() {
+	      return !this.props.viewedTeam.isAvailableForChat ? _react2.default.createElement(
+	        'span',
+	        null,
+	        'Team is not available for chat right now'
+	      ) : null;
+	    }
 	  }, {
 	    key: 'renderMessage',
 	    value: function renderMessage(message) {
@@ -43364,6 +43399,7 @@
 	            _react2.default.createElement(
 	              'ul',
 	              { className: 'chat-window' },
+	              this.renderMessagesStatus(),
 	              this.state.messages.map(this.renderMessage.bind(this))
 	            ),
 	            _react2.default.createElement(
@@ -43380,10 +43416,11 @@
 	                }),
 	                _react2.default.createElement(
 	                  'button',
-	                  { type: 'submit', className: 'msi', disabled: this.state.isFetching },
+	                  { type: 'submit', className: 'msi', disabled: this.isChatDisabled() },
 	                  'Send'
 	                )
-	              )
+	              ),
+	              this.renderAvailabilityStatus()
 	            )
 	          )
 	        )
@@ -43396,6 +43433,7 @@
 
 	Chat.propTypes = {
 	  selectedUserId: _react.PropTypes.string.isRequired,
+	  viewedTeam: _react.PropTypes.object.isRequired,
 	  users: _react.PropTypes.object.isRequired,
 	  messages: _react.PropTypes.array.isRequired,
 	  actions: _react.PropTypes.object.isRequired
