@@ -69,7 +69,7 @@ router.get('/chat/:id', checkTeamId, checkAuth, async (req, res, next) => {
           lastTimestamp: messages[0].ts, hasNewMessage: false
         }).then(() => {
           res.json({ messages: messages })
-        }).catch((error) => {
+        }).catch(error => {
           res.status(500).json({ error: error })
         })
       } else {
@@ -95,7 +95,7 @@ router.post('/chat/:id', checkTeamId, checkAuth, async (req, res, next) => {
         lastTimestamp: message.ts, hasNewMessage: false
       }).then(() => {
         res.json({ message: message })
-      }).catch((error) => {
+      }).catch(error => {
         res.status(500).json({ error: error })
       })
     }
