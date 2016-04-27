@@ -43096,8 +43096,17 @@
 	    //
 
 	  }, {
-	    key: 'renderStatus',
-	    value: function renderStatus(user) {
+	    key: 'renderUsersStatus',
+	    value: function renderUsersStatus() {
+	      return this.props.users.length === 0 ? _react2.default.createElement(
+	        'span',
+	        null,
+	        'Can\'t show any users. The team must have been kicked the bot.'
+	      ) : null;
+	    }
+	  }, {
+	    key: 'renderUserStatus',
+	    value: function renderUserStatus(user) {
 	      if (user.hasNewMessage) return _react2.default.createElement('i', { className: 'fa fa-comment' });
 	      if (user.hasLastTimestamp) return _react2.default.createElement('i', { className: 'fa fa-comment-o' });
 	      return null;
@@ -43124,7 +43133,7 @@
 	          { href: '', onClick: this.handleUserClick.bind(this, user) },
 	          userName
 	        ),
-	        this.renderStatus(user)
+	        this.renderUserStatus(user)
 	      );
 	    }
 	  }, {
@@ -43148,6 +43157,7 @@
 	        _react2.default.createElement(
 	          'ul',
 	          { className: 'users-list' },
+	          this.renderUsersStatus(),
 	          (0, _lodash.chain)(users).sortBy('hasLastTimestamp').reverse().sortBy('hasNewMessage').reverse().map(this.renderUser.bind(this))
 	        ),
 	        _react2.default.createElement(_Chat2.default, {

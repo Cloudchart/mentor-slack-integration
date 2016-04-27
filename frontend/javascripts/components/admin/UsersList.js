@@ -26,7 +26,15 @@ class UsersList extends Component {
 
   // renderers
   //
-  renderStatus(user) {
+  renderUsersStatus() {
+    return (
+      this.props.users.length === 0 ?
+      <span>Can't show any users. The team must have been kicked the bot.</span> :
+      null
+    )
+  }
+
+  renderUserStatus(user) {
     if (user.hasNewMessage) return <i className="fa fa-comment" />
     if (user.hasLastTimestamp) return <i className="fa fa-comment-o" />
     return null
@@ -47,7 +55,7 @@ class UsersList extends Component {
     return (
       <li>
         <a href="" onClick={ this.handleUserClick.bind(this, user) }>{ userName }</a>
-        { this.renderStatus(user) }
+        { this.renderUserStatus(user) }
       </li>
     )
   }
@@ -60,6 +68,7 @@ class UsersList extends Component {
         <h2>{ `${viewedTeam.name} users:` }</h2>
 
         <ul className="users-list">
+          { this.renderUsersStatus() }
           {
             chain(users)
               .sortBy('hasLastTimestamp')
