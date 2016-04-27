@@ -132,7 +132,7 @@ class Chat extends Component {
           <div className="modal-content chat">
             <h1>
               <span>Chat with </span>
-              <strong>{ this.state.user.real_name }</strong>
+              <strong>{ this.state.user.real_name || this.state.user.name }</strong>
             </h1>
 
             <ul className="chat-window">
@@ -149,7 +149,7 @@ class Chat extends Component {
                   onChange={ this.handleInputChange.bind(this) }
                 />
 
-                <button type="submit" className="msi" disabled={ this.state.isFetching }>
+                <button type="submit" className="msi" disabled={ this.state.isFetching || !this.props.viewedTeam.isAvailableForChat  }>
                   Send
                 </button>
               </form>

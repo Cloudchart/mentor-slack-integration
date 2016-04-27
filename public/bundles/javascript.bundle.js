@@ -43430,7 +43430,7 @@
 	              _react2.default.createElement(
 	                'strong',
 	                null,
-	                this.state.user.real_name
+	                this.state.user.real_name || this.state.user.name
 	              )
 	            ),
 	            _react2.default.createElement(
@@ -43453,7 +43453,7 @@
 	                }),
 	                _react2.default.createElement(
 	                  'button',
-	                  { type: 'submit', className: 'msi', disabled: this.state.isFetching },
+	                  { type: 'submit', className: 'msi', disabled: this.state.isFetching || !this.props.viewedTeam.isAvailableForChat },
 	                  'Send'
 	                )
 	              ),
