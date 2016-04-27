@@ -1,7 +1,7 @@
 import momentTimezone from 'moment-timezone'
 import { Router } from 'express'
 import { WebClient } from 'slack-client'
-import { checkTeamId } from '../helpers'
+import { queue, enqueueAt, checkTeamId } from '../helpers'
 import { appName, botTeamId, errorMarker } from '../../lib'
 import { Team, TimeSetting, TeamOwner, User } from '../../models'
 import { getAndSyncUsers } from '../../workers/helpers'
@@ -27,6 +27,24 @@ function isAvailableForChat(timeSetting) {
   const day = now.format('ddd')
   const time = now.format('HH:mm')
   return timeSetting.days.includes(day) && time >= timeSetting.startTime && time <= timeSetting.endTime
+}
+
+function enqueueChatMessage(user, text) {
+  return new Promise((resolve, reject) => {
+    const timeSetting = user.Team.TimeSetting
+    const time = momentTimezone().tz(timeSetting.tz).format('HH:mm')
+    let morningTimestamp = momentTimezone(timeSetting.startTime, 'HH:mm').tz(timeSetting.tz)
+    if (time > timeSetting.startTime) morningTimestamp = morningTimestamp.add(1, 'day')
+
+    queue.scheduledAt('slack-integration', 'messageDispatcher', [user.id, text], async (err, timestamps) => {
+      if (timestamps.length > 0) {
+        resolve(false)
+      } else {
+        await enqueueAt(morningTimestamp, 'messageDispatcher', [user.id, text])
+        resolve(true)
+      }
+    })
+  })
 }
 
 // actions
@@ -101,7 +119,14 @@ router.get('/chat/:id', checkTeamId, checkAuth, async (req, res, next) => {
 router.post('/chat/:id', checkTeamId, checkAuth, async (req, res, next) => {
   const user = await User.find({ include: [{ model: Team, include: [TimeSetting] }], where: { id: req.params.id } })
   if (!user) return res.status(404).json({ message: 'could not find user' })
-  if (!isAvailableForChat(user.Team.TimeSetting)) return res.status(412).json({ message: 'team is not available for chat' })
+  if (!isAvailableForChat(user.Team.TimeSetting)) {
+    const isChatMessageEnqueued = await enqueueChatMessage(user, req.body.text)
+    if (isChatMessageEnqueued) {
+      return res.json({ message: 'enqueued' })
+    } else {
+      return res.json({ message: 'not enqueued' })
+    }
+  }
 
   const SlackWeb = new WebClient(user.Team.accessToken)
 

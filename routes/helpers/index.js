@@ -3,12 +3,22 @@ import Redis from 'ioredis'
 import NR from 'node-resque'
 
 const redisClient = new Redis(process.env.REDIS_URL)
-const queue = new NR.queue({ connection: { redis: redisClient } })
 
+const queue = new NR.queue({ connection: { redis: redisClient } })
+queue.connect()
+
+
+export { queue }
 
 export function enqueue(name, payload) {
-  queue.connect(() => {
-    queue.enqueue('slack-integration', name, payload)
+  queue.enqueue('slack-integration', name, payload)
+}
+
+export function enqueueAt(timestamp, name, payload) {
+  return new Promise((resolve, reject) => {
+    queue.enqueueAt(timestamp, 'slack-integration', name, payload, () => {
+      resolve()
+    })
   })
 }
 

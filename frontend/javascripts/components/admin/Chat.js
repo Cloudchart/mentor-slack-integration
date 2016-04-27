@@ -3,6 +3,11 @@ import Modal from 'boron/FadeModal'
 import React, { Component, PropTypes } from 'react'
 import { botName } from '../../../data'
 
+const availabilityStatuses = {
+  default: "The team isn't available for chat. You can enqueue the message. This cannot be undone.",
+  enqueued: "Ok. Chat message has been enqueued.",
+  notEnqueued: "Hey. You have already enqueued this message.",
+}
 
 class Chat extends Component {
 
@@ -14,6 +19,7 @@ class Chat extends Component {
       text: '',
       syncInterval: null,
       isFetching: false,
+      availabilityStatus: availabilityStatuses.default,
     }
   }
 
@@ -46,12 +52,6 @@ class Chat extends Component {
     }
   }
 
-  // helpers
-  //
-  isChatDisabled() {
-    return  !this.props.viewedTeam.isAvailableForChat || this.state.isFetching
-  }
-
   // handlers
   //
   handleModalShow() {
@@ -82,10 +82,17 @@ class Chat extends Component {
 
   handleFormSubmit(event) {
     event.preventDefault()
-    if (!this.state.text) return
+    if (!this.state.text || this.state.isFetching) return
     this.setState({ text: '' })
-    this.props.actions.postMessage(this.state.user.id, this.state.text).then(() => {
-      this.props.actions.fetchMessages(this.state.user.id)
+
+    this.props.actions.postMessage(this.state.user.id, this.state.text).then(json => {
+      if (json.message === 'enqueued') {
+        this.setState({ availabilityStatus: availabilityStatuses.enqueued })
+      } else if (json.message === 'not enqueued') {
+        this.setState({ availabilityStatus: availabilityStatuses.notEnqueued })
+      } else {
+        this.props.actions.fetchMessages(this.state.user.id)
+      }
     })
   }
 
@@ -99,7 +106,7 @@ class Chat extends Component {
   renderAvailabilityStatus() {
     return(
       !this.props.viewedTeam.isAvailableForChat ?
-      <span>Team is not available for chat right now.</span> :
+      <span>{ this.state.availabilityStatus }</span> :
       null
     )
   }
@@ -142,7 +149,7 @@ class Chat extends Component {
                   onChange={ this.handleInputChange.bind(this) }
                 />
 
-                <button type="submit" className="msi" disabled={ this.isChatDisabled() }>
+                <button type="submit" className="msi" disabled={ this.state.isFetching }>
                   Send
                 </button>
               </form>

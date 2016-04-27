@@ -43225,6 +43225,12 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+	var availabilityStatuses = {
+	  default: "The team isn't available for chat. You can enqueue the message. This cannot be undone.",
+	  enqueued: "Ok. Chat message has been enqueued.",
+	  notEnqueued: "Hey. You have already enqueued this message."
+	};
+
 	var Chat = function (_Component) {
 	  _inherits(Chat, _Component);
 
@@ -43238,7 +43244,8 @@
 	      messages: [],
 	      text: '',
 	      syncInterval: null,
-	      isFetching: false
+	      isFetching: false,
+	      availabilityStatus: availabilityStatuses.default
 	    };
 	    return _this;
 	  }
@@ -43279,15 +43286,6 @@
 	      } else {
 	        nextProps.actions.fetchMessages(user.id);
 	      }
-	    }
-
-	    // helpers
-	    //
-
-	  }, {
-	    key: 'isChatDisabled',
-	    value: function isChatDisabled() {
-	      return !this.props.viewedTeam.isAvailableForChat || this.state.isFetching;
 	    }
 
 	    // handlers
@@ -43331,10 +43329,17 @@
 	      var _this3 = this;
 
 	      event.preventDefault();
-	      if (!this.state.text) return;
+	      if (!this.state.text || this.state.isFetching) return;
 	      this.setState({ text: '' });
-	      this.props.actions.postMessage(this.state.user.id, this.state.text).then(function () {
-	        _this3.props.actions.fetchMessages(_this3.state.user.id);
+
+	      this.props.actions.postMessage(this.state.user.id, this.state.text).then(function (json) {
+	        if (json.message === 'enqueued') {
+	          _this3.setState({ availabilityStatus: availabilityStatuses.enqueued });
+	        } else if (json.message === 'not enqueued') {
+	          _this3.setState({ availabilityStatus: availabilityStatuses.notEnqueued });
+	        } else {
+	          _this3.props.actions.fetchMessages(_this3.state.user.id);
+	        }
 	      });
 	    }
 
@@ -43357,7 +43362,7 @@
 	      return !this.props.viewedTeam.isAvailableForChat ? _react2.default.createElement(
 	        'span',
 	        null,
-	        'Team is not available for chat right now.'
+	        this.state.availabilityStatus
 	      ) : null;
 	    }
 	  }, {
@@ -43433,7 +43438,7 @@
 	                }),
 	                _react2.default.createElement(
 	                  'button',
-	                  { type: 'submit', className: 'msi', disabled: this.isChatDisabled() },
+	                  { type: 'submit', className: 'msi', disabled: this.state.isFetching },
 	                  'Send'
 	                )
 	              ),
