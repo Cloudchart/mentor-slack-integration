@@ -26965,6 +26965,9 @@
 	  }, {
 	    key: 'render',
 	    value: function render() {
+	      var teams = this.props.teams;
+
+
 	      return _react2.default.createElement(
 	        'div',
 	        null,
@@ -26976,7 +26979,13 @@
 	        _react2.default.createElement(
 	          'ul',
 	          { className: 'teams-list' },
-	          (0, _lodash.chain)(this.props.teams).sortBy('hasMessages').reverse().sortBy('hasNewMessage').reverse().map(this.renderTeam.bind(this))
+	          (0, _lodash.chain)(teams).filter('hasNewMessage').sortBy('name').map(this.renderTeam.bind(this)),
+	          (0, _lodash.chain)(teams).filter(function (team) {
+	            return team.hasMessages && !team.hasNewMessage;
+	          }).sortBy('name').map(this.renderTeam.bind(this)),
+	          (0, _lodash.chain)(teams).filter(function (team) {
+	            return !team.hasMessages && !team.hasNewMessage;
+	          }).sortBy('name').map(this.renderTeam.bind(this))
 	        )
 	      );
 	    }
@@ -43165,7 +43174,13 @@
 	          'ul',
 	          { className: 'users-list' },
 	          this.renderUsersStatus(),
-	          (0, _lodash.chain)(users).sortBy('hasLastTimestamp').reverse().sortBy('hasNewMessage').reverse().map(this.renderUser.bind(this))
+	          (0, _lodash.chain)(users).filter('hasNewMessage').sortBy('name').map(this.renderUser.bind(this)),
+	          (0, _lodash.chain)(users).filter(function (user) {
+	            return user.hasLastTimestamp && !user.hasNewMessage;
+	          }).sortBy('name').map(this.renderUser.bind(this)),
+	          (0, _lodash.chain)(users).filter(function (user) {
+	            return !user.hasLastTimestamp && !user.hasNewMessage;
+	          }).sortBy('name').map(this.renderUser.bind(this))
 	        ),
 	        _react2.default.createElement(_Chat2.default, {
 	          selectedUserId: this.state.selectedUserId,

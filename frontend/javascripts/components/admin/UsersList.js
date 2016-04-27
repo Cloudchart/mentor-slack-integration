@@ -69,12 +69,25 @@ class UsersList extends Component {
 
         <ul className="users-list">
           { this.renderUsersStatus() }
+
           {
             chain(users)
-              .sortBy('hasLastTimestamp')
-              .reverse()
-              .sortBy('hasNewMessage')
-              .reverse()
+              .filter('hasNewMessage')
+              .sortBy('name')
+              .map(this.renderUser.bind(this))
+          }
+
+          {
+            chain(users)
+              .filter(user => user.hasLastTimestamp && !user.hasNewMessage)
+              .sortBy('name')
+              .map(this.renderUser.bind(this))
+          }
+
+          {
+            chain(users)
+              .filter(user => !user.hasLastTimestamp && !user.hasNewMessage)
+              .sortBy('name')
               .map(this.renderUser.bind(this))
           }
         </ul>

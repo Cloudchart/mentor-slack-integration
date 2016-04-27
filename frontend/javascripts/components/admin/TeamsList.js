@@ -20,17 +20,31 @@ class TeamsList extends Component {
   }
 
   render() {
+    const { teams } = this.props
+
     return (
       <div>
         <h2>Teams:</h2>
 
         <ul className="teams-list">
           {
-            chain(this.props.teams)
-              .sortBy('hasMessages')
-              .reverse()
-              .sortBy('hasNewMessage')
-              .reverse()
+            chain(teams)
+              .filter('hasNewMessage')
+              .sortBy('name')
+              .map(this.renderTeam.bind(this))
+          }
+
+          {
+            chain(teams)
+              .filter(team => team.hasMessages && !team.hasNewMessage)
+              .sortBy('name')
+              .map(this.renderTeam.bind(this))
+          }
+
+          {
+            chain(teams)
+              .filter(team => !team.hasMessages && !team.hasNewMessage)
+              .sortBy('name')
               .map(this.renderTeam.bind(this))
           }
         </ul>
