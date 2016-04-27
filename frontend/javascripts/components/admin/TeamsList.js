@@ -5,8 +5,8 @@ import { chain } from 'lodash'
 class TeamsList extends Component {
 
   renderStatus(team) {
-    if (team.hasMessages) return <i className="fa fa-comment-o" />
     if (team.hasNewMessage) return <i className="fa fa-comment" />
+    if (team.hasMessages) return <i className="fa fa-comment-o" />
     return null
   }
 

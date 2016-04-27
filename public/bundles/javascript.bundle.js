@@ -26944,8 +26944,8 @@
 	  _createClass(TeamsList, [{
 	    key: 'renderStatus',
 	    value: function renderStatus(team) {
-	      if (team.hasMessages) return _react2.default.createElement('i', { className: 'fa fa-comment-o' });
 	      if (team.hasNewMessage) return _react2.default.createElement('i', { className: 'fa fa-comment' });
+	      if (team.hasMessages) return _react2.default.createElement('i', { className: 'fa fa-comment-o' });
 	      return null;
 	    }
 	  }, {
@@ -56927,7 +56927,7 @@
 	  switch (action.type) {
 	    case 'MESSAGES_RECEIVE':
 	      return state.map(function (user) {
-	        return user.id === action.userId ? Object.assign({}, user, { hasNewMessage: false }) : user;
+	        return user.id === action.userId ? Object.assign({}, user, { hasNewMessage: false, hasLastTimestamp: true }) : user;
 	      });
 	    default:
 	      return state;
