@@ -92,14 +92,14 @@ class Chat extends Component {
   // renderers
   //
   renderMessagesStatus() {
-    if (this.state.messages.length === 0) return <span>There are no messages here</span>
+    if (this.state.messages.length === 0) return <span>There are no messages here.</span>
     return null
   }
 
   renderAvailabilityStatus() {
     return(
       !this.props.viewedTeam.isAvailableForChat ?
-      <span>Team is not available for chat right now</span> :
+      <span>Team is not available for chat right now.</span> :
       null
     )
   }

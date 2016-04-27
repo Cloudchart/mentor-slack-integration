@@ -4,11 +4,17 @@ import { chain } from 'lodash'
 
 class TeamsList extends Component {
 
+  renderStatus(team) {
+    if (team.hasMessages) return <i className="fa fa-comment-o" />
+    if (team.hasNewMessage) return <i className="fa fa-comment" />
+    return null
+  }
+
   renderTeam(team) {
     return (
       <li>
         <a href={ `/admin/teams/${team.id}/users` }>{ team.name }</a>
-        { team.hasNewMessage ? <i className="fa fa-comment" /> : null }
+        { this.renderStatus(team) }
       </li>
     )
   }
@@ -19,7 +25,14 @@ class TeamsList extends Component {
         <h2>Teams:</h2>
 
         <ul className="teams-list">
-          { chain(this.props.teams).sortBy('hasNewMessage').reverse().map(this.renderTeam.bind(this)) }
+          {
+            chain(this.props.teams)
+              .sortBy('hasMessages')
+              .reverse()
+              .sortBy('hasNewMessage')
+              .reverse()
+              .map(this.renderTeam.bind(this))
+          }
         </ul>
       </div>
     )

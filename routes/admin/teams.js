@@ -36,10 +36,12 @@ router.get('/', checkTeamId, checkAuth, async (req, res, next) => {
   let teams = await Team.findAll({ include: [User], where: { isActive: true } })
   teams = teams.map(team => {
     const hasNewMessage = team.Users.map(user => user.hasNewMessage).includes(true)
+    const hasMessages = team.Users.filter(user => user.lastTimestamp).length > 0
     return {
       id: team.id,
       name: team.name,
       hasNewMessage: hasNewMessage,
+      hasMessages: hasMessages,
     }
   })
   res.render('admin/teams', { title: `${appName} Slack Teams`, team: team, teams: teams })

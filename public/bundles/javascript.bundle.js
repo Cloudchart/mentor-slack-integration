@@ -26942,6 +26942,13 @@
 	  }
 
 	  _createClass(TeamsList, [{
+	    key: 'renderStatus',
+	    value: function renderStatus(team) {
+	      if (team.hasMessages) return _react2.default.createElement('i', { className: 'fa fa-comment-o' });
+	      if (team.hasNewMessage) return _react2.default.createElement('i', { className: 'fa fa-comment' });
+	      return null;
+	    }
+	  }, {
 	    key: 'renderTeam',
 	    value: function renderTeam(team) {
 	      return _react2.default.createElement(
@@ -26952,7 +26959,7 @@
 	          { href: '/admin/teams/' + team.id + '/users' },
 	          team.name
 	        ),
-	        team.hasNewMessage ? _react2.default.createElement('i', { className: 'fa fa-comment' }) : null
+	        this.renderStatus(team)
 	      );
 	    }
 	  }, {
@@ -26969,7 +26976,7 @@
 	        _react2.default.createElement(
 	          'ul',
 	          { className: 'teams-list' },
-	          (0, _lodash.chain)(this.props.teams).sortBy('hasNewMessage').reverse().map(this.renderTeam.bind(this))
+	          (0, _lodash.chain)(this.props.teams).sortBy('hasMessages').reverse().sortBy('hasNewMessage').reverse().map(this.renderTeam.bind(this))
 	        )
 	      );
 	    }
@@ -43340,7 +43347,7 @@
 	      if (this.state.messages.length === 0) return _react2.default.createElement(
 	        'span',
 	        null,
-	        'There are no messages here'
+	        'There are no messages here.'
 	      );
 	      return null;
 	    }
@@ -43350,7 +43357,7 @@
 	      return !this.props.viewedTeam.isAvailableForChat ? _react2.default.createElement(
 	        'span',
 	        null,
-	        'Team is not available for chat right now'
+	        'Team is not available for chat right now.'
 	      ) : null;
 	    }
 	  }, {
