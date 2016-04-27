@@ -40,7 +40,7 @@ function enqueueChatMessage(user, text) {
       if (timestamps.length > 0) {
         resolve(false)
       } else {
-        await enqueueAt(morningTimestamp, 'messageDispatcher', [user.id, text])
+        await enqueueAt(morningTimestamp.unix() * 1000, 'messageDispatcher', [user.id, text])
         resolve(true)
       }
     })
