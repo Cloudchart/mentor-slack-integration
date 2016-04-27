@@ -1,4 +1,5 @@
 import { WebClient } from 'slack-client'
+import { slugify } from 'underscore.string'
 import { errorMarker } from '../lib'
 import { getTeamOwner } from './helpers'
 import { Team, TeamOwnerNotification } from '../models'
@@ -9,8 +10,13 @@ const notificationType = 'welcome'
 
 // helpers
 //
-function sendMessage(SlackWeb, teamOwner, done) {
-  const text = "Hello, meatb… Master. Thank you for using me as your mentor. To make this battle bot fully operational, please select channels and topics for me to post on."
+function sendMessage(team, teamOwner, SlackWeb, done) {
+  const configurationLink = `${process.env.ROOT_URL}/${slugify(team.name)}/configuration`
+
+  const text = [
+    "Hello, meatb… Master. Thank you for using me as your mentor.",
+    `To make this battle bot fully operational, please select channels and topics on <${configurationLink}|configuration page>.`
+  ].join(' ')
 
   SlackWeb.chat.postMessage(teamOwner.imId, text, { as_user: true }, async (err, res) => {
     if (err = err || res.error) {
@@ -48,7 +54,7 @@ async function perform(teamId, done) {
   // do nothing if owner has already been notified
   if (teamOwnerNotifications) return done(null, true)
   // otherwise send message
-  sendMessage(SlackWeb, teamOwner, done)
+  sendMessage(team, teamOwner, SlackWeb, done)
 }
 
 
