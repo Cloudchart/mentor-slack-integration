@@ -33,14 +33,14 @@ function enqueueChatMessage(user, text) {
   return new Promise((resolve, reject) => {
     const timeSetting = user.Team.TimeSetting
     const time = momentTimezone().tz(timeSetting.tz).format('HH:mm')
-    let morningTimestamp = momentTimezone(timeSetting.startTime, 'HH:mm').tz(timeSetting.tz)
-    if (time > timeSetting.startTime) morningTimestamp = morningTimestamp.add(1, 'day')
+    let morningTime = momentTimezone.tz(timeSetting.startTime, 'HH:mm', timeSetting.tz)
+    if (time > timeSetting.startTime) morningTime = morningTime.add(1, 'day')
 
     queue.scheduledAt('slack-integration', 'messageDispatcher', [user.id, text], async (err, timestamps) => {
       if (timestamps.length > 0) {
         resolve(false)
       } else {
-        await enqueueAt(morningTimestamp.unix() * 1000, 'messageDispatcher', [user.id, text])
+        await enqueueAt(morningTime.unix() * 1000, 'messageDispatcher', [user.id, text])
         resolve(true)
       }
     })

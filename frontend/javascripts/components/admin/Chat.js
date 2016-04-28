@@ -149,7 +149,7 @@ class Chat extends Component {
                   onChange={ this.handleInputChange.bind(this) }
                 />
 
-                <button type="submit" className="msi" disabled={ this.state.isFetching || !this.props.viewedTeam.isAvailableForChat  }>
+                <button type="submit" className="msi" disabled={ this.state.isFetching }>
                   Send
                 </button>
               </form>

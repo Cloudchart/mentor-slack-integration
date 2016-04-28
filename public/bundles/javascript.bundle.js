@@ -43459,7 +43459,7 @@
 	                }),
 	                _react2.default.createElement(
 	                  'button',
-	                  { type: 'submit', className: 'msi', disabled: this.state.isFetching || !this.props.viewedTeam.isAvailableForChat },
+	                  { type: 'submit', className: 'msi', disabled: this.state.isFetching },
 	                  'Send'
 	                )
 	              ),
