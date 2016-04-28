@@ -26979,13 +26979,19 @@
 	        _react2.default.createElement(
 	          'ul',
 	          { className: 'teams-list' },
-	          (0, _lodash.chain)(teams).filter('hasNewMessage').sortBy('name').map(this.renderTeam.bind(this)),
+	          (0, _lodash.chain)(teams).filter('hasNewMessage').sortBy(function (team) {
+	            return team.name.toLocaleLowerCase();
+	          }).map(this.renderTeam.bind(this)),
 	          (0, _lodash.chain)(teams).filter(function (team) {
 	            return team.hasMessages && !team.hasNewMessage;
-	          }).sortBy('name').map(this.renderTeam.bind(this)),
+	          }).sortBy(function (team) {
+	            return team.name.toLocaleLowerCase();
+	          }).map(this.renderTeam.bind(this)),
 	          (0, _lodash.chain)(teams).filter(function (team) {
 	            return !team.hasMessages && !team.hasNewMessage;
-	          }).sortBy('name').map(this.renderTeam.bind(this))
+	          }).sortBy(function (team) {
+	            return team.name.toLocaleLowerCase();
+	          }).map(this.renderTeam.bind(this))
 	        )
 	      );
 	    }

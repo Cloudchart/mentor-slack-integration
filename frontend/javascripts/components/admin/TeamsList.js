@@ -30,21 +30,21 @@ class TeamsList extends Component {
           {
             chain(teams)
               .filter('hasNewMessage')
-              .sortBy('name')
+              .sortBy(team => team.name.toLocaleLowerCase())
               .map(this.renderTeam.bind(this))
           }
 
           {
             chain(teams)
               .filter(team => team.hasMessages && !team.hasNewMessage)
-              .sortBy('name')
+              .sortBy(team => team.name.toLocaleLowerCase())
               .map(this.renderTeam.bind(this))
           }
 
           {
             chain(teams)
               .filter(team => !team.hasMessages && !team.hasNewMessage)
-              .sortBy('name')
+              .sortBy(team => team.name.toLocaleLowerCase())
               .map(this.renderTeam.bind(this))
           }
         </ul>
