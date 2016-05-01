@@ -11,6 +11,7 @@ module.exports = function(shipit) {
       deployTo: '/home/app/mentor-slack-integration',
       repositoryUrl: 'git@github.com:Cloudchart/mentor-slack-integration.git',
       keepReleases: 2,
+      // shallowClone: true,
       shared: {
         overwrite: true,
         dirs: ['node_modules'],

@@ -1,6 +1,7 @@
 import { WebClient } from 'slack-client'
 
 import { errorMarker } from '../lib'
+import { enqueue } from './helpers'
 import { User, Team } from '../models'
 
 const workerName = 'messagesMonitor'
@@ -23,6 +24,7 @@ function checkNewMessages(user) {
 
         if (lastMessage.ts > user.lastTimestamp) {
           user.update({ hasNewMessage: true }).then(() => {
+            enqueue('tracker', ['wrote_to_bot', { teamId: user.Team.id, userId: user.id }])
             resolve(true)
           }).catch(err => {
             console.log(errorMarker, err, workerName, 'user.update')

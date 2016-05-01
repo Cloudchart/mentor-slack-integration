@@ -3,8 +3,8 @@ import { WebClient } from 'slack-client'
 import { toSentence } from 'underscore.string'
 
 import { getSubscribedThemes } from './helpers'
-import { errorMarker } from '../lib'
-import { Team } from '../models'
+import { errorMarker, botName } from '../lib'
+import { Team, User } from '../models'
 
 const workerName = 'tracker'
 
@@ -12,9 +12,17 @@ const workerName = 'tracker'
 // helpers
 //
 function getPayload(type, team, data) {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     if (type === 'registered') {
       resolve({ text: `New team ${team.name} has registered, yay! :ghost:` })
+    } else if (type === 'wrote_to_bot') {
+      const user = await User.findById(data.userId)
+      if (!user) return resolve({})
+
+      const userName = JSON.parse(user.responseBody).name
+      const teamUsersLink = `${process.env.ROOT_URL}/admin/teams/${team.id}/users`
+
+      resolve({ text: `User @${userName} from ${team.name} team wrote <${teamUsersLink}|new message> to @${botName}` })
     } else if (type === 'subscribed_to_channel') {
       const channelId = data.channelId
       const SlackWeb = new WebClient(team.accessToken)
