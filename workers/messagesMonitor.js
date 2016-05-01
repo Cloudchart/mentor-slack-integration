@@ -23,8 +23,12 @@ function checkNewMessages(user) {
         const lastMessage = messages[0]
 
         if (lastMessage.ts > user.lastTimestamp) {
+          const hasNewMessageChanged = !user.hasNewMessage
           user.update({ hasNewMessage: true }).then(() => {
-            enqueue('tracker', ['wrote_to_bot', { teamId: user.Team.id, userId: user.id }])
+            if (hasNewMessageChanged) {
+              enqueue('tracker', ['wrote_to_bot', { teamId: user.Team.id, userId: user.id }])
+            }
+
             resolve(true)
           }).catch(err => {
             console.log(errorMarker, err, workerName, 'user.update')
