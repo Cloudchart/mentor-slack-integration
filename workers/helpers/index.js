@@ -191,12 +191,17 @@ export function getRandomUnratedInsight(channelId) {
 
     if (!response) return resolve(null)
 
-    const insights = JSON.parse(response).data.viewer.insights.edges
-    if (insights.length > 0) {
-      const randomInsight = sample(insights)
-      resolve({ insight: randomInsight.node, topic: randomInsight.topic })
-    } else {
-      resolve(null)
+    try {
+      const insights = JSON.parse(response).data.viewer.insights.edges
+      if (insights.length > 0) {
+        const randomInsight = sample(insights)
+        resolve({ insight: randomInsight.node, topic: randomInsight.topic })
+      } else {
+        resolve(null)
+      }
+    } catch (err) {
+      console.log(errorMarker, 'getRandomUnratedInsight', err)
+      resolve(false)
     }
   })
 }
@@ -248,16 +253,21 @@ export function getRandomSubscribedTopic(channelId) {
 
     if (!response) return resolve(null)
 
-    const topics = JSON.parse(response).data.viewer.topics.edges
-    let topic = sample(topics.filter(topic => topic.node.links.edges.length > 0))
+    try {
+      const topics = JSON.parse(response).data.viewer.topics.edges
+      let topic = sample(topics.filter(topic => topic.node.links.edges.length > 0))
 
-    if (topic) {
-      topic = topic.node
-      topic.randomLink = sample(topic.links.edges).node
-      topic.randomInsights = sampleSize(topic.randomLink.insights.edges.map(edge => edge.node), 3)
-      resolve(topic)
-    } else {
-      resolve(null)
+      if (topic) {
+        topic = topic.node
+        topic.randomLink = sample(topic.links.edges).node
+        topic.randomInsights = sampleSize(topic.randomLink.insights.edges.map(edge => edge.node), 3)
+        resolve(topic)
+      } else {
+        resolve(null)
+      }
+    } catch (err) {
+      console.log(errorMarker, 'getRandomSubscribedTopic', err)
+      resolve(false)
     }
   })
 }
