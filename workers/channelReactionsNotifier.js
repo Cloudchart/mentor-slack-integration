@@ -4,6 +4,7 @@ import { Channel, ChannelNotification, Team } from '../models'
 
 const workerName = 'channelReactionsNotifier'
 const notificationType = 'reactions_reminder'
+const reactionSamples = ['-1', 'astonished', 'clap', 'smile']
 
 
 // notify channel about reactions
@@ -31,7 +32,11 @@ async function perform(channelId, done) {
       // leave trace of notification
       await ChannelNotification.create({
         channelId: channel.id,
-        type: notificationType
+        type: notificationType,
+      })
+      // add reaction samples
+      reactionSamples.forEach(name => {
+        SlackWeb.reactions.add(name, { channel: res.channel, timestamp: res.ts })
       })
 
       done(null, true)
