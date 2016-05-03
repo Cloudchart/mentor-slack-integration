@@ -2,7 +2,13 @@ import moment from 'moment'
 import { WebClient } from 'slack-client'
 import { clean } from 'underscore.string'
 
-import { errorMarker, reactionsCollectorDelay, notInChannelNotifierDelay } from '../lib'
+import {
+  errorMarker,
+  reactionsCollectorDelay,
+  reactionsNotifierDelay,
+  notInChannelNotifierDelay
+} from '../lib'
+
 import { queue } from '../node-resque'
 import { enqueueIn, markInsightAsRead } from './helpers'
 import { Message } from '../models'
@@ -68,6 +74,7 @@ function perform(channel, insight, topic, done) {
       })
 
       await enqueueIn(reactionsCollectorDelay, 'reactionsCollector', [message.id, insight.id, topic.id])
+      await enqueueIn(reactionsNotifierDelay, 'channelReactionsNotifier', channel.id)
       done(null, true)
     }
   })

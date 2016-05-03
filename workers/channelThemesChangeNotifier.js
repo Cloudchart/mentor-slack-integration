@@ -12,7 +12,10 @@ const notificationType = 'themes_changed'
 // helpers
 //
 async function sendMessage(channel, themes, done) {
-  const channelNotification = await ChannelNotification.find({ where: { channelId: channel.id } })
+  const channelNotification = await ChannelNotification.find({
+    where: { channelId: channel.id, type: notificationType }
+  })
+
   const SlackWeb = new WebClient(channel.Team.accessToken)
   let text
 
