@@ -10,6 +10,8 @@ const reactionSamples = ['-1', 'astonished', 'clap', 'smile']
 // notify channel about reactions
 //
 async function perform(channelId, done) {
+  return done(null)
+
   const channel = await Channel.find({ include: [Team], where: { id: channelId } })
   if (!channel) return done(null)
 
