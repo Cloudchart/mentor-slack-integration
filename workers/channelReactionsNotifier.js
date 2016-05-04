@@ -4,7 +4,7 @@ import { Channel, ChannelNotification, Team } from '../models'
 
 const workerName = 'channelReactionsNotifier'
 const notificationType = 'reactions_reminder'
-const reactionSamples = ['-1', 'astonished', 'clap', 'smile']
+const reactionSamples = ['-1', 'confused', 'clap', 'smile']
 
 
 // notify channel about reactions

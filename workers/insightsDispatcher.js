@@ -74,7 +74,7 @@ function perform(channel, insight, topic, done) {
       })
 
       await enqueueIn(reactionsCollectorDelay, 'reactionsCollector', [message.id, insight.id, topic.id])
-      await enqueueIn(reactionsNotifierDelay, 'channelReactionsNotifier', channel.id)
+      // await enqueueIn(reactionsNotifierDelay, 'channelReactionsNotifier', channel.id)
       done(null, true)
     }
   })
