@@ -1,58 +1,5 @@
-$giant-font-size: $primary-font-size * 1.5;
-
-@import 'slack_button';
-
 #landing-container {
-  section.top, section.bottom {
-    @include gradient-horizontal(#2BAA4C, #3DA44C);
-  }
-
   > section.top {
-    position: relative;
-    padding: 30px 30px 40px 30px;
-    color: #FFFFFF;
-    z-index: 1;
-
-    > .bg {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      opacity: 0.04;
-      z-index: -1;
-      background-image: url('/images/MB-bg.png');
-      background-repeat: repeat;
-      background-size: 400px;
-    }
-
-    > header {
-      @include flexbox;
-      @include justify-content(space-between);
-      @include align-items(center);
-
-      font-size: $primary-font-size;
-
-      > .logo {
-        @include flexbox;
-        @include align-items(center);
-
-        font-weight: 200;
-
-        strong {
-          font-weight: 500;
-        }
-
-        > .main-logo {
-          margin-right: 15px;
-          width: 71px;
-          height: 67px;
-          background-image: url('/images/BorisIcon@2x.png');
-          background-size: cover;
-        }
-      }
-    }
-
     > .content {
       @include flexbox;
       @include flex-direction(column);
@@ -157,6 +104,7 @@ $giant-font-size: $primary-font-size * 1.5;
     @include flexbox;
     @include flex-direction(column);
     @include align-items(center);
+    @include gradient-horizontal(#2BAA4C, #3DA44C);
 
     padding: 50px 30px 40px 30px;
     color: #FFFFFF;

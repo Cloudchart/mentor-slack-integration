@@ -1,0 +1,35 @@
+#support-container {
+  @include flexbox;
+  @include flex-direction(column);
+  min-height: 100vh;
+
+  > section.top {
+    @include flex(1);
+    @include flexbox;
+    @include flex-direction(column);
+
+    > .content {
+      @include flexbox;
+      @include flex-direction(column);
+      @include align-items(center);
+
+      margin: auto;
+      padding: 30px;
+      max-width: 900px;
+
+      > p {
+        font-size: $primary-font-size;
+
+        &.main-message {
+          font-size: $giant-font-size;
+          text-align: center;
+          margin-bottom: 20px;
+
+          > a {
+            color: #FFFFFF;
+          }
+        }
+      }
+    }
+  }
+}

@@ -2129,6 +2129,90 @@ button.msi {
     background-color: #9AA19F;
     border-color: #9AA19F; }
 
+.slack-button {
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  -moz-align-items: center;
+  align-items: center;
+  background: #FFFFFF;
+  border: 1px solid #CBD0CD;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #222222;
+  font-size: 22px;
+  padding: 10px 15px; }
+  .slack-button.small {
+    font-size: 16px;
+    padding: 8px 8px; }
+    .slack-button.small > i {
+      width: 25px;
+      height: 24px;
+      margin-right: 5px; }
+  .slack-button > i {
+    background-image: url("/images/slack-logo@2x.png");
+    background-size: cover;
+    width: 50px;
+    height: 48px;
+    margin-right: 15px; }
+
+#landing-container > section.top, #support-container > section.top {
+  background-image: linear-gradient(to right, #2BAA4C 0%, #3DA44C 100%);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF2BAA4C', endColorstr='#FF3DA44C', GradientType=1);
+  position: relative;
+  padding: 30px 30px 40px 30px;
+  color: #FFFFFF;
+  z-index: 1; }
+  #landing-container > section.top > .bg, #support-container > section.top > .bg {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    opacity: 0.04;
+    z-index: -1;
+    background-image: url("/images/MB-bg.png");
+    background-repeat: repeat;
+    background-size: 400px; }
+  #landing-container > section.top > header, #support-container > section.top > header {
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-pack: justify;
+    -webkit-justify-content: space-between;
+    -moz-justify-content: space-between;
+    justify-content: space-between;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    -moz-align-items: center;
+    align-items: center;
+    font-size: 32px; }
+    #landing-container > section.top > header > .logo, #support-container > section.top > header > .logo {
+      display: -webkit-flex;
+      display: -moz-flex;
+      display: -ms-flexbox;
+      display: flex;
+      -ms-flex-align: center;
+      -webkit-align-items: center;
+      -moz-align-items: center;
+      align-items: center;
+      font-weight: 200;
+      color: #FFFFFF;
+      text-decoration: none; }
+      #landing-container > section.top > header > .logo strong, #support-container > section.top > header > .logo strong {
+        font-weight: 500; }
+      #landing-container > section.top > header > .logo > .main-logo, #support-container > section.top > header > .logo > .main-logo {
+        margin-right: 15px;
+        width: 71px;
+        height: 67px;
+        background-image: url("/images/BorisIcon@2x.png");
+        background-size: cover; }
+
 header.main {
   display: -webkit-flex;
   display: -moz-flex;
@@ -2215,140 +2299,57 @@ div.container footer {
 #modal .modal-content {
   padding: 20px; }
 
-.slack-button {
+#landing-container > section.top > .content {
   display: -webkit-flex;
   display: -moz-flex;
   display: -ms-flexbox;
   display: flex;
+  -webkit-flex-direction: column;
+  -moz-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
   -ms-flex-align: center;
   -webkit-align-items: center;
   -moz-align-items: center;
-  align-items: center;
-  background: #FFFFFF;
-  border: 1px solid #CBD0CD;
-  border-radius: 8px;
-  cursor: pointer;
-  color: #222222;
-  font-size: 22px;
-  padding: 10px 15px; }
-  .slack-button.small {
-    font-size: 16px;
-    padding: 8px 8px; }
-    .slack-button.small > i {
-      width: 25px;
-      height: 24px;
-      margin-right: 5px; }
-  .slack-button > i {
-    background-image: url("/images/slack-logo@2x.png");
-    background-size: cover;
-    width: 50px;
-    height: 48px;
-    margin-right: 15px; }
-
-#landing-container section.top, #landing-container section.bottom {
-  background-image: linear-gradient(to right, #2BAA4C 0%, #3DA44C 100%);
-  background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF2BAA4C', endColorstr='#FF3DA44C', GradientType=1); }
-
-#landing-container > section.top {
-  position: relative;
-  padding: 30px 30px 40px 30px;
-  color: #FFFFFF;
-  z-index: 1; }
-  #landing-container > section.top > .bg {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    opacity: 0.04;
-    z-index: -1;
-    background-image: url("/images/MB-bg.png");
-    background-repeat: repeat;
-    background-size: 400px; }
-  #landing-container > section.top > header {
-    display: -webkit-flex;
-    display: -moz-flex;
-    display: -ms-flexbox;
-    display: flex;
-    -ms-flex-pack: justify;
-    -webkit-justify-content: space-between;
-    -moz-justify-content: space-between;
-    justify-content: space-between;
-    -ms-flex-align: center;
-    -webkit-align-items: center;
-    -moz-align-items: center;
-    align-items: center;
-    font-size: 32px; }
-    #landing-container > section.top > header > .logo {
+  align-items: center; }
+  #landing-container > section.top > .content > .boris {
+    font-size: 48px;
+    max-width: 1000px;
+    margin: 40px 0 60px 0;
+    text-align: center; }
+    #landing-container > section.top > .content > .boris > p > span.slack {
+      white-space: nowrap;
+      display: inline-block; }
+    #landing-container > section.top > .content > .boris .main-action {
       display: -webkit-flex;
       display: -moz-flex;
       display: -ms-flexbox;
       display: flex;
+      -ms-flex-pack: center;
+      -webkit-justify-content: center;
+      -moz-justify-content: center;
+      justify-content: center;
       -ms-flex-align: center;
       -webkit-align-items: center;
       -moz-align-items: center;
       align-items: center;
-      font-weight: 200; }
-      #landing-container > section.top > header > .logo strong {
-        font-weight: 500; }
-      #landing-container > section.top > header > .logo > .main-logo {
-        margin-right: 15px;
-        width: 71px;
-        height: 67px;
-        background-image: url("/images/BorisIcon@2x.png");
-        background-size: cover; }
-  #landing-container > section.top > .content {
-    display: -webkit-flex;
-    display: -moz-flex;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-flex-direction: column;
-    -moz-flex-direction: column;
-    -ms-flex-direction: column;
-    flex-direction: column;
-    -ms-flex-align: center;
-    -webkit-align-items: center;
-    -moz-align-items: center;
-    align-items: center; }
-    #landing-container > section.top > .content > .boris {
-      font-size: 48px;
-      max-width: 1000px;
-      margin: 40px 0 60px 0;
-      text-align: center; }
-      #landing-container > section.top > .content > .boris > p > span.slack {
-        white-space: nowrap;
-        display: inline-block; }
-      #landing-container > section.top > .content > .boris .main-action {
-        display: -webkit-flex;
-        display: -moz-flex;
-        display: -ms-flexbox;
-        display: flex;
-        -ms-flex-pack: center;
-        -webkit-justify-content: center;
-        -moz-justify-content: center;
-        justify-content: center;
-        -ms-flex-align: center;
-        -webkit-align-items: center;
-        -moz-align-items: center;
-        align-items: center;
-        margin-top: 60px; }
-        #landing-container > section.top > .content > .boris .main-action .boris-logo {
-          background-image: url("/images/Boris@2x.png");
-          background-size: cover;
-          width: 122px;
-          height: 123px;
-          margin-right: 10px; }
-        #landing-container > section.top > .content > .boris .main-action .dashed-arrow {
-          background-image: url("/images/Arrow@2x.png");
-          background-size: cover;
-          width: 74px;
-          height: 13px;
-          margin-right: 20px; }
-    #landing-container > section.top > .content > p {
-      max-width: 800px;
-      font-size: 32px;
-      text-align: center; }
+      margin-top: 60px; }
+      #landing-container > section.top > .content > .boris .main-action .boris-logo {
+        background-image: url("/images/Boris@2x.png");
+        background-size: cover;
+        width: 122px;
+        height: 123px;
+        margin-right: 10px; }
+      #landing-container > section.top > .content > .boris .main-action .dashed-arrow {
+        background-image: url("/images/Arrow@2x.png");
+        background-size: cover;
+        width: 74px;
+        height: 13px;
+        margin-right: 20px; }
+  #landing-container > section.top > .content > p {
+    max-width: 800px;
+    font-size: 32px;
+    text-align: center; }
 
 #landing-container > section.features {
   display: -webkit-flex;
@@ -2402,6 +2403,9 @@ div.container footer {
   -webkit-align-items: center;
   -moz-align-items: center;
   align-items: center;
+  background-image: linear-gradient(to right, #2BAA4C 0%, #3DA44C 100%);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF2BAA4C', endColorstr='#FF3DA44C', GradientType=1);
   padding: 50px 30px 40px 30px;
   color: #FFFFFF; }
   #landing-container > section.bottom a {
@@ -2575,3 +2579,51 @@ div.container footer {
   font-size: 16px;
   width: 70%;
   margin-right: 10px; }
+
+#support-container {
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -moz-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  min-height: 100vh; }
+  #support-container > section.top {
+    -webkit-flex: 1;
+    -moz-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -moz-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column; }
+    #support-container > section.top > .content {
+      display: -webkit-flex;
+      display: -moz-flex;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-flex-direction: column;
+      -moz-flex-direction: column;
+      -ms-flex-direction: column;
+      flex-direction: column;
+      -ms-flex-align: center;
+      -webkit-align-items: center;
+      -moz-align-items: center;
+      align-items: center;
+      margin: auto;
+      padding: 30px;
+      max-width: 900px; }
+      #support-container > section.top > .content > p {
+        font-size: 32px; }
+        #support-container > section.top > .content > p.main-message {
+          font-size: 48px;
+          text-align: center;
+          margin-bottom: 20px; }
+          #support-container > section.top > .content > p.main-message > a {
+            color: #FFFFFF; }

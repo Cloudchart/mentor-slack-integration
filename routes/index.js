@@ -33,10 +33,8 @@ async function initTimeSetting(req, res, next) {
   next()
 }
 
-// auth
-//
-router.get('/', (req, res, next) => {
-  let slackButtonUrl = URL.format({
+function getSlackButtonUrl() {
+  return URL.format({
     protocol: 'https',
     hostname: 'slack.com',
     pathname: '/oauth/authorize',
@@ -47,8 +45,12 @@ router.get('/', (req, res, next) => {
       state: process.env.SLACK_CLIENT_OAUTH_STATE,
     }
   })
+}
 
-  res.render('landing', { title: `Add ${appName} to Slack`, slackButtonUrl: slackButtonUrl })
+// auth
+//
+router.get('/', (req, res, next) => {
+  res.render('landing', { title: `Add ${appName} to Slack`, slackButtonUrl: getSlackButtonUrl() })
 })
 
 router.get('/logout', (req, res, next) => {
@@ -116,6 +118,10 @@ router.get('/:teamName/configuration', checkTeamId, initTimeSetting, async (req,
 //
 router.get('/privacy', (req, res, next) => {
   res.render('privacy', { title: `${appName} Privacy Policy` })
+})
+
+router.get('/support', (req, res, next) => {
+  res.render('support', { title: `${appName} Support`, slackButtonUrl: getSlackButtonUrl() })
 })
 
 

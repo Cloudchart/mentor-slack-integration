@@ -13,6 +13,9 @@ class Footer extends Component {
           <li>
             <a href="/privacy">Privacy</a>
           </li>
+          <li>
+            <a href="/support">Support</a>
+          </li>
         </ul>
       </footer>
     )
