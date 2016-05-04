@@ -1,8 +1,9 @@
 import momentTimezone from 'moment-timezone'
 import { WebClient } from 'slack-client'
-import { errorMarker, noticeMarker } from '../lib'
-import { enqueue, getRandomUnratedInsight, getRandomSubscribedTopic } from './helpers'
-import { Channel, Team, TimeSetting } from '../models'
+import { errorMarker, noticeMarker, channelReactionsNotifierDelay } from '../lib'
+import { enqueue, enqueueIn, getRandomUnratedInsight, getRandomSubscribedTopic } from './helpers'
+import { notificationType as channelNotificationType } from './channelReactionsNotifier'
+import { Channel, Team, TimeSetting, ChannelNotification } from '../models'
 
 const workerName = 'dispatcher'
 
@@ -44,6 +45,23 @@ function isEveryoneAsleep(channel) {
   })
 }
 
+function enqueueChannelReactionsNotifier(channel) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const channelNotification = await ChannelNotification.find({
+        where: { channelId: channel.id, type: channelNotificationType }
+      })
+      if (channelNotification) return resolve(null)
+
+      await enqueueIn(channelReactionsNotifierDelay, 'channelReactionsNotifier', channel.id)
+      resolve(true)
+    } catch (err) {
+      console.log(errorMarker, workerName, 'enqueueChannelReactionsNotifier', err)
+      resolve(false)
+    }
+  })
+}
+
 // request unrated insight
 // enqueue insightsDispatcher
 function sendInsight(channel) {
@@ -53,6 +71,7 @@ function sendInsight(channel) {
       if (response) {
         const { insight, topic } = response
         await enqueue('insightsDispatcher', [channel, insight, topic])
+        await enqueueChannelReactionsNotifier(channel)
         resolve(true)
       } else {
         console.log(noticeMarker, workerName, "couldn't find unrated insight for channel:", channel.id)
@@ -73,6 +92,7 @@ function sendLink(channel) {
       const topic = await getRandomSubscribedTopic(channel.id)
       if (topic) {
         await enqueue('linksDispatcher', [channel, topic])
+        await enqueueChannelReactionsNotifier(channel)
         resolve(true)
       } else {
         await sendInsight(channel)

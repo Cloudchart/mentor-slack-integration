@@ -1,6 +1,6 @@
 import { WebClient } from 'slack-client'
 import { errorMarker } from '../lib'
-import { Channel, ChannelNotification, Team } from '../models'
+import { Channel, ChannelNotification, Team, Message } from '../models'
 
 const workerName = 'channelReactionsNotifier'
 const notificationType = 'reactions_reminder'
@@ -10,15 +10,9 @@ const reactionSamples = ['-1', 'confused', 'clap', 'smile']
 // notify channel about reactions
 //
 async function perform(channelId, done) {
-  return done(null)
-
-  const channel = await Channel.find({ include: [Team], where: { id: channelId } })
+  const channel = await Channel.find({ include: [Team, Message], where: { id: channelId } })
   if (!channel) return done(null)
-
-  const channelNotification = await ChannelNotification.find({
-    where: { channelId: channel.id, type: notificationType }
-  })
-  if (channelNotification) return done(null)
+  if (channel.Messages.length === 0) return done(null)
 
   const SlackWeb = new WebClient(channel.Team.accessToken)
   const text = [
@@ -35,6 +29,7 @@ async function perform(channelId, done) {
       await ChannelNotification.create({
         channelId: channel.id,
         type: notificationType,
+        responseBody: JSON.stringify(res),
       })
       // add reaction samples
       reactionSamples.forEach(name => {
@@ -47,4 +42,4 @@ async function perform(channelId, done) {
 }
 
 
-export { perform }
+export { perform, notificationType }

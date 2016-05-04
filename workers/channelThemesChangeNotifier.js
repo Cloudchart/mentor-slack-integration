@@ -35,7 +35,8 @@ async function sendMessage(channel, themes, done) {
       // leave trace of notification
       await ChannelNotification.create({
         channelId: channel.id,
-        type: notificationType
+        type: notificationType,
+        responseBody: JSON.stringify(res),
       })
 
       done(null, true)
