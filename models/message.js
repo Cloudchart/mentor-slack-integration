@@ -21,6 +21,16 @@ module.exports = function(sequelize, DataTypes) {
     responseBody: {
       type: DataTypes.TEXT,
       allowNull: false
+    },
+
+    topicId: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+
+    insightId: {
+      type: DataTypes.STRING,
+      allowNull: false
     }
 
   }, {

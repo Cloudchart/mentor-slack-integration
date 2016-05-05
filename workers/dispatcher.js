@@ -126,6 +126,7 @@ function perform(done) {
 
         if (hour === timeSetting.startTime.split(':')[0]) {
           await sendLink(channel)
+          await enqueue('reactionsCollector', channel)
         } else if (time > timeSetting.startTime && time <= timeSetting.endTime) {
           await sendInsight(channel)
         }

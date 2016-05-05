@@ -1,7 +1,8 @@
+import momentTimezone from 'moment-timezone'
 import { WebClient } from 'slack-client'
 import { reactOnInsight } from './helpers'
 import { errorMarker } from '../lib'
-import { Channel, Message, Team } from '../models'
+import { Channel, Message, MessagesUser, Team } from '../models'
 
 const workerName = 'reactionsCollector'
 
@@ -48,44 +49,62 @@ function updateChatMessage(message, rate, SlackWeb) {
   })
 }
 
+function saveUserLikes(message, userIds) {
+  userIds.forEach(userId => {
+    MessagesUser.findOrCreate({ where: { messageId: message.id, userId: userId, rate: 1 } })
+  })
+}
 
-// get reactions
-// determine rate
-// react on insight
-async function perform(messageId, insightId, topicId, done) {
-  const message = await Message.find({ include: [{ model: Channel, include: [Team] }], where: { id: messageId } })
-  if (!message) return done(null, true)
 
-  const channelId = message.channelId
-  const SlackWeb = new WebClient(message.Channel.Team.accessToken)
+// for each yesterday message, get reaction
+// determine rate and send mutation to web app
+function perform(channel, done) {
+  const now = momentTimezone().tz(channel.Team.TimeSetting.tz)
+  const yesterday = now.subtract(1, 'day')
+  const yesterdayStart = yesterday.startOf('day').format('YYYY-MM-DD HH:mm:ss')
+  const yesterdayEnd = yesterday.endOf('day').format('YYYY-MM-DD HH:mm:ss')
 
-  SlackWeb.reactions.get({ channel: channelId, timestamp: message.timestamp }, async (err, data) => {
-    if (err = err || data.error) {
-      console.log(errorMarker, err, workerName, 'reactions.get')
-      done(null)
-    } else {
-      if (data.message.reactions) {
-        let rate = 0
-        let positiveReactionsCounter = 0
-        let negativeReactionsCounter = 0
+  Message.findAll({
+    where: {
+      channelId: channel.id,
+      createdAt: { $between: [yesterdayStart, yesterdayEnd] }
+    }
+  }).then(messages => {
 
-        data.message.reactions.forEach(reaction => {
-          if (positiveReactions.includes(reaction.name)) {
-            positiveReactionsCounter += reaction.count || 0
-          } else if (negativeReactions.includes(reaction.name)) {
-            negativeReactionsCounter += reaction.count || 0
+    const jobs = messages.reduce((promiseChain, message) => {
+      return promiseChain.then(() => {
+        const SlackWeb = new WebClient(channel.Team.accessToken)
+
+        SlackWeb.reactions.get({ channel: channel.id, timestamp: message.timestamp }, async (err, data) => {
+          if (err = err || data.error) {
+            console.log(errorMarker, err, workerName, 'reactions.get')
+          } else if (data.message.reactions) {
+            let rate = 0
+            let positiveReactionsCounter = 0
+            let negativeReactionsCounter = 0
+
+            data.message.reactions.forEach(reaction => {
+              if (positiveReactions.includes(reaction.name)) {
+                positiveReactionsCounter += reaction.count || 0
+                saveUserLikes(message, reaction.users)
+              } else if (negativeReactions.includes(reaction.name)) {
+                negativeReactionsCounter += reaction.count || 0
+              }
+            })
+
+            if (positiveReactionsCounter === negativeReactionsCounter) return
+            if (positiveReactionsCounter > negativeReactionsCounter) { rate += 1 } else { rate -= 1 }
+            await reactOnInsight(rate, channel.id, message.topicId, message.insightId)
+            await updateChatMessage(message, rate, SlackWeb)
           }
         })
+      })
+    }, Promise.resolve())
 
-        if (positiveReactionsCounter === negativeReactionsCounter) return done(null, true)
-        if (positiveReactionsCounter > negativeReactionsCounter) { rate += 1 } else { rate -= 1 }
-        await reactOnInsight(rate, channelId, topicId, insightId)
-        await updateChatMessage(message, rate, SlackWeb)
-        done(null, true)
-      } else {
-        done(null, true)
-      }
-    }
+    jobs.then(() => done(null, true))
+  }).catch(err => {
+    console.log(errorMarker, workerName, err);
+    done(false)
   })
 }
 
