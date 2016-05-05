@@ -2,8 +2,8 @@ import React, { Component, PropTypes } from 'react'
 import { appName, botName } from '../../data'
 
 const messages = {
-  'non_selected': `Please select at least one channel for ${appName} to post to.`,
-  'awaiting_invitation': `Please type /invite @${botName} in each channel where you want the bot to post advice to.`,
+  'non_selected': `Please select at least one channel for ${appName} to post to, then press the button again to retest.`,
+  'awaiting_invitation': `Please type /invite @${botName} in each channel where you want the bot to post advice to. Press the button to retest.`,
   'ok': `Success! Your ${appName} is ready to serve its new Master.`,
   'error': "Something went really wrong. Please try again later.",
 }

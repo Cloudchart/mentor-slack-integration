@@ -25371,8 +25371,8 @@
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 	var messages = {
-	  'non_selected': 'Please select at least one channel for ' + _data.appName + ' to post to.',
-	  'awaiting_invitation': 'Please type /invite @' + _data.botName + ' in each channel where you want the bot to post advice to.',
+	  'non_selected': 'Please select at least one channel for ' + _data.appName + ' to post to, then press the button again to retest.',
+	  'awaiting_invitation': 'Please type /invite @' + _data.botName + ' in each channel where you want the bot to post advice to. Press the button to retest.',
 	  'ok': 'Success! Your ' + _data.appName + ' is ready to serve its new Master.',
 	  'error': "Something went really wrong. Please try again later."
 	};
