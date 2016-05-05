@@ -22,9 +22,10 @@ async function sendMessage(channel, themes, done) {
   if (channelNotification) {
     text = `New settings accepted. I will now give you advice on ${toSentence(themes)} in this channel.`
   } else {
-    const pt1 = `Greetings, humans. I am ${appName}, here to give you advice on ${toSentence(themes)} in this channel. You can always change that in my settings.`
-    const pt2 = "Please use reactions on my advice so I can adjust my setup and serve you better. Now let the mentoring begin!"
-    text = [pt1, pt2].join('\n')
+    text = [
+      `Greetings, humans. I am ${appName}, here to give you advice on *${toSentence(themes)}* in this channel.`,
+      `You can always change that in my settings. Now let the mentoring begin!`
+    ].join(' ')
   }
 
   SlackWeb.chat.postMessage(channel.id, text, { as_user: true }, async (err, res) => {
