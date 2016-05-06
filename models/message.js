@@ -42,6 +42,7 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       associate: function(models) {
         Message.belongsTo(models.Channel, { foreignKey: 'channelId' })
+        Message.hasMany(models.MessagesUser, { foreignKey: 'messageId', onDelete: 'CASCADE' })
       }
     }
 

@@ -40,6 +40,7 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       associate: function(models) {
         User.belongsTo(models.Team, { foreignKey: 'teamId' })
+        User.hasMany(models.MessagesUser, { foreignKey: 'userId', onDelete: 'CASCADE' })
       }
     }
 

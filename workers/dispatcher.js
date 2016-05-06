@@ -135,7 +135,7 @@ function perform(done) {
 
     jobs.then(() => done(null, true))
   }).catch(err => {
-    console.log(errorMarker, workerName, err);
+    console.log(errorMarker, workerName, err)
     done(false)
   })
 

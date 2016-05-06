@@ -1,7 +1,8 @@
 import momentTimezone from 'moment-timezone'
 import { WebClient } from 'slack-client'
-import { reactOnInsight } from './helpers'
-import { errorMarker } from '../lib'
+import { queue } from '../node-resque'
+import { enqueueIn, reactOnInsight } from './helpers'
+import { errorMarker, reactionsDispatcherDelay } from '../lib'
 import { Channel, Message, MessagesUser, Team } from '../models'
 
 const workerName = 'reactionsCollector'
@@ -55,6 +56,14 @@ function saveUserLikes(message, userIds) {
   })
 }
 
+function enqueueReactionsDispatcher(channel) {
+  queue.scheduledAt('slack-integration', 'reactionsDispatcher', channel.Team.id, (err, timestamps) => {
+    // don't enqueue if already enqueued
+    if (timestamps.length === 0) {
+      enqueueIn(reactionsDispatcherDelay, 'reactionsDispatcher', channel.Team.id)
+    }
+  })
+}
 
 // for each yesterday message, get reaction
 // determine rate and send mutation to web app
@@ -70,7 +79,6 @@ function perform(channel, done) {
       createdAt: { $between: [yesterdayStart, yesterdayEnd] }
     }
   }).then(messages => {
-
     const jobs = messages.reduce((promiseChain, message) => {
       return promiseChain.then(() => {
         const SlackWeb = new WebClient(channel.Team.accessToken)
@@ -101,9 +109,12 @@ function perform(channel, done) {
       })
     }, Promise.resolve())
 
-    jobs.then(() => done(null, true))
+    jobs.then(() => {
+      enqueueReactionsDispatcher(channel)
+      done(null, true)
+    })
   }).catch(err => {
-    console.log(errorMarker, workerName, err);
+    console.log(errorMarker, workerName, err)
     done(false)
   })
 }
