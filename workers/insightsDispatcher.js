@@ -72,7 +72,7 @@ function perform(channel, insight, topic, done) {
         responseBody: JSON.stringify(res),
       })
 
-      await enqueueIn(reactionsCollectorDelay, 'reactionsCollector', [message.id, insight.id, topic.id])
+      // await enqueueIn(reactionsCollectorDelay, 'reactionsCollector', [message.id, insight.id, topic.id])
       done(null, true)
     }
   })
