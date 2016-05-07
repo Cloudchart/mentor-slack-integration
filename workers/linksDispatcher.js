@@ -9,7 +9,7 @@ const workerName = 'linksDispatcher'
 // get text
 // post message
 // if message sent, send random insights and mark as read
-// TODO: save output and enqueue reactionsCollector
+// TODO: save output
 function perform(channel, topic, done) {
   const SlackWeb = new WebClient(channel.Team.accessToken)
   const link = topic.randomLink

@@ -21,6 +21,16 @@ module.exports = function(sequelize, DataTypes) {
     responseBody: {
       type: DataTypes.TEXT,
       allowNull: false
+    },
+
+    topicId: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+
+    insightId: {
+      type: DataTypes.STRING,
+      allowNull: false
     }
 
   }, {
@@ -32,6 +42,7 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       associate: function(models) {
         Message.belongsTo(models.Channel, { foreignKey: 'channelId' })
+        Message.hasMany(models.MessagesUser, { foreignKey: 'messageId', onDelete: 'CASCADE' })
       }
     }
 

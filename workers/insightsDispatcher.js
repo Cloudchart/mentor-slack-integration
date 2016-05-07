@@ -1,15 +1,9 @@
 import moment from 'moment'
 import { WebClient } from 'slack-client'
 import { clean } from 'underscore.string'
-
-import {
-  errorMarker,
-  reactionsCollectorDelay,
-  notInChannelNotifierDelay
-} from '../lib'
-
 import { queue } from '../node-resque'
 import { enqueueIn, markInsightAsRead } from './helpers'
+import { errorMarker, notInChannelNotifierDelay } from '../lib'
 import { Message } from '../models'
 
 const workerName = 'insightsDispatcher'
@@ -32,7 +26,7 @@ function enqueueNotInChannelNotifier(channelId, done) {
 // get text
 // post message
 // if bot isn't invited, enqueue notInChannelNotifier
-// if message sent, mark as read, save output and enqueue reactionsCollector
+// if message sent, mark as read and save output
 function perform(channel, insight, topic, done) {
   const SlackWeb = new WebClient(channel.Team.accessToken)
   const { url, author, title, duration } = insight.origin
@@ -70,9 +64,10 @@ function perform(channel, insight, topic, done) {
         channelId: res.channel,
         timestamp: res.ts,
         responseBody: JSON.stringify(res),
+        topicId: topic.id,
+        insightId: insight.id,
       })
 
-      // await enqueueIn(reactionsCollectorDelay, 'reactionsCollector', [message.id, insight.id, topic.id])
       done(null, true)
     }
   })
