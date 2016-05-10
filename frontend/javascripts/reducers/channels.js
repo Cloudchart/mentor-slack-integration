@@ -8,6 +8,7 @@ export default function channels(state = initialState, action) {
   switch (action.type) {
     case 'CREATE_CHANNEL_REQUEST':
     case 'DESTROY_CHANNEL_REQUEST':
+    case 'UPDATE_CHANNEL_REQUEST':
       return Object.assign({}, state, {
         items: state.items.map(channel =>
           channel.id === action.id ?
@@ -17,10 +18,11 @@ export default function channels(state = initialState, action) {
       })
     case 'CREATE_CHANNEL_ERROR':
     case 'DESTROY_CHANNEL_ERROR':
+    case 'UPDATE_CHANNEL_ERROR':
       return Object.assign({}, state, {
         items: state.items.map(channel =>
           channel.id === action.id ?
-            Object.assign({}, channel, { isFetching: false }) :
+            Object.assign({}, channel, { isFetching: false, error: action.error }) :
             channel
         )
       })
@@ -30,6 +32,14 @@ export default function channels(state = initialState, action) {
         items: state.items.map(channel =>
           channel.id === action.id ?
             Object.assign({}, channel, { isFetching: false, status: action.status }) :
+            channel
+        )
+      })
+    case 'UPDATE_CHANNEL_RECEIVE':
+      return Object.assign({}, state, {
+        items: state.items.map(channel =>
+          channel.id === action.id ?
+            Object.assign({}, channel, { isFetching: false, [action.attr]: action.value }) :
             channel
         )
       })

@@ -10,6 +10,11 @@ module.exports = function(sequelize, DataTypes) {
     teamId: {
       type: DataTypes.STRING,
       allowNull: false
+    },
+
+    shouldSendMessagesAtOnce: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
     }
 
   }, {

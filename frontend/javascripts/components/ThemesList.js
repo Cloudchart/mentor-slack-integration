@@ -90,6 +90,10 @@ class ThemesList extends Component {
     })
   }
 
+  handleShouldSendMessagesAtOnceClick(event) {
+    this.props.actions.updateChannel(this.state.channel.id, 'shouldSendMessagesAtOnce', event.target.checked)
+  }
+
   // renderers
   //
   renderTheme(theme) {
@@ -119,6 +123,15 @@ class ThemesList extends Component {
             </ul>
 
             <div className="actions">
+              <label>
+                <input
+                  type="checkbox"
+                  onClick={ this.handleShouldSendMessagesAtOnceClick.bind(this) }
+                  checked={ this.state.channel.shouldSendMessagesAtOnce }
+                  disabled={ this.state.channel.isFetching }
+                />
+                <span>Send all advice at once in the morning</span>
+              </label>
               <button className="msi" onClick={ this.handleModalClose.bind(this) }>Done</button>
             </div>
           </div>

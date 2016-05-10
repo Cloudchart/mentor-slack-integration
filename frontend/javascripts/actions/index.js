@@ -4,6 +4,7 @@ import createChannel from './createChannel'
 import destroyChannel from './destroyChannel'
 import updateTimeSetting from './updateTimeSetting'
 import fetchChannels from './fetchChannels'
+import updateChannel from './updateChannel'
 
 export const configActions = {
   fetchThemes,
@@ -12,6 +13,7 @@ export const configActions = {
   destroyChannel,
   updateTimeSetting,
   fetchChannels,
+  updateChannel,
 }
 
 import fetchMessages from './admin/fetchMessages'

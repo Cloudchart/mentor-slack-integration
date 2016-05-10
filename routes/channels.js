@@ -5,6 +5,7 @@ import { Team, Channel } from '../models'
 
 let router = Router()
 let SlackDefaultWeb = new WebClient('')
+const permittedAttrs = ['shouldSendMessagesAtOnce']
 
 
 // helpers
@@ -73,7 +74,7 @@ router.post('/', checkTeamId, async (req, res, next) => {
 
   SlackWeb.channels.info(id, (error, data) => {
     if (error = error || data.error) {
-      res.status(500).json({ error: error })
+      res.status(500).json({ error })
     } else {
       enqueueNotifications(data.channel, team.id)
       res.status(201).json({ status: data.channel.is_member ? 'invited' : 'uninvited' })
@@ -81,12 +82,28 @@ router.post('/', checkTeamId, async (req, res, next) => {
   })
 })
 
+router.put('/:id', checkTeamId, async (req, res, next) => {
+  const { attr, value } = req.body
+
+  if (permittedAttrs.includes(attr)) {
+    const channel = await Channel.findById(req.params.id)
+    if (channel.teamId !== req.session.teamId) return res.status(403).json({ message: 'unauthorized' })
+
+    channel.update({ [attr]: value }).then(channel => {
+      res.json({ [attr]: channel[attr] })
+    }).catch(error => {
+      res.status(500).json({ error })
+    })
+  } else {
+    res.status(400).json({ message: 'bad request' })
+  }
+})
+
 router.delete('/', checkTeamId, async (req, res, next) => {
   const id = req.body.id
-  const channel = await Channel.find({ where: { id: id } })
-  const team = await Team.findById(req.session.teamId)
-  if (!channel || !team) return res.status(404).json({ message: 'not found' })
-  if (channel.teamId !== team.id) return res.status(403).json({ message: 'unauthorized' })
+  const channel = await Channel.findById(id)
+  if (!channel) return res.status(404).json({ message: 'not found' })
+  if (channel.teamId !== req.session.teamId) return res.status(403).json({ message: 'unauthorized' })
 
   await Channel.destroy({ where: { id: id } })
   res.json({ status: null })

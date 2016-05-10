@@ -14,7 +14,7 @@ router.put('/', checkTeamId, async (req, res, next) => {
     timeSetting.update({ [attr]: value }).then(timeSetting => {
       res.json({ [attr]: timeSetting[attr] })
     }).catch(error => {
-      res.status(400).json({ error })
+      res.status(500).json({ error })
     })
   } else {
     res.status(400).json({ message: 'bad request' })
