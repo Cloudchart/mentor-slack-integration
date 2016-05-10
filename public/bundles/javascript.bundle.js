@@ -24792,6 +24792,20 @@
 	    //
 
 	  }, {
+	    key: 'renderShouldSendMessagesAtOnceSetting',
+	    value: function renderShouldSendMessagesAtOnceSetting() {
+	      return null;
+	      // <label>
+	      //   <input
+	      //     type="checkbox"
+	      //     onClick={ this.handleShouldSendMessagesAtOnceClick.bind(this) }
+	      //     checked={ this.state.channel.shouldSendMessagesAtOnce }
+	      //     disabled={ this.state.channel.isFetching }
+	      //   />
+	      //   <span>Send all advice at once in the morning</span>
+	      // </label>
+	    }
+	  }, {
 	    key: 'renderTheme',
 	    value: function renderTheme(theme) {
 	      if (!theme.isDefault && !theme.isSubscribed) return null;
@@ -24842,21 +24856,7 @@
 	            _react2.default.createElement(
 	              'div',
 	              { className: 'actions' },
-	              _react2.default.createElement(
-	                'label',
-	                null,
-	                _react2.default.createElement('input', {
-	                  type: 'checkbox',
-	                  onClick: this.handleShouldSendMessagesAtOnceClick.bind(this),
-	                  checked: this.state.channel.shouldSendMessagesAtOnce,
-	                  disabled: this.state.channel.isFetching
-	                }),
-	                _react2.default.createElement(
-	                  'span',
-	                  null,
-	                  'Send all advice at once in the morning'
-	                )
-	              ),
+	              this.renderShouldSendMessagesAtOnceSetting(),
 	              _react2.default.createElement(
 	                'button',
 	                { className: 'msi', onClick: this.handleModalClose.bind(this) },

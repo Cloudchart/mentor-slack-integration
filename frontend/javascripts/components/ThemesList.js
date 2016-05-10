@@ -96,6 +96,19 @@ class ThemesList extends Component {
 
   // renderers
   //
+  renderShouldSendMessagesAtOnceSetting() {
+    return null
+    // <label>
+    //   <input
+    //     type="checkbox"
+    //     onClick={ this.handleShouldSendMessagesAtOnceClick.bind(this) }
+    //     checked={ this.state.channel.shouldSendMessagesAtOnce }
+    //     disabled={ this.state.channel.isFetching }
+    //   />
+    //   <span>Send all advice at once in the morning</span>
+    // </label>
+  }
+
   renderTheme(theme) {
     if (!theme.isDefault && !theme.isSubscribed) return null
     let iconClassNames = classNames('fa', 'fa-check', { 'is-fetching': theme.isFetching })
@@ -123,15 +136,7 @@ class ThemesList extends Component {
             </ul>
 
             <div className="actions">
-              <label>
-                <input
-                  type="checkbox"
-                  onClick={ this.handleShouldSendMessagesAtOnceClick.bind(this) }
-                  checked={ this.state.channel.shouldSendMessagesAtOnce }
-                  disabled={ this.state.channel.isFetching }
-                />
-                <span>Send all advice at once in the morning</span>
-              </label>
+              { this.renderShouldSendMessagesAtOnceSetting() }
               <button className="msi" onClick={ this.handleModalClose.bind(this) }>Done</button>
             </div>
           </div>
