@@ -67,6 +67,8 @@ function enqueueChannelReactionsNotifier(channel) {
 function sendInsight(channel) {
   return new Promise(async (resolve, reject) => {
     try {
+      if (channel.shouldSendMessagesAtOnce) return resolve(null)
+
       const response = await getRandomUnratedInsight(channel.id)
       if (response) {
         const { insight, topic } = response
@@ -95,7 +97,11 @@ function sendLink(channel) {
         await enqueueChannelReactionsNotifier(channel)
         resolve(true)
       } else {
-        await sendInsight(channel)
+        if (channel.shouldSendMessagesAtOnce) {
+          await enqueue('insightsDailyDispatcher', channel)
+        } else {
+          await sendInsight(channel)
+        }
         console.log(noticeMarker, workerName, "couldn't find random link for channel:", channel.id)
         resolve(null)
       }

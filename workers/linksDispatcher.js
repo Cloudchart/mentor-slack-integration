@@ -1,7 +1,7 @@
 import { WebClient } from 'slack-client'
 
 import { errorMarker, noticeMarker } from '../lib'
-import { enqueue, markLinkAsRead } from './helpers'
+import { enqueue, enqueueIn, markLinkAsRead } from './helpers'
 
 const workerName = 'linksDispatcher'
 
@@ -33,10 +33,13 @@ function perform(channel, topic, done) {
       console.log(errorMarker, err, workerName, 'chat.postMessage')
       done(null)
     } else {
-      console.log(noticeMarker, workerName, 'sending random insights attached to a link')
       topic.randomInsights.forEach(insight => {
         enqueue('insightsDispatcher', [channel, insight, topic])
       })
+
+      if (channel.shouldSendMessagesAtOnce) {
+        await enqueueIn(5000, 'insightsDailyDispatcher', channel)
+      }
 
       await markLinkAsRead(channel.id, link.id)
       done(null, true)

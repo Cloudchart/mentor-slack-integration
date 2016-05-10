@@ -162,6 +162,51 @@ export function markLinkAsRead(channelId, linkId) {
   })
 }
 
+export function getAllUnratedInsights(channelId) {
+  return new Promise(async (resolve, reject) => {
+    const response = await callWebAppGraphQL(channelId, 'GET', `
+      {
+        viewer {
+          insights {
+            edges {
+              topic {
+                id
+                name
+              }
+              node {
+                id
+                content
+                origin {
+                  author
+                  url
+                  title
+                  duration
+                }
+              }
+            }
+          }
+        }
+      }
+    `)
+
+    if (!response) return resolve(null)
+
+    try {
+      const insights = JSON.parse(response).data.viewer.insights.edges
+      if (insights.length > 0) {
+        resolve(insights.map(insight => {
+          return { insight: insight.node, topic: insight.topic }
+        }))
+      } else {
+        resolve(null)
+      }
+    } catch (err) {
+      console.log(errorMarker, 'getAllUnratedInsights', err)
+      resolve(false)
+    }
+  })
+}
+
 export function getRandomUnratedInsight(channelId) {
   return new Promise(async (resolve, reject) => {
     const response = await callWebAppGraphQL(channelId, 'GET', `
