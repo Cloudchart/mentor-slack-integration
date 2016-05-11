@@ -20,7 +20,7 @@ body {
   }
 
   main {
-    min-width: 800px;
+    min-width: 1000px;
 
     > div.container {
       @include flexbox;
@@ -60,7 +60,7 @@ body {
 }
 
 @import 'buttons';
-@import 'slack_button';
+@import 'bot_button';
 @import 'shared';
 @import 'header';
 @import 'footer';

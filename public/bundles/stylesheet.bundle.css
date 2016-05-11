@@ -2083,7 +2083,7 @@ body {
   body.modal-opened {
     overflow: hidden; }
   body main {
-    min-width: 800px; }
+    min-width: 1000px; }
     body main > div.container {
       display: -webkit-flex;
       display: -moz-flex;
@@ -2129,7 +2129,7 @@ button.msi {
     background-color: #9AA19F;
     border-color: #9AA19F; }
 
-.slack-button {
+.bot-button {
   display: -webkit-flex;
   display: -moz-flex;
   display: -ms-flexbox;
@@ -2138,26 +2138,28 @@ button.msi {
   -webkit-align-items: center;
   -moz-align-items: center;
   align-items: center;
+  height: 50px;
   background: #FFFFFF;
-  border: 1px solid #CBD0CD;
+  border: 2px solid #1D7B35;
   border-radius: 8px;
   cursor: pointer;
   color: #222222;
   font-size: 22px;
-  padding: 10px 15px; }
-  .slack-button.small {
-    font-size: 16px;
-    padding: 8px 8px; }
-    .slack-button.small > i {
-      width: 25px;
-      height: 24px;
-      margin-right: 5px; }
-  .slack-button > i {
-    background-image: url("/images/slack-logo@2x.png");
+  padding: 10px 15px;
+  text-decoration: none;
+  white-space: nowrap; }
+  .bot-button > i {
     background-size: cover;
-    width: 50px;
     height: 48px;
     margin-right: 15px; }
+  .bot-button.gray {
+    border-color: #9AA6A7; }
+  .bot-button.slack > i {
+    background-image: url("/images/slack-logo@2x.png");
+    width: 50px; }
+  .bot-button.telegram > i {
+    background-image: url("/images/telegram-logo@2x.png");
+    width: 48px; }
 
 #landing-container > section.top, #support-container > section.top {
   background-image: linear-gradient(to right, #2BAA4C 0%, #3DA44C 100%);
@@ -2167,6 +2169,17 @@ button.msi {
   padding: 30px 30px 40px 30px;
   color: #FFFFFF;
   z-index: 1; }
+  #landing-container > section.top > header > ul.links, #support-container > section.top > header > ul.links {
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -ms-flexbox;
+    display: flex; }
+    #landing-container > section.top > header > ul.links > li:not(:last-child), #support-container > section.top > header > ul.links > li:not(:last-child) {
+      margin-right: 40px; }
+    #landing-container > section.top > header > ul.links > li > a, #support-container > section.top > header > ul.links > li > a {
+      font-size: 26px;
+      color: #FFFFFF;
+      text-decoration: none; }
   #landing-container > section.top > .bg, #support-container > section.top > .bg {
     position: absolute;
     top: 0;
@@ -2299,6 +2312,17 @@ div.container footer {
 #modal .modal-content {
   padding: 20px; }
 
+#landing-container .dashed-arrow {
+  background-size: cover;
+  width: 74px;
+  height: 13px; }
+
+#landing-container .boris-logo {
+  background-image: url("/images/Boris@2x.png");
+  background-size: cover;
+  width: 122px;
+  height: 123px; }
+
 #landing-container > section.top > .content {
   display: -webkit-flex;
   display: -moz-flex;
@@ -2314,12 +2338,16 @@ div.container footer {
   align-items: center; }
   #landing-container > section.top > .content > .boris {
     font-size: 48px;
-    max-width: 1000px;
+    max-width: 800px;
     margin: 40px 0 60px 0;
     text-align: center; }
-    #landing-container > section.top > .content > .boris > p > span.slack {
+    #landing-container > section.top > .content > .boris > p > span.slack, #landing-container > section.top > .content > .boris > p span.telegram {
       white-space: nowrap;
       display: inline-block; }
+    #landing-container > section.top > .content > .boris > p > span.slack > i {
+      margin-right: 5px; }
+    #landing-container > section.top > .content > .boris > p > span.telegram > i {
+      margin-right: 7px; }
     #landing-container > section.top > .content > .boris .main-action {
       display: -webkit-flex;
       display: -moz-flex;
@@ -2334,24 +2362,18 @@ div.container footer {
       -moz-align-items: center;
       align-items: center;
       margin-top: 60px; }
-      #landing-container > section.top > .content > .boris .main-action .boris-logo {
-        background-image: url("/images/Boris@2x.png");
-        background-size: cover;
-        width: 122px;
-        height: 123px;
-        margin-right: 10px; }
-      #landing-container > section.top > .content > .boris .main-action .dashed-arrow {
+      #landing-container > section.top > .content > .boris .main-action .dashed-arrow.normal {
         background-image: url("/images/Arrow@2x.png");
-        background-size: cover;
-        width: 74px;
-        height: 13px;
-        margin-right: 20px; }
+        margin: 0 20px 65px 0; }
+      #landing-container > section.top > .content > .boris .main-action .dashed-arrow.inverted {
+        background-image: url("/images/ArrowInverted@2x.png");
+        margin: 45px 0 0 20px; }
   #landing-container > section.top > .content > p {
-    max-width: 800px;
+    max-width: 850px;
     font-size: 32px;
     text-align: center; }
 
-#landing-container > section.features {
+#landing-container > section.features > .slack, #landing-container > section.features > .telegram {
   display: -webkit-flex;
   display: -moz-flex;
   display: -ms-flexbox;
@@ -2360,35 +2382,60 @@ div.container footer {
   -webkit-justify-content: center;
   -moz-justify-content: center;
   justify-content: center;
-  -webkit-flex-wrap: wrap;
-  -ms-flex-wrap: wrap;
-  flex-wrap: wrap;
-  background-color: #FFFFFF;
+  background-image: linear-gradient(to bottom, #FFFFFF 0%, #FAF8F6 100%);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFFFFFF', endColorstr='#FFFAF8F6', GradientType=0);
   padding: 40px 30px 30px 30px; }
-  #landing-container > section.features > .slack-window {
-    margin: 0 30px 10px 0;
-    width: 577.3913px;
-    height: 429.56522px;
-    background-image: url("/images/SlackWindow@2x.png");
+  #landing-container > section.features > .slack > .window, #landing-container > section.features > .telegram > .window {
+    width: 553.33333px;
+    height: 411.66667px;
     background-size: cover; }
-  #landing-container > section.features > .description {
-    width: 577.3913px;
-    padding-top: 3px; }
-    #landing-container > section.features > .description > h1 {
+  #landing-container > section.features > .slack > .description, #landing-container > section.features > .telegram > .description {
+    width: 553.33333px; }
+    #landing-container > section.features > .slack > .description > h1, #landing-container > section.features > .telegram > .description > h1 {
       font-size: 32px;
       margin-bottom: 30px; }
-    #landing-container > section.features > .description > ul {
+    #landing-container > section.features > .slack > .description > ul, #landing-container > section.features > .telegram > .description > ul {
       font-size: 22px;
-      margin-left: 2em; }
-      #landing-container > section.features > .description > ul > li {
+      margin-left: 2em;
+      max-width: 450px; }
+      #landing-container > section.features > .slack > .description > ul > li, #landing-container > section.features > .telegram > .description > ul > li {
         position: relative;
         margin-bottom: 20px; }
-        #landing-container > section.features > .description > ul > li:before {
+        #landing-container > section.features > .slack > .description > ul > li:before, #landing-container > section.features > .telegram > .description > ul > li:before {
           content: "\F111";
           font-family: FontAwesome;
           color: #3BC363;
           position: absolute;
           left: -2em; }
+    #landing-container > section.features > .slack > .description > .bot, #landing-container > section.features > .telegram > .description > .bot {
+      display: -webkit-flex;
+      display: -moz-flex;
+      display: -ms-flexbox;
+      display: flex;
+      -ms-flex-align: center;
+      -webkit-align-items: center;
+      -moz-align-items: center;
+      align-items: center; }
+
+#landing-container > section.features > .slack > .window {
+  background-image: url("/images/SlackWindow@2x.png");
+  margin-right: 30px; }
+
+#landing-container > section.features > .slack > .description > .bot > .dashed-arrow.flipped {
+  background-image: url("/images/ArrowFlippedBlack@2x.png");
+  margin-left: 20px;
+  margin-right: 5px; }
+
+#landing-container > section.features > .separator {
+  background-color: #BCC1BE;
+  height: 20px; }
+
+#landing-container > section.features > .telegram > .description {
+  margin-left: 10px; }
+
+#landing-container > section.features > .telegram > .window {
+  background-image: url("/images/TelegramWindow@2x.png"); }
 
 #landing-container > section.bottom {
   display: -webkit-flex;
@@ -2406,18 +2453,14 @@ div.container footer {
   background-image: linear-gradient(to right, #2BAA4C 0%, #3DA44C 100%);
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF2BAA4C', endColorstr='#FF3DA44C', GradientType=1);
-  padding: 50px 30px 40px 30px;
+  padding: 40px 30px 40px 30px;
   color: #FFFFFF; }
   #landing-container > section.bottom a {
     color: #FFFFFF; }
   #landing-container > section.bottom > p {
-    font-size: 22px;
+    font-size: 26px;
     text-align: center;
     max-width: 700px; }
-    #landing-container > section.bottom > p:first-of-type {
-      margin: 40px 0; }
-    #landing-container > section.bottom > p:last-of-type {
-      font-size: 26px; }
 
 .container.configuration > .content > h1 {
   margin-bottom: 30px; }

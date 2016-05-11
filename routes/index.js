@@ -47,12 +47,22 @@ function getSlackButtonUrl() {
   })
 }
 
-// auth
+function getTelegramButtonUrl() {
+  return 'http://telegram.me/thementorbot'
+}
+
+// landing
 //
 router.get('/', (req, res, next) => {
-  res.render('landing', { title: `Add ${appName} to Slack`, slackButtonUrl: getSlackButtonUrl() })
+  res.render('landing', {
+    title: `Add ${appName} to Slack`,
+    slackButtonUrl: getSlackButtonUrl(),
+    telegramButtonUrl: getTelegramButtonUrl(),
+  })
 })
 
+// auth
+//
 router.get('/logout', (req, res, next) => {
   req.session.teamId = null
   res.redirect('/')
@@ -121,7 +131,11 @@ router.get('/privacy', (req, res, next) => {
 })
 
 router.get('/support', (req, res, next) => {
-  res.render('support', { title: `${appName} Support`, slackButtonUrl: getSlackButtonUrl() })
+  res.render('support', {
+    title: `${appName} Support`,
+    slackButtonUrl: getSlackButtonUrl(),
+    telegramButtonUrl: getTelegramButtonUrl(),
+  })
 })
 
 

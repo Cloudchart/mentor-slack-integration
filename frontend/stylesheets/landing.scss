@@ -1,4 +1,17 @@
 #landing-container {
+  .dashed-arrow {
+    background-size: cover;
+    width: 74px;
+    height: 13px;
+  }
+
+  .boris-logo {
+    background-image: url('/images/Boris@2x.png');
+    background-size: cover;
+    width: 122px;
+    height: 123px;
+  }
+
   > section.top {
     > .content {
       @include flexbox;
@@ -7,14 +20,26 @@
 
       > .boris {
         font-size: $giant-font-size;
-        max-width: 1000px;
+        max-width: 800px;
         margin: 40px 0 60px 0;
         text-align: center;
 
         > p {
-          > span.slack {
+          > span.slack, span.telegram {
             white-space: nowrap;
             display: inline-block;
+          }
+
+          > span.slack {
+            > i {
+              margin-right: 5px;
+            }
+          }
+
+          > span.telegram {
+            > i {
+              margin-right: 7px;
+            }
           }
         }
 
@@ -25,26 +50,23 @@
 
           margin-top: 60px;
 
-          .boris-logo {
-            background-image: url('/images/Boris@2x.png');
-            background-size: cover;
-            width: 122px;
-            height: 123px;
-            margin-right: 10px;
-          }
-
           .dashed-arrow {
-            background-image: url('/images/Arrow@2x.png');
-            background-size: cover;
-            width: 74px;
-            height: 13px;
-            margin-right: 20px;
+            &.normal {
+              background-image: url('/images/Arrow@2x.png');
+              margin: 0 20px 65px 0;
+            }
+
+            &.inverted {
+              background-image: url('/images/ArrowInverted@2x.png');
+              margin: 45px 0 0 20px;
+            }
+
           }
         }
       }
 
       > p {
-        max-width: 800px;
+        max-width: 850px;
         font-size: $primary-font-size;
         text-align: center;
       }
@@ -52,51 +74,89 @@
   }
 
   > section.features {
-    @include flexbox;
-    @include justify-content(center);
-    @include flex-wrap(wrap);
+    > .slack, > .telegram {
+      @include flexbox;
+      @include justify-content(center);
+      @include gradient-vertical(#FFFFFF, #FAF8F6);
 
-    $slack-window-width: 1328px;
-    $slack-window-height: 988px;
-    $reduction-ratio: 2.3;
+      $window-width: 1328px;
+      $window-height: 988px;
+      $reduction-ratio: 2.4;
 
-    background-color: #FFFFFF;
-    padding: 40px 30px 30px 30px;
+      padding: 40px 30px 30px 30px;
 
-    > .slack-window {
-      margin: 0 30px 10px 0;
-      width: $slack-window-width / $reduction-ratio;
-      height: $slack-window-height / $reduction-ratio;
-      background-image: url('/images/SlackWindow@2x.png');
-      background-size: cover;
-    }
-
-    > .description {
-      width: $slack-window-width / $reduction-ratio;
-      padding-top: 3px;
-
-      > h1 {
-        font-size: $primary-font-size;
-        margin-bottom: 30px;
+      > .window {
+        width: $window-width / $reduction-ratio;
+        height: $window-height / $reduction-ratio;
+        background-size: cover;
       }
 
-      > ul {
-        font-size: 22px;
-        margin-left: 2em;
+      > .description {
+        width: $window-width / $reduction-ratio;
 
-        > li {
-          position: relative;
-          margin-bottom: 20px;
+        > h1 {
+          font-size: $primary-font-size;
+          margin-bottom: 30px;
+        }
 
-          &:before {
-            content: "\f111";
-            font-family: FontAwesome;
-            color: $primary-green;
-            position: absolute;
-            left: -2em;
+        > ul {
+          font-size: 22px;
+          margin-left: 2em;
+          max-width: 450px;
+
+          > li {
+            position: relative;
+            margin-bottom: 20px;
+
+            &:before {
+              content: "\f111";
+              font-family: FontAwesome;
+              color: $primary-green;
+              position: absolute;
+              left: -2em;
+            }
           }
         }
+
+        > .bot {
+          @include flexbox;
+          @include align-items(center);
+        }
       }
+    }
+
+    > .slack {
+      > .window {
+        background-image: url('/images/SlackWindow@2x.png');
+        margin-right: 30px;
+      }
+
+      > .description {
+        > .bot {
+          > .dashed-arrow.flipped {
+            background-image: url('/images/ArrowFlippedBlack@2x.png');
+            margin-left: 20px;
+            margin-right: 5px;
+          }
+
+        }
+      }
+    }
+
+    > .separator {
+      background-color: #BCC1BE;
+      height: 20px;
+    }
+
+    > .telegram {
+      > .description {
+        margin-left: 10px;
+      }
+
+      > .window {
+        background-image: url('/images/TelegramWindow@2x.png');
+      }
+
     }
   }
 
@@ -106,7 +166,7 @@
     @include align-items(center);
     @include gradient-horizontal(#2BAA4C, #3DA44C);
 
-    padding: 50px 30px 40px 30px;
+    padding: 40px 30px 40px 30px;
     color: #FFFFFF;
 
     a {
@@ -114,17 +174,9 @@
     }
 
     > p {
-      font-size: 22px;
+      font-size: 26px;
       text-align: center;
       max-width: 700px;
-
-      &:first-of-type {
-        margin: 40px 0;
-      }
-
-      &:last-of-type {
-        font-size: 26px;
-      }
     }
 
   }

@@ -2,6 +2,24 @@
   > section.top {
     @include gradient-horizontal(#2BAA4C, #3DA44C);
 
+    > header {
+      > ul.links {
+        @include flexbox;
+
+        > li {
+          &:not(:last-child) {
+            margin-right: 40px;
+          }
+
+          > a {
+            font-size: 26px;
+            color: #FFFFFF;
+            text-decoration: none;
+          }
+        }
+      }
+    }
+
     position: relative;
     padding: 30px 30px 40px 30px;
     color: #FFFFFF;

@@ -1,8 +1,9 @@
 import React, { Component, PropTypes } from 'react'
 import { appName } from '../../data'
 
-import SlackButton from '../components/SlackButton'
+import LandingHeader from '../components/LandingHeader'
 import Footer from '../components/Footer'
+
 
 
 class SupportApp extends Component {
@@ -12,14 +13,11 @@ class SupportApp extends Component {
       <div id="support-container">
         <section className="top">
           <div className="bg"></div>
-          <header>
-            <a href="/" className="logo">
-              <span className="main-logo"></span>
-              <span>Mentor<strong>Bot</strong></span>
-            </a>
 
-            <SlackButton slackButtonUrl={ this.props.slackButtonUrl } text="login" size="small" />
-          </header>
+          <LandingHeader
+            slackButtonUrl={ this.props.slackButtonUrl }
+            telegramButtonUrl={ this.props.telegramButtonUrl }
+          />
 
           <div className="content">
             <p className="main-message">
@@ -40,6 +38,7 @@ class SupportApp extends Component {
 
 SupportApp.propTypes = {
   slackButtonUrl: PropTypes.string.isRequired,
+  telegramButtonUrl: PropTypes.string.isRequired,
 }
 
 
