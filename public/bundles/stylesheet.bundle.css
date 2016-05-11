@@ -2338,16 +2338,17 @@ div.container footer {
   align-items: center; }
   #landing-container > section.top > .content > .boris {
     font-size: 48px;
-    max-width: 800px;
     margin: 40px 0 60px 0;
     text-align: center; }
-    #landing-container > section.top > .content > .boris > p > span.slack, #landing-container > section.top > .content > .boris > p span.telegram {
-      white-space: nowrap;
-      display: inline-block; }
-    #landing-container > section.top > .content > .boris > p > span.slack > i {
-      margin-right: 5px; }
-    #landing-container > section.top > .content > .boris > p > span.telegram > i {
-      margin-right: 7px; }
+    #landing-container > section.top > .content > .boris > p {
+      max-width: 800px; }
+      #landing-container > section.top > .content > .boris > p > span.slack, #landing-container > section.top > .content > .boris > p span.telegram {
+        white-space: nowrap;
+        display: inline-block; }
+      #landing-container > section.top > .content > .boris > p > span.slack > i {
+        margin-right: 5px; }
+      #landing-container > section.top > .content > .boris > p > span.telegram > i {
+        margin-right: 7px; }
     #landing-container > section.top > .content > .boris .main-action {
       display: -webkit-flex;
       display: -moz-flex;
@@ -2385,13 +2386,13 @@ div.container footer {
   background-image: linear-gradient(to bottom, #FFFFFF 0%, #FAF8F6 100%);
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFFFFFF', endColorstr='#FFFAF8F6', GradientType=0);
-  padding: 40px 30px 30px 30px; }
+  padding: 40px 20px 40px 20px; }
   #landing-container > section.features > .slack > .window, #landing-container > section.features > .telegram > .window {
-    width: 553.33333px;
-    height: 411.66667px;
+    width: 474.28571px;
+    height: 352.85714px;
     background-size: cover; }
   #landing-container > section.features > .slack > .description, #landing-container > section.features > .telegram > .description {
-    width: 553.33333px; }
+    width: 474.28571px; }
     #landing-container > section.features > .slack > .description > h1, #landing-container > section.features > .telegram > .description > h1 {
       font-size: 32px;
       margin-bottom: 30px; }
