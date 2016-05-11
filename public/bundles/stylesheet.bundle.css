@@ -2153,7 +2153,7 @@ button.msi {
     height: 48px;
     margin-right: 15px; }
   .bot-button.gray {
-    border-color: #9AA6A7; }
+    border-color: #CBD0CD; }
   .bot-button.slack > i {
     background-image: url("/images/slack-logo@2x.png");
     width: 50px; }
@@ -2426,10 +2426,6 @@ div.container footer {
   background-image: url("/images/ArrowFlippedBlack@2x.png");
   margin-left: 20px;
   margin-right: 5px; }
-
-#landing-container > section.features > .separator {
-  background-color: #BCC1BE;
-  height: 20px; }
 
 #landing-container > section.features > .telegram > .description {
   margin-left: 10px; }

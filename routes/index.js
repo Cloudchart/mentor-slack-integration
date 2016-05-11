@@ -55,7 +55,7 @@ function getTelegramButtonUrl() {
 //
 router.get('/', (req, res, next) => {
   res.render('landing', {
-    title: `Add ${appName} to Slack`,
+    title: `Add ${appName} to Slack and Telegram`,
     slackButtonUrl: getSlackButtonUrl(),
     telegramButtonUrl: getTelegramButtonUrl(),
   })

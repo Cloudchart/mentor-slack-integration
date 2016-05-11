@@ -81,8 +81,6 @@ class LandingApp extends Component {
           </div>
         </div>
 
-        <div className="separator"></div>
-
         <div className="telegram">
           <div className="description">
             <h1>

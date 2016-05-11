@@ -25879,7 +25879,6 @@
 	            )
 	          )
 	        ),
-	        _react2.default.createElement('div', { className: 'separator' }),
 	        _react2.default.createElement(
 	          'div',
 	          { className: 'telegram' },
@@ -26091,8 +26090,6 @@
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
-	var _data = __webpack_require__(192);
-
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -26111,7 +26108,7 @@
 	    _react2.default.createElement(
 	      'strong',
 	      null,
-	      _data.appName
+	      'TheMentorBot'
 	    )
 	  ),
 	  slack: _react2.default.createElement(

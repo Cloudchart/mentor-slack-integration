@@ -1,10 +1,9 @@
 import React, { Component, PropTypes } from 'react'
 import classNames from 'classnames'
-import { appName } from '../../data'
 
 
 const buttonText = {
-  telegram: <span>Add <strong>{ appName }</strong></span>,
+  telegram: <span>Add <strong>TheMentorBot</strong></span>,
   slack: <span>Add to <strong>Slack</strong></span>,
 }
 
