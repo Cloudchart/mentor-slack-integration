@@ -1,6 +1,6 @@
 import { WebClient } from 'slack-client'
 
-import { errorMarker, botId } from '../lib'
+import { errorMarker } from '../lib'
 import { enqueue } from './helpers'
 import { User, Team } from '../models'
 
@@ -21,7 +21,7 @@ function checkNewMessages(user) {
         const messages = res.messages
         if (messages.length === 0) return resolve(null)
         const lastMessage = messages[0]
-        if (lastMessage.user === botId) return resolve(null)
+        if (lastMessage.user !== user.id) return resolve(null)
 
         if (lastMessage.ts > user.lastTimestamp) {
           const hasNewMessageChanged = !user.hasNewMessage
