@@ -27,7 +27,9 @@ function checkNewMessages(user) {
           const hasNewMessageChanged = !user.hasNewMessage
           user.update({ hasNewMessage: true }).then(() => {
             if (hasNewMessageChanged) {
-              enqueue('tracker', ['wrote_to_bot', { teamId: user.Team.id, userId: user.id }])
+              enqueue('tracker', ['wrote_to_bot', {
+                teamId: user.Team.id, userId: user.id, lastMessage: lastMessage
+              }])
             }
 
             resolve(true)

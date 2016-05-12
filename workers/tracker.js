@@ -21,8 +21,15 @@ function getPayload(type, team, data) {
 
       const userName = JSON.parse(user.responseBody).name
       const teamUsersLink = `${process.env.ROOT_URL}/admin/teams/${team.id}/users`
+      const text = `User @${userName} from ${team.name} team wrote <${teamUsersLink}|new message> to @${botName}`
 
-      resolve({ text: `User @${userName} from ${team.name} team wrote <${teamUsersLink}|new message> to @${botName}` })
+      const attachments = [{
+        fallback: data.lastMessage.text,
+        text: data.lastMessage.text,
+        mrkdwn_in: ['text'],
+      }]
+
+      resolve({ text: text, attachments: attachments })
     } else if (type === 'subscribed_to_channel') {
       const channelId = data.channelId
       const SlackWeb = new WebClient(team.accessToken)
