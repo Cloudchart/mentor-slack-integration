@@ -113,8 +113,10 @@ class Chat extends Component {
 
   renderMessage(message) {
     const user = message.user === this.state.user.id ? this.state.user.name : botName
-    const text = message.text
     const time = moment(parseInt(message.ts.split('.')[0] + '000')).fromNow()
+
+    let text = message.text
+    if (!text && message.attachments) text = message.attachments[0].text
 
     return (
       <li>

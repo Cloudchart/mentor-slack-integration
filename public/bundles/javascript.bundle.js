@@ -43730,8 +43730,10 @@
 	    key: 'renderMessage',
 	    value: function renderMessage(message) {
 	      var user = message.user === this.state.user.id ? this.state.user.name : _data.botName;
-	      var text = message.text;
 	      var time = (0, _moment2.default)(parseInt(message.ts.split('.')[0] + '000')).fromNow();
+
+	      var text = message.text;
+	      if (!text && message.attachments) text = message.attachments[0].text;
 
 	      return _react2.default.createElement(
 	        'li',
