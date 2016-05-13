@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import { chain } from 'lodash'
 import { clean } from 'underscore.string'
 import Chat from './Chat'
+import Channel from '../Channel'
 
 
 class UsersList extends Component {
@@ -22,6 +23,10 @@ class UsersList extends Component {
 
   handleChatHide() {
     this.setState({ selectedUserId: '' })
+  }
+
+  handleChannelClick(channel, event) {
+    event.preventDefault()
   }
 
   // renderers
@@ -61,7 +66,7 @@ class UsersList extends Component {
   }
 
   render() {
-    const { viewedTeam, users, messages, actions } = this.props
+    const { viewedTeam, users, messages, channels, themes, actions } = this.props
 
     return (
       <div>
@@ -100,6 +105,19 @@ class UsersList extends Component {
           actions={ actions }
           onHide={ this.handleChatHide.bind(this) }
         />
+
+        <h2>Channels:</h2>
+
+        <ul className="channels-list">
+          { channels.items.map(channel =>
+            <Channel
+              channel={ channel }
+              themes={ themes }
+              actions={ actions }
+              onClick={ this.handleChannelClick.bind(this) }
+            />
+          )}
+        </ul>
       </div>
     )
   }
@@ -108,7 +126,9 @@ class UsersList extends Component {
 
 UsersList.propTypes = {
   viewedTeam: PropTypes.object.isRequired,
-  users: PropTypes.object.isRequired,
+  users: PropTypes.array.isRequired,
+  channels: PropTypes.object.isRequired,
+  themes: PropTypes.array.isRequired,
   messages: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired,
 }

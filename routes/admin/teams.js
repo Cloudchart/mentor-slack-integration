@@ -1,10 +1,12 @@
 import momentTimezone from 'moment-timezone'
 import { Router } from 'express'
 import { WebClient } from 'slack-client'
+
 import { queue, enqueueAt, checkTeamId } from '../helpers'
 import { appName, botTeamId, errorMarker } from '../../lib'
 import { Team, TimeSetting, TeamOwner, User } from '../../models'
 import { getAndSyncUsers } from '../../workers/helpers'
+import { getChannels } from '../channels'
 
 const router = Router()
 
@@ -77,10 +79,13 @@ router.get('/:id/users', checkTeamId, checkAuth, async (req, res, next) => {
     return Object.assign(user, { hasNewMessage: hasNewMessage, hasLastTimestamp: hasLastTimestamp })
   })
 
+  const channels = await getChannels(viewedTeam)
+
   res.render('admin/users', {
     title: `${appName} Slack Users`,
     team: team,
     users: users,
+    channels: channels,
     viewedTeam: {
       id: viewedTeam.id,
       name: viewedTeam.name,

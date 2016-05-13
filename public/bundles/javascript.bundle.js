@@ -20627,7 +20627,7 @@
 
 	ConfigApp.propTypes = {
 	  team: _react.PropTypes.object.isRequired,
-	  channels: _react.PropTypes.array.isRequired,
+	  channels: _react.PropTypes.object.isRequired,
 	  themes: _react.PropTypes.array.isRequired,
 	  actions: _react.PropTypes.object.isRequired,
 	  timeSetting: _react.PropTypes.object.isRequired,
@@ -20714,7 +20714,7 @@
 	};
 
 	var teamsActions = exports.teamsActions = {};
-	var usersActions = exports.usersActions = { fetchMessages: _fetchMessages2.default, postMessage: _postMessage2.default };
+	var usersActions = exports.usersActions = { fetchMessages: _fetchMessages2.default, fetchThemes: _fetchThemes2.default, postMessage: _postMessage2.default };
 
 /***/ },
 /* 179 */
@@ -43341,6 +43341,8 @@
 	      var team = _props.team;
 	      var viewedTeam = _props.viewedTeam;
 	      var users = _props.users;
+	      var channels = _props.channels;
+	      var themes = _props.themes;
 	      var messages = _props.messages;
 	      var actions = _props.actions;
 
@@ -43355,6 +43357,8 @@
 	          _react2.default.createElement(_UsersList2.default, {
 	            viewedTeam: viewedTeam,
 	            users: users,
+	            channels: channels,
+	            themes: themes,
 	            messages: messages,
 	            actions: actions
 	          })
@@ -43371,6 +43375,8 @@
 	  team: _react.PropTypes.object.isRequired,
 	  viewedTeam: _react.PropTypes.object.isRequired,
 	  users: _react.PropTypes.array.isRequired,
+	  channels: _react.PropTypes.object.isRequired,
+	  themes: _react.PropTypes.array.isRequired,
 	  messages: _react.PropTypes.array.isRequired,
 	  actions: _react.PropTypes.object.isRequired
 	};
@@ -43380,6 +43386,8 @@
 	    viewedTeam: state.viewedTeam,
 	    team: state.team,
 	    users: state.users,
+	    channels: state.channels,
+	    themes: state.themes,
 	    messages: state.messages
 	  };
 	}
@@ -43415,6 +43423,10 @@
 	var _Chat = __webpack_require__(295);
 
 	var _Chat2 = _interopRequireDefault(_Chat);
+
+	var _Channel = __webpack_require__(269);
+
+	var _Channel2 = _interopRequireDefault(_Channel);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -43452,6 +43464,11 @@
 	    key: 'handleChatHide',
 	    value: function handleChatHide() {
 	      this.setState({ selectedUserId: '' });
+	    }
+	  }, {
+	    key: 'handleChannelClick',
+	    value: function handleChannelClick(channel, event) {
+	      event.preventDefault();
 	    }
 
 	    // renderers
@@ -43501,10 +43518,14 @@
 	  }, {
 	    key: 'render',
 	    value: function render() {
+	      var _this2 = this;
+
 	      var _props = this.props;
 	      var viewedTeam = _props.viewedTeam;
 	      var users = _props.users;
 	      var messages = _props.messages;
+	      var channels = _props.channels;
+	      var themes = _props.themes;
 	      var actions = _props.actions;
 
 
@@ -43535,7 +43556,24 @@
 	          messages: messages,
 	          actions: actions,
 	          onHide: this.handleChatHide.bind(this)
-	        })
+	        }),
+	        _react2.default.createElement(
+	          'h2',
+	          null,
+	          'Channels:'
+	        ),
+	        _react2.default.createElement(
+	          'ul',
+	          { className: 'channels-list' },
+	          channels.items.map(function (channel) {
+	            return _react2.default.createElement(_Channel2.default, {
+	              channel: channel,
+	              themes: themes,
+	              actions: actions,
+	              onClick: _this2.handleChannelClick.bind(_this2)
+	            });
+	          })
+	        )
 	      );
 	    }
 	  }]);
@@ -43545,7 +43583,9 @@
 
 	UsersList.propTypes = {
 	  viewedTeam: _react.PropTypes.object.isRequired,
-	  users: _react.PropTypes.object.isRequired,
+	  users: _react.PropTypes.array.isRequired,
+	  channels: _react.PropTypes.object.isRequired,
+	  themes: _react.PropTypes.array.isRequired,
 	  messages: _react.PropTypes.array.isRequired,
 	  actions: _react.PropTypes.object.isRequired
 	};
@@ -57243,6 +57283,14 @@
 
 	var _team2 = _interopRequireDefault(_team);
 
+	var _channels = __webpack_require__(398);
+
+	var _channels2 = _interopRequireDefault(_channels);
+
+	var _themes = __webpack_require__(399);
+
+	var _themes2 = _interopRequireDefault(_themes);
+
 	var _viewedTeam = __webpack_require__(404);
 
 	var _viewedTeam2 = _interopRequireDefault(_viewedTeam);
@@ -57261,6 +57309,8 @@
 	  team: _team2.default,
 	  viewedTeam: _viewedTeam2.default,
 	  users: _users2.default,
+	  channels: _channels2.default,
+	  themes: _themes2.default,
 	  messages: _messages2.default
 	});
 

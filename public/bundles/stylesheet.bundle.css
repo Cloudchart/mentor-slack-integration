@@ -2161,6 +2161,30 @@ button.msi {
     background-image: url("/images/telegram-logo@2x.png");
     width: 48px; }
 
+.channels-list {
+  margin-bottom: 20px; }
+  .channels-list > li:not(:last-child) {
+    margin-bottom: 10px; }
+  .channels-list > li > a {
+    font-size: 16px;
+    font-weight: 500;
+    border-radius: 5px;
+    padding: 5px 10px;
+    color: inherit;
+    text-decoration: none; }
+    .channels-list > li > a:hover {
+      background-color: #F6F5F2; }
+    .channels-list > li > a > i {
+      margin-right: 10px;
+      color: #CBD0CD; }
+      .channels-list > li > a > i.invited {
+        color: #3BC363; }
+      .channels-list > li > a > i.uninvited {
+        color: #FFC202; }
+  .channels-list > li > span.description {
+    display: block;
+    padding-left: 35px; }
+
 #landing-container > section.top, #support-container > section.top {
   background-image: linear-gradient(to right, #2BAA4C 0%, #3DA44C 100%);
   background-repeat: repeat-x;
@@ -2507,30 +2531,6 @@ div.container footer {
       margin-right: 15px; }
     .container.configuration > .content .days-list > li.selected {
       color: #3BC363; }
-
-.container.configuration > .content .channels-list {
-  margin-bottom: 20px; }
-  .container.configuration > .content .channels-list > li:not(:last-child) {
-    margin-bottom: 10px; }
-  .container.configuration > .content .channels-list > li > a {
-    font-size: 16px;
-    font-weight: 500;
-    border-radius: 5px;
-    padding: 5px 10px;
-    color: inherit;
-    text-decoration: none; }
-    .container.configuration > .content .channels-list > li > a:hover {
-      background-color: #F6F5F2; }
-    .container.configuration > .content .channels-list > li > a > i {
-      margin-right: 10px;
-      color: #CBD0CD; }
-      .container.configuration > .content .channels-list > li > a > i.invited {
-        color: #3BC363; }
-      .container.configuration > .content .channels-list > li > a > i.uninvited {
-        color: #FFC202; }
-  .container.configuration > .content .channels-list > li > span.description {
-    display: block;
-    padding-left: 35px; }
 
 .container.configuration > .content .intergation-test {
   display: -webkit-flex;

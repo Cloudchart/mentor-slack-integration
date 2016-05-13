@@ -12,7 +12,7 @@ import Footer from '../components/Footer'
 class UsersApp extends Component {
 
   render() {
-    const { team, viewedTeam, users, messages, actions } = this.props
+    const { team, viewedTeam, users, channels, themes, messages, actions } = this.props
 
     return (
       <div className="container users">
@@ -22,6 +22,8 @@ class UsersApp extends Component {
           <UsersList
             viewedTeam={ viewedTeam }
             users={ users }
+            channels={ channels }
+            themes={ themes }
             messages={ messages }
             actions={ actions }
           />
@@ -37,6 +39,8 @@ UsersApp.propTypes = {
   team: PropTypes.object.isRequired,
   viewedTeam: PropTypes.object.isRequired,
   users: PropTypes.array.isRequired,
+  channels: PropTypes.object.isRequired,
+  themes: PropTypes.array.isRequired,
   messages: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired,
 }
@@ -46,6 +50,8 @@ function mapStateToProps(state) {
     viewedTeam: state.viewedTeam,
     team: state.team,
     users: state.users,
+    channels: state.channels,
+    themes: state.themes,
     messages: state.messages,
   }
 }
