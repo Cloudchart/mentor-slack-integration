@@ -38,7 +38,7 @@ function perform(channel, insight, topic, done) {
 
   const attachments = [{
     fallback: content,
-    text: `${content} _<${url}|${urlTitle}>_`,
+    text: `${content} <${url}|_${urlTitle}_>`,
     mrkdwn_in: ['text'],
   }]
 
