@@ -79,18 +79,20 @@ router.get('/:id/users', checkTeamId, checkAuth, async (req, res, next) => {
     return Object.assign(user, { hasNewMessage: hasNewMessage, hasLastTimestamp: hasLastTimestamp })
   })
 
-  const channels = await getChannels(viewedTeam)
-
-  res.render('admin/users', {
-    title: `${appName} Slack Users`,
-    team: team,
-    users: users,
-    channels: channels,
-    viewedTeam: {
-      id: viewedTeam.id,
-      name: viewedTeam.name,
-      isAvailableForChat: isAvailableForChat(viewedTeam.TimeSetting),
-    },
+  getChannels(viewedTeam).then(channels => {
+    res.render('admin/users', {
+      title: `${appName} Slack Users`,
+      team: team,
+      users: users,
+      channels: channels,
+      viewedTeam: {
+        id: viewedTeam.id,
+        name: viewedTeam.name,
+        isAvailableForChat: isAvailableForChat(viewedTeam.TimeSetting),
+      },
+    })
+  }).catch(error => {
+    res.status(500).render('error', { message: error, error: {} })
   })
 })
 
