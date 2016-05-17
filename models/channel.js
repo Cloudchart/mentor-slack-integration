@@ -12,6 +12,11 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false
     },
 
+    isActive: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    },
+
     shouldSendMessagesAtOnce: {
       type: DataTypes.BOOLEAN,
       defaultValue: false

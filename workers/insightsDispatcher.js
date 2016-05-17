@@ -4,7 +4,7 @@ import { clean } from 'underscore.string'
 import { queue } from '../node-resque'
 import { enqueueIn, markInsightAsRead } from './helpers'
 import { errorMarker, notInChannelNotifierDelay } from '../lib'
-import { Message } from '../models'
+import { Channel, Message } from '../models'
 
 const workerName = 'insightsDispatcher'
 
@@ -52,15 +52,16 @@ function perform(channel, insight, topic, done) {
   SlackWeb.chat.postMessage(channel.id, null, options, async (err, res) => {
     if (err = err || res.error) {
       if (err === 'not_in_channel') {
+        if (channel.isActive) await Channel.update({ isActive: false }, { where: { id: channel.id } })
         enqueueNotInChannelNotifier(channel.id, done)
       } else {
         console.log(errorMarker, err, workerName, 'chat.postMessage')
         done(null, true)
       }
     } else {
+      if (!channel.isActive) await Channel.update({ isActive: true }, { where: { id: channel.id } })
       await markInsightAsRead(channel.id, topic.id, insight.id)
-
-      const message = await Message.create({
+      await Message.create({
         channelId: res.channel,
         timestamp: res.ts,
         responseBody: JSON.stringify(res),

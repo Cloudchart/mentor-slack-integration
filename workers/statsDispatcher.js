@@ -7,13 +7,19 @@ const workerName = 'statsDispatcher'
 
 async function perform(done) {
   const teamsCount = await Team.count()
-  const inactiveTeamsCount = await Team.count({ where: { isActive: false } })
+  const activeTeamsCount = await Team.count({
+    include: { model: Channel, where: { isActive: true } },
+    where: { isActive: true }
+  })
+
   const channelsCount = await Channel.count()
+  const activeChannelsCount = await Channel.count({ where: { isActive: true } })
 
   const text = `Hey meatb… everyone, here are some fresh stats from ${appName}:\n` +
     `Total teams: *${teamsCount}*\n` +
-    `Inactive teams: *${inactiveTeamsCount}*\n` +
-    `Subscribed channels: *${channelsCount}*`
+    `Active teams: *${activeTeamsCount}*\n` +
+    `Subscribed channels: *${channelsCount}*\n` +
+    `Active channels: *${activeChannelsCount}*`
 
   const options = {
     url: process.env.SLACK_DEFAULT_WEBHOOK_URL,
