@@ -7,11 +7,17 @@ module.exports = function(sequelize, DataTypes) {
       primaryKey: true
     },
 
-    name: DataTypes.STRING,
+    name: {
+      type: DataTypes.STRING
+    },
 
     accessToken: {
       type: DataTypes.STRING,
       allowNull: false
+    },
+
+    ownerId: {
+      type: DataTypes.STRING
     },
 
     responseBody: {

@@ -87,9 +87,16 @@ router.get('/oauth/callback', (req, res, next) => {
           }
 
           Team.findOrCreate({
-            where: { id: data.team_id }, defaults: attrs
+            where: { id: data.team_id }, defaults: Object.assign(attrs, { ownerId: data.user_id })
           }).spread(async (team, created) => {
-            if (created) { enqueueNotifications(team.id) } else { await team.update(attrs) }
+            if (created) {
+              enqueueNotifications(team.id)
+            } else {
+              let attrsForUpdate = attrs
+              if (!team.ownerId) attrsForUpdate.ownerId = data.user_id
+              await team.update(attrsForUpdate)
+            }
+
             req.session.teamId = team.id
             res.redirect(`/${slugify(team.name)}/configuration`)
           })
