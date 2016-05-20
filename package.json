@@ -6,7 +6,8 @@
     "webpack": "./node_modules/.bin/webpack --color --progress --config config/webpack",
     "webpack:watch": "./node_modules/.bin/webpack --color --progress --watch --config config/webpack",
     "start": "node bin/www",
-    "worker": "node bin/worker"
+    "worker": "node bin/worker",
+    "rtm": "node bin/rtm"
   },
   "dependencies": {
     "babel-core": "6.3.26",

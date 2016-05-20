@@ -1,0 +1,27 @@
+require('babel-core/register')
+require('babel-polyfill')
+
+var path = require('path')
+var spawn = require('child_process').spawn
+var Team = require('../models').Team
+
+function loopWithDelay (i, data) {
+  setTimeout(function () {
+    var team = data[i]
+    if (team) {
+      i++
+      console.log(team.name)
+      spawn(process.execPath, [path.join(__dirname, '/../rtm.js'), team.accessToken], { stdio: 'inherit' })
+      loopWithDelay(i, data)
+    }
+  }, 3000)
+}
+
+Team.findAll({
+  where: { isActive: true },
+  limit: 150
+}).then(function (teams) {
+  loopWithDelay(0, teams)
+}).catch(function (error) {
+  console.log(error)
+})
