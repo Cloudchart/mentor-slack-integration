@@ -4,7 +4,7 @@ import { WebClient } from 'slack-client'
 
 import { queue, enqueueAt, checkTeamId } from '../helpers'
 import { appName, botTeamId, errorMarker } from '../../lib'
-import { Team, TimeSetting, TeamOwner, User } from '../../models'
+import { Team, TimeSetting, User } from '../../models'
 import { getAndSyncUsers } from '../../workers/helpers'
 import { getChannels } from '../channels'
 

@@ -24,45 +24,6 @@ export function enqueueIn(delay, name, payload) {
   })
 }
 
-export async function getTeamOwner(teamId, SlackWeb) {
-  return new Promise(async (resolve, reject) => {
-    let teamOwner = await TeamOwner.findOne({ where: { teamId: teamId } })
-
-    if (teamOwner) {
-      resolve(teamOwner)
-    } else {
-      SlackWeb.users.list((err, res) => {
-        if (err = err || res.error) {
-          console.log(errorMarker, err, 'getTeamOwner', 'users.list')
-          resolve(null)
-        } else {
-          let primaryOwner = res.members.find(member => member.is_primary_owner)
-          // let primaryOwner = res.members.find(member => member.name === 'peresleguine')
-
-          SlackWeb.dm.list((err, res) => {
-            if (err = err || res.error) {
-              console.log(errorMarker, err, 'getTeamOwner', 'im.list')
-              resolve(null)
-            } else {
-              let im = res.ims.find(im => im.user === primaryOwner.id)
-              if (!im) return resolve(null)
-
-              TeamOwner.findOrCreate({
-                where: { id: im.user },
-                defaults: { teamId: teamId, imId: im.id, responseBody: JSON.stringify(im) }
-              }).spread((teamOwner, created) => {
-                resolve(teamOwner)
-              })
-            }
-
-          })
-        }
-      })
-    }
-
-  })
-}
-
 export function getAndSyncUsers(team) {
   return new Promise((resolve, reject) => {
     const SlackWeb = new WebClient(team.accessToken)

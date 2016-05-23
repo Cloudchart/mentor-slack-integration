@@ -111,8 +111,7 @@ router.get('/oauth/callback', (req, res, next) => {
 // config
 //
 router.get('/:teamName/configuration', checkTeamId, initTimeSetting, async (req, res, next) => {
-  let team = await Team.findById(req.session.teamId)
-  let timeSetting = await TimeSetting.find({ where: { teamId: team.id } })
+  const team = await Team.find({ include: [TimeSetting], where: { id: req.session.teamId } })
 
   getChannels(team).then(channels => {
     res.render('configuration', {
@@ -120,10 +119,10 @@ router.get('/:teamName/configuration', checkTeamId, initTimeSetting, async (req,
       team: { id: team.id, name: team.name, isAdmin: team.id === botTeamId },
       channels: channels,
       timeSetting: {
-        tz: timeSetting.tz,
-        startTime: timeSetting.startTime,
-        endTime: timeSetting.endTime,
-        days: timeSetting.days,
+        tz: team.TimeSetting.tz,
+        startTime: team.TimeSetting.startTime,
+        endTime: team.TimeSetting.endTime,
+        days: team.TimeSetting.days,
       }
     })
   }).catch(error => {
