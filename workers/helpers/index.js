@@ -3,7 +3,7 @@ import { sample, sampleSize } from 'lodash'
 import { WebClient } from 'slack-client'
 import { eventMarker, errorMarker } from '../../lib'
 import { callWebAppGraphQL } from '../../routes/helpers'
-import { TeamOwner, User } from '../../models'
+import { User } from '../../models'
 
 
 export function enqueue(name, payload) {

@@ -6,7 +6,7 @@ const tasks = {
     Team.findAll().then(teams => {
       teams.forEach(team => {
         const data = JSON.parse(team.responseBody)
-        if (data.user_id) team.update({ ownerId: data.user_id })
+        if (!team.ownerId && data.user_id) team.update({ ownerId: data.user_id })
       })
     }).catch(err => {
       console.log(err)
