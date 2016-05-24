@@ -12,36 +12,41 @@ const workerName = 'dispatcher'
 //
 function isEveryoneAsleep(channel) {
   return new Promise((resolve, reject) => {
-    const SlackWeb = new WebClient(channel.Team.accessToken)
-    SlackWeb.channels.info(channel.id, (err, res) => {
-      if (err = err || res.error) {
-        if (err === 'account_inactive') channel.Team.update({ isActive: false })
-        console.log(errorMarker, err, workerName, 'channels.info')
-        resolve(null)
-      } else {
-        if (!channel.Team.isActive) channel.Team.update({ isActive: true })
-        let members = res.channel.members
+    try {
+      const SlackWeb = new WebClient(channel.Team.accessToken)
+      SlackWeb.channels.info(channel.id, (err, res) => {
+        if (err = err || res.error) {
+          if (err === 'account_inactive') channel.Team.update({ isActive: false })
+          console.log(errorMarker, err, workerName, 'channels.info')
+          resolve(null)
+        } else {
+          if (!channel.Team.isActive) channel.Team.update({ isActive: true })
+          let members = res.channel.members
 
-        SlackWeb.users.list(1, (err, res) => {
-          if (err = err || res.error) {
-            console.log(errorMarker, err, workerName, 'users.list')
-            resolve(null)
-          } else {
-            let activeUsers = res.members.filter(member => {
-              return (
-                members.includes(member.id) &&
-                !member.deleted &&
-                !member.is_ultra_restricted &&
-                !member.is_bot &&
-                member.presence === 'active'
-              )
-            })
+          SlackWeb.users.list(1, (err, res) => {
+            if (err = err || res.error) {
+              console.log(errorMarker, err, workerName, 'users.list')
+              resolve(null)
+            } else {
+              let activeUsers = res.members.filter(member => {
+                return (
+                  members.includes(member.id) &&
+                  !member.deleted &&
+                  !member.is_ultra_restricted &&
+                  !member.is_bot &&
+                  member.presence === 'active'
+                )
+              })
 
-            resolve(activeUsers.length === 0)
-          }
-        })
-      }
-    })
+              resolve(activeUsers.length === 0)
+            }
+          })
+        }
+      })
+    } catch (err) {
+      console.log(errorMarker, workerName, 'isEveryoneAsleep', err)
+      resolve(false)
+    }
   })
 }
 
