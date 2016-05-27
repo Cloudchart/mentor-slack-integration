@@ -44,7 +44,7 @@ function getPayload(type, team, data) {
 
           const themes = await getSubscribedThemes(channelId)
           if (themes.length > 0) {
-            text.push(`to ${toSentence(themes)}`)
+            text.push(`to *${toSentence(themes)}*`)
             themes.length === 1 ? text.push('topic') : text.push('topics')
           }
 
