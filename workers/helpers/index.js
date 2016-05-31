@@ -24,6 +24,33 @@ export function enqueueIn(delay, name, payload) {
   })
 }
 
+export function getLastSeenUserImId(team) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const SlackWeb = new WebClient(team.accessToken)
+      const lastSeenUserId = JSON.parse(team.responseBody).user_id
+      const user = await User.findById(lastSeenUserId)
+
+      if (user) {
+        resolve(user.imId)
+      } else {
+        SlackWeb.dm.list((err, res) => {
+          if (err = err || res.error) {
+            console.log(errorMarker, 'getLastSeenUserImId', 'dm.list', err)
+            resolve(false)
+          } else {
+            const im = res.ims.find(im => im.user === lastSeenUserId)
+            im ? resolve(im.id) : resolve(null)
+          }
+        })
+      }
+    } catch (err) {
+      console.log(errorMarker, 'getLastSeenUserImId', err)
+      resolve(false)
+    }
+  })
+}
+
 export function getAndSyncUsers(team) {
   return new Promise((resolve, reject) => {
     const SlackWeb = new WebClient(team.accessToken)

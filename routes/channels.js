@@ -109,6 +109,17 @@ router.delete('/', checkTeamId, async (req, res, next) => {
   res.json({ status: null })
 })
 
+router.post('/send_notification', checkTeamId, (req, res, next) => {
+  const { id, name, type } = req.body
+  switch (type) {
+    case 'invite_notification':
+      enqueue('channelInviteNotifier', [id, name])
+      return res.json({ message: 'ok' })
+    default:
+      return res.status(404).json({ message: 'not found' })
+  }
+})
+
 
 export default router
 export { getChannels }

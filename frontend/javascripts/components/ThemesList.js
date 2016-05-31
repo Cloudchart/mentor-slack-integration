@@ -62,6 +62,13 @@ class ThemesList extends Component {
     }
   }
 
+  sendInviteNotification() {
+    const { actions } = this.props
+    const { channel } = this.state
+    if (channel.status !== 'uninvited') return
+    actions.sendChannelInviteNotification(channel.id, channel.name)
+  }
+
   // handlers
   //
   handleModalHide() {
@@ -71,6 +78,7 @@ class ThemesList extends Component {
 
     this.props.onHide()
     this.toggleChannelSubscription()
+    this.sendInviteNotification()
   }
 
   handleModalClose(event) {
