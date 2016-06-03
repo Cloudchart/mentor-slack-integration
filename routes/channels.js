@@ -54,10 +54,12 @@ router.get('/', checkTeamId, async (req, res, next) => {
     const atLeastOneIsUninvited = statuses.includes('uninvited')
 
     if (atLeastOneIsUninvited) status = 'awaiting_invitation'
-    if (atLeastOneIsInvited && !atLeastOneIsUninvited) {
-      status = 'ok'
-      const channelIds = channels.filter(channel => channel.status == 'invited').map(channel => channel.id)
-      enqueue('channelWelcomeNotifier', [channelIds])
+    if (atLeastOneIsInvited && !atLeastOneIsUninvited) status = 'ok'
+
+    if (atLeastOneIsInvited) {
+      channels.filter(channel => channel.status == 'invited').forEach(channel => {
+        enqueue('channelWelcomeNotifier', [channel.id, 'test'])
+      })
     }
 
     res.json({ channels: channels, status: status })

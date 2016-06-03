@@ -1,5 +1,8 @@
 import { WebClient } from 'slack-client'
-import { errorMarker } from '../lib'
+import { toSentence } from 'underscore.string'
+import { appName, errorMarker } from '../lib'
+import { enqueue, sendInsight, getSubscribedThemes, getLastSeenUserName } from './helpers'
+import { notificationType as channelNotificationType } from './channelReactionsNotifier'
 import { Channel, ChannelNotification, Team } from '../models'
 
 const workerName = 'channelWelcomeNotifier'
@@ -8,34 +11,18 @@ const notificationType = 'welcome'
 
 // helpers
 //
-function sendNotification(channel) {
+function enqueueChannelReactionsNotifier(channel) {
   return new Promise(async (resolve, reject) => {
     try {
       const channelNotification = await ChannelNotification.find({
-        where: { channelId: channel.id, type: notificationType }
+        where: { channelId: channel.id, type: channelNotificationType }
       })
       if (channelNotification) return resolve(null)
 
-      const SlackWeb = new WebClient(channel.Team.accessToken)
-      const text = "Testing procedure successful. I will now send you advice according to the set schedule."
-
-      SlackWeb.chat.postMessage(channel.id, text, { as_user: true }, async (err, res) => {
-        if (err = err || res.error) {
-          console.log(errorMarker, err, workerName, 'chat.postMessage')
-          resolve(false)
-        } else {
-          // leave trace of notification
-          await ChannelNotification.create({
-            channelId: channel.id,
-            type: notificationType,
-            responseBody: JSON.stringify(res),
-          })
-
-          resolve(true)
-        }
-      })
+      await enqueue('channelReactionsNotifier', channel.id)
+      resolve(true)
     } catch (err) {
-      console.log(errorMarker, workerName, 'sendNotification', err)
+      console.log(errorMarker, workerName, 'enqueueChannelReactionsNotifier', err)
       resolve(false)
     }
   })
@@ -43,19 +30,58 @@ function sendNotification(channel) {
 
 // notify channel about succesfull integration test
 //
-function perform(channelIds, done) {
-  Channel.findAll({ include: [Team], where: { id: channelIds } }).then(channels => {
-    const jobs = channels.reduce(async (promiseChain, channel) => {
-      return promiseChain.then(async () => {
-        await sendNotification(channel)
-      })
-    }, Promise.resolve())
+async function perform(channelId, type, done) {
+  try {
+    const channelNotification = await ChannelNotification.find({
+      where: { channelId: channelId, type: notificationType }
+    })
+    if (channelNotification) return done(null)
 
-    jobs.then(() => done(null, true))
-  }).catch(err => {
+    const channel = await Channel.find({ include: [Team], where: { id: channelId } })
+    if (!channel) return done(null)
+
+    const themes = await getSubscribedThemes(channel.id)
+    if (themes.length === 0) return done(null)
+
+    const lastSeenUserName = await getLastSeenUserName(channel.Team)
+
+    // generate text
+    let text = []
+    text.push(`Greetings, humans. I am ${appName},`)
+    if (lastSeenUserName) text.push(`set up by @${lastSeenUserName},`)
+    text.push(`here to give you advice on *${toSentence(themes)}* in this channel.`)
+    if (type === 'test') {
+      text.push('Testing procedure successful.')
+    } else {
+      text.push('You can always change that in my settings')
+    }
+    text.push('Now let the mentoring begin!')
+    text = text.join(' ')
+
+    const SlackWeb = new WebClient(channel.Team.accessToken)
+
+    SlackWeb.chat.postMessage(channel.id, text, { as_user: true }, async (err, res) => {
+      if (err = err || res.error) {
+        console.log(errorMarker, err, workerName, 'chat.postMessage')
+        done(false)
+      } else {
+        // leave trace of notification
+        await ChannelNotification.create({
+          channelId: channel.id,
+          type: notificationType,
+          responseBody: JSON.stringify(res),
+        })
+
+        await sendInsight(channel)
+        await enqueueChannelReactionsNotifier(channel)
+
+        done(null, true)
+      }
+    })
+  } catch (err) {
     console.log(errorMarker, workerName, err)
     done(false)
-  })
+  }
 }
 
 

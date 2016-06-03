@@ -1,7 +1,7 @@
 import { queue } from '../../node-resque'
 import { sample, sampleSize } from 'lodash'
 import { WebClient } from 'slack-client'
-import { eventMarker, errorMarker } from '../../lib'
+import { eventMarker, errorMarker, noticeMarker } from '../../lib'
 import { callWebAppGraphQL } from '../../routes/helpers'
 import { User } from '../../models'
 
@@ -21,6 +21,53 @@ export function enqueueIn(delay, name, payload) {
       console.log(eventMarker, 'enqueued', name)
       resolve()
     })
+  })
+}
+
+export function sendInsight(channel) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (channel.shouldSendMessagesAtOnce) return resolve(null)
+
+      const response = await getRandomUnratedInsight(channel.id)
+      if (response) {
+        const { insight, topic } = response
+        await enqueue('insightsDispatcher', [channel, insight, topic])
+        resolve(true)
+      } else {
+        console.log(noticeMarker, 'sendInsight', "couldn't find unrated insight for channel:", channel.id)
+        resolve(null)
+      }
+    } catch (err) {
+      console.log(errorMarker, 'sendInsight', err)
+      resolve(false)
+    }
+  })
+}
+
+export function getTeamOwnerImId(team) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const SlackWeb = new WebClient(team.accessToken)
+      const user = await User.findById(team.ownerId)
+
+      if (user) {
+        resolve(user.imId)
+      } else {
+        SlackWeb.dm.list((err, res) => {
+          if (err = err || res.error) {
+            console.log(errorMarker, 'getTeamOwnerImId', 'dm.list', err)
+            resolve(false)
+          } else {
+            const im = res.ims.find(im => im.user === team.ownerId)
+            im ? resolve(im.id) : resolve(null)
+          }
+        })
+      }
+    } catch (err) {
+      console.log(errorMarker, 'getTeamOwnerImId', err)
+      resolve(false)
+    }
   })
 }
 
@@ -46,6 +93,50 @@ export function getLastSeenUserImId(team) {
       }
     } catch (err) {
       console.log(errorMarker, 'getLastSeenUserImId', err)
+      resolve(false)
+    }
+  })
+}
+
+export function getLastSeenUserName(team) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const SlackWeb = new WebClient(team.accessToken)
+      const lastSeenUserId = JSON.parse(team.responseBody).user_id
+      const user = await User.findById(lastSeenUserId)
+      if (user) {
+        resolve(JSON.parse(user.responseBody).name)
+      } else {
+        SlackWeb.users.info(lastSeenUserId, (err, res) => {
+          if (err = err || res.error) {
+            console.log(errorMarker, 'getLastSeenUserName', err)
+            resolve(null)
+          } else {
+            resolve(res.user.name)
+          }
+        })
+      }
+    } catch (err) {
+      console.log(errorMarker, 'getLastSeenUserName', err)
+      resolve(false)
+    }
+  })
+}
+
+export function getChannelName(channel) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const SlackWeb = new WebClient(channel.Team.accessToken)
+      SlackWeb.channels.info(channel.id, (err, res) => {
+        if (err = err || res.error) {
+          console.log(errorMarker, 'getChannelName', err)
+          resolve(null)
+        } else {
+          resolve(res.channel.name)
+        }
+      })
+    } catch (err) {
+      console.log(errorMarker, 'getChannelName', err)
       resolve(false)
     }
   })

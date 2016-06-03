@@ -1,9 +1,8 @@
 import momentTimezone from 'moment-timezone'
 import { WebClient } from 'slack-client'
-import { errorMarker, noticeMarker, channelReactionsNotifierDelay } from '../lib'
-import { enqueue, enqueueIn, getRandomUnratedInsight, getRandomSubscribedTopic } from './helpers'
-import { notificationType as channelNotificationType } from './channelReactionsNotifier'
-import { Channel, Team, TimeSetting, ChannelNotification } from '../models'
+import { errorMarker, noticeMarker } from '../lib'
+import { enqueue, sendInsight, getRandomSubscribedTopic } from './helpers'
+import { Channel, Message, Team, TimeSetting } from '../models'
 
 const workerName = 'dispatcher'
 
@@ -50,47 +49,6 @@ function isEveryoneAsleep(channel) {
   })
 }
 
-function enqueueChannelReactionsNotifier(channel) {
-  return new Promise(async (resolve, reject) => {
-    try {
-      const channelNotification = await ChannelNotification.find({
-        where: { channelId: channel.id, type: channelNotificationType }
-      })
-      if (channelNotification) return resolve(null)
-
-      await enqueueIn(channelReactionsNotifierDelay, 'channelReactionsNotifier', channel.id)
-      resolve(true)
-    } catch (err) {
-      console.log(errorMarker, workerName, 'enqueueChannelReactionsNotifier', err)
-      resolve(false)
-    }
-  })
-}
-
-// request unrated insight
-// enqueue insightsDispatcher
-function sendInsight(channel) {
-  return new Promise(async (resolve, reject) => {
-    try {
-      if (channel.shouldSendMessagesAtOnce) return resolve(null)
-
-      const response = await getRandomUnratedInsight(channel.id)
-      if (response) {
-        const { insight, topic } = response
-        await enqueue('insightsDispatcher', [channel, insight, topic])
-        await enqueueChannelReactionsNotifier(channel)
-        resolve(true)
-      } else {
-        console.log(noticeMarker, workerName, "couldn't find unrated insight for channel:", channel.id)
-        resolve(null)
-      }
-    } catch (err) {
-      console.log(errorMarker, workerName, 'sendInsight', err)
-      resolve(false)
-    }
-  })
-}
-
 // request random link and insights for selected topics
 // enqueue linksDispatcher
 function sendLink(channel) {
@@ -99,7 +57,6 @@ function sendLink(channel) {
       const topic = await getRandomSubscribedTopic(channel.id)
       if (topic) {
         await enqueue('linksDispatcher', [channel, topic])
-        await enqueueChannelReactionsNotifier(channel)
         resolve(true)
       } else {
         if (channel.shouldSendMessagesAtOnce) {
@@ -122,7 +79,9 @@ function sendLink(channel) {
 // check if everyone is away
 // send insight or link
 function perform(done) {
-  Channel.findAll({ include: [{ model: Team, include: [TimeSetting] }] }).then(channels => {
+  Channel.findAll({
+    include: [{ model: Team, include: [TimeSetting] }, { model: Message, limit: 1 }]
+  }).then(channels => {
     const jobs = channels.reduce(async (promiseChain, channel) => {
       return promiseChain.then(async () => {
         const timeSetting = channel.Team.TimeSetting
@@ -135,12 +94,17 @@ function perform(done) {
         const everyoneIsAsleep = await isEveryoneAsleep(channel)
         if (everyoneIsAsleep || everyoneIsAsleep === null) return
 
-        if (hour === timeSetting.startTime.split(':')[0]) {
-          await sendLink(channel)
-          await enqueue('reactionsCollector', channel)
-        } else if (time > timeSetting.startTime && time <= timeSetting.endTime) {
-          await sendInsight(channel)
+        if (channel.Messages.length === 0) {
+          await enqueue('channelWelcomeNotifier', [channel.id, 'default'])
+        } else {
+          if (hour === timeSetting.startTime.split(':')[0]) {
+            await sendLink(channel)
+            await enqueue('reactionsCollector', channel)
+          } else if (time > timeSetting.startTime && time <= timeSetting.endTime) {
+            await sendInsight(channel)
+          }
         }
+
       })
     }, Promise.resolve())
 
