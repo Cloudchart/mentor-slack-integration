@@ -18,8 +18,8 @@ function notifyTeamOwner(channel, lastSeenUserName, themes, SlackWeb) {
       const channelName = await getChannelName(channel)
 
       let text = []
-      text.push(`Hello, master. Just to let you know that @${lastSeenUserName} adjusted my settings.`)
-      text.push(`I will now give you advice on *${toSentence(themes)}* in #${channelName} channel.`)
+      text.push(`Hello, Master. Just to let you know that @${lastSeenUserName} adjusted my settings.`)
+      text.push(`I will now give advice on *${toSentence(themes)}* in #${channelName} channel.`)
       text = text.join(' ')
 
       SlackWeb.chat.postMessage(teamOwnerImId, text, { as_user: true }, async (err, res) => {
