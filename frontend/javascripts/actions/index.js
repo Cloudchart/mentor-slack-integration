@@ -22,4 +22,5 @@ import fetchMessages from './admin/fetchMessages'
 import postMessage from './admin/postMessage'
 
 export const teamsActions = {}
+export const surveysActions = {}
 export const usersActions = { fetchMessages, fetchThemes, postMessage }

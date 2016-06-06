@@ -3,7 +3,8 @@ import { Router } from 'express'
 import { WebClient } from 'slack-client'
 
 import { queue, enqueueAt, checkTeamId } from '../helpers'
-import { appName, botTeamId, errorMarker } from '../../lib'
+import { checkAuth, getTeam } from './helpers'
+import { appName, errorMarker } from '../../lib'
 import { Team, TimeSetting, User } from '../../models'
 import { getAndSyncUsers } from '../../workers/helpers'
 import { getChannels } from '../channels'
@@ -13,17 +14,6 @@ const router = Router()
 
 // helpers
 //
-function checkAuth(req, res, next) {
-  req.session.teamId === botTeamId ? next() : res.redirect('/')
-}
-
-function getTeam(id) {
-  return new Promise(async (resolve, reject) => {
-    const team = await Team.findById(id)
-    resolve({ id: team.id, name: team.name, isAdmin: team.id === botTeamId })
-  })
-}
-
 function isAvailableForChat(timeSetting) {
   const now = momentTimezone().tz(timeSetting.tz)
   const day = now.format('ddd')

@@ -15,12 +15,13 @@ class Header extends Component {
     )
   }
 
-  renderTeamsLink() {
-    return (
-      this.props.team.isAdmin ?
-      <li><a href="/admin/teams">Teams</a></li> :
-      null
-    )
+  renderAdminLinks() {
+    if (!this.props.team.isAdmin) return null
+
+    return [
+      <li><a href="/admin/teams">Teams</a></li>,
+      <li><a href="/admin/surveys">Surveys</a></li>,
+    ]
   }
 
   renderNav() {
@@ -30,7 +31,7 @@ class Header extends Component {
       <nav>
         <ul>
           { this.renderConfigurationLink() }
-          { this.renderTeamsLink() }
+          { this.renderAdminLinks() }
           <li>
             <a href="/logout">Logout</a>
           </li>
