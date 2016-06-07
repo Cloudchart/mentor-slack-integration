@@ -1,5 +1,7 @@
 'use strict';
 
+var slugify = require('underscore.string').slugify
+
 module.exports = function(sequelize, DataTypes) {
   var Survey = sequelize.define('Survey', {
     id: {
@@ -10,7 +12,14 @@ module.exports = function(sequelize, DataTypes) {
 
     name: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        notEmpty: true
+      },
+      set: function(value) {
+        this.setDataValue('name', value)
+        this.setDataValue('slug', slugify(value))
+      }
     },
 
     slug: {
@@ -27,7 +36,7 @@ module.exports = function(sequelize, DataTypes) {
 
     classMethods: {
       associate: function(models) {
-        Survey.hasMany(models.Question, { foreignKey: 'surveyId', onDelete: 'CASCADE' })
+        Survey.hasMany(models.SurveyQuestion, { foreignKey: 'surveyId', onDelete: 'CASCADE' })
       }
     }
 

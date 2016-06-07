@@ -1,14 +1,14 @@
 'use strict';
 
 module.exports = function(sequelize, DataTypes) {
-  var Answer = sequelize.define('Answer', {
+  var SurveyQuestion = sequelize.define('SurveyQuestion', {
     id: {
       type: DataTypes.UUID,
       primaryKey: true,
       defaultValue: DataTypes.UUIDV4
     },
 
-    questionId: {
+    surveyId: {
       type: DataTypes.UUID,
       allowNull: false
     },
@@ -16,22 +16,18 @@ module.exports = function(sequelize, DataTypes) {
     name: {
       type: DataTypes.STRING,
       allowNull: false
-    },
-
-    isCorrect: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false
     }
 
   }, {
 
     classMethods: {
       associate: function(models) {
-        Answer.belongsTo(models.Question, { foreignKey: 'questionId' })
+        SurveyQuestion.belongsTo(models.Survey, { foreignKey: 'surveyId' })
+        SurveyQuestion.hasMany(models.SurveyAnswer, { foreignKey: 'surveyQuestionId', onDelete: 'CASCADE' })
       }
     }
 
   });
 
-  return Answer;
+  return SurveyQuestion;
 };
