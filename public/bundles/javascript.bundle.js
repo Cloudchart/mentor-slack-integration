@@ -21778,7 +21778,11 @@
 	    }).then(function (response) {
 	      return response.json();
 	    }).then(function (json) {
-	      return dispatch(receiveCreateSurvey(json));
+	      if (json.error) {
+	        return dispatch(catchCreateSurveyError(json.error));
+	      } else {
+	        return dispatch(receiveCreateSurvey(json));
+	      }
 	    }).catch(function (error) {
 	      return dispatch(catchCreateSurveyError(error));
 	    });
@@ -21839,7 +21843,11 @@
 	    }).then(function (response) {
 	      return response.json();
 	    }).then(function (json) {
-	      return dispatch(receiveDestroySurvey(id, json));
+	      if (json.error) {
+	        return dispatch(catchDestroySurveyError(id, json.error));
+	      } else {
+	        return dispatch(receiveDestroySurvey(id, json));
+	      }
 	    }).catch(function (error) {
 	      return dispatch(catchDestroySurveyError(id, error));
 	    });
@@ -27549,7 +27557,7 @@
 	    key: 'handleDestroy',
 	    value: function handleDestroy(id, event) {
 	      event.preventDefault();
-	      this.props.actions.destroySurvey(id);
+	      if (window.confirm('Are you sure?')) this.props.actions.destroySurvey(id);
 	    }
 
 	    // renderers
@@ -58852,7 +58860,11 @@
 	    }).then(function (response) {
 	      return response.json();
 	    }).then(function (json) {
-	      return dispatch(receiveUpdateSurvey(id, json));
+	      if (json.error) {
+	        return dispatch(catchUpdateSurveyError(id, json.error));
+	      } else {
+	        return dispatch(receiveUpdateSurvey(id, json));
+	      }
 	    }).catch(function (error) {
 	      return dispatch(catchUpdateSurveyError(id, error));
 	    });

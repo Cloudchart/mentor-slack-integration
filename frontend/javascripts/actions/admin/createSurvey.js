@@ -33,7 +33,11 @@ function createSurvey(attrs) {
       credentials: 'same-origin',
       headers: { 'Content-Type': 'application/json' },
     }).then(response => response.json()).then(json => {
-      return dispatch(receiveCreateSurvey(json))
+      if (json.error) {
+        return dispatch(catchCreateSurveyError(json.error))
+      } else {
+        return dispatch(receiveCreateSurvey(json))
+      }
     }).catch(error => {
       return dispatch(catchCreateSurveyError(error))
     })

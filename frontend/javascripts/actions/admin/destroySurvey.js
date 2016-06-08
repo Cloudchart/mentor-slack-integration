@@ -35,7 +35,11 @@ function destroySurvey(id) {
       credentials: 'same-origin',
       headers: { 'Content-Type': 'application/json' },
     }).then(response => response.json()).then(json => {
-      return dispatch(receiveDestroySurvey(id, json))
+      if (json.error) {
+        return dispatch(catchDestroySurveyError(id, json.error))
+      } else {
+        return dispatch(receiveDestroySurvey(id, json))
+      }
     }).catch(error => {
       return dispatch(catchDestroySurveyError(id, error))
     })

@@ -27,7 +27,7 @@ class SurveysList extends Component {
 
   handleDestroy(id, event) {
     event.preventDefault()
-    this.props.actions.destroySurvey(id)
+    if (window.confirm('Are you sure?')) this.props.actions.destroySurvey(id)
   }
 
   // renderers

@@ -36,7 +36,11 @@ function updateSurvey(id, attrs) {
       credentials: 'same-origin',
       headers: { 'Content-Type': 'application/json' },
     }).then(response => response.json()).then(json => {
-      return dispatch(receiveUpdateSurvey(id, json))
+      if (json.error) {
+        return dispatch(catchUpdateSurveyError(id, json.error))
+      } else {
+        return dispatch(receiveUpdateSurvey(id, json))
+      }
     }).catch(error => {
       return dispatch(catchUpdateSurveyError(id, error))
     })
