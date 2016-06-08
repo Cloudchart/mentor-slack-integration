@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import Modal from 'boron/FadeModal'
 import { sortBy } from 'lodash'
-import SurveysForm from './SurveysForm'
+import SurveysEdit from './SurveysEdit'
 
 
 class SurveysList extends Component {
@@ -59,11 +59,11 @@ class SurveysList extends Component {
 
         <Modal ref="modal">
           <div className="modal-content surveys-edit">
-            <SurveysForm
+            <SurveysEdit
               id={ this.state.selectedSurveyId }
               surveys={ surveys }
               actions={ actions }
-              onSubmit={ this.handleUpdate.bind(this) }
+              onUpdate={ this.handleUpdate.bind(this) }
             />
           </div>
         </Modal>

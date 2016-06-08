@@ -1,15 +1,13 @@
 import React, { Component, PropTypes } from 'react'
 
 
-class SurveysForm extends Component {
+class SurveysNew extends Component {
 
   constructor(props) {
     super(props)
-    const survey = props.surveys.find(survey => survey.id === props.id)
-
     this.state = {
-      name: survey ? survey.name : '',
-      isActive: survey ? survey.isActive : true,
+      name: '',
+      isActive: true,
       isFetching: false,
     }
   }
@@ -32,20 +30,13 @@ class SurveysForm extends Component {
 
   handleSubmit(event) {
     event.preventDefault()
-    const { id, actions, onSubmit } = this.props
+    const { id, actions, onCreate } = this.props
     this.setState({ isFetching: true })
 
-    if (id) {
-      actions.updateSurvey(id, this.getAttributes()).then(() => {
-        this.setState({ isFetching: false })
-        onSubmit()
-      })
-    } else {
-      actions.createSurvey(this.getAttributes()).then(() => {
-        onSubmit()
-        this.setState({ isFetching: false })
-      })
-    }
+    actions.createSurvey(this.getAttributes()).then(() => {
+      onCreate()
+      this.setState({ isFetching: false })
+    })
   }
 
   // renderers
@@ -72,7 +63,7 @@ class SurveysForm extends Component {
           <span>Active</span>
         </label>
         <button type="submit" className="msi" disabled={ !this.state.name || this.state.isFetching }>
-          { this.props.id ? 'Update' : 'Create' }
+          Create
         </button>
       </form>
     )
@@ -80,12 +71,10 @@ class SurveysForm extends Component {
 
 }
 
-SurveysForm.propTypes = {
-  id: PropTypes.string,
-  surveys: PropTypes.array.isRequired,
+SurveysNew.propTypes = {
   actions: PropTypes.object.isRequired,
-  onSubmit: PropTypes.func,
+  onCreate: PropTypes.func,
 }
 
 
-export default SurveysForm
+export default SurveysNew

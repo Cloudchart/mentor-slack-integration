@@ -27380,9 +27380,9 @@
 
 	var _SurveysList2 = _interopRequireDefault(_SurveysList);
 
-	var _SurveysForm = __webpack_require__(419);
+	var _SurveysNew = __webpack_require__(296);
 
-	var _SurveysForm2 = _interopRequireDefault(_SurveysForm);
+	var _SurveysNew2 = _interopRequireDefault(_SurveysNew);
 
 	var _Footer = __webpack_require__(270);
 
@@ -27416,8 +27416,8 @@
 	      this.refs.modal.show();
 	    }
 	  }, {
-	    key: 'handleSurveySubmit',
-	    value: function handleSurveySubmit() {
+	    key: 'handleSurveyCreate',
+	    value: function handleSurveyCreate() {
 	      this.refs.modal.hide();
 	    }
 
@@ -27452,10 +27452,9 @@
 	            _react2.default.createElement(
 	              'div',
 	              { className: 'modal-content surveys-new' },
-	              _react2.default.createElement(_SurveysForm2.default, {
-	                surveys: surveys,
+	              _react2.default.createElement(_SurveysNew2.default, {
 	                actions: actions,
-	                onSubmit: this.handleSurveySubmit.bind(this)
+	                onCreate: this.handleSurveyCreate.bind(this)
 	              })
 	            )
 	          )
@@ -27511,9 +27510,9 @@
 
 	var _lodash = __webpack_require__(294);
 
-	var _SurveysForm = __webpack_require__(419);
+	var _SurveysEdit = __webpack_require__(418);
 
-	var _SurveysForm2 = _interopRequireDefault(_SurveysForm);
+	var _SurveysEdit2 = _interopRequireDefault(_SurveysEdit);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -27629,11 +27628,11 @@
 	          _react2.default.createElement(
 	            'div',
 	            { className: 'modal-content surveys-edit' },
-	            _react2.default.createElement(_SurveysForm2.default, {
+	            _react2.default.createElement(_SurveysEdit2.default, {
 	              id: this.state.selectedSurveyId,
 	              surveys: surveys,
 	              actions: actions,
-	              onSubmit: this.handleUpdate.bind(this)
+	              onUpdate: this.handleUpdate.bind(this)
 	            })
 	          )
 	        )
@@ -43588,7 +43587,147 @@
 
 
 /***/ },
-/* 296 */,
+/* 296 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var SurveysNew = function (_Component) {
+	  _inherits(SurveysNew, _Component);
+
+	  function SurveysNew(props) {
+	    _classCallCheck(this, SurveysNew);
+
+	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(SurveysNew).call(this, props));
+
+	    _this.state = {
+	      name: '',
+	      isActive: true,
+	      isFetching: false
+	    };
+	    return _this;
+	  }
+
+	  // helpers
+	  //
+
+
+	  _createClass(SurveysNew, [{
+	    key: 'getAttributes',
+	    value: function getAttributes() {
+	      return {
+	        name: this.state.name,
+	        isActive: this.state.isActive
+	      };
+	    }
+
+	    // handlers
+	    //
+
+	  }, {
+	    key: 'handleInputChange',
+	    value: function handleInputChange(attr, event) {
+	      var value = attr === 'isActive' ? event.target.checked : event.target.value;
+	      this.setState(_defineProperty({}, attr, value));
+	    }
+	  }, {
+	    key: 'handleSubmit',
+	    value: function handleSubmit(event) {
+	      var _this2 = this;
+
+	      event.preventDefault();
+	      var _props = this.props;
+	      var id = _props.id;
+	      var actions = _props.actions;
+	      var onCreate = _props.onCreate;
+
+	      this.setState({ isFetching: true });
+
+	      actions.createSurvey(this.getAttributes()).then(function () {
+	        onCreate();
+	        _this2.setState({ isFetching: false });
+	      });
+	    }
+
+	    // renderers
+	    //
+
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'form',
+	        { onSubmit: this.handleSubmit.bind(this) },
+	        _react2.default.createElement(
+	          'label',
+	          null,
+	          _react2.default.createElement(
+	            'span',
+	            null,
+	            'Name'
+	          ),
+	          _react2.default.createElement('input', {
+	            type: 'text',
+	            autoFocus: true,
+	            value: this.state.name,
+	            placeholder: 'Enter survey name',
+	            onChange: this.handleInputChange.bind(this, 'name')
+	          })
+	        ),
+	        _react2.default.createElement(
+	          'label',
+	          null,
+	          _react2.default.createElement('input', {
+	            type: 'checkbox',
+	            checked: this.state.isActive,
+	            onChange: this.handleInputChange.bind(this, 'isActive')
+	          }),
+	          _react2.default.createElement(
+	            'span',
+	            null,
+	            'Active'
+	          )
+	        ),
+	        _react2.default.createElement(
+	          'button',
+	          { type: 'submit', className: 'msi', disabled: !this.state.name || this.state.isFetching },
+	          'Create'
+	        )
+	      );
+	    }
+	  }]);
+
+	  return SurveysNew;
+	}(_react.Component);
+
+	SurveysNew.propTypes = {
+	  actions: _react.PropTypes.object.isRequired,
+	  onCreate: _react.PropTypes.func
+	};
+
+	exports.default = SurveysNew;
+
+/***/ },
 /* 297 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -58464,9 +58603,17 @@
 	  switch (action.type) {
 	    case 'CREATE_SURVEY_RECEIVE':
 	      return state.concat(action.survey);
+	    case 'UPDATE_SURVEY_REQUEST':
+	      return state.map(function (survey) {
+	        return survey.id === action.id ? Object.assign(survey, { isFetching: true }) : survey;
+	      });
 	    case 'UPDATE_SURVEY_RECEIVE':
 	      return state.map(function (survey) {
-	        return survey.id === action.id ? action.survey : survey;
+	        return survey.id === action.id ? Object.assign(action.survey, { isFetching: false }) : survey;
+	      });
+	    case 'UPDATE_SURVEY_ERROR':
+	      return state.map(function (survey) {
+	        return survey.id === action.id ? Object.assign(survey, { isFetching: false, error: action.error }) : survey;
 	      });
 	    case 'DESTROY_SURVEY_RECEIVE':
 	      return state.filter(function (survey) {
@@ -58653,8 +58800,7 @@
 	}
 
 /***/ },
-/* 418 */,
-/* 419 */
+/* 418 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -58679,22 +58825,22 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var SurveysForm = function (_Component) {
-	  _inherits(SurveysForm, _Component);
+	var SurveysEdit = function (_Component) {
+	  _inherits(SurveysEdit, _Component);
 
-	  function SurveysForm(props) {
-	    _classCallCheck(this, SurveysForm);
+	  function SurveysEdit(props) {
+	    _classCallCheck(this, SurveysEdit);
 
-	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(SurveysForm).call(this, props));
+	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(SurveysEdit).call(this, props));
 
 	    var survey = props.surveys.find(function (survey) {
 	      return survey.id === props.id;
 	    });
 
 	    _this.state = {
-	      name: survey ? survey.name : '',
-	      isActive: survey ? survey.isActive : true,
-	      isFetching: false
+	      survey: survey,
+	      name: survey.name,
+	      isActive: survey.isActive
 	    };
 	    return _this;
 	  }
@@ -58703,7 +58849,7 @@
 	  //
 
 
-	  _createClass(SurveysForm, [{
+	  _createClass(SurveysEdit, [{
 	    key: 'getAttributes',
 	    value: function getAttributes() {
 	      return {
@@ -58724,27 +58870,15 @@
 	  }, {
 	    key: 'handleSubmit',
 	    value: function handleSubmit(event) {
-	      var _this2 = this;
-
 	      event.preventDefault();
 	      var _props = this.props;
 	      var id = _props.id;
 	      var actions = _props.actions;
-	      var onSubmit = _props.onSubmit;
+	      var onUpdate = _props.onUpdate;
 
-	      this.setState({ isFetching: true });
-
-	      if (id) {
-	        actions.updateSurvey(id, this.getAttributes()).then(function () {
-	          _this2.setState({ isFetching: false });
-	          onSubmit();
-	        });
-	      } else {
-	        actions.createSurvey(this.getAttributes()).then(function () {
-	          onSubmit();
-	          _this2.setState({ isFetching: false });
-	        });
-	      }
+	      actions.updateSurvey(id, this.getAttributes()).then(function () {
+	        return onUpdate();
+	      });
 	    }
 
 	    // renderers
@@ -58788,26 +58922,27 @@
 	        ),
 	        _react2.default.createElement(
 	          'button',
-	          { type: 'submit', className: 'msi', disabled: !this.state.name || this.state.isFetching },
-	          this.props.id ? 'Update' : 'Create'
+	          { type: 'submit', className: 'msi', disabled: !this.state.name || this.state.survey.isFetching },
+	          'Update'
 	        )
 	      );
 	    }
 	  }]);
 
-	  return SurveysForm;
+	  return SurveysEdit;
 	}(_react.Component);
 
-	SurveysForm.propTypes = {
-	  id: _react.PropTypes.string,
+	SurveysEdit.propTypes = {
+	  id: _react.PropTypes.string.isRequired,
 	  surveys: _react.PropTypes.array.isRequired,
 	  actions: _react.PropTypes.object.isRequired,
-	  onSubmit: _react.PropTypes.func
+	  onUpdate: _react.PropTypes.func
 	};
 
-	exports.default = SurveysForm;
+	exports.default = SurveysEdit;
 
 /***/ },
+/* 419 */,
 /* 420 */
 /***/ function(module, exports, __webpack_require__) {
 

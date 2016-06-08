@@ -7,7 +7,7 @@ import { surveysActions } from '../actions'
 
 import Header from '../components/Header'
 import SurveysList from '../components/admin/SurveysList'
-import SurveysForm from '../components/admin/SurveysForm'
+import SurveysNew from '../components/admin/SurveysNew'
 import Footer from '../components/Footer'
 
 
@@ -20,7 +20,7 @@ class SurveysApp extends Component {
     this.refs.modal.show()
   }
 
-  handleSurveySubmit() {
+  handleSurveyCreate() {
     this.refs.modal.hide()
   }
 
@@ -38,10 +38,9 @@ class SurveysApp extends Component {
           <a href="" onClick={ this.handleNewClick.bind(this) }>New</a>
           <Modal ref="modal">
             <div className="modal-content surveys-new">
-              <SurveysForm
-                surveys={ surveys }
+              <SurveysNew
                 actions={ actions }
-                onSubmit={ this.handleSurveySubmit.bind(this) }
+                onCreate={ this.handleSurveyCreate.bind(this) }
               />
             </div>
           </Modal>
