@@ -47,11 +47,11 @@ class SurveysList extends Component {
   }
 
   render() {
-    const { surveys, actions } = this.props
+    const { surveys, questions, actions } = this.props
 
     return (
       <div>
-        <h2>Surveys:</h2>
+        <h2>Surveys</h2>
 
         <ul className="surveys-list">
           { sortBy(surveys, 'name').map(this.renderSurvey.bind(this)) }
@@ -62,6 +62,7 @@ class SurveysList extends Component {
             <SurveysEdit
               id={ this.state.selectedSurveyId }
               surveys={ surveys }
+              questions={ questions }
               actions={ actions }
               onUpdate={ this.handleUpdate.bind(this) }
             />
@@ -75,6 +76,7 @@ class SurveysList extends Component {
 
 SurveysList.propTypes = {
   surveys: PropTypes.array.isRequired,
+  questions: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired,
 }
 

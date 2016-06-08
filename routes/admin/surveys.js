@@ -2,7 +2,7 @@ import { Router } from 'express'
 import { checkTeamId } from '../helpers'
 import { checkAuth, getTeam } from './helpers'
 import { appName } from '../../lib'
-import { Survey } from '../../models'
+import { Survey, SurveyQuestion } from '../../models'
 
 const permittedAttrs = ['name', 'isActive']
 const router = Router()
@@ -23,7 +23,14 @@ function getFilteredAttrs(attrs) {
 router.get('/', checkTeamId, checkAuth, async (req, res, next) => {
   const team = await getTeam(req.session.teamId)
   const surveys = await Survey.findAll()
-  res.render('admin/surveys', { title: `${appName} Surveys`, team: team, surveys: surveys })
+  const questions = await SurveyQuestion.findAll()
+
+  res.render('admin/surveys', {
+    title: `${appName} Surveys`,
+    team: team,
+    surveys: surveys,
+    questions: questions,
+  })
 })
 
 router.post('/', checkTeamId, checkAuth, (req, res, next) => {
@@ -48,8 +55,8 @@ router.put('/:id', checkTeamId, checkAuth, (req, res, next) => {
   })
 })
 
-router.delete('/', checkTeamId, checkAuth, (req, res, next) => {
-  Survey.findById(req.body.id).then(survey => {
+router.delete('/:id', checkTeamId, checkAuth, (req, res, next) => {
+  Survey.findById(req.params.id).then(survey => {
     survey.destroy()
     res.json({ message: 'ok' })
   }).catch(error => {

@@ -29,9 +29,8 @@ function destroySurvey(id) {
   return function (dispatch) {
     dispatch(requestDestroySurvey(id))
 
-    return fetch('/admin/surveys', {
+    return fetch(`/admin/surveys/${id}`, {
       method: 'DELETE',
-      body: JSON.stringify({ id }),
       credentials: 'same-origin',
       headers: { 'Content-Type': 'application/json' },
     }).then(response => response.json()).then(json => {

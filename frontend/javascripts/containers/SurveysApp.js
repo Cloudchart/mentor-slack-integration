@@ -27,14 +27,19 @@ class SurveysApp extends Component {
   // renderers
   //
   render() {
-    const { team, surveys, actions } = this.props
+    const { team, surveys, questions, actions } = this.props
 
     return (
       <div className="container surveys">
         <Header team={ team } />
 
         <div className="content">
-          <SurveysList surveys={ surveys } actions={ actions } />
+          <SurveysList
+            surveys={ surveys }
+            questions={ questions }
+            actions={ actions }
+          />
+
           <a href="" onClick={ this.handleNewClick.bind(this) }>New</a>
           <Modal ref="modal">
             <div className="modal-content surveys-new">
@@ -56,6 +61,7 @@ class SurveysApp extends Component {
 SurveysApp.propTypes = {
   team: PropTypes.object.isRequired,
   surveys: PropTypes.array.isRequired,
+  questions: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired,
 }
 
@@ -63,6 +69,7 @@ function mapStateToProps(state) {
   return {
     team: state.team,
     surveys: state.surveys,
+    questions: state.questions,
   }
 }
 
