@@ -24,7 +24,10 @@ module.exports = function(sequelize, DataTypes) {
 
     slug: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        notEmpty: true
+      }
     },
 
     isActive: {

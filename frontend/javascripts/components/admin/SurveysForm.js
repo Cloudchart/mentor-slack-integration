@@ -1,13 +1,16 @@
 import React, { Component, PropTypes } from 'react'
 
 
-class SurveysNew extends Component {
+class SurveysForm extends Component {
 
   constructor(props) {
     super(props)
+    const survey = props.surveys.find(survey => survey.id === props.id)
+
     this.state = {
-      name: '',
-      isActive: true,
+      name: survey ? survey.name : '',
+      isActive: survey ? survey.isActive : true,
+      isFetching: false,
     }
   }
 
@@ -20,14 +23,6 @@ class SurveysNew extends Component {
     }
   }
 
-  // lifecycle
-  //
-  // conponentDidMount() {
-  // }
-
-  // componentWillReceiveProps(nextProps) {
-  // }
-
   // handlers
   //
   handleInputChange(attr, event) {
@@ -37,7 +32,20 @@ class SurveysNew extends Component {
 
   handleSubmit(event) {
     event.preventDefault()
-    this.props.actions.createSurvey(this.getAttributes()).then(() => this.props.onCreate())
+    const { id, actions, onSubmit } = this.props
+    this.setState({ isFetching: true })
+
+    if (id) {
+      actions.updateSurvey(id, this.getAttributes()).then(() => {
+        this.setState({ isFetching: false })
+        onSubmit()
+      })
+    } else {
+      actions.createSurvey(this.getAttributes()).then(() => {
+        onSubmit()
+        this.setState({ isFetching: false })
+      })
+    }
   }
 
   // renderers
@@ -63,8 +71,8 @@ class SurveysNew extends Component {
           />
           <span>Active</span>
         </label>
-        <button type="submit" className="msi" disabled={ !this.state.name }>
-          Create
+        <button type="submit" className="msi" disabled={ !this.state.name || this.state.isFetching }>
+          { this.props.id ? 'Update' : 'Create' }
         </button>
       </form>
     )
@@ -72,10 +80,12 @@ class SurveysNew extends Component {
 
 }
 
-SurveysNew.propTypes = {
+SurveysForm.propTypes = {
+  id: PropTypes.string,
+  surveys: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired,
-  onCreate: PropTypes.func,
+  onSubmit: PropTypes.func,
 }
 
 
-export default SurveysNew
+export default SurveysForm

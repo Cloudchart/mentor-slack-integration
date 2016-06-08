@@ -1,12 +1,32 @@
 import React, { Component, PropTypes } from 'react'
+import Modal from 'boron/FadeModal'
 import { sortBy } from 'lodash'
+import SurveysForm from './SurveysForm'
 
 
 class SurveysList extends Component {
 
+  constructor(props) {
+    super(props)
+    this.state = {
+      selectedSurveyId: null,
+    }
+  }
+
   // handlers
   //
-  handleRemove(id) {
+  handleEdit(id, event) {
+    event.preventDefault()
+    this.setState({ selectedSurveyId: id })
+    this.refs.modal.show()
+  }
+
+  handleUpdate() {
+    this.refs.modal.hide()
+  }
+
+  handleDestroy(id, event) {
+    event.preventDefault()
     this.props.actions.destroySurvey(id)
   }
 
@@ -16,13 +36,18 @@ class SurveysList extends Component {
     return(
       <li>
         <span>{ survey.name }</span>
-        <i className="fa fa-remove" onClick={ this.handleRemove.bind(this, survey.id) }/>
+        <span> | </span>
+        { survey.isActive ? <i className="fa fa-check"/> : <i className="fa fa-times"/> }
+        <span> | </span>
+        <a href="" onClick={ this.handleEdit.bind(this, survey.id) }>Edit</a>
+        <span> | </span>
+        <a href="" onClick={ this.handleDestroy.bind(this, survey.id) }>Destroy</a>
       </li>
     )
   }
 
   render() {
-    const { surveys } = this.props
+    const { surveys, actions } = this.props
 
     return (
       <div>
@@ -31,6 +56,17 @@ class SurveysList extends Component {
         <ul className="surveys-list">
           { sortBy(surveys, 'name').map(this.renderSurvey.bind(this)) }
         </ul>
+
+        <Modal ref="modal">
+          <div className="modal-content surveys-edit">
+            <SurveysForm
+              id={ this.state.selectedSurveyId }
+              surveys={ surveys }
+              actions={ actions }
+              onSubmit={ this.handleUpdate.bind(this) }
+            />
+          </div>
+        </Modal>
       </div>
     )
   }
