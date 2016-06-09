@@ -43897,16 +43897,31 @@
 	  }
 
 	  _createClass(QuestionsList, [{
-	    key: 'handleCreateQuestion',
+	    key: 'getQuestions',
 
+
+	    // helpers
+	    //
+	    value: function getQuestions() {
+	      var _props = this.props;
+	      var questions = _props.questions;
+	      var survey = _props.survey;
+
+	      return questions.filter(function (question) {
+	        return question.surveyId === survey.id;
+	      });
+	    }
 
 	    // handlers
 	    //
+
+	  }, {
+	    key: 'handleCreateQuestion',
 	    value: function handleCreateQuestion(event) {
 	      event.preventDefault();
-	      var _props = this.props;
-	      var survey = _props.survey;
-	      var actions = _props.actions;
+	      var _props2 = this.props;
+	      var survey = _props2.survey;
+	      var actions = _props2.actions;
 
 	      actions.createQuestion(survey.id);
 	    }
@@ -43926,7 +43941,7 @@
 	        _react2.default.createElement(
 	          'ul',
 	          { className: 'questions' },
-	          this.props.questions.map(function (question) {
+	          this.getQuestions().map(function (question) {
 	            return _react2.default.createElement(_Question2.default, { question: question, actions: actions });
 	          })
 	        ),
@@ -59203,7 +59218,6 @@
 	      return state.filter(function (question) {
 	        return question.id !== action.id;
 	      });
-
 	    default:
 	      return state;
 	  }

@@ -4,6 +4,13 @@ import Question from './Question'
 
 class QuestionsList extends Component {
 
+  // helpers
+  //
+  getQuestions() {
+    const { questions, survey } = this.props
+    return questions.filter(question => question.surveyId === survey.id)
+  }
+
   // handlers
   //
   handleCreateQuestion(event) {
@@ -21,7 +28,7 @@ class QuestionsList extends Component {
       <div>
         <ul className="questions">
           {
-            this.props.questions.map(question => {
+            this.getQuestions().map(question => {
               return <Question question={ question } actions={ actions } />
             })
           }

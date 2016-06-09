@@ -16,7 +16,6 @@ export default function questions(state = [], action) {
       )
     case 'DESTROY_QUESTION_RECEIVE':
       return state.filter(question => question.id !== action.id)
-
     default:
       return state
   }
