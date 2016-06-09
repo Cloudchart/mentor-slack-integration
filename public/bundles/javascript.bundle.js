@@ -20726,6 +20726,14 @@
 
 	var _createQuestion2 = _interopRequireDefault(_createQuestion);
 
+	var _updateQuestion = __webpack_require__(425);
+
+	var _updateQuestion2 = _interopRequireDefault(_updateQuestion);
+
+	var _destroyQuestion = __webpack_require__(424);
+
+	var _destroyQuestion2 = _interopRequireDefault(_destroyQuestion);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var configActions = exports.configActions = {
@@ -20745,7 +20753,9 @@
 	  createSurvey: _createSurvey2.default,
 	  updateSurvey: _updateSurvey2.default,
 	  destroySurvey: _destroySurvey2.default,
-	  createQuestion: _createQuestion2.default
+	  createQuestion: _createQuestion2.default,
+	  updateQuestion: _updateQuestion2.default,
+	  destroyQuestion: _destroyQuestion2.default
 	};
 
 /***/ },
@@ -59177,6 +59187,23 @@
 	  switch (action.type) {
 	    case 'CREATE_QUESTION_RECEIVE':
 	      return state.concat(action.question);
+	    case 'DESTROY_QUESTION_RECEIVE':
+	      return state.filter(function (question) {
+	        return question.id !== action.id;
+	      });
+	    case 'UPDATE_QUESTION_RECEIVE':
+	      return state.map(function (question) {
+	        return question.id === action.id ? Object.assign(action.question, { isFetching: false }) : question;
+	      });
+	    case 'UPDATE_QUESTION_ERROR':
+	      return state.map(function (question) {
+	        return question.id === action.id ? Object.assign(question, { isFetching: false, error: action.error }) : question;
+	      });
+	    case 'DESTROY_QUESTION_RECEIVE':
+	      return state.filter(function (question) {
+	        return question.id !== action.id;
+	      });
+
 	    default:
 	      return state;
 	  }
@@ -59251,7 +59278,7 @@
 /* 423 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -59289,58 +59316,70 @@
 
 	  // lifecycle
 	  //
-	  // conponentDidMount() {
-	  // }
-
-	  // componentWillReceiveProps(nextProps) {
-	  // }
-
-	  // handlers
-	  //
 
 
 	  _createClass(Question, [{
-	    key: 'handleInputChange',
+	    key: "componentWillReceiveProps",
+	    value: function componentWillReceiveProps(nextProps) {
+	      this.setState({ name: nextProps.question.name });
+	    }
+
+	    // helpers
+	    //
+
+	  }, {
+	    key: "getAttrs",
+	    value: function getAttrs() {
+	      return {
+	        name: this.state.name
+	      };
+	    }
+
+	    // handlers
+	    //
+
+	  }, {
+	    key: "handleInputChange",
 	    value: function handleInputChange(attr, event) {
 	      this.setState(_defineProperty({}, attr, event.target.value));
 	    }
 	  }, {
-	    key: 'handleUpdate',
+	    key: "handleUpdate",
 	    value: function handleUpdate(event) {
-	      console.log('handleUpdate');
+	      this.props.actions.updateQuestion(this.props.question.id, this.getAttrs());
 	    }
 	  }, {
-	    key: 'handleDestroy',
+	    key: "handleDestroy",
 	    value: function handleDestroy(event) {
 	      event.preventDefault();
-	      console.log('handleDestroy');
+	      this.props.actions.destroyQuestion(this.props.question.id);
 	    }
 
 	    // renderers
 	    //
 
 	  }, {
-	    key: 'render',
+	    key: "render",
 	    value: function render() {
 	      return _react2.default.createElement(
-	        'li',
+	        "li",
 	        null,
-	        _react2.default.createElement('input', {
-	          type: 'text',
-	          placeholder: 'Enter question name',
+	        _react2.default.createElement("input", {
+	          type: "text",
+	          placeholder: "Enter question name",
 	          value: this.state.name,
 	          onChange: this.handleInputChange.bind(this, 'name'),
 	          onBlur: this.handleUpdate.bind(this)
 	        }),
 	        _react2.default.createElement(
-	          'span',
+	          "span",
 	          null,
-	          ' | '
+	          " | "
 	        ),
 	        _react2.default.createElement(
-	          'a',
-	          { href: '', onClick: this.handleDestroy.bind(this) },
-	          'Destroy'
+	          "a",
+	          { href: "", onClick: this.handleDestroy.bind(this) },
+	          "Destroy"
 	        )
 	      );
 	    }
@@ -59355,6 +59394,136 @@
 	};
 
 	exports.default = Question;
+
+/***/ },
+/* 424 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _isomorphicFetch = __webpack_require__(180);
+
+	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function requestDestroyQuestion(id) {
+	  return {
+	    type: 'DESTROY_QUESTION_REQUEST',
+	    id: id
+	  };
+	}
+
+	function receiveDestroyQuestion(id, json) {
+	  return {
+	    type: 'DESTROY_QUESTION_RECEIVE',
+	    id: id,
+	    receivedAt: Date.now()
+	  };
+	}
+
+	function catchDestroyQuestionError(id, error) {
+	  return {
+	    type: 'DESTROY_QUESTION_ERROR',
+	    id: id,
+	    error: error,
+	    receivedAt: Date.now()
+	  };
+	}
+
+	function destroyQuestion(id) {
+	  return function (dispatch) {
+	    dispatch(requestDestroyQuestion(id));
+
+	    return (0, _isomorphicFetch2.default)('/admin/questions/' + id, {
+	      method: 'DELETE',
+	      credentials: 'same-origin',
+	      headers: { 'Content-Type': 'application/json' }
+	    }).then(function (response) {
+	      return response.json();
+	    }).then(function (json) {
+	      if (json.error) {
+	        return dispatch(catchDestroyQuestionError(id, json.error));
+	      } else {
+	        return dispatch(receiveDestroyQuestion(id, json));
+	      }
+	    }).catch(function (error) {
+	      return dispatch(catchDestroyQuestionError(id, error));
+	    });
+	  };
+	}
+
+	exports.default = destroyQuestion;
+
+/***/ },
+/* 425 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _isomorphicFetch = __webpack_require__(180);
+
+	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function requestUpdateQuestion(id) {
+	  return {
+	    type: 'UPDATE_QUESTION_REQUEST',
+	    id: id
+	  };
+	}
+
+	function receiveUpdateQuestion(id, json) {
+	  return {
+	    type: 'UPDATE_QUESTION_RECEIVE',
+	    id: id,
+	    question: json,
+	    receivedAt: Date.now()
+	  };
+	}
+
+	function catchUpdateQuestionError(id, error) {
+	  return {
+	    type: 'UPDATE_QUESTION_ERROR',
+	    id: id,
+	    error: error,
+	    receivedAt: Date.now()
+	  };
+	}
+
+	function updateQuestion(id, attrs) {
+	  return function (dispatch) {
+	    dispatch(requestUpdateQuestion(id));
+
+	    return (0, _isomorphicFetch2.default)('/admin/questions/' + id, {
+	      method: 'PUT',
+	      body: JSON.stringify(attrs),
+	      credentials: 'same-origin',
+	      headers: { 'Content-Type': 'application/json' }
+	    }).then(function (response) {
+	      return response.json();
+	    }).then(function (json) {
+	      if (json.error) {
+	        return dispatch(catchUpdateQuestionError(id, json.error));
+	      } else {
+	        return dispatch(receiveUpdateQuestion(id, json));
+	      }
+	    }).catch(function (error) {
+	      return dispatch(catchUpdateQuestionError(id, error));
+	    });
+	  };
+	}
+
+	exports.default = updateQuestion;
 
 /***/ }
 /******/ ]);

@@ -47,7 +47,7 @@ app.use('/themes', themes);
 app.use('/time_settings', timeSettings);
 app.use('/admin/teams', teams);
 app.use('/admin/surveys', surveys);
-app.use('/admin/surveys/:surveyId/questions', questions);
+app.use('/admin', questions);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

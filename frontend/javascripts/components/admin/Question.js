@@ -12,11 +12,17 @@ class Question extends Component {
 
   // lifecycle
   //
-  // conponentDidMount() {
-  // }
+  componentWillReceiveProps(nextProps) {
+    this.setState({ name: nextProps.question.name })
+  }
 
-  // componentWillReceiveProps(nextProps) {
-  // }
+  // helpers
+  //
+  getAttrs() {
+    return {
+      name: this.state.name
+    }
+  }
 
   // handlers
   //
@@ -25,12 +31,12 @@ class Question extends Component {
   }
 
   handleUpdate(event) {
-    console.log('handleUpdate');
+    this.props.actions.updateQuestion(this.props.question.id, this.getAttrs())
   }
 
   handleDestroy(event) {
     event.preventDefault()
-    console.log('handleDestroy');
+    this.props.actions.destroyQuestion(this.props.question.id)
   }
 
   // renderers

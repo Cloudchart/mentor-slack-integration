@@ -5,12 +5,12 @@ import { appName } from '../../lib'
 import { Survey, SurveyQuestion } from '../../models'
 
 const permittedAttrs = ['name']
-const router = Router({ mergeParams: true })
+const router = Router()
 
 
 // actions
 //
-router.post('/', checkTeamId, checkAuth, (req, res, next) => {
+router.post('/surveys/:surveyId/questions', checkTeamId, checkAuth, (req, res, next) => {
   Survey.findById(req.params.surveyId).then(survey => {
     SurveyQuestion.create({ surveyId: survey.id }).then(surveyQuestion => {
       res.json(surveyQuestion)
@@ -22,11 +22,26 @@ router.post('/', checkTeamId, checkAuth, (req, res, next) => {
   })
 })
 
-router.put('/:id', checkTeamId, checkAuth, (req, res, next) => {
-  // const attrs = getFilteredAttrs(req.body, permittedAttrs)
+router.put('/questions/:id', checkTeamId, checkAuth, (req, res, next) => {
+  SurveyQuestion.findById(req.params.id).then(question => {
+    const attrs = getFilteredAttrs(req.body, permittedAttrs)
+    question.update(attrs).then(question => {
+      res.json(question)
+    }).catch(error => {
+      res.status(500).json({ error })
+    })
+  }).catch(error => {
+    res.status(404).json({ message: 'not found' })
+  })
 })
 
-router.delete('/:id', checkTeamId, checkAuth, (req, res, next) => {
+router.delete('/questions/:id', checkTeamId, checkAuth, (req, res, next) => {
+  SurveyQuestion.findById(req.params.id).then(question => {
+    question.destroy()
+    res.json({ message: 'ok' })
+  }).catch(error => {
+    res.status(404).json({ message: 'not found' })
+  })
 })
 
 

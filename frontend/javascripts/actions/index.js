@@ -24,6 +24,8 @@ import createSurvey from './admin/createSurvey'
 import updateSurvey from './admin/updateSurvey'
 import destroySurvey from './admin/destroySurvey'
 import createQuestion from './admin/createQuestion'
+import updateQuestion from './admin/updateQuestion'
+import destroyQuestion from './admin/destroyQuestion'
 
 export const teamsActions = {}
 export const usersActions = { fetchMessages, fetchThemes, postMessage }
@@ -31,5 +33,7 @@ export const surveysActions = {
   createSurvey,
   updateSurvey,
   destroySurvey,
-  createQuestion
+  createQuestion,
+  updateQuestion,
+  destroyQuestion,
 }
