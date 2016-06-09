@@ -47,14 +47,14 @@ class SurveysList extends Component {
   }
 
   render() {
-    const { surveys, questions, actions } = this.props
+    const { surveys, questions, answers, actions } = this.props
 
     return (
       <div>
         <h2>Surveys</h2>
 
         <ul className="surveys-list">
-          { sortBy(surveys, 'name').map(this.renderSurvey.bind(this)) }
+          { sortBy(surveys, survey => survey.name.toLowerCase()).map(this.renderSurvey.bind(this)) }
         </ul>
 
         <Modal ref="modal">
@@ -63,6 +63,7 @@ class SurveysList extends Component {
               id={ this.state.selectedSurveyId }
               surveys={ surveys }
               questions={ questions }
+              answers={ answers }
               actions={ actions }
               onUpdate={ this.handleUpdate.bind(this) }
             />
@@ -77,6 +78,7 @@ class SurveysList extends Component {
 SurveysList.propTypes = {
   surveys: PropTypes.array.isRequired,
   questions: PropTypes.array.isRequired,
+  answers: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired,
 }
 

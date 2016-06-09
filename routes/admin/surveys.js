@@ -1,22 +1,12 @@
 import { Router } from 'express'
 import { checkTeamId } from '../helpers'
-import { checkAuth, getTeam } from './helpers'
+import { checkAuth, getTeam, getFilteredAttrs } from './helpers'
 import { appName } from '../../lib'
-import { Survey, SurveyQuestion } from '../../models'
+import { Survey, SurveyQuestion, SurveyAnswer } from '../../models'
 
 const permittedAttrs = ['name', 'isActive']
 const router = Router()
 
-
-// helpers
-//
-function getFilteredAttrs(attrs) {
-  let filteredAttrs = {}
-  Object.keys(attrs).forEach(key => {
-    if (permittedAttrs.includes(key)) filteredAttrs[key] = attrs[key]
-  })
-  return filteredAttrs
-}
 
 // actions
 //
@@ -24,17 +14,19 @@ router.get('/', checkTeamId, checkAuth, async (req, res, next) => {
   const team = await getTeam(req.session.teamId)
   const surveys = await Survey.findAll()
   const questions = await SurveyQuestion.findAll()
+  const answers = await SurveyAnswer.findAll()
 
   res.render('admin/surveys', {
     title: `${appName} Surveys`,
     team: team,
     surveys: surveys,
     questions: questions,
+    answers: answers,
   })
 })
 
 router.post('/', checkTeamId, checkAuth, (req, res, next) => {
-  const attrs = getFilteredAttrs(req.body)
+  const attrs = getFilteredAttrs(req.body, permittedAttrs)
   Survey.create(attrs).then(survey => {
     res.json(survey)
   }).catch(error => {
@@ -44,7 +36,7 @@ router.post('/', checkTeamId, checkAuth, (req, res, next) => {
 
 router.put('/:id', checkTeamId, checkAuth, (req, res, next) => {
   Survey.findById(req.params.id).then(survey => {
-    const attrs = getFilteredAttrs(req.body)
+    const attrs = getFilteredAttrs(req.body, permittedAttrs)
     survey.update(attrs).then(survey => {
       res.json(survey)
     }).catch(error => {

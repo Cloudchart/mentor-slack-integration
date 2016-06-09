@@ -27,7 +27,7 @@ class SurveysApp extends Component {
   // renderers
   //
   render() {
-    const { team, surveys, questions, actions } = this.props
+    const { team, surveys, questions, answers, actions } = this.props
 
     return (
       <div className="container surveys">
@@ -37,6 +37,7 @@ class SurveysApp extends Component {
           <SurveysList
             surveys={ surveys }
             questions={ questions }
+            answers={ answers }
             actions={ actions }
           />
 
@@ -62,6 +63,7 @@ SurveysApp.propTypes = {
   team: PropTypes.object.isRequired,
   surveys: PropTypes.array.isRequired,
   questions: PropTypes.array.isRequired,
+  answers: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired,
 }
 
@@ -70,6 +72,7 @@ function mapStateToProps(state) {
     team: state.team,
     surveys: state.surveys,
     questions: state.questions,
+    answers: state.answers,
   }
 }
 

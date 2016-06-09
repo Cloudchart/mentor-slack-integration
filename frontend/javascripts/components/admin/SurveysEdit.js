@@ -40,23 +40,26 @@ class SurveysEdit extends Component {
     this.setState({ [attr]: value })
   }
 
-  handleSubmit(event) {
-    event.preventDefault()
-    const { id, actions, onUpdate } = this.props
+  handleUpdate(event) {
+    const { id, actions } = this.props
     actions.updateSurvey(id, this.getAttributes())
+  }
+
+  handleOkClick(event) {
+    this.props.onUpdate()
   }
 
   // renderers
   //
   render() {
-    const { questions, actions } = this.props
+    const { questions, answers, actions } = this.props
     const { survey } = this.state
 
     return (
-      <div>
+      <div className="surveys-edit">
         <h2>{ `${survey.name} survey` }</h2>
 
-        <form onSubmit={ this.handleSubmit.bind(this) }>
+        <form>
           <label>
             <span>Name</span>
             <input
@@ -65,6 +68,7 @@ class SurveysEdit extends Component {
               value={ this.state.name }
               placeholder={ 'Enter survey name' }
               onChange={ this.handleInputChange.bind(this, 'name') }
+              onBlur={ this.handleUpdate.bind(this) }
             />
           </label>
           <label>
@@ -72,16 +76,25 @@ class SurveysEdit extends Component {
               type="checkbox"
               checked={ this.state.isActive }
               onChange={ this.handleInputChange.bind(this, 'isActive') }
+              onBlur={ this.handleUpdate.bind(this) }
             />
             <span>Active</span>
           </label>
-          <button type="submit" className="msi" disabled={ !this.state.name || survey.isFetching }>
-            Update
-          </button>
         </form>
 
         <h2>Questions</h2>
-        <QuestionsList survey={ survey } questions={ questions } actions={ actions } />
+        <QuestionsList
+          survey={ survey }
+          questions={ questions }
+          answers={ answers }
+          actions={ actions }
+        />
+
+        <div className="actions">
+          <button className="msi" onClick={ this.handleOkClick.bind(this) }>
+            Ok
+          </button>
+        </div>
       </div>
     )
   }
@@ -92,6 +105,7 @@ SurveysEdit.propTypes = {
   id: PropTypes.string.isRequired,
   surveys: PropTypes.array.isRequired,
   questions: PropTypes.array.isRequired,
+  answers: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired,
   onUpdate: PropTypes.func,
 }

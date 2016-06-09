@@ -22,14 +22,14 @@ class QuestionsList extends Component {
   // renderers
   //
   render() {
-    const { actions } = this.props
+    const { answers, actions } = this.props
 
     return (
       <div>
         <ul className="questions">
           {
             this.getQuestions().map(question => {
-              return <Question question={ question } actions={ actions } />
+              return <Question question={ question } answers={ answers } actions={ actions } />
             })
           }
         </ul>
@@ -43,6 +43,7 @@ class QuestionsList extends Component {
 QuestionsList.propTypes = {
   survey: PropTypes.object.isRequired,
   questions: PropTypes.array.isRequired,
+  answers: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired,
 }
 

@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react'
+import AnswersList from './AnswersList'
 
 
 class Question extends Component {
@@ -36,12 +37,14 @@ class Question extends Component {
 
   handleDestroy(event) {
     event.preventDefault()
-    this.props.actions.destroyQuestion(this.props.question.id)
+    if (window.confirm('Are you sure?')) this.props.actions.destroyQuestion(this.props.question.id)
   }
 
   // renderers
   //
   render() {
+    const { question, answers, actions } = this.props
+
     return (
       <li>
         <input
@@ -53,6 +56,7 @@ class Question extends Component {
         />
         <span> | </span>
         <a href="" onClick={ this.handleDestroy.bind(this) }>Destroy</a>
+        <AnswersList question={ question } answers={ answers } actions={ actions } />
       </li>
     )
   }
@@ -61,6 +65,7 @@ class Question extends Component {
 
 Question.propTypes = {
   question: PropTypes.object.isRequired,
+  answers: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired,
 }
 
