@@ -1,6 +1,8 @@
 import React, { Component, PropTypes } from 'react'
 import Modal from 'boron/FadeModal'
 import { sortBy } from 'lodash'
+
+import SurveysNew from './SurveysNew'
 import SurveysEdit from './SurveysEdit'
 
 
@@ -15,14 +17,22 @@ class SurveysList extends Component {
 
   // handlers
   //
-  handleEdit(id, event) {
+  handleNew(event) {
     event.preventDefault()
-    this.setState({ selectedSurveyId: id })
     this.refs.modal.show()
   }
 
-  handleUpdate() {
+  handleCreate() {
     this.refs.modal.hide()
+  }
+
+  handleEdit(id, event) {
+    event.preventDefault()
+    this.setState({ selectedSurveyId: id })
+  }
+
+  handleReturn() {
+    this.setState({ selectedSurveyId: null })
   }
 
   handleDestroy(id, event) {
@@ -49,6 +59,17 @@ class SurveysList extends Component {
   render() {
     const { surveys, questions, answers, actions } = this.props
 
+    if (this.state.selectedSurveyId) return (
+      <SurveysEdit
+        id={ this.state.selectedSurveyId }
+        surveys={ surveys }
+        questions={ questions }
+        answers={ answers }
+        actions={ actions }
+        onReturn={ this.handleReturn.bind(this) }
+      />
+    )
+
     return (
       <div>
         <h2>Surveys</h2>
@@ -57,15 +78,12 @@ class SurveysList extends Component {
           { sortBy(surveys, survey => survey.name.toLowerCase()).map(this.renderSurvey.bind(this)) }
         </ul>
 
+        <a href="" onClick={ this.handleNew.bind(this) }>New</a>
         <Modal ref="modal">
-          <div className="modal-content surveys-edit">
-            <SurveysEdit
-              id={ this.state.selectedSurveyId }
-              surveys={ surveys }
-              questions={ questions }
-              answers={ answers }
+          <div className="modal-content surveys-new">
+            <SurveysNew
               actions={ actions }
-              onUpdate={ this.handleUpdate.bind(this) }
+              onCreate={ this.handleCreate.bind(this) }
             />
           </div>
         </Modal>

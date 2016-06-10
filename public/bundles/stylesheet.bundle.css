@@ -2671,12 +2671,7 @@ div.container footer {
 .container.surveys > .content .answers-list {
   margin: 0 0 30px 30px; }
 
-.container.surveys > .content .surveys-edit .actions {
-  display: -webkit-flex;
-  display: -moz-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -ms-flex-pack: end;
-  -webkit-justify-content: flex-end;
-  -moz-justify-content: flex-end;
-  justify-content: flex-end; }
+.container.surveys > .content .surveys-edit i.fa.fa-chevron-left {
+  cursor: pointer;
+  color: #3BC363;
+  margin-right: 10px; }

@@ -27660,10 +27660,6 @@
 
 	var _reactRedux = __webpack_require__(164);
 
-	var _FadeModal = __webpack_require__(279);
-
-	var _FadeModal2 = _interopRequireDefault(_FadeModal);
-
 	var _actions = __webpack_require__(178);
 
 	var _Header = __webpack_require__(201);
@@ -27673,10 +27669,6 @@
 	var _SurveysList = __webpack_require__(297);
 
 	var _SurveysList2 = _interopRequireDefault(_SurveysList);
-
-	var _SurveysNew = __webpack_require__(304);
-
-	var _SurveysNew2 = _interopRequireDefault(_SurveysNew);
 
 	var _Footer = __webpack_require__(274);
 
@@ -27700,25 +27692,6 @@
 	  }
 
 	  _createClass(SurveysApp, [{
-	    key: 'handleNewClick',
-
-
-	    // handlers
-	    //
-	    value: function handleNewClick(event) {
-	      event.preventDefault();
-	      this.refs.modal.show();
-	    }
-	  }, {
-	    key: 'handleSurveyCreate',
-	    value: function handleSurveyCreate() {
-	      this.refs.modal.hide();
-	    }
-
-	    // renderers
-	    //
-
-	  }, {
 	    key: 'render',
 	    value: function render() {
 	      var _props = this.props;
@@ -27741,24 +27714,7 @@
 	            questions: questions,
 	            answers: answers,
 	            actions: actions
-	          }),
-	          _react2.default.createElement(
-	            'a',
-	            { href: '', onClick: this.handleNewClick.bind(this) },
-	            'New'
-	          ),
-	          _react2.default.createElement(
-	            _FadeModal2.default,
-	            { ref: 'modal' },
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'modal-content surveys-new' },
-	              _react2.default.createElement(_SurveysNew2.default, {
-	                actions: actions,
-	                onCreate: this.handleSurveyCreate.bind(this)
-	              })
-	            )
-	          )
+	          })
 	        ),
 	        _react2.default.createElement(_Footer2.default, null)
 	      );
@@ -27815,6 +27771,10 @@
 
 	var _lodash = __webpack_require__(298);
 
+	var _SurveysNew = __webpack_require__(304);
+
+	var _SurveysNew2 = _interopRequireDefault(_SurveysNew);
+
 	var _SurveysEdit = __webpack_require__(300);
 
 	var _SurveysEdit2 = _interopRequireDefault(_SurveysEdit);
@@ -27846,16 +27806,26 @@
 
 
 	  _createClass(SurveysList, [{
+	    key: 'handleNew',
+	    value: function handleNew(event) {
+	      event.preventDefault();
+	      this.refs.modal.show();
+	    }
+	  }, {
+	    key: 'handleCreate',
+	    value: function handleCreate() {
+	      this.refs.modal.hide();
+	    }
+	  }, {
 	    key: 'handleEdit',
 	    value: function handleEdit(id, event) {
 	      event.preventDefault();
 	      this.setState({ selectedSurveyId: id });
-	      this.refs.modal.show();
 	    }
 	  }, {
-	    key: 'handleUpdate',
-	    value: function handleUpdate() {
-	      this.refs.modal.hide();
+	    key: 'handleReturn',
+	    value: function handleReturn() {
+	      this.setState({ selectedSurveyId: null });
 	    }
 	  }, {
 	    key: 'handleDestroy',
@@ -27916,6 +27886,15 @@
 	      var actions = _props.actions;
 
 
+	      if (this.state.selectedSurveyId) return _react2.default.createElement(_SurveysEdit2.default, {
+	        id: this.state.selectedSurveyId,
+	        surveys: surveys,
+	        questions: questions,
+	        answers: answers,
+	        actions: actions,
+	        onReturn: this.handleReturn.bind(this)
+	      });
+
 	      return _react2.default.createElement(
 	        'div',
 	        null,
@@ -27932,18 +27911,19 @@
 	          }).map(this.renderSurvey.bind(this))
 	        ),
 	        _react2.default.createElement(
+	          'a',
+	          { href: '', onClick: this.handleNew.bind(this) },
+	          'New'
+	        ),
+	        _react2.default.createElement(
 	          _FadeModal2.default,
 	          { ref: 'modal' },
 	          _react2.default.createElement(
 	            'div',
-	            { className: 'modal-content surveys-edit' },
-	            _react2.default.createElement(_SurveysEdit2.default, {
-	              id: this.state.selectedSurveyId,
-	              surveys: surveys,
-	              questions: questions,
-	              answers: answers,
+	            { className: 'modal-content surveys-new' },
+	            _react2.default.createElement(_SurveysNew2.default, {
 	              actions: actions,
-	              onUpdate: this.handleUpdate.bind(this)
+	              onCreate: this.handleCreate.bind(this)
 	            })
 	          )
 	        )
@@ -43994,9 +43974,9 @@
 	      actions.updateSurvey(id, this.getAttributes());
 	    }
 	  }, {
-	    key: 'handleOkClick',
-	    value: function handleOkClick(event) {
-	      this.props.onUpdate();
+	    key: 'handleBackClick',
+	    value: function handleBackClick(event) {
+	      this.props.onReturn();
 	    }
 
 	    // renderers
@@ -44018,7 +43998,12 @@
 	        _react2.default.createElement(
 	          'h2',
 	          null,
-	          survey.name + ' survey'
+	          _react2.default.createElement('i', { className: 'fa fa-chevron-left', onClick: this.handleBackClick.bind(this) }),
+	          _react2.default.createElement(
+	            'span',
+	            null,
+	            survey.name + ' survey'
+	          )
 	        ),
 	        _react2.default.createElement(
 	          'form',
@@ -44066,16 +44051,7 @@
 	          questions: questions,
 	          answers: answers,
 	          actions: actions
-	        }),
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'actions' },
-	          _react2.default.createElement(
-	            'button',
-	            { className: 'msi', onClick: this.handleOkClick.bind(this) },
-	            'Ok'
-	          )
-	        )
+	        })
 	      );
 	    }
 	  }]);
@@ -44089,7 +44065,7 @@
 	  questions: _react.PropTypes.array.isRequired,
 	  answers: _react.PropTypes.array.isRequired,
 	  actions: _react.PropTypes.object.isRequired,
-	  onUpdate: _react.PropTypes.func
+	  onReturn: _react.PropTypes.func
 	};
 
 	exports.default = SurveysEdit;

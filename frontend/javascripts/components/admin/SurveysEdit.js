@@ -45,8 +45,8 @@ class SurveysEdit extends Component {
     actions.updateSurvey(id, this.getAttributes())
   }
 
-  handleOkClick(event) {
-    this.props.onUpdate()
+  handleBackClick(event) {
+    this.props.onReturn()
   }
 
   // renderers
@@ -57,7 +57,10 @@ class SurveysEdit extends Component {
 
     return (
       <div className="surveys-edit">
-        <h2>{ `${survey.name} survey` }</h2>
+        <h2>
+          <i className="fa fa-chevron-left" onClick={ this.handleBackClick.bind(this) }/>
+          <span>{ `${survey.name} survey` }</span>
+        </h2>
 
         <form>
           <label>
@@ -89,12 +92,6 @@ class SurveysEdit extends Component {
           answers={ answers }
           actions={ actions }
         />
-
-        <div className="actions">
-          <button className="msi" onClick={ this.handleOkClick.bind(this) }>
-            Ok
-          </button>
-        </div>
       </div>
     )
   }
@@ -107,7 +104,7 @@ SurveysEdit.propTypes = {
   questions: PropTypes.array.isRequired,
   answers: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired,
-  onUpdate: PropTypes.func,
+  onReturn: PropTypes.func,
 }
 
 

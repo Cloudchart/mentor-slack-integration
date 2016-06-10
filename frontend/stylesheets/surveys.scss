@@ -6,9 +6,10 @@
     }
 
     .surveys-edit {
-      .actions {
-        @include flexbox;
-        @include justify-content(flex-end);
+      i.fa.fa-chevron-left {
+        cursor: pointer;
+        color: $primary-green;
+        margin-right: 10px;
       }
     }
 
