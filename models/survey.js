@@ -40,6 +40,7 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       associate: function(models) {
         Survey.hasMany(models.SurveyQuestion, { foreignKey: 'surveyId', onDelete: 'CASCADE' })
+        Survey.hasMany(models.SurveyResult, { foreignKey: 'surveyId', onDelete: 'CASCADE' })
       }
     }
 

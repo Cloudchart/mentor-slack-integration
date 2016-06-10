@@ -33,6 +33,10 @@ import createAnswer from './admin/createAnswer'
 import updateAnswer from './admin/updateAnswer'
 import destroyAnswer from './admin/destroyAnswer'
 
+import createResult from './admin/createResult'
+import updateResult from './admin/updateResult'
+// import destroyResult from './admin/destroyResult'
+
 export const teamsActions = {}
 export const usersActions = { fetchMessages, fetchThemes, postMessage }
 export const surveysActions = {
@@ -45,4 +49,7 @@ export const surveysActions = {
   createAnswer,
   updateAnswer,
   destroyAnswer,
+  createResult,
+  updateResult,
+  // destroyResult,
 }

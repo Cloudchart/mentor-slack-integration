@@ -57,7 +57,7 @@ class SurveysList extends Component {
   }
 
   render() {
-    const { surveys, questions, answers, actions } = this.props
+    const { surveys, questions, answers, results, actions } = this.props
 
     if (this.state.selectedSurveyId) return (
       <SurveysEdit
@@ -65,6 +65,7 @@ class SurveysList extends Component {
         surveys={ surveys }
         questions={ questions }
         answers={ answers }
+        results={ results }
         actions={ actions }
         onReturn={ this.handleReturn.bind(this) }
       />
@@ -97,6 +98,7 @@ SurveysList.propTypes = {
   surveys: PropTypes.array.isRequired,
   questions: PropTypes.array.isRequired,
   answers: PropTypes.array.isRequired,
+  results: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired,
 }
 

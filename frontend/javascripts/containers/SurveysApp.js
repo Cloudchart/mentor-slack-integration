@@ -12,7 +12,7 @@ import Footer from '../components/Footer'
 class SurveysApp extends Component {
 
   render() {
-    const { team, surveys, questions, answers, actions } = this.props
+    const { team, surveys, questions, answers, results, actions } = this.props
 
     return (
       <div className="container surveys">
@@ -23,6 +23,7 @@ class SurveysApp extends Component {
             surveys={ surveys }
             questions={ questions }
             answers={ answers }
+            results={ results }
             actions={ actions }
           />
         </div>
@@ -38,6 +39,7 @@ SurveysApp.propTypes = {
   surveys: PropTypes.array.isRequired,
   questions: PropTypes.array.isRequired,
   answers: PropTypes.array.isRequired,
+  results: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired,
 }
 
@@ -47,6 +49,7 @@ function mapStateToProps(state) {
     surveys: state.surveys,
     questions: state.questions,
     answers: state.answers,
+    results: state.results,
   }
 }
 

@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import QuestionsList from './QuestionsList'
+import ResultsList from './ResultsList'
 
 
 class SurveysEdit extends Component {
@@ -52,7 +53,7 @@ class SurveysEdit extends Component {
   // renderers
   //
   render() {
-    const { questions, answers, actions } = this.props
+    const { questions, answers, results, actions } = this.props
     const { survey } = this.state
 
     return (
@@ -67,7 +68,6 @@ class SurveysEdit extends Component {
             <span>Name</span>
             <input
               type="text"
-              autoFocus={ true }
               value={ this.state.name }
               placeholder={ 'Enter survey name' }
               onChange={ this.handleInputChange.bind(this, 'name') }
@@ -92,6 +92,13 @@ class SurveysEdit extends Component {
           answers={ answers }
           actions={ actions }
         />
+
+        <h2>Results</h2>
+        <ResultsList
+          survey={ survey }
+          results={ results }
+          actions={ actions }
+        />
       </div>
     )
   }
@@ -103,6 +110,7 @@ SurveysEdit.propTypes = {
   surveys: PropTypes.array.isRequired,
   questions: PropTypes.array.isRequired,
   answers: PropTypes.array.isRequired,
+  results: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired,
   onReturn: PropTypes.func,
 }

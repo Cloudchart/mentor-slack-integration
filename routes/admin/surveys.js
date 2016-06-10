@@ -2,7 +2,7 @@ import { Router } from 'express'
 import { checkTeamId } from '../helpers'
 import { checkAuth, getTeam, getFilteredAttrs } from './helpers'
 import { appName } from '../../lib'
-import { Survey, SurveyQuestion, SurveyAnswer } from '../../models'
+import { Survey, SurveyQuestion, SurveyAnswer, SurveyResult } from '../../models'
 
 const permittedAttrs = ['name', 'isActive']
 const router = Router()
@@ -15,6 +15,7 @@ router.get('/', checkTeamId, checkAuth, async (req, res, next) => {
   const surveys = await Survey.findAll()
   const questions = await SurveyQuestion.findAll()
   const answers = await SurveyAnswer.findAll()
+  const results = await SurveyResult.findAll()
 
   res.render('admin/surveys', {
     title: `${appName} Surveys`,
@@ -22,6 +23,7 @@ router.get('/', checkTeamId, checkAuth, async (req, res, next) => {
     surveys: surveys,
     questions: questions,
     answers: answers,
+    results: results,
   })
 })
 

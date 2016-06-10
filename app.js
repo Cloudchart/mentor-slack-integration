@@ -13,10 +13,12 @@ var routes = require('./routes/index').default;
 var channels = require('./routes/channels').default;
 var themes = require('./routes/themes').default;
 var timeSettings = require('./routes/timeSettings').default;
+
 var teams = require('./routes/admin/teams').default;
 var surveys = require('./routes/admin/surveys').default;
 var questions = require('./routes/admin/questions').default;
 var answers = require('./routes/admin/answers').default;
+var results = require('./routes/admin/results').default;
 
 var app = express();
 
@@ -50,6 +52,7 @@ app.use('/admin/teams', teams);
 app.use('/admin/surveys', surveys);
 app.use('/admin', questions);
 app.use('/admin', answers);
+app.use('/admin', results);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

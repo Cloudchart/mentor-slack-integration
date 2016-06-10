@@ -13,3 +13,4 @@ logs
 results
 lib-cov
 node_modules
+public/uploads
