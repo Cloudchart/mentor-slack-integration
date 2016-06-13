@@ -14,7 +14,7 @@ module.exports = function(shipit) {
       // shallowClone: true,
       shared: {
         overwrite: true,
-        dirs: ['node_modules'],
+        dirs: ['node_modules', 'public/uploads'],
         files: ['.env'],
       },
       npm: {
