@@ -11,14 +11,6 @@ class Result extends Component {
     }
   }
 
-  // lifecycle
-  //
-  // conponentDidMount() {
-  // }
-
-  // componentWillReceiveProps(nextProps) {
-  // }
-
   // helpers
   //
   getAttrs() {
