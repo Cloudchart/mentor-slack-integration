@@ -45302,9 +45302,9 @@
 	  }, {
 	    key: 'renderImage',
 	    value: function renderImage() {
-	      if (!this.props.result.imagePath) return null;
+	      if (!this.props.result.imageUid) return null;
 	      return _react2.default.createElement('img', {
-	        src: ("http://localhost:3001") + this.props.result.imagePath,
+	        src: '/uploads/surveys/' + this.props.result.imageUid,
 	        width: '100'
 	      });
 	    }

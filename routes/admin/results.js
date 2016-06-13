@@ -1,5 +1,4 @@
 import fs from 'fs'
-import path from 'path'
 import multer from 'multer'
 import mime from 'mime'
 import { Router } from 'express'
@@ -9,24 +8,32 @@ import { checkAuth, getFilteredAttrs } from './helpers'
 import { appName } from '../../lib'
 import { Survey, SurveyResult } from '../../models'
 
+const acceptedMimetypes = ['image/jpg', 'image/jpeg', 'image/png', 'image/gif']
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'public/uploads/surveys/')
+    cb(null, __dirname + '/../../public/uploads/surveys/')
   },
-  filename: function (req, file, cb) {
+  filename: (req, file, cb) => {
     cb(null, `result-${file.fieldname}-${Date.now()}.${mime.extension(file.mimetype)}`)
-  }
+  },
 })
 
-const upload = multer({ storage: storage })
+const upload = multer({
+  storage: storage,
+  fileFilter: (req, file, cb) => {
+    acceptedMimetypes.includes(file.mimetype) ? cb(null, true) : cb(null, false)
+  },
+})
+
 const permittedAttrs = ['percentage', 'text', 'image']
 const router = Router()
 
 
 // helpers
 //
-function removeImage(path) {
-  const imageFullPath = __dirname + '/../../public' + path
+function removeImage(uid) {
+  const imageFullPath = __dirname + '/../../public/uploads/surveys/' + uid
   fs.exists(imageFullPath, (exists) => {
     if (exists) fs.unlink(imageFullPath)
   })
@@ -50,8 +57,8 @@ router.put('/results/:id', checkTeamId, checkAuth, upload.single('image'), (req,
   SurveyResult.findById(req.params.id).then(result => {
     let attrs = getFilteredAttrs(req.body, permittedAttrs)
     if (req.file) {
-      removeImage(result.imagePath)
-      attrs.imagePath = req.file.path.replace(/public/, '')
+      removeImage(result.imageUid)
+      attrs.imageUid = req.file.filename
     }
 
     result.update(attrs).then(result => {
@@ -66,7 +73,7 @@ router.put('/results/:id', checkTeamId, checkAuth, upload.single('image'), (req,
 
 router.delete('/results/:id', checkTeamId, checkAuth, (req, res, next) => {
   SurveyResult.findById(req.params.id).then(result => {
-    removeImage(result.imagePath)
+    removeImage(result.imageUid)
     result.destroy()
     res.json({ message: 'ok' })
   }).catch(error => {

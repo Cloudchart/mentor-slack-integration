@@ -39,10 +39,10 @@ class Result extends Component {
   // renderers
   //
   renderImage() {
-    if (!this.props.result.imagePath) return null
+    if (!this.props.result.imageUid) return null
     return(
       <img
-        src={ process.env.ROOT_URL + this.props.result.imagePath }
+        src={ '/uploads/surveys/' + this.props.result.imageUid }
         width="100"
       />
     )
