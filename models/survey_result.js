@@ -14,7 +14,8 @@ module.exports = function(sequelize, DataTypes) {
     },
 
     percentage: {
-      type: DataTypes.INTEGER
+      type: DataTypes.INTEGER,
+      defaultValue: 0
     },
 
     text: {

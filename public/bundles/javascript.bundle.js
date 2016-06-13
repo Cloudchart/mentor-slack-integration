@@ -20754,6 +20754,10 @@
 
 	var _updateResult2 = _interopRequireDefault(_updateResult);
 
+	var _destroyResult = __webpack_require__(437);
+
+	var _destroyResult2 = _interopRequireDefault(_destroyResult);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var configActions = exports.configActions = {
@@ -20766,8 +20770,6 @@
 	  updateChannel: _updateChannel2.default,
 	  sendChannelInviteNotification: _sendChannelInviteNotification2.default
 	};
-
-	// import destroyResult from './admin/destroyResult'
 
 	var teamsActions = exports.teamsActions = {};
 	var usersActions = exports.usersActions = { fetchMessages: _fetchMessages2.default, fetchThemes: _fetchThemes2.default, postMessage: _postMessage2.default };
@@ -20782,7 +20784,8 @@
 	  updateAnswer: _updateAnswer2.default,
 	  destroyAnswer: _destroyAnswer2.default,
 	  createResult: _createResult2.default,
-	  updateResult: _updateResult2.default
+	  updateResult: _updateResult2.default,
+	  destroyResult: _destroyResult2.default
 	};
 
 /***/ },
@@ -44502,11 +44505,6 @@
 	          _react2.default.createElement(
 	            'label',
 	            null,
-	            _react2.default.createElement(
-	              'span',
-	              null,
-	              'Name'
-	            ),
 	            _react2.default.createElement('input', {
 	              type: 'text',
 	              value: this.state.name,
@@ -45246,6 +45244,15 @@
 	    //
 
 	  }, {
+	    key: 'renderImage',
+	    value: function renderImage() {
+	      if (!this.props.result.imagePath) return null;
+	      return _react2.default.createElement('img', {
+	        src: ("http://localhost:3001") + this.props.result.imagePath,
+	        width: '100'
+	      });
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
 	      var result = this.props.result;
@@ -45288,10 +45295,7 @@
 	              name: 'image',
 	              onChange: this.handleUpdate.bind(this)
 	            }),
-	            _react2.default.createElement('img', {
-	              src: '' + ("http://localhost:3001") + result.imagePath,
-	              width: '100'
-	            })
+	            this.renderImage()
 	          )
 	        ),
 	        _react2.default.createElement(
@@ -60519,6 +60523,70 @@
 	      return state;
 	  }
 	}
+
+/***/ },
+/* 437 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _isomorphicFetch = __webpack_require__(180);
+
+	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function requestDestroyResult(id) {
+	  return {
+	    type: 'DESTROY_RESULT_REQUEST',
+	    id: id
+	  };
+	}
+
+	function receiveDestroyResult(id, json) {
+	  return {
+	    type: 'DESTROY_RESULT_RECEIVE',
+	    id: id,
+	    receivedAt: Date.now()
+	  };
+	}
+
+	function catchDestroyResultError(id, error) {
+	  return {
+	    type: 'DESTROY_RESULT_ERROR',
+	    id: id,
+	    error: error,
+	    receivedAt: Date.now()
+	  };
+	}
+
+	function destroyResult(id) {
+	  return function (dispatch) {
+	    dispatch(requestDestroyResult(id));
+
+	    return (0, _isomorphicFetch2.default)('/admin/results/' + id, {
+	      method: 'DELETE',
+	      credentials: 'same-origin',
+	      headers: { 'Content-Type': 'application/json' }
+	    }).then(function (response) {
+	      return response.json();
+	    }).then(function (json) {
+	      if (json.error) {
+	        return dispatch(catchDestroyResultError(id, json.error));
+	      } else {
+	        return dispatch(receiveDestroyResult(id, json));
+	      }
+	    }).catch(function (error) {
+	      return dispatch(catchDestroyResultError(id, error));
+	    });
+	  };
+	}
+
+	exports.default = destroyResult;
 
 /***/ }
 /******/ ]);

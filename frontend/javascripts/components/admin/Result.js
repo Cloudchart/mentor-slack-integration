@@ -46,6 +46,16 @@ class Result extends Component {
 
   // renderers
   //
+  renderImage() {
+    if (!this.props.result.imagePath) return null
+    return(
+      <img
+        src={ process.env.ROOT_URL + this.props.result.imagePath }
+        width="100"
+      />
+    )
+  }
+
   render() {
     const { result } = this.props
 
@@ -77,10 +87,7 @@ class Result extends Component {
               name="image"
               onChange={ this.handleUpdate.bind(this) }
             />
-            <img
-              src={ `${process.env.ROOT_URL}${result.imagePath}` }
-              width="100"
-            />
+            { this.renderImage() }
           </div>
         </form>
 

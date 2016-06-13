@@ -65,7 +65,6 @@ class SurveysEdit extends Component {
 
         <form>
           <label>
-            <span>Name</span>
             <input
               type="text"
               value={ this.state.name }

@@ -1,5 +1,9 @@
+import fs from 'fs'
+import path from 'path'
 import multer from 'multer'
+import mime from 'mime'
 import { Router } from 'express'
+
 import { checkTeamId } from '../helpers'
 import { checkAuth, getFilteredAttrs } from './helpers'
 import { appName } from '../../lib'
@@ -10,7 +14,7 @@ const storage = multer.diskStorage({
     cb(null, 'public/uploads/surveys/')
   },
   filename: function (req, file, cb) {
-    cb(null, file.fieldname + '-' + Date.now())
+    cb(null, `result-${file.fieldname}-${Date.now()}.${mime.extension(file.mimetype)}`)
   }
 })
 
@@ -18,6 +22,15 @@ const upload = multer({ storage: storage })
 const permittedAttrs = ['percentage', 'text', 'image']
 const router = Router()
 
+
+// helpers
+//
+function removeImage(path) {
+  const imageFullPath = __dirname + '/../../public' + path
+  fs.exists(imageFullPath, (exists) => {
+    if (exists) fs.unlink(imageFullPath)
+  })
+}
 
 // actions
 //
@@ -36,7 +49,10 @@ router.post('/surveys/:surveyId/results', checkTeamId, checkAuth, (req, res, nex
 router.put('/results/:id', checkTeamId, checkAuth, upload.single('image'), (req, res, next) => {
   SurveyResult.findById(req.params.id).then(result => {
     let attrs = getFilteredAttrs(req.body, permittedAttrs)
-    if (req.file) attrs.imagePath = req.file.path.replace(/public/, '')
+    if (req.file) {
+      removeImage(result.imagePath)
+      attrs.imagePath = req.file.path.replace(/public/, '')
+    }
 
     result.update(attrs).then(result => {
       res.json(result)
@@ -50,6 +66,7 @@ router.put('/results/:id', checkTeamId, checkAuth, upload.single('image'), (req,
 
 router.delete('/results/:id', checkTeamId, checkAuth, (req, res, next) => {
   SurveyResult.findById(req.params.id).then(result => {
+    removeImage(result.imagePath)
     result.destroy()
     res.json({ message: 'ok' })
   }).catch(error => {
