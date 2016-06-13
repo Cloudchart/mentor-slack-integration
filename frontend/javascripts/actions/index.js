@@ -18,6 +18,10 @@ export const configActions = {
   sendChannelInviteNotification,
 }
 
+export const surveyActions = {
+
+}
+
 import fetchMessages from './admin/fetchMessages'
 import postMessage from './admin/postMessage'
 

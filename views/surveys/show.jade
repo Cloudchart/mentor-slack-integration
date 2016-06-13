@@ -1,0 +1,12 @@
+extends ../layout
+
+block content
+  main(
+    data-react-class="SurveyApp"
+  )
+
+block pagescript
+  script(type="text/javascript").
+    window.__INITIAL_STATE__ = {
+      survey: !{JSON.stringify(survey)}
+    }

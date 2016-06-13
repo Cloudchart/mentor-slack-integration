@@ -56,7 +56,8 @@ class Header extends Component {
 }
 
 Header.propTypes = {
-  team: PropTypes.object.isRequired,
+  team: PropTypes.object,
+  type: PropTypes.string,
 }
 
 

@@ -13,12 +13,13 @@ var routes = require('./routes/index').default;
 var channels = require('./routes/channels').default;
 var themes = require('./routes/themes').default;
 var timeSettings = require('./routes/timeSettings').default;
+var surveys = require('./routes/surveys').default;
 
-var teams = require('./routes/admin/teams').default;
-var surveys = require('./routes/admin/surveys').default;
-var questions = require('./routes/admin/questions').default;
-var answers = require('./routes/admin/answers').default;
-var results = require('./routes/admin/results').default;
+var adminTeams = require('./routes/admin/teams').default;
+var adminSurveys = require('./routes/admin/surveys').default;
+var adminQuestions = require('./routes/admin/questions').default;
+var adminAnswers = require('./routes/admin/answers').default;
+var adminResults = require('./routes/admin/results').default;
 
 var app = express();
 
@@ -48,11 +49,13 @@ app.use('/', routes);
 app.use('/channels', channels);
 app.use('/themes', themes);
 app.use('/time_settings', timeSettings);
-app.use('/admin/teams', teams);
-app.use('/admin/surveys', surveys);
-app.use('/admin', questions);
-app.use('/admin', answers);
-app.use('/admin', results);
+app.use('/surveys', surveys);
+
+app.use('/admin/teams', adminTeams);
+app.use('/admin/surveys', adminSurveys);
+app.use('/admin', adminQuestions);
+app.use('/admin', adminAnswers);
+app.use('/admin', adminResults);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
