@@ -20704,6 +20704,10 @@
 
 	var _sendChannelInviteNotification2 = _interopRequireDefault(_sendChannelInviteNotification);
 
+	var _answerQuestion = __webpack_require__(445);
+
+	var _answerQuestion2 = _interopRequireDefault(_answerQuestion);
+
 	var _fetchMessages = __webpack_require__(189);
 
 	var _fetchMessages2 = _interopRequireDefault(_fetchMessages);
@@ -20773,7 +20777,9 @@
 	  sendChannelInviteNotification: _sendChannelInviteNotification2.default
 	};
 
-	var surveyActions = exports.surveyActions = {};
+	var surveyActions = exports.surveyActions = {
+	  answerQuestion: _answerQuestion2.default
+	};
 
 	var teamsActions = exports.teamsActions = {};
 	var usersActions = exports.usersActions = { fetchMessages: _fetchMessages2.default, fetchThemes: _fetchThemes2.default, postMessage: _postMessage2.default };
@@ -60807,7 +60813,7 @@
 /* 443 */
 /***/ function(module, exports) {
 
-	"use strict";
+	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -60818,6 +60824,8 @@
 	  var action = arguments[1];
 
 	  switch (action.type) {
+	    case 'ANSWER_QUESTION_RECEIVE':
+	      return state.concat(action.userAnswer);
 	    default:
 	      return state;
 	  }
@@ -60827,7 +60835,7 @@
 /* 444 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -60856,7 +60864,8 @@
 	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(QuestionsList).call(this, props));
 
 	    _this.state = {
-	      questionIndex: props.userAnswers.length
+	      questionIndex: props.userAnswers.length,
+	      answered: false
 	    };
 	    return _this;
 	  }
@@ -60874,66 +60883,89 @@
 
 
 	  _createClass(QuestionsList, [{
-	    key: 'handleNextClick',
+	    key: "handleNextClick",
 	    value: function handleNextClick() {
-	      console.log('handleNextClick');
+	      this.setState({ answered: false, questionIndex: this.props.userAnswers.length });
 	    }
 	  }, {
-	    key: 'handleAnswerClick',
+	    key: "handleAnswerClick",
 	    value: function handleAnswerClick(answer, event) {
-	      console.log('handleAnswerClick', answer);
-	      // this.props.actions.answerQuestion(answer.id)
+	      var _this2 = this;
+
+	      this.props.actions.answerQuestion(answer.id).then(function () {
+	        _this2.setState({ answered: true });
+	      });
 	    }
 
 	    // renderers
 	    //
 
 	  }, {
-	    key: 'renderAnswer',
+	    key: "renderAnswerStatus",
+	    value: function renderAnswerStatus(answer) {
+	      var userAnswer = this.props.userAnswers.find(function (userAnswer) {
+	        return userAnswer.answerId === answer.id;
+	      });
+
+	      if (userAnswer) {
+	        if (userAnswer.isCorrect) {
+	          return _react2.default.createElement("i", { className: "fa fa-check-circle-o" });
+	        } else {
+	          return _react2.default.createElement("i", { className: "fa fa-times-circle-o" });
+	        }
+	      } else {
+	        return _react2.default.createElement("i", { className: "fa fa-circle-o" });
+	      }
+	    }
+	  }, {
+	    key: "renderAnswer",
 	    value: function renderAnswer(answer) {
 	      return _react2.default.createElement(
-	        'li',
+	        "li",
 	        { onClick: this.handleAnswerClick.bind(this, answer) },
-	        _react2.default.createElement('i', { className: 'fa fa-circle-o' }),
+	        this.renderAnswerStatus(answer),
 	        _react2.default.createElement(
-	          'span',
+	          "span",
 	          null,
 	          answer.name
 	        )
 	      );
 	    }
 	  }, {
-	    key: 'render',
+	    key: "render",
 	    value: function render() {
 	      var _props = this.props;
 	      var questions = _props.questions;
 	      var userAnswers = _props.userAnswers;
 	      var actions = _props.actions;
+	      var _state = this.state;
+	      var questionIndex = _state.questionIndex;
+	      var answered = _state.answered;
 
-	      var question = questions[this.state.questionIndex];
+	      var question = questions[questionIndex];
 
 	      return _react2.default.createElement(
-	        'div',
+	        "div",
 	        null,
 	        _react2.default.createElement(
-	          'div',
-	          { className: 'questions-counter' },
-	          this.state.questionIndex + 1 + '/' + questions.length
+	          "div",
+	          { className: "questions-counter" },
+	          questionIndex + 1 + "/" + questions.length
 	        ),
 	        _react2.default.createElement(
-	          'div',
-	          { className: 'question' },
+	          "div",
+	          { className: "question" },
 	          question.name
 	        ),
 	        _react2.default.createElement(
-	          'ul',
-	          { className: 'answers' },
+	          "ul",
+	          { className: "answers" },
 	          question.answers.map(this.renderAnswer.bind(this))
 	        ),
 	        _react2.default.createElement(
-	          'button',
-	          { className: 'msi', onClick: this.handleNextClick.bind(this), disabled: true },
-	          'Next'
+	          "button",
+	          { className: "msi", onClick: this.handleNextClick.bind(this), disabled: !answered },
+	          "Next"
 	        )
 	      );
 	    }
@@ -60950,6 +60982,68 @@
 	};
 
 	exports.default = QuestionsList;
+
+/***/ },
+/* 445 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _isomorphicFetch = __webpack_require__(180);
+
+	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function requestAnswerQuestion(id) {
+	  return {
+	    type: 'ANSWER_QUESTION_REQUEST',
+	    id: id
+	  };
+	}
+
+	function receiveAnswerQuestion(id, json) {
+	  return {
+	    type: 'ANSWER_QUESTION_RECEIVE',
+	    id: id,
+	    userAnswer: json,
+	    receivedAt: Date.now()
+	  };
+	}
+
+	function catchAnswerQuestionError(id, error) {
+	  return {
+	    type: 'ANSWER_QUESTION_ERROR',
+	    id: id,
+	    error: error,
+	    receivedAt: Date.now()
+	  };
+	}
+
+	function answerQuestion(id) {
+	  return function (dispatch) {
+	    dispatch(requestAnswerQuestion(id));
+
+	    return (0, _isomorphicFetch2.default)('/surveys/answer', {
+	      method: 'POST',
+	      body: JSON.stringify({ id: id }),
+	      credentials: 'same-origin',
+	      headers: { 'Content-Type': 'application/json' }
+	    }).then(function (response) {
+	      return response.json();
+	    }).then(function (json) {
+	      return dispatch(receiveAnswerQuestion(id, json));
+	    }).catch(function (error) {
+	      return dispatch(catchAnswerQuestionError(id, error));
+	    });
+	  };
+	}
+
+	exports.default = answerQuestion;
 
 /***/ }
 /******/ ]);

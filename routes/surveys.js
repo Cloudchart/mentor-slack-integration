@@ -10,6 +10,8 @@ router.get('/:slug/:userId', async (req, res, next) => {
     where: { slug: req.params.slug },
     include: [{ model: SurveyQuestion, include: [SurveyAnswer] }, { model: SurveyResult }]
   }).then(async (survey) => {
+    req.session.surveyUserId = req.params.userId
+
     const questions = survey.SurveyQuestions.map(question => {
       return {
         id: question.id,
@@ -29,7 +31,7 @@ router.get('/:slug/:userId', async (req, res, next) => {
     //   }
     // })
 
-    const userAnswers = await SurveyAnswerUser.findAll({
+    let userAnswers = await SurveyAnswerUser.findAll({
       where: { userId: req.params.userId },
       include: [
         {
@@ -39,6 +41,14 @@ router.get('/:slug/:userId', async (req, res, next) => {
           ]
         }
       ]
+    })
+
+    userAnswers = userAnswers.map(userAnswer => {
+      return {
+        id: userAnswer.id,
+        answerId: userAnswer.surveyAnswerId,
+        isCorrect: userAnswer.SurveyAnswer.isCorrect,
+      }
     })
 
     res.render('surveys/show', {
@@ -51,6 +61,26 @@ router.get('/:slug/:userId', async (req, res, next) => {
   }).catch(error => {
     res.status(404).render({ message: 'not found' })
   })
+})
+
+router.post('/answer', (req, res, next) => {
+  SurveyAnswer.findById(req.body.id).then(answer => {
+    SurveyAnswerUser.create({
+      userId: req.session.surveyUserId,
+      surveyAnswerId: answer.id,
+    }).then(userAnswer => {
+      res.json({
+        id: userAnswer.id,
+        answerId: userAnswer.surveyAnswerId,
+        isCorrect: answer.isCorrect,
+      })
+    }).catch(error => {
+      res.status(500).json({ error })
+    })
+  }).catch(error => {
+    res.status(404).render({ message: 'not found' })
+  })
+
 })
 
 

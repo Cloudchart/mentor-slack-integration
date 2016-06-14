@@ -7,6 +7,7 @@ class QuestionsList extends Component {
     super(props)
     this.state = {
       questionIndex: props.userAnswers.length,
+      answered: false,
     }
   }
 
@@ -21,20 +22,35 @@ class QuestionsList extends Component {
   // handlers
   //
   handleNextClick() {
-    console.log('handleNextClick');
+    this.setState({ answered: false, questionIndex: this.props.userAnswers.length })
   }
 
   handleAnswerClick(answer, event) {
-    console.log('handleAnswerClick', answer);
-    // this.props.actions.answerQuestion(answer.id)
+    this.props.actions.answerQuestion(answer.id).then(() => {
+      this.setState({ answered: true })
+    })
   }
 
   // renderers
   //
+  renderAnswerStatus(answer) {
+    const userAnswer = this.props.userAnswers.find(userAnswer => userAnswer.answerId === answer.id)
+
+    if (userAnswer) {
+      if (userAnswer.isCorrect) {
+        return <i className="fa fa-check-circle-o"/>
+      } else {
+        return <i className="fa fa-times-circle-o"/>
+      }
+    } else {
+      return <i className="fa fa-circle-o"/>
+    }
+  }
+
   renderAnswer(answer) {
     return (
       <li onClick={ this.handleAnswerClick.bind(this, answer) }>
-        <i className="fa fa-circle-o"/>
+        { this.renderAnswerStatus(answer) }
         <span>{ answer.name }</span>
       </li>
     )
@@ -42,12 +58,13 @@ class QuestionsList extends Component {
 
   render() {
     const { questions, userAnswers, actions } = this.props
-    const question = questions[this.state.questionIndex]
+    const { questionIndex, answered } = this.state
+    const question = questions[questionIndex]
 
     return (
       <div>
         <div className="questions-counter">
-          { `${this.state.questionIndex + 1}/${questions.length}` }
+          { `${questionIndex + 1}/${questions.length}` }
         </div>
 
         <div className="question">
@@ -58,7 +75,7 @@ class QuestionsList extends Component {
           { question.answers.map(this.renderAnswer.bind(this)) }
         </ul>
 
-        <button className="msi" onClick={ this.handleNextClick.bind(this) } disabled={ true }>
+        <button className="msi" onClick={ this.handleNextClick.bind(this) } disabled={ !answered }>
           Next
         </button>
       </div>
