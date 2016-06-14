@@ -28087,8 +28087,6 @@
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-	// import SurveysList from '../components/admin/SurveysList'
-
 
 	var SurveyApp = function (_Component) {
 	  _inherits(SurveyApp, _Component);
@@ -28102,8 +28100,11 @@
 	  _createClass(SurveyApp, [{
 	    key: 'render',
 	    value: function render() {
+	      console.log(this.props);
 	      var _props = this.props;
 	      var survey = _props.survey;
+	      var questions = _props.questions;
+	      var results = _props.results;
 	      var actions = _props.actions;
 
 
@@ -28114,7 +28115,50 @@
 	        _react2.default.createElement(
 	          'div',
 	          { className: 'content' },
-	          'yoyoyoyoyo'
+	          _react2.default.createElement(
+	            'h1',
+	            null,
+	            _react2.default.createElement('i', { className: 'fa fa-check-square' }),
+	            _react2.default.createElement(
+	              'span',
+	              null,
+	              survey.name + ' – Quiz'
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'questions-counter' },
+	            '1/' + questions.length
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'question' },
+	            'test'
+	          ),
+	          _react2.default.createElement(
+	            'ul',
+	            { className: 'answers' },
+	            _react2.default.createElement(
+	              'li',
+	              null,
+	              '1'
+	            ),
+	            _react2.default.createElement(
+	              'li',
+	              null,
+	              '2'
+	            ),
+	            _react2.default.createElement(
+	              'li',
+	              null,
+	              '3'
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'button',
+	            { className: 'msi' },
+	            'Next'
+	          )
 	        ),
 	        _react2.default.createElement(_Footer2.default, null)
 	      );
@@ -28126,12 +28170,16 @@
 
 	SurveyApp.propTypes = {
 	  survey: _react.PropTypes.object.isRequired,
+	  questions: _react.PropTypes.array.isRequired,
+	  results: _react.PropTypes.array.isRequired,
 	  actions: _react.PropTypes.object.isRequired
 	};
 
 	function mapStateToProps(state) {
 	  return {
-	    survey: state.survey
+	    survey: state.survey,
+	    questions: state.questions,
+	    results: state.results
 	  };
 	}
 
@@ -60065,6 +60113,10 @@
 		"./admin/viewedTeam.js": 436,
 		"./channels": 425,
 		"./channels.js": 425,
+		"./questions": 441,
+		"./questions.js": 441,
+		"./results": 442,
+		"./results.js": 442,
 		"./survey": 440,
 		"./survey.js": 440,
 		"./team": 424,
@@ -60698,10 +60750,20 @@
 
 	var _survey2 = _interopRequireDefault(_survey);
 
+	var _questions = __webpack_require__(441);
+
+	var _questions2 = _interopRequireDefault(_questions);
+
+	var _results = __webpack_require__(442);
+
+	var _results2 = _interopRequireDefault(_results);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	exports.default = (0, _redux.combineReducers)({
-	  survey: _survey2.default
+	  survey: _survey2.default,
+	  questions: _questions2.default,
+	  results: _results2.default
 	});
 
 /***/ },
@@ -60716,6 +60778,46 @@
 	exports.default = survey;
 	function survey() {
 	  var state = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+	  var action = arguments[1];
+
+	  switch (action.type) {
+	    default:
+	      return state;
+	  }
+	}
+
+/***/ },
+/* 441 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = questions;
+	function questions() {
+	  var state = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
+	  var action = arguments[1];
+
+	  switch (action.type) {
+	    default:
+	      return state;
+	  }
+	}
+
+/***/ },
+/* 442 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = results;
+	function results() {
+	  var state = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
 	  var action = arguments[1];
 
 	  switch (action.type) {

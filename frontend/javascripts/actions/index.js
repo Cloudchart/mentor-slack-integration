@@ -19,7 +19,6 @@ export const configActions = {
 }
 
 export const surveyActions = {
-
 }
 
 import fetchMessages from './admin/fetchMessages'

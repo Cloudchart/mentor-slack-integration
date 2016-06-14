@@ -27,6 +27,7 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       associate: function(models) {
         SurveyAnswer.belongsTo(models.SurveyQuestion, { foreignKey: 'surveyQuestionId' })
+        SurveyAnswer.hasMany(models.SurveyAnswerUser, { foreignKey: 'surveyAnswerId', onDelete: 'CASCADE' })
       }
     }
 
