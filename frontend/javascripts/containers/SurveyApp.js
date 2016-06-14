@@ -5,14 +5,14 @@ import { connect } from 'react-redux'
 import { surveyActions } from '../actions'
 
 import Header from '../components/Header'
+import QuestionsList from '../components/QuestionsList'
 import Footer from '../components/Footer'
 
 
 class SurveyApp extends Component {
 
   render() {
-    console.log(this.props);
-    const { survey, questions, results, actions } = this.props
+    const { survey, questions, userAnswers, actions } = this.props
 
     return (
       <div className="container survey">
@@ -24,21 +24,12 @@ class SurveyApp extends Component {
             <span>{ `${survey.name} – Quiz` }</span>
           </h1>
 
-          <div className="questions-counter">
-            { `1/${questions.length}` }
-          </div>
-
-          <div className="question">
-            test
-          </div>
-
-          <ul className="answers">
-            <li>1</li>
-            <li>2</li>
-            <li>3</li>
-          </ul>
-
-          <button className="msi">Next</button>
+          <QuestionsList
+            survey={ survey }
+            questions={ questions }
+            userAnswers={ userAnswers }
+            actions={ actions }
+          />
         </div>
 
         <Footer/>
@@ -50,7 +41,7 @@ class SurveyApp extends Component {
 SurveyApp.propTypes = {
   survey: PropTypes.object.isRequired,
   questions: PropTypes.array.isRequired,
-  results: PropTypes.array.isRequired,
+  userAnswers: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired,
 }
 
@@ -58,7 +49,7 @@ function mapStateToProps(state) {
   return {
     survey: state.survey,
     questions: state.questions,
-    results: state.results,
+    userAnswers: state.userAnswers,
   }
 }
 

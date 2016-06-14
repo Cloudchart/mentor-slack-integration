@@ -28076,6 +28076,10 @@
 
 	var _Header2 = _interopRequireDefault(_Header);
 
+	var _QuestionsList = __webpack_require__(444);
+
+	var _QuestionsList2 = _interopRequireDefault(_QuestionsList);
+
 	var _Footer = __webpack_require__(280);
 
 	var _Footer2 = _interopRequireDefault(_Footer);
@@ -28100,11 +28104,10 @@
 	  _createClass(SurveyApp, [{
 	    key: 'render',
 	    value: function render() {
-	      console.log(this.props);
 	      var _props = this.props;
 	      var survey = _props.survey;
 	      var questions = _props.questions;
-	      var results = _props.results;
+	      var userAnswers = _props.userAnswers;
 	      var actions = _props.actions;
 
 
@@ -28125,40 +28128,12 @@
 	              survey.name + ' – Quiz'
 	            )
 	          ),
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'questions-counter' },
-	            '1/' + questions.length
-	          ),
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'question' },
-	            'test'
-	          ),
-	          _react2.default.createElement(
-	            'ul',
-	            { className: 'answers' },
-	            _react2.default.createElement(
-	              'li',
-	              null,
-	              '1'
-	            ),
-	            _react2.default.createElement(
-	              'li',
-	              null,
-	              '2'
-	            ),
-	            _react2.default.createElement(
-	              'li',
-	              null,
-	              '3'
-	            )
-	          ),
-	          _react2.default.createElement(
-	            'button',
-	            { className: 'msi' },
-	            'Next'
-	          )
+	          _react2.default.createElement(_QuestionsList2.default, {
+	            survey: survey,
+	            questions: questions,
+	            userAnswers: userAnswers,
+	            actions: actions
+	          })
 	        ),
 	        _react2.default.createElement(_Footer2.default, null)
 	      );
@@ -28171,7 +28146,7 @@
 	SurveyApp.propTypes = {
 	  survey: _react.PropTypes.object.isRequired,
 	  questions: _react.PropTypes.array.isRequired,
-	  results: _react.PropTypes.array.isRequired,
+	  userAnswers: _react.PropTypes.array.isRequired,
 	  actions: _react.PropTypes.object.isRequired
 	};
 
@@ -28179,7 +28154,7 @@
 	  return {
 	    survey: state.survey,
 	    questions: state.questions,
-	    results: state.results
+	    userAnswers: state.userAnswers
 	  };
 	}
 
@@ -60124,7 +60099,9 @@
 		"./themes": 426,
 		"./themes.js": 426,
 		"./timeSetting": 427,
-		"./timeSetting.js": 427
+		"./timeSetting.js": 427,
+		"./userAnswers": 443,
+		"./userAnswers.js": 443
 	};
 	function webpackContext(req) {
 		return __webpack_require__(webpackContextResolve(req));
@@ -60754,16 +60731,16 @@
 
 	var _questions2 = _interopRequireDefault(_questions);
 
-	var _results = __webpack_require__(442);
+	var _userAnswers = __webpack_require__(443);
 
-	var _results2 = _interopRequireDefault(_results);
+	var _userAnswers2 = _interopRequireDefault(_userAnswers);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	exports.default = (0, _redux.combineReducers)({
 	  survey: _survey2.default,
 	  questions: _questions2.default,
-	  results: _results2.default
+	  userAnswers: _userAnswers2.default
 	});
 
 /***/ },
@@ -60825,6 +60802,154 @@
 	      return state;
 	  }
 	}
+
+/***/ },
+/* 443 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = userAnswers;
+	function userAnswers() {
+	  var state = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
+	  var action = arguments[1];
+
+	  switch (action.type) {
+	    default:
+	      return state;
+	  }
+	}
+
+/***/ },
+/* 444 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var QuestionsList = function (_Component) {
+	  _inherits(QuestionsList, _Component);
+
+	  function QuestionsList(props) {
+	    _classCallCheck(this, QuestionsList);
+
+	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(QuestionsList).call(this, props));
+
+	    _this.state = {
+	      questionIndex: props.userAnswers.length
+	    };
+	    return _this;
+	  }
+
+	  // lifecycle
+	  //
+	  // conponentDidMount() {
+	  // }
+
+	  // componentWillReceiveProps(nextProps) {
+	  // }
+
+	  // handlers
+	  //
+
+
+	  _createClass(QuestionsList, [{
+	    key: 'handleNextClick',
+	    value: function handleNextClick() {
+	      console.log('handleNextClick');
+	    }
+	  }, {
+	    key: 'handleAnswerClick',
+	    value: function handleAnswerClick(answer, event) {
+	      console.log('handleAnswerClick', answer);
+	      // this.props.actions.answerQuestion(answer.id)
+	    }
+
+	    // renderers
+	    //
+
+	  }, {
+	    key: 'renderAnswer',
+	    value: function renderAnswer(answer) {
+	      return _react2.default.createElement(
+	        'li',
+	        { onClick: this.handleAnswerClick.bind(this, answer) },
+	        _react2.default.createElement('i', { className: 'fa fa-circle-o' }),
+	        _react2.default.createElement(
+	          'span',
+	          null,
+	          answer.name
+	        )
+	      );
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _props = this.props;
+	      var questions = _props.questions;
+	      var userAnswers = _props.userAnswers;
+	      var actions = _props.actions;
+
+	      var question = questions[this.state.questionIndex];
+
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'questions-counter' },
+	          this.state.questionIndex + 1 + '/' + questions.length
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'question' },
+	          question.name
+	        ),
+	        _react2.default.createElement(
+	          'ul',
+	          { className: 'answers' },
+	          question.answers.map(this.renderAnswer.bind(this))
+	        ),
+	        _react2.default.createElement(
+	          'button',
+	          { className: 'msi', onClick: this.handleNextClick.bind(this), disabled: true },
+	          'Next'
+	        )
+	      );
+	    }
+	  }]);
+
+	  return QuestionsList;
+	}(_react.Component);
+
+	QuestionsList.propTypes = {
+	  survey: _react.PropTypes.object.isRequired,
+	  questions: _react.PropTypes.array.isRequired,
+	  userAnswers: _react.PropTypes.array.isRequired,
+	  actions: _react.PropTypes.object.isRequired
+	};
+
+	exports.default = QuestionsList;
 
 /***/ }
 /******/ ]);

@@ -3,17 +3,19 @@
 module.exports = function(sequelize, DataTypes) {
   var SurveyAnswerUser = sequelize.define('SurveyAnswerUser', {
     id: {
+      type: DataTypes.UUID,
+      primaryKey: true,
+      defaultValue: DataTypes.UUIDV4
+    },
+
+    userId: {
       type: DataTypes.STRING,
-      primaryKey: true
+      allowNull: false
     },
 
     surveyAnswerId: {
       type: DataTypes.UUID,
       allowNull: false
-    },
-
-    isCorrect: {
-      type: DataTypes.BOOLEAN
     }
 
   }, {

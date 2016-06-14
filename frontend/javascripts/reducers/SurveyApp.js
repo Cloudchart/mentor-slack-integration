@@ -2,10 +2,10 @@ import { combineReducers } from 'redux'
 
 import survey from './survey'
 import questions from './questions'
-import results from './results'
+import userAnswers from './userAnswers'
 
 export default combineReducers({
   survey,
   questions,
-  results,
+  userAnswers,
 })
