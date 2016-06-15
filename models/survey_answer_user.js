@@ -20,6 +20,11 @@ module.exports = function(sequelize, DataTypes) {
 
   }, {
 
+    indexes: [{
+      unique: true,
+      fields: ['userId', 'surveyAnswerId'],
+    }],
+
     classMethods: {
       associate: function(models) {
         SurveyAnswerUser.belongsTo(models.SurveyAnswer, { foreignKey: 'surveyAnswerId' })

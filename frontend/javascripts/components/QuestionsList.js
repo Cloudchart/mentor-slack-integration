@@ -11,21 +11,20 @@ class QuestionsList extends Component {
     }
   }
 
-  // lifecycle
-  //
-  // conponentDidMount() {
-  // }
-
-  // componentWillReceiveProps(nextProps) {
-  // }
-
   // handlers
   //
   handleNextClick() {
-    this.setState({ answered: false, questionIndex: this.props.userAnswers.length })
+    if (this.state.questionIndex + 1 === this.props.questions.length) {
+      window.location.reload()
+    } else {
+      this.setState({ answered: false, questionIndex: this.props.userAnswers.length })
+    }
+
   }
 
   handleAnswerClick(answer, event) {
+    if (this.state.answered) return
+
     this.props.actions.answerQuestion(answer.id).then(() => {
       this.setState({ answered: true })
     })
