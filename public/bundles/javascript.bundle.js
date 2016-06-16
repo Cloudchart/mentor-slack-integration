@@ -28368,8 +28368,8 @@
 	          questionIndex + 1 + '/' + questions.length
 	        ),
 	        _react2.default.createElement(
-	          'div',
-	          { className: 'question' },
+	          'p',
+	          null,
 	          question.name
 	        ),
 	        _react2.default.createElement(
@@ -45618,28 +45618,17 @@
 
 	    _this.state = {
 	      percentage: props.result.percentage,
+	      title: props.result.title,
 	      text: props.result.text
 	    };
 	    return _this;
 	  }
 
-	  // helpers
+	  // handlers
 	  //
 
 
 	  _createClass(Result, [{
-	    key: 'getAttrs',
-	    value: function getAttrs() {
-	      return {
-	        percentage: this.state.percentage,
-	        text: this.state.text
-	      };
-	    }
-
-	    // handlers
-	    //
-
-	  }, {
 	    key: 'handleInputChange',
 	    value: function handleInputChange(attr, event) {
 	      this.setState(_defineProperty({}, attr, event.target.value));
@@ -45685,11 +45674,23 @@
 	            'div',
 	            null,
 	            _react2.default.createElement('input', {
-	              type: 'text',
+	              type: 'number',
 	              name: 'percentage',
 	              placeholder: 'Enter result percentage',
 	              value: this.state.percentage,
 	              onChange: this.handleInputChange.bind(this, 'percentage'),
+	              onBlur: this.handleUpdate.bind(this)
+	            })
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            null,
+	            _react2.default.createElement('input', {
+	              type: 'text',
+	              name: 'title',
+	              placeholder: 'Enter result title',
+	              value: this.state.title,
+	              onChange: this.handleInputChange.bind(this, 'title'),
 	              onBlur: this.handleUpdate.bind(this)
 	            })
 	          ),

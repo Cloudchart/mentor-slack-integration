@@ -11,6 +11,7 @@ router.get('/:slug/:userId', async (req, res, next) => {
     where: { slug: req.params.slug },
     include: [{ model: SurveyQuestion, include: [SurveyAnswer] }, { model: SurveyResult }]
   }).then(async (survey) => {
+    if (!survey.isActive) return res.redirect('/')
     req.session.surveyUserId = req.params.userId
 
     let userAnswers = await SurveyAnswerUser.findAll({
@@ -35,8 +36,8 @@ router.get('/:slug/:userId', async (req, res, next) => {
 
     // render result
     if (userAnswers.length >= survey.SurveyQuestions.length) {
-      const correctAnswersSize = userAnswers.filter(answer => answer.isCorrect).length
-      const correctAnswersPercentage = correctAnswersSize / survey.SurveyQuestions.length * 100
+      const correctAnswersLength = userAnswers.filter(answer => answer.isCorrect).length
+      const correctAnswersPercentage = correctAnswersLength / survey.SurveyQuestions.length * 100
       const closestPercentage = getClosestNumber(
         survey.SurveyResults.map(result => result.percentage),
         correctAnswersPercentage
@@ -45,7 +46,10 @@ router.get('/:slug/:userId', async (req, res, next) => {
 
       res.render('surveys/result', {
         title: `${appName} ${survey.name} Result`,
-        result: result,
+        survey: { id: survey.id, name: survey.name },
+        result,
+        correctAnswersLength,
+        questionsLenght: survey.SurveyQuestions.length,
       })
     // render questions
     } else {

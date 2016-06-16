@@ -2099,7 +2099,6 @@ body {
         -moz-flex: 1;
         -ms-flex: 1;
         flex: 1;
-        max-width: 800px;
         margin: 0 auto;
         padding: 30px; }
     body main h1 {
@@ -2671,13 +2670,13 @@ div.container footer {
     .container.survey > .content > h1 > i {
       color: #3BC363;
       margin-right: 10px; }
-  .container.survey > .content h1, .container.survey > .content .questions-counter, .container.survey > .content .question, .container.survey > .content .answers {
+  .container.survey > .content h1, .container.survey > .content p, .container.survey > .content .questions-counter, .container.survey > .content .answers {
     margin-bottom: 30px; }
   .container.survey > .content .questions-counter {
     font-size: 32px;
     text-align: center;
     color: #3BC363; }
-  .container.survey > .content .question {
+  .container.survey > .content p {
     font-size: 32px;
     font-weight: 300; }
   .container.survey > .content .answers {

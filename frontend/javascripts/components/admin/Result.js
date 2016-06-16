@@ -7,16 +7,8 @@ class Result extends Component {
     super(props)
     this.state = {
       percentage: props.result.percentage,
+      title: props.result.title,
       text: props.result.text,
-    }
-  }
-
-  // helpers
-  //
-  getAttrs() {
-    return {
-      percentage: this.state.percentage,
-      text: this.state.text,
     }
   }
 
@@ -56,11 +48,21 @@ class Result extends Component {
         <form ref="form" encType="multipart/form-data" onSubmit={ this.handleUpdate.bind(this) }>
           <div>
             <input
-              type="text"
+              type="number"
               name="percentage"
               placeholder="Enter result percentage"
               value={ this.state.percentage }
               onChange={ this.handleInputChange.bind(this, 'percentage') }
+              onBlur={ this.handleUpdate.bind(this) }
+            />
+          </div>
+          <div>
+            <input
+              type="text"
+              name="title"
+              placeholder="Enter result title"
+              value={ this.state.title }
+              onChange={ this.handleInputChange.bind(this, 'title') }
               onBlur={ this.handleUpdate.bind(this) }
             />
           </div>

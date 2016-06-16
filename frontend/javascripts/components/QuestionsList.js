@@ -75,9 +75,9 @@ class QuestionsList extends Component {
           { `${questionIndex + 1}/${questions.length}` }
         </div>
 
-        <div className="question">
+        <p>
           { question.name }
-        </div>
+        </p>
 
         <ul className="answers">
           { question.answers.map(this.renderAnswer.bind(this)) }

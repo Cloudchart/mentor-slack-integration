@@ -26,7 +26,7 @@ const upload = multer({
   },
 })
 
-const permittedAttrs = ['percentage', 'text', 'image']
+const permittedAttrs = ['percentage', 'title', 'text', 'image']
 const router = Router()
 
 

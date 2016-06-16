@@ -2,5 +2,30 @@ extends ../layout
 
 block content
   main
-    p= result.text
-    img(src="/uploads/surveys/#{result.imageUid}")
+    div(class="container survey")
+      header(class="main")
+        a(href="/" class="logo")
+          span(class="main-logo")
+          span
+            span Mentor
+            strong Bot
+      div(class="content")
+        h1
+          i(class="fa fa-check-square")
+          span #{survey.name} – Results
+        div(class="questions-counter")= result.title
+        p
+          span.
+            You got <strong>#{correctAnswersLength}</strong> out of
+            <strong>#{questionsLenght}</strong> questions right.
+          span &nbsp;
+          span= result.text
+        img(src="/uploads/surveys/#{result.imageUid}")
+      footer
+        ul
+          li
+            a(href="mailto:team@getmentorbot.com") Contact
+          li
+            a(href="/privacy") Privacy
+          li
+            a(href="/support") Support

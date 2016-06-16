@@ -18,6 +18,10 @@ module.exports = function(sequelize, DataTypes) {
       defaultValue: 0
     },
 
+    title: {
+      type: DataTypes.STRING
+    },
+
     text: {
       type: DataTypes.TEXT
     },
