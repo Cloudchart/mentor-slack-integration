@@ -47,6 +47,8 @@ class SurveysList extends Component {
       <li>
         <span>{ survey.name }</span>
         <span> | </span>
+        <span>{ survey.slug }</span>
+        <span> | </span>
         { survey.isActive ? <i className="fa fa-check"/> : <i className="fa fa-times"/> }
         <span> | </span>
         <a href="" onClick={ this.handleEdit.bind(this, survey.id) }>Edit</a>

@@ -28623,6 +28623,16 @@
 	          null,
 	          ' | '
 	        ),
+	        _react2.default.createElement(
+	          'span',
+	          null,
+	          survey.slug
+	        ),
+	        _react2.default.createElement(
+	          'span',
+	          null,
+	          ' | '
+	        ),
 	        survey.isActive ? _react2.default.createElement('i', { className: 'fa fa-check' }) : _react2.default.createElement('i', { className: 'fa fa-times' }),
 	        _react2.default.createElement(
 	          'span',
