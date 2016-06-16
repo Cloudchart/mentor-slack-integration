@@ -28238,7 +28238,7 @@
 /* 304 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -28249,6 +28249,10 @@
 	var _react = __webpack_require__(1);
 
 	var _react2 = _interopRequireDefault(_react);
+
+	var _classnames = __webpack_require__(284);
+
+	var _classnames2 = _interopRequireDefault(_classnames);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -28278,7 +28282,7 @@
 
 
 	  _createClass(QuestionsList, [{
-	    key: "handleNextClick",
+	    key: 'handleNextClick',
 	    value: function handleNextClick() {
 	      if (this.state.questionIndex + 1 === this.props.questions.length) {
 	        window.location.reload();
@@ -28287,7 +28291,7 @@
 	      }
 	    }
 	  }, {
-	    key: "handleAnswerClick",
+	    key: 'handleAnswerClick',
 	    value: function handleAnswerClick(answer, event) {
 	      var _this2 = this;
 
@@ -28297,43 +28301,53 @@
 	        _this2.setState({ answered: true });
 	      });
 	    }
+	  }, {
+	    key: 'handleAnswerMouseEnter',
+	    value: function handleAnswerMouseEnter(event) {
+	      if (!this.state.answered) event.target.firstChild.className = "fa fa-check-circle-o";
+	    }
+	  }, {
+	    key: 'handleAnswerMouseLeave',
+	    value: function handleAnswerMouseLeave(event) {
+	      if (!this.state.answered) event.target.firstChild.className = "fa fa-circle-o";
+	    }
 
 	    // renderers
 	    //
 
 	  }, {
-	    key: "renderAnswerStatus",
+	    key: 'renderAnswerStatus',
 	    value: function renderAnswerStatus(answer) {
 	      var userAnswer = this.props.userAnswers.find(function (userAnswer) {
 	        return userAnswer.answerId === answer.id;
 	      });
-
-	      if (userAnswer) {
-	        if (userAnswer.isCorrect) {
-	          return _react2.default.createElement("i", { className: "fa fa-check-circle-o" });
-	        } else {
-	          return _react2.default.createElement("i", { className: "fa fa-times-circle-o" });
-	        }
-	      } else {
-	        return _react2.default.createElement("i", { className: "fa fa-circle-o" });
-	      }
+	      var iconClasses = (0, _classnames2.default)('fa', {
+	        'fa-circle-o': !userAnswer,
+	        'fa-check-circle': userAnswer && userAnswer.isCorrect,
+	        'fa-times-circle': userAnswer && !userAnswer.isCorrect
+	      });
+	      return _react2.default.createElement('i', { ref: 'answerStatus', className: iconClasses });
 	    }
 	  }, {
-	    key: "renderAnswer",
+	    key: 'renderAnswer',
 	    value: function renderAnswer(answer) {
 	      return _react2.default.createElement(
-	        "li",
-	        { onClick: this.handleAnswerClick.bind(this, answer) },
+	        'li',
+	        {
+	          onClick: this.handleAnswerClick.bind(this, answer),
+	          onMouseEnter: this.handleAnswerMouseEnter.bind(this),
+	          onMouseLeave: this.handleAnswerMouseLeave.bind(this)
+	        },
 	        this.renderAnswerStatus(answer),
 	        _react2.default.createElement(
-	          "span",
+	          'span',
 	          null,
 	          answer.name
 	        )
 	      );
 	    }
 	  }, {
-	    key: "render",
+	    key: 'render',
 	    value: function render() {
 	      var _props = this.props;
 	      var questions = _props.questions;
@@ -28346,27 +28360,35 @@
 	      var question = questions[questionIndex];
 
 	      return _react2.default.createElement(
-	        "div",
+	        'div',
 	        null,
 	        _react2.default.createElement(
-	          "div",
-	          { className: "questions-counter" },
-	          questionIndex + 1 + "/" + questions.length
+	          'div',
+	          { className: 'questions-counter' },
+	          questionIndex + 1 + '/' + questions.length
 	        ),
 	        _react2.default.createElement(
-	          "div",
-	          { className: "question" },
+	          'div',
+	          { className: 'question' },
 	          question.name
 	        ),
 	        _react2.default.createElement(
-	          "ul",
-	          { className: "answers" },
+	          'ul',
+	          { className: 'answers' },
 	          question.answers.map(this.renderAnswer.bind(this))
 	        ),
 	        _react2.default.createElement(
-	          "button",
-	          { className: "msi", onClick: this.handleNextClick.bind(this), disabled: !answered },
-	          "Next"
+	          'div',
+	          { className: 'actions' },
+	          _react2.default.createElement(
+	            'button',
+	            {
+	              className: 'msi next',
+	              onClick: this.handleNextClick.bind(this),
+	              disabled: !answered
+	            },
+	            'Next'
+	          )
 	        )
 	      );
 	    }

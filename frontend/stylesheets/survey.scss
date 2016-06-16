@@ -1,0 +1,62 @@
+.container.survey {
+  > .content {
+    min-width: 600px;
+
+    > h1 {
+      font-size: $primary-font-size;
+
+      > i {
+        color: $primary-green;
+        margin-right: 10px;
+      }
+    }
+
+    h1, .questions-counter, .question, .answers {
+      margin-bottom: 30px;
+    }
+
+    .questions-counter {
+      font-size: $primary-font-size;
+      text-align: center;
+      color: $primary-green;
+    }
+
+    .question {
+      font-size: $primary-font-size;
+      font-weight: 300;
+    }
+
+    .answers {
+      font-size: $regular-font-size;
+      font-weight: 300;
+
+      > li {
+        @include flexbox;
+        @include align-items(center);
+
+        border-top: 1px solid $primary-gray;
+        padding: 20px;
+        cursor: pointer;
+
+        &:last-child {
+          border-bottom: 1px solid $primary-gray;
+        }
+
+        > i {
+          font-size: $primary-font-size;
+          margin-right: 20px;
+          color: $primary-green;
+
+          &.fa-times-circle {
+            color: $primary-red;
+          }
+        }
+      }
+    }
+
+    .actions {
+      @include flexbox;
+      @include justify-content(center);
+    }
+  }
+}

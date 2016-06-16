@@ -2117,7 +2117,7 @@ body {
       line-height: 1.5em; }
 
 button.msi {
-  padding: 15px 20px;
+  padding: 15px 30px;
   background-color: #3BC363;
   border: 1px solid #1E7433;
   border-bottom: 2px solid #1E7433;
@@ -2596,10 +2596,6 @@ div.container footer {
   -moz-justify-content: flex-end;
   justify-content: flex-end; }
 
-.container.teams > .content .teams-list > li > i {
-  margin-left: 10px;
-  color: #3BC363; }
-
 .container.users > .content .users-list > li > i {
   margin-left: 10px;
   color: #3BC363; }
@@ -2667,6 +2663,59 @@ div.container footer {
           margin-bottom: 20px; }
           #support-container > section.top > .content > p.main-message > a {
             color: #FFFFFF; }
+
+.container.survey > .content {
+  min-width: 600px; }
+  .container.survey > .content > h1 {
+    font-size: 32px; }
+    .container.survey > .content > h1 > i {
+      color: #3BC363;
+      margin-right: 10px; }
+  .container.survey > .content h1, .container.survey > .content .questions-counter, .container.survey > .content .question, .container.survey > .content .answers {
+    margin-bottom: 30px; }
+  .container.survey > .content .questions-counter {
+    font-size: 32px;
+    text-align: center;
+    color: #3BC363; }
+  .container.survey > .content .question {
+    font-size: 32px;
+    font-weight: 300; }
+  .container.survey > .content .answers {
+    font-size: 22px;
+    font-weight: 300; }
+    .container.survey > .content .answers > li {
+      display: -webkit-flex;
+      display: -moz-flex;
+      display: -ms-flexbox;
+      display: flex;
+      -ms-flex-align: center;
+      -webkit-align-items: center;
+      -moz-align-items: center;
+      align-items: center;
+      border-top: 1px solid #CBD0CD;
+      padding: 20px;
+      cursor: pointer; }
+      .container.survey > .content .answers > li:last-child {
+        border-bottom: 1px solid #CBD0CD; }
+      .container.survey > .content .answers > li > i {
+        font-size: 32px;
+        margin-right: 20px;
+        color: #3BC363; }
+        .container.survey > .content .answers > li > i.fa-times-circle {
+          color: #CA1F2B; }
+  .container.survey > .content .actions {
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    -moz-justify-content: center;
+    justify-content: center; }
+
+.container.teams > .content .teams-list > li > i {
+  margin-left: 10px;
+  color: #3BC363; }
 
 .container.surveys > .content .answers-list {
   margin: 0 0 30px 30px; }

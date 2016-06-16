@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react'
+import classNames from 'classnames'
 
 
 class QuestionsList extends Component {
@@ -30,25 +31,33 @@ class QuestionsList extends Component {
     })
   }
 
+  handleAnswerMouseEnter(event) {
+    if (!this.state.answered) event.target.firstChild.className = "fa fa-check-circle-o"
+  }
+
+  handleAnswerMouseLeave(event) {
+    if (!this.state.answered) event.target.firstChild.className = "fa fa-circle-o"
+  }
+
   // renderers
   //
   renderAnswerStatus(answer) {
     const userAnswer = this.props.userAnswers.find(userAnswer => userAnswer.answerId === answer.id)
-
-    if (userAnswer) {
-      if (userAnswer.isCorrect) {
-        return <i className="fa fa-check-circle-o"/>
-      } else {
-        return <i className="fa fa-times-circle-o"/>
-      }
-    } else {
-      return <i className="fa fa-circle-o"/>
-    }
+    const iconClasses = classNames('fa', {
+      'fa-circle-o': !userAnswer,
+      'fa-check-circle': userAnswer && userAnswer.isCorrect,
+      'fa-times-circle': userAnswer && !userAnswer.isCorrect,
+    })
+    return <i ref="answerStatus" className={ iconClasses }/>
   }
 
   renderAnswer(answer) {
     return (
-      <li onClick={ this.handleAnswerClick.bind(this, answer) }>
+      <li
+        onClick={ this.handleAnswerClick.bind(this, answer) }
+        onMouseEnter={ this.handleAnswerMouseEnter.bind(this) }
+        onMouseLeave={ this.handleAnswerMouseLeave.bind(this) }
+      >
         { this.renderAnswerStatus(answer) }
         <span>{ answer.name }</span>
       </li>
@@ -74,9 +83,15 @@ class QuestionsList extends Component {
           { question.answers.map(this.renderAnswer.bind(this)) }
         </ul>
 
-        <button className="msi" onClick={ this.handleNextClick.bind(this) } disabled={ !answered }>
-          Next
-        </button>
+        <div className="actions">
+          <button
+            className="msi next"
+            onClick={ this.handleNextClick.bind(this) }
+            disabled={ !answered }
+          >
+            Next
+          </button>
+        </div>
       </div>
     )
   }

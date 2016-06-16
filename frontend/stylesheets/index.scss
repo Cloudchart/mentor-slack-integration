@@ -6,6 +6,7 @@
 
 $primary-green: #3BC363;
 $primary-gray: #CBD0CD;
+$primary-red: #CA1F2B;
 $primary-font-size: 32px;
 $regular-font-size: 22px;
 $giant-font-size: $primary-font-size * 1.5;
@@ -68,7 +69,8 @@ body {
 @import 'modal';
 @import 'landing';
 @import 'configuration';
-@import 'teams';
 @import 'users';
 @import 'support';
-@import 'surveys';
+@import 'survey';
+@import 'admin/teams';
+@import 'admin/surveys';
