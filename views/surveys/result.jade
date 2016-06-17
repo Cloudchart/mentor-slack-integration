@@ -1,5 +1,10 @@
 extends ../layout
 
+block meta
+  meta(name="og:title" content=title)
+  meta(name="og:description" content=result.text)
+  meta(name="og:image" content=resultImageUrl)
+
 block content
   main
     div(class="container survey")

@@ -1,5 +1,5 @@
+import path from 'path'
 import { Router } from 'express'
-import { sumBy } from 'lodash'
 import { appName, getClosestNumber } from '../lib'
 import { Survey, SurveyQuestion, SurveyAnswer, SurveyResult, SurveyAnswerUser } from '../models'
 
@@ -45,11 +45,12 @@ router.get('/:slug/:userId', async (req, res, next) => {
       const result = survey.SurveyResults.find(result => result.percentage === closestPercentage)
 
       res.render('surveys/result', {
-        title: `${appName} ${survey.name} Result`,
+        title: `${appName} Quiz – ${survey.name}`,
         survey: { id: survey.id, name: survey.name },
         result,
         correctAnswersLength,
         questionsLenght: survey.SurveyQuestions.length,
+        resultImageUrl: path.join(process.env.ROOT_URL, `uploads/surveys`, result.imageUid),
       })
     // render questions
     } else {

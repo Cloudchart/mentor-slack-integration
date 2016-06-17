@@ -2678,7 +2678,8 @@ div.container footer {
     color: #3BC363; }
   .container.survey > .content p {
     font-size: 32px;
-    font-weight: 300; }
+    font-weight: 300;
+    max-width: 800px; }
   .container.survey > .content .answers {
     font-size: 22px;
     font-weight: 300; }
