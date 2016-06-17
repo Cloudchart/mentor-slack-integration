@@ -47,8 +47,7 @@ class Question extends Component {
 
     return (
       <li>
-        <input
-          type="text"
+        <textarea
           placeholder="Enter question name"
           value={ this.state.name }
           onChange={ this.handleInputChange.bind(this, 'name') }

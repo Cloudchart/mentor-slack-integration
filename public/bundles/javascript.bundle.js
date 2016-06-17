@@ -28272,7 +28272,8 @@
 
 	    _this.state = {
 	      questionIndex: props.userAnswers.length,
-	      answered: false
+	      answered: false,
+	      isFetching: false
 	    };
 	    return _this;
 	  }
@@ -28297,19 +28298,24 @@
 
 	      if (this.state.answered) return;
 
+	      this.setState({ isFetching: true });
 	      this.props.actions.answerQuestion(answer.id).then(function () {
-	        _this2.setState({ answered: true });
+	        _this2.setState({ answered: true, isFetching: false });
 	      });
 	    }
 	  }, {
 	    key: 'handleAnswerMouseEnter',
 	    value: function handleAnswerMouseEnter(event) {
-	      if (!this.state.answered) event.target.firstChild.className = "fa fa-check-circle-o";
+	      if (!this.state.answered && !this.state.isFetching) {
+	        event.target.firstChild.className = "fa fa-check-circle-o";
+	      }
 	    }
 	  }, {
 	    key: 'handleAnswerMouseLeave',
 	    value: function handleAnswerMouseLeave(event) {
-	      if (!this.state.answered) event.target.firstChild.className = "fa fa-circle-o";
+	      if (!this.state.answered && !this.state.isFetching) {
+	        event.target.firstChild.className = "fa fa-circle-o";
+	      }
 	    }
 
 	    // renderers
@@ -45213,8 +45219,7 @@
 	      return _react2.default.createElement(
 	        'li',
 	        null,
-	        _react2.default.createElement('input', {
-	          type: 'text',
+	        _react2.default.createElement('textarea', {
 	          placeholder: 'Enter question name',
 	          value: this.state.name,
 	          onChange: this.handleInputChange.bind(this, 'name'),

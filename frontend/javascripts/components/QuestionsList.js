@@ -9,6 +9,7 @@ class QuestionsList extends Component {
     this.state = {
       questionIndex: props.userAnswers.length,
       answered: false,
+      isFetching: false,
     }
   }
 
@@ -26,17 +27,22 @@ class QuestionsList extends Component {
   handleAnswerClick(answer, event) {
     if (this.state.answered) return
 
+    this.setState({ isFetching: true })
     this.props.actions.answerQuestion(answer.id).then(() => {
-      this.setState({ answered: true })
+      this.setState({ answered: true, isFetching: false })
     })
   }
 
   handleAnswerMouseEnter(event) {
-    if (!this.state.answered) event.target.firstChild.className = "fa fa-check-circle-o"
+    if (!this.state.answered && !this.state.isFetching) {
+      event.target.firstChild.className = "fa fa-check-circle-o"
+    }
   }
 
   handleAnswerMouseLeave(event) {
-    if (!this.state.answered) event.target.firstChild.className = "fa fa-circle-o"
+    if (!this.state.answered && !this.state.isFetching) {
+      event.target.firstChild.className = "fa fa-circle-o"
+    }
   }
 
   // renderers
