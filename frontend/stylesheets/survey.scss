@@ -1,6 +1,7 @@
 .container.survey {
   > .content {
     min-width: 600px;
+    max-width: 800px;
 
     > h1 {
       font-size: $primary-font-size;
@@ -24,7 +25,6 @@
     p {
       font-size: $primary-font-size;
       font-weight: 300;
-      max-width: 800px;
     }
 
     .answers {

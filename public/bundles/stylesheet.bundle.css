@@ -2664,7 +2664,8 @@ div.container footer {
             color: #FFFFFF; }
 
 .container.survey > .content {
-  min-width: 600px; }
+  min-width: 600px;
+  max-width: 800px; }
   .container.survey > .content > h1 {
     font-size: 32px; }
     .container.survey > .content > h1 > i {
@@ -2678,8 +2679,7 @@ div.container footer {
     color: #3BC363; }
   .container.survey > .content p {
     font-size: 32px;
-    font-weight: 300;
-    max-width: 800px; }
+    font-weight: 300; }
   .container.survey > .content .answers {
     font-size: 22px;
     font-weight: 300; }
