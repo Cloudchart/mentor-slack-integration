@@ -28272,8 +28272,7 @@
 
 	    _this.state = {
 	      questionIndex: props.userAnswers.length,
-	      answered: false,
-	      isFetching: false
+	      answered: false
 	    };
 	    return _this;
 	  }
@@ -28298,53 +28297,35 @@
 
 	      if (this.state.answered) return;
 
-	      this.setState({ isFetching: true });
 	      this.props.actions.answerQuestion(answer.id).then(function () {
-	        _this2.setState({ answered: true, isFetching: false });
+	        _this2.setState({ answered: true });
 	      });
-	    }
-	  }, {
-	    key: 'handleAnswerMouseEnter',
-	    value: function handleAnswerMouseEnter(event) {
-	      if (!this.state.answered && !this.state.isFetching) {
-	        event.target.firstChild.className = "fa fa-check-circle-o";
-	      }
-	    }
-	  }, {
-	    key: 'handleAnswerMouseLeave',
-	    value: function handleAnswerMouseLeave(event) {
-	      if (!this.state.answered && !this.state.isFetching) {
-	        event.target.firstChild.className = "fa fa-circle-o";
-	      }
 	    }
 
 	    // renderers
 	    //
 
 	  }, {
-	    key: 'renderAnswerStatus',
-	    value: function renderAnswerStatus(answer) {
+	    key: 'renderAnswerIcon',
+	    value: function renderAnswerIcon(answer) {
 	      var userAnswer = this.props.userAnswers.find(function (userAnswer) {
 	        return userAnswer.answerId === answer.id;
 	      });
-	      var iconClasses = (0, _classnames2.default)('fa', {
-	        'fa-circle-o': !userAnswer,
-	        'fa-check-circle': userAnswer && userAnswer.isCorrect,
-	        'fa-times-circle': userAnswer && !userAnswer.isCorrect
+	      var iconClasses = (0, _classnames2.default)({
+	        unanswered: !this.state.answered,
+	        check: userAnswer && userAnswer.isCorrect,
+	        times: userAnswer && !userAnswer.isCorrect
 	      });
-	      return _react2.default.createElement('i', { ref: 'answerStatus', className: iconClasses });
+
+	      return _react2.default.createElement('i', { className: iconClasses });
 	    }
 	  }, {
 	    key: 'renderAnswer',
 	    value: function renderAnswer(answer) {
 	      return _react2.default.createElement(
 	        'li',
-	        {
-	          onClick: this.handleAnswerClick.bind(this, answer),
-	          onMouseEnter: this.handleAnswerMouseEnter.bind(this),
-	          onMouseLeave: this.handleAnswerMouseLeave.bind(this)
-	        },
-	        this.renderAnswerStatus(answer),
+	        { onClick: this.handleAnswerClick.bind(this, answer) },
+	        this.renderAnswerIcon(answer),
 	        _react2.default.createElement(
 	          'span',
 	          null,

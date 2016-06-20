@@ -9,7 +9,6 @@ class QuestionsList extends Component {
     this.state = {
       questionIndex: props.userAnswers.length,
       answered: false,
-      isFetching: false,
     }
   }
 
@@ -27,44 +26,28 @@ class QuestionsList extends Component {
   handleAnswerClick(answer, event) {
     if (this.state.answered) return
 
-    this.setState({ isFetching: true })
     this.props.actions.answerQuestion(answer.id).then(() => {
-      this.setState({ answered: true, isFetching: false })
+      this.setState({ answered: true })
     })
-  }
-
-  handleAnswerMouseEnter(event) {
-    if (!this.state.answered && !this.state.isFetching) {
-      event.target.firstChild.className = "fa fa-check-circle-o"
-    }
-  }
-
-  handleAnswerMouseLeave(event) {
-    if (!this.state.answered && !this.state.isFetching) {
-      event.target.firstChild.className = "fa fa-circle-o"
-    }
   }
 
   // renderers
   //
-  renderAnswerStatus(answer) {
+  renderAnswerIcon(answer) {
     const userAnswer = this.props.userAnswers.find(userAnswer => userAnswer.answerId === answer.id)
-    const iconClasses = classNames('fa', {
-      'fa-circle-o': !userAnswer,
-      'fa-check-circle': userAnswer && userAnswer.isCorrect,
-      'fa-times-circle': userAnswer && !userAnswer.isCorrect,
+    const iconClasses = classNames({
+      unanswered: !this.state.answered,
+      check: userAnswer && userAnswer.isCorrect,
+      times: userAnswer && !userAnswer.isCorrect,
     })
-    return <i ref="answerStatus" className={ iconClasses }/>
+
+    return <i className={ iconClasses }/>
   }
 
   renderAnswer(answer) {
     return (
-      <li
-        onClick={ this.handleAnswerClick.bind(this, answer) }
-        onMouseEnter={ this.handleAnswerMouseEnter.bind(this) }
-        onMouseLeave={ this.handleAnswerMouseLeave.bind(this) }
-      >
-        { this.renderAnswerStatus(answer) }
+      <li onClick={ this.handleAnswerClick.bind(this, answer) }>
+        { this.renderAnswerIcon(answer) }
         <span>{ answer.name }</span>
       </li>
     )

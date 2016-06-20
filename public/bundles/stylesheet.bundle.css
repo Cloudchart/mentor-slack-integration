@@ -2697,12 +2697,18 @@ div.container footer {
       cursor: pointer; }
       .container.survey > .content .answers > li:last-child {
         border-bottom: 1px solid #CBD0CD; }
+      .container.survey > .content .answers > li:hover > i.unanswered {
+        background-image: url("/images/surveys/QuizHover@2x.png"); }
       .container.survey > .content .answers > li > i {
-        font-size: 32px;
-        margin-right: 20px;
-        color: #3BC363; }
-        .container.survey > .content .answers > li > i.fa-times-circle {
-          color: #CA1F2B; }
+        width: 32px;
+        height: 32px;
+        background-image: url("/images/surveys/QuizSelector@2x.png");
+        background-size: cover;
+        margin-right: 20px; }
+        .container.survey > .content .answers > li > i.times {
+          background-image: url("/images/surveys/QuizFalse@2x.png"); }
+        .container.survey > .content .answers > li > i.check {
+          background-image: url("/images/surveys/QuizTrue@2x.png"); }
   .container.survey > .content .actions {
     display: -webkit-flex;
     display: -moz-flex;

@@ -43,13 +43,25 @@
           border-bottom: 1px solid $primary-gray;
         }
 
-        > i {
-          font-size: $primary-font-size;
-          margin-right: 20px;
-          color: $primary-green;
+        &:hover {
+          > i.unanswered {
+            background-image: url('/images/surveys/QuizHover@2x.png');
+          }
+        }
 
-          &.fa-times-circle {
-            color: $primary-red;
+        > i {
+          width: 32px;
+          height: 32px;
+          background-image: url('/images/surveys/QuizSelector@2x.png');
+          background-size: cover;
+          margin-right: 20px;
+
+          &.times {
+            background-image: url('/images/surveys/QuizFalse@2x.png');
+          }
+
+          &.check {
+            background-image: url('/images/surveys/QuizTrue@2x.png');
           }
         }
       }
