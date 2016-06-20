@@ -12,11 +12,20 @@
       }
     }
 
-    h1, p, .questions-counter, .answers {
+    h1, p, .questions-counter, .result-title, .answers {
       margin-bottom: 30px;
     }
 
-    .questions-counter {
+    > .result-image {
+      > img {
+        min-width: 600px;
+        max-width: 800px;
+        display: block;
+        margin: 0 auto;
+      }
+    }
+
+    .questions-counter, .result-title {
       font-size: $primary-font-size;
       text-align: center;
       color: $primary-green;

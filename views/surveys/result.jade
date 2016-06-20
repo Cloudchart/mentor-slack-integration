@@ -18,14 +18,15 @@ block content
         h1
           i(class="fa fa-check-square")
           span #{survey.name} – Results
-        div(class="questions-counter")= result.title
+        div(class="result-title")= result.title
         p
           span.
             You got <strong>#{correctAnswersLength}</strong> out of
             <strong>#{questionsLenght}</strong> questions right.
           span &nbsp;
           span= result.text
-        img(src="/uploads/surveys/#{result.imageUid}")
+        div(class="result-image")
+          img(src="/uploads/surveys/#{result.imageUid}")
       footer
         ul
           li
