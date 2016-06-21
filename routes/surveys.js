@@ -83,11 +83,18 @@ router.post('/answer', (req, res, next) => {
         userId: req.session.surveyUserId,
         surveyAnswerId: answer.id,
       }
-    }).spread(userAnswer => {
+    }).spread(async (userAnswer) => {
+      const correctAnswerIds = await SurveyAnswer.findAll({
+        where: { surveyQuestionId: answer.surveyQuestionId, isCorrect: true }
+      }).map(surveyAnswer => surveyAnswer.id)
+
       res.json({
-        id: userAnswer.id,
-        answerId: userAnswer.surveyAnswerId,
-        isCorrect: answer.isCorrect,
+        userAnswer: {
+          id: userAnswer.id,
+          answerId: userAnswer.surveyAnswerId,
+          isCorrect: answer.isCorrect,
+        },
+        correctAnswerIds: correctAnswerIds,
       })
     }).catch(error => {
       res.status(500).json({ error })

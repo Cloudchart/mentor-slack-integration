@@ -12,7 +12,8 @@ function receiveAnswerQuestion(id, json) {
   return {
     type: 'ANSWER_QUESTION_RECEIVE',
     id,
-    userAnswer: json,
+    userAnswer: json.userAnswer,
+    correctAnswerIds: json.correctAnswerIds,
     receivedAt: Date.now(),
   }
 }

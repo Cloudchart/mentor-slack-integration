@@ -21695,7 +21695,8 @@
 	  return {
 	    type: 'ANSWER_QUESTION_RECEIVE',
 	    id: id,
-	    userAnswer: json,
+	    userAnswer: json.userAnswer,
+	    correctAnswerIds: json.correctAnswerIds,
 	    receivedAt: Date.now()
 	  };
 	}
@@ -28176,6 +28177,7 @@
 	      var survey = _props.survey;
 	      var questions = _props.questions;
 	      var userAnswers = _props.userAnswers;
+	      var correctAnswers = _props.correctAnswers;
 	      var actions = _props.actions;
 
 
@@ -28200,6 +28202,7 @@
 	            survey: survey,
 	            questions: questions,
 	            userAnswers: userAnswers,
+	            correctAnswers: correctAnswers,
 	            actions: actions
 	          })
 	        ),
@@ -28215,6 +28218,7 @@
 	  survey: _react.PropTypes.object.isRequired,
 	  questions: _react.PropTypes.array.isRequired,
 	  userAnswers: _react.PropTypes.array.isRequired,
+	  correctAnswers: _react.PropTypes.array.isRequired,
 	  actions: _react.PropTypes.object.isRequired
 	};
 
@@ -28222,7 +28226,8 @@
 	  return {
 	    survey: state.survey,
 	    questions: state.questions,
-	    userAnswers: state.userAnswers
+	    userAnswers: state.userAnswers,
+	    correctAnswers: state.correctAnswers
 	  };
 	}
 
@@ -28311,9 +28316,10 @@
 	      var userAnswer = this.props.userAnswers.find(function (userAnswer) {
 	        return userAnswer.answerId === answer.id;
 	      });
+
 	      var iconClasses = (0, _classnames2.default)({
 	        unanswered: !this.state.answered,
-	        check: userAnswer && userAnswer.isCorrect,
+	        check: userAnswer && userAnswer.isCorrect || this.props.correctAnswers.includes(answer.id),
 	        times: userAnswer && !userAnswer.isCorrect
 	      });
 
@@ -60301,34 +60307,36 @@
 		"./ConfigApp.js": 425,
 		"./SurveyApp": 430,
 		"./SurveyApp.js": 430,
-		"./SurveysApp": 434,
-		"./SurveysApp.js": 434,
-		"./TeamsApp": 439,
-		"./TeamsApp.js": 439,
-		"./UsersApp": 441,
-		"./UsersApp.js": 441,
-		"./admin/answers": 437,
-		"./admin/answers.js": 437,
-		"./admin/messages": 444,
-		"./admin/messages.js": 444,
-		"./admin/questions": 436,
-		"./admin/questions.js": 436,
-		"./admin/results": 438,
-		"./admin/results.js": 438,
-		"./admin/surveys": 435,
-		"./admin/surveys.js": 435,
-		"./admin/teams": 440,
-		"./admin/teams.js": 440,
-		"./admin/users": 443,
-		"./admin/users.js": 443,
-		"./admin/viewedTeam": 442,
-		"./admin/viewedTeam.js": 442,
+		"./SurveysApp": 435,
+		"./SurveysApp.js": 435,
+		"./TeamsApp": 440,
+		"./TeamsApp.js": 440,
+		"./UsersApp": 442,
+		"./UsersApp.js": 442,
+		"./admin/answers": 438,
+		"./admin/answers.js": 438,
+		"./admin/messages": 445,
+		"./admin/messages.js": 445,
+		"./admin/questions": 437,
+		"./admin/questions.js": 437,
+		"./admin/results": 439,
+		"./admin/results.js": 439,
+		"./admin/surveys": 436,
+		"./admin/surveys.js": 436,
+		"./admin/teams": 441,
+		"./admin/teams.js": 441,
+		"./admin/users": 444,
+		"./admin/users.js": 444,
+		"./admin/viewedTeam": 443,
+		"./admin/viewedTeam.js": 443,
 		"./channels": 427,
 		"./channels.js": 427,
+		"./correctAnswers": 434,
+		"./correctAnswers.js": 434,
 		"./questions": 432,
 		"./questions.js": 432,
-		"./results": 445,
-		"./results.js": 445,
+		"./results": 446,
+		"./results.js": 446,
 		"./survey": 431,
 		"./survey.js": 431,
 		"./team": 426,
@@ -60603,12 +60611,17 @@
 
 	var _userAnswers2 = _interopRequireDefault(_userAnswers);
 
+	var _correctAnswers = __webpack_require__(434);
+
+	var _correctAnswers2 = _interopRequireDefault(_correctAnswers);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	exports.default = (0, _redux.combineReducers)({
 	  survey: _survey2.default,
 	  questions: _questions2.default,
-	  userAnswers: _userAnswers2.default
+	  userAnswers: _userAnswers2.default,
+	  correctAnswers: _correctAnswers2.default
 	});
 
 /***/ },
@@ -60675,6 +60688,28 @@
 
 /***/ },
 /* 434 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = correctAnswers;
+	function correctAnswers() {
+	  var state = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
+	  var action = arguments[1];
+
+	  switch (action.type) {
+	    case 'ANSWER_QUESTION_RECEIVE':
+	      return state.concat(action.correctAnswerIds);
+	    default:
+	      return state;
+	  }
+	}
+
+/***/ },
+/* 435 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -60689,19 +60724,19 @@
 
 	var _team2 = _interopRequireDefault(_team);
 
-	var _surveys = __webpack_require__(435);
+	var _surveys = __webpack_require__(436);
 
 	var _surveys2 = _interopRequireDefault(_surveys);
 
-	var _questions = __webpack_require__(436);
+	var _questions = __webpack_require__(437);
 
 	var _questions2 = _interopRequireDefault(_questions);
 
-	var _answers = __webpack_require__(437);
+	var _answers = __webpack_require__(438);
 
 	var _answers2 = _interopRequireDefault(_answers);
 
-	var _results = __webpack_require__(438);
+	var _results = __webpack_require__(439);
 
 	var _results2 = _interopRequireDefault(_results);
 
@@ -60716,7 +60751,7 @@
 	});
 
 /***/ },
-/* 435 */
+/* 436 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -60754,7 +60789,7 @@
 	}
 
 /***/ },
-/* 436 */
+/* 437 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -60792,7 +60827,7 @@
 	}
 
 /***/ },
-/* 437 */
+/* 438 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -60830,7 +60865,7 @@
 	}
 
 /***/ },
-/* 438 */
+/* 439 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -60868,7 +60903,7 @@
 	}
 
 /***/ },
-/* 439 */
+/* 440 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -60883,7 +60918,7 @@
 
 	var _team2 = _interopRequireDefault(_team);
 
-	var _teams = __webpack_require__(440);
+	var _teams = __webpack_require__(441);
 
 	var _teams2 = _interopRequireDefault(_teams);
 
@@ -60895,7 +60930,7 @@
 	});
 
 /***/ },
-/* 440 */
+/* 441 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -60915,7 +60950,7 @@
 	}
 
 /***/ },
-/* 441 */
+/* 442 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -60938,15 +60973,15 @@
 
 	var _themes2 = _interopRequireDefault(_themes);
 
-	var _viewedTeam = __webpack_require__(442);
+	var _viewedTeam = __webpack_require__(443);
 
 	var _viewedTeam2 = _interopRequireDefault(_viewedTeam);
 
-	var _users = __webpack_require__(443);
+	var _users = __webpack_require__(444);
 
 	var _users2 = _interopRequireDefault(_users);
 
-	var _messages = __webpack_require__(444);
+	var _messages = __webpack_require__(445);
 
 	var _messages2 = _interopRequireDefault(_messages);
 
@@ -60962,7 +60997,7 @@
 	});
 
 /***/ },
-/* 442 */
+/* 443 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -60982,7 +61017,7 @@
 	}
 
 /***/ },
-/* 443 */
+/* 444 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -61006,7 +61041,7 @@
 	}
 
 /***/ },
-/* 444 */
+/* 445 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -61043,7 +61078,7 @@
 	}
 
 /***/ },
-/* 445 */
+/* 446 */
 /***/ function(module, exports) {
 
 	"use strict";

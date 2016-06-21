@@ -35,9 +35,10 @@ class QuestionsList extends Component {
   //
   renderAnswerIcon(answer) {
     const userAnswer = this.props.userAnswers.find(userAnswer => userAnswer.answerId === answer.id)
+
     const iconClasses = classNames({
       unanswered: !this.state.answered,
-      check: userAnswer && userAnswer.isCorrect,
+      check: (userAnswer && userAnswer.isCorrect) || this.props.correctAnswers.includes(answer.id),
       times: userAnswer && !userAnswer.isCorrect,
     })
 

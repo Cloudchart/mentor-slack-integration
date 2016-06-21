@@ -2674,7 +2674,6 @@ div.container footer {
   .container.survey > .content h1, .container.survey > .content p, .container.survey > .content .questions-counter, .container.survey > .content .result-title, .container.survey > .content .answers {
     margin-bottom: 30px; }
   .container.survey > .content > .result-image > img {
-    min-width: 600px;
     max-width: 800px;
     display: block;
     margin: 0 auto; }
