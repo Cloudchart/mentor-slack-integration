@@ -67,6 +67,7 @@ class QuestionsList extends Component {
 
         <p>
           { question.name }
+          { answered ? question.explanation : null }
         </p>
 
         <ul className="answers">

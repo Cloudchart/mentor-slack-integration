@@ -4,7 +4,7 @@ import { checkAuth, getFilteredAttrs } from './helpers'
 import { appName } from '../../lib'
 import { Survey, SurveyQuestion } from '../../models'
 
-const permittedAttrs = ['name']
+const permittedAttrs = ['name', 'explanation']
 const router = Router()
 
 

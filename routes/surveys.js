@@ -58,6 +58,7 @@ router.get('/:slug/:userId', async (req, res, next) => {
         return {
           id: question.id,
           name: question.name,
+          explanation: question.explanation,
           answers: question.SurveyAnswers.map(answer => {
             return { id: answer.id, name: answer.name }
           }),
@@ -72,7 +73,7 @@ router.get('/:slug/:userId', async (req, res, next) => {
       })
     }
   }).catch(error => {
-    res.status(404).render({ message: 'not found' })
+    res.status(404).render('error', { message: 'not found', error: {} })
   })
 })
 
@@ -100,7 +101,7 @@ router.post('/answer', (req, res, next) => {
       res.status(500).json({ error })
     })
   }).catch(error => {
-    res.status(404).render({ message: 'not found' })
+    res.status(404).json({ message: 'not found' })
   })
 })
 

@@ -28363,7 +28363,8 @@
 	        _react2.default.createElement(
 	          'p',
 	          null,
-	          question.name
+	          question.name,
+	          answered ? question.explanation : null
 	        ),
 	        _react2.default.createElement(
 	          'ul',
@@ -45145,7 +45146,8 @@
 	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Question).call(this, props));
 
 	    _this.state = {
-	      name: props.question.name
+	      name: props.question.name,
+	      explanation: props.question.explanation
 	    };
 	    return _this;
 	  }
@@ -45157,7 +45159,10 @@
 	  _createClass(Question, [{
 	    key: 'componentWillReceiveProps',
 	    value: function componentWillReceiveProps(nextProps) {
-	      this.setState({ name: nextProps.question.name });
+	      this.setState({
+	        name: nextProps.question.name,
+	        explanation: nextProps.question.explanation
+	      });
 	    }
 
 	    // helpers
@@ -45167,7 +45172,8 @@
 	    key: 'getAttrs',
 	    value: function getAttrs() {
 	      return {
-	        name: this.state.name
+	        name: this.state.name,
+	        explanation: this.state.explanation
 	      };
 	    }
 
@@ -45210,6 +45216,17 @@
 	          placeholder: 'Enter question name',
 	          value: this.state.name,
 	          onChange: this.handleInputChange.bind(this, 'name'),
+	          onBlur: this.handleUpdate.bind(this)
+	        }),
+	        _react2.default.createElement(
+	          'span',
+	          null,
+	          ' | '
+	        ),
+	        _react2.default.createElement('textarea', {
+	          placeholder: 'Enter question explanation',
+	          value: this.state.explanation,
+	          onChange: this.handleInputChange.bind(this, 'explanation'),
 	          onBlur: this.handleUpdate.bind(this)
 	        }),
 	        _react2.default.createElement(

@@ -15,6 +15,10 @@ module.exports = function(sequelize, DataTypes) {
 
     name: {
       type: DataTypes.TEXT
+    },
+
+    explanation: {
+      type: DataTypes.TEXT
     }
 
   }, {

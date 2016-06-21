@@ -8,20 +8,25 @@ class Question extends Component {
     super(props)
     this.state = {
       name: props.question.name,
+      explanation: props.question.explanation,
     }
   }
 
   // lifecycle
   //
   componentWillReceiveProps(nextProps) {
-    this.setState({ name: nextProps.question.name })
+    this.setState({
+      name: nextProps.question.name,
+      explanation: nextProps.question.explanation,
+    })
   }
 
   // helpers
   //
   getAttrs() {
     return {
-      name: this.state.name
+      name: this.state.name,
+      explanation: this.state.explanation,
     }
   }
 
@@ -51,6 +56,13 @@ class Question extends Component {
           placeholder="Enter question name"
           value={ this.state.name }
           onChange={ this.handleInputChange.bind(this, 'name') }
+          onBlur={ this.handleUpdate.bind(this) }
+        />
+        <span> | </span>
+        <textarea
+          placeholder="Enter question explanation"
+          value={ this.state.explanation }
+          onChange={ this.handleInputChange.bind(this, 'explanation') }
           onBlur={ this.handleUpdate.bind(this) }
         />
         <span> | </span>
