@@ -53,23 +53,25 @@
 
         &:hover {
           > i.unanswered {
-            background-image: url('/images/surveys/QuizHover@2x.png');
+            background-position: 0px -32px;
           }
         }
 
         > i {
           width: 32px;
           height: 32px;
-          background-image: url('/images/surveys/QuizSelector@2x.png');
+          background-image: url('/images/surveys/sprite.png');
+          background-repeat: no-repeat;
           background-size: cover;
+          background-position: 0px -64px;
           margin-right: 20px;
 
           &.times {
-            background-image: url('/images/surveys/QuizFalse@2x.png');
+            background-position: 0px 0px;
           }
 
           &.check {
-            background-image: url('/images/surveys/QuizTrue@2x.png');
+            background-position: 0px -96px;
           }
         }
       }
