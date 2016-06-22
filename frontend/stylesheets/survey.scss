@@ -78,6 +78,10 @@
     .actions {
       @include flexbox;
       @include justify-content(center);
+
+      &.result {
+        margin-top: 30px;
+      }
     }
   }
 }

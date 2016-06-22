@@ -27,6 +27,11 @@ block content
           span= result.text
         div(class="result-image")
           img(src="/uploads/surveys/#{result.imageUid}")
+        if canStartOver
+          div(class="actions result")
+            form(action="/surveys/start_over" method="post")
+              input(type="hidden" name="surveyId" value=survey.id)
+              button(type="submit" class="msi") Start over
       footer
         ul
           li

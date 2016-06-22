@@ -12,7 +12,7 @@ router.get('/:slug/:userId', async (req, res, next) => {
     include: [{ model: SurveyQuestion, include: [SurveyAnswer] }, { model: SurveyResult }]
   }).then(async (survey) => {
     if (!survey.isActive) return res.redirect('/')
-    req.session.surveyUserId = req.params.userId
+    req.session.surveyUserId = req.session.surveyUserId || req.params.userId
 
     let userAnswers = await SurveyAnswerUser.findAll({
       where: { userId: req.params.userId },
@@ -51,9 +51,14 @@ router.get('/:slug/:userId', async (req, res, next) => {
         correctAnswersLength,
         questionsLenght: survey.SurveyQuestions.length,
         resultImageUrl: path.join(process.env.ROOT_URL, `uploads/surveys`, result.imageUid),
+        canStartOver: req.session.surveyUserId === req.params.userId,
       })
     // render questions
     } else {
+      if (req.session.surveyUserId !== req.params.userId) {
+        return res.redirect(`/surveys/${req.params.slug}/${req.session.surveyUserId}`)
+      }
+
       const questions = survey.SurveyQuestions.map(question => {
         return {
           id: question.id,
@@ -78,9 +83,13 @@ router.get('/:slug/:userId', async (req, res, next) => {
 })
 
 router.post('/answer', (req, res, next) => {
-  SurveyAnswer.findById(req.body.id).then(answer => {
+  SurveyAnswer.findOne({
+    include: [SurveyQuestion],
+    where: { id: req.body.id },
+  }).then(answer => {
     SurveyAnswerUser.findOrCreate({
       where: {
+        surveyId: answer.SurveyQuestion.surveyId,
         userId: req.session.surveyUserId,
         surveyAnswerId: answer.id,
       }
@@ -102,6 +111,17 @@ router.post('/answer', (req, res, next) => {
     })
   }).catch(error => {
     res.status(404).json({ message: 'not found' })
+  })
+})
+
+router.post('/start_over', (req, res, next) => {
+  Survey.findById(req.body.surveyId).then(async (survey) => {
+    await SurveyAnswerUser.destroy({
+      where: { userId: req.session.surveyUserId, surveyId: survey.id }
+    })
+    res.redirect(`/surveys/${survey.slug}/${req.session.surveyUserId}`)
+  }).catch(error => {
+    res.redirect('/')
   })
 })
 

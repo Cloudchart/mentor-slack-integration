@@ -8,6 +8,11 @@ module.exports = function(sequelize, DataTypes) {
       defaultValue: DataTypes.UUIDV4
     },
 
+    surveyId: {
+      type: DataTypes.UUID,
+      allowNull: false
+    },
+
     userId: {
       type: DataTypes.STRING,
       allowNull: false

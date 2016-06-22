@@ -2722,6 +2722,8 @@ div.container footer {
     -webkit-justify-content: center;
     -moz-justify-content: center;
     justify-content: center; }
+    .container.survey > .content .actions.result {
+      margin-top: 30px; }
 
 .container.teams > .content .teams-list > li > i {
   margin-left: 10px;
